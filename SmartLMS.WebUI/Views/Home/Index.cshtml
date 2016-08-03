@@ -1,0 +1,286 @@
+﻿@model SmartLMS.WebUI.Models.ConteudoPrincipalViewModel
+@Html.Partial("_BuscaContextual")
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="content">
+                <h4 class="card-title text-primary">
+                    Selecione uma das áreas de conhecimento para visualizar os cursos disponíveis
+                </h4>
+                <div class="card-body">
+                    <ul class="nav nav-pills" role="tablist">
+                        @{
+                            var primeiraLinha = true;
+                        }
+                        @foreach (var item in Model.AreasConhecimento)
+                        {
+                            <li class="@(primeiraLinha? "active" : "")">
+                                <a href="#areaConhecimento-@item.Ordem" role="tab" data-toggle="tab" aria-expanded="@(primeiraLinha? "true" : "false")">
+                                    <i class="fa fa-map-signs text-primary"></i>
+                                    <p class="text-primary">@item.Nome</p>
+                                </a>
+                            </li>
+                            if (primeiraLinha)
+                            {
+                                primeiraLinha = false;
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <p class="text-primary">e veja abaixo os cursos disponíveis por assunto</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tab-content">
+            @{
+                primeiraLinha = true;
+            }
+            @foreach (var item in Model.AreasConhecimento)
+            {
+
+                <div id="areaConhecimento-@item.Ordem" class="tab-pane fade @(primeiraLinha? "in active" : "")">
+                    @Html.Partial("_AreaConhecimentoPanel", item)
+                </div>
+
+                if (primeiraLinha)
+                {
+                    primeiraLinha = false;
+                }
+            }
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="content">
+                <h4 class="text-primary"><i class="fa fa-bell"></i> Fique por dentro das novidades através dos paineis de acessos rápidos</h4>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-7">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">@Model.TituloUltimasAulas</h3>
+            </div>
+            <div class="panel-body">
+                <div class="bs-component">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <a href="#" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <div class="least-content">Há 1 hora</div>
+                                    <h4 class="list-group-item-heading">C# Conhecendo a linguagem e o ecossistema .net</h4>
+                                    <p class="list-group-item-text">Aula 1 - Visão geral da plataforma .net</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator"></div>
+                        <div class="list-group-item">
+                            <a href="#" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <div class="least-content">Há 1 hora</div>
+                                    <h4 class="list-group-item-heading">C# Conhecendo a linguagem e o ecossistema .net</h4>
+                                    <p class="list-group-item-text">Aula 1 - Visão geral da plataforma .net</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator"></div>
+                        <div class="list-group-item">
+                            <a href="#" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <div class="least-content">Há 1 hora</div>
+                                    <h4 class="list-group-item-heading">C# Conhecendo a linguagem e o ecossistema .net</h4>
+                                    <p class="list-group-item-text">Aula 1 - Visão geral da plataforma .net</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator"></div>
+                        <div class="list-group-item">
+                            <a href="#" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <div class="least-content">Há 1 hora</div>
+                                    <h4 class="list-group-item-heading">C# Conhecendo a linguagem e o ecossistema .net</h4>
+                                    <p class="list-group-item-text">Aula 1 - Visão geral da plataforma .net</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator"></div>
+                        <div class="list-group-item">
+                            <a href="#" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <div class="least-content">Há 1 hora</div>
+                                    <h4 class="list-group-item-heading">C# Conhecendo a linguagem e o ecossistema .net</h4>
+                                    <p class="list-group-item-text">Aula 1 - Visão geral da plataforma .net</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator"></div>
+                        <div class="list-group-item">
+                            <a href="#" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <div class="least-content">Há 1 hora</div>
+                                    <h4 class="list-group-item-heading">C# Conhecendo a linguagem e o ecossistema .net</h4>
+                                    <p class="list-group-item-text">Aula 1 - Visão geral da plataforma .net</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h3 class="panel-title">@Model.TituloAulasAssistidas</h3>
+            </div>
+            <div class="panel-body">
+                <div class="bs-component">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <a href="#" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <div class="least-content">Há 1 hora</div>
+                                    <h4 class="list-group-item-heading">C# Conhecendo a linguage...</h4>
+                                    <p class="list-group-item-text">Aula 1 - Visão geral da plataforma .net</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator"></div>
+                        <div class="list-group-item">
+                            <a href="#" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <div class="least-content">Há 1 hora</div>
+                                    <h4 class="list-group-item-heading">C# Conhecendo a linguage...</h4>
+                                    <p class="list-group-item-text">Aula 1 - Visão geral da plataforma .net</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator"></div>
+                        <div class="list-group-item">
+                            <a href="#" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <div class="least-content">Há 1 hora</div>
+                                    <h4 class="list-group-item-heading">C# Conhecendo a linguage...</h4>
+                                    <p class="list-group-item-text">Aula 1 - Visão geral da plataforma .net</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator"></div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Avisos</h3>
+            </div>
+            <div class="panel-body">
+                <div class="bs-component">
+                    <div class="alert alert-dismissible alert-default">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        <strong>21/07/2016</strong> Aula 5 dispoível no curso C# - Conhecento a linguagem e o ecossistema .net
+                    </div>
+                </div>
+                <div class="bs-component">
+                    <div class="alert alert-dismissible alert-default">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        <strong>21/07/2016</strong> Aula 5 dispoível no curso C# - Conhecento a linguagem e o ecossistema .net
+                    </div>
+                </div>
+                <div class="bs-component">
+                    <div class="alert alert-dismissible alert-default">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        <strong>21/07/2016</strong> Aula 5 dispoível no curso C# - Conhecento a linguagem e o ecossistema .net
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        SmartLMS.HomeControllerProxy = (function () {
+            var $private = {}, $public = {};
+
+            $public.BuscaContextual = function (termo, pagina) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Home/BuscaContextualPaginada",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ termo: termo, pagina: pagina })
+                });
+            };
+
+
+            return $public;
+        }());
+
+        (function (proxy) {
+            var $private = {};
+
+            $(function () {
+                $("#busca-contextual-button").on("click", $private.efetuarBusca);
+                $private.ResultadoBuscaTemplate = Handlebars.compile($("#resultado-busca-template").html());
+            });
+
+            $private.efetuarBusca = function () {
+                $("#resultado-busca-container").slideUp();
+                proxy.BuscaContextual($("#q").val(), 1)
+                    .done($private.exibirResultados)
+                    .fail(function () { console.log("Erro"); });
+            };
+
+            $private.exibirResultados = function (data) {
+                $("#resultado-busca-container").html($private.ResultadoBuscaTemplate({ ResultadoBusca: data.Entities, paginas : data.Count / 10, possuiAnterior: data.HasPrevious, possuiProxima: data.HasNext }));
+                $("#resultado-busca-container").slideDown();
+            };
+
+        }(SmartLMS.HomeControllerProxy));
+    </script>
+}

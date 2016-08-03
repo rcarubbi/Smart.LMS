@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.WebUI", "SmartLMS.WebUI\SmartLMS.WebUI.csproj", "{7FB79F55-B752-4B26-93EA-0709E2F4EA20}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Apresentacao", "1. Apresentacao", "{692DEB81-4F71-45E6-80D8-F781F25CDC63}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Dominio", "2. Dominio", "{CF5957B2-7609-41C5-A23E-4066785FA8AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.Dominio", "SmartLMS.Dominio\SmartLMS.Dominio.csproj", "{8AA461EA-0DB0-4DC3-84E8-63A286E73A95}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. AcessoADados", "3. AcessoADados", "{3356FD88-3542-4640-9F02-CA95C0F69161}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.DAL", "SmartLMS.DAL\SmartLMS.DAL.csproj", "{3CADB06F-EF96-4C65-882E-1DE1F882A95F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7FB79F55-B752-4B26-93EA-0709E2F4EA20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FB79F55-B752-4B26-93EA-0709E2F4EA20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FB79F55-B752-4B26-93EA-0709E2F4EA20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FB79F55-B752-4B26-93EA-0709E2F4EA20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AA461EA-0DB0-4DC3-84E8-63A286E73A95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AA461EA-0DB0-4DC3-84E8-63A286E73A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AA461EA-0DB0-4DC3-84E8-63A286E73A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AA461EA-0DB0-4DC3-84E8-63A286E73A95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CADB06F-EF96-4C65-882E-1DE1F882A95F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CADB06F-EF96-4C65-882E-1DE1F882A95F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CADB06F-EF96-4C65-882E-1DE1F882A95F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CADB06F-EF96-4C65-882E-1DE1F882A95F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7FB79F55-B752-4B26-93EA-0709E2F4EA20} = {692DEB81-4F71-45E6-80D8-F781F25CDC63}
+		{8AA461EA-0DB0-4DC3-84E8-63A286E73A95} = {CF5957B2-7609-41C5-A23E-4066785FA8AA}
+		{3CADB06F-EF96-4C65-882E-1DE1F882A95F} = {3356FD88-3542-4640-9F02-CA95C0F69161}
+	EndGlobalSection
+EndGlobal

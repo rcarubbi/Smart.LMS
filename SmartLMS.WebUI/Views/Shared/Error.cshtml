@@ -1,0 +1,22 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Smart LMS</title>
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div id="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center">
+                <h1 align="center">Ocorreu um erro desconhecido.</h1>
+                @Html.ActionLink("Voltar para a Home", "Index", "Home", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+</body>
+</html>

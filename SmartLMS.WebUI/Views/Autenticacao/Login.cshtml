@@ -1,0 +1,68 @@
+﻿@model SmartLMS.WebUI.Models.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Autenticacao/_Layout.cshtml";
+}
+
+
+<div class="card card-signup">
+
+    @using (Ajax.BeginForm("Login", "Autenticacao",
+                                    new
+                                    {
+                                        ReturnUrl = Request.QueryString["ReturnUrl"]
+                                    },
+                                    new AjaxOptions
+                                    {
+                                        LoadingElementId = "loading",
+                                        UpdateTargetId = "ValidationSummaryContainer"
+                                    }, new { @class = "form" }))
+    {
+        <div class="header header-primary text-center">
+            <h2>Código Nerd</h2>
+            <h4>Ensinando dinossauros a Programar</h4>
+        </div>
+        <div class="content">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="material-icons">email</i>
+                </span>
+                <div class="form-group label-floating">
+                    <label class="control-label">Digite seu email cadastrado</label>
+                    @Html.TextBoxFor(x => x.Login, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="material-icons">lock_outline</i>
+                </span>
+                <div class="form-group label-floating">
+                    <label class="control-label">Digite sua senha</label>
+                     @Html.EditorFor(x => x.Senha)
+                </div>
+            </div>
+            <div class="togglebutton">
+                <label>
+                    @Html.CheckBoxFor(x => x.LembrarMe, new { name = "remember", id = "remember" })
+                    Me Lembrar
+                </label>
+            </div>
+
+         
+        </div>
+        <div class="footer text-center">
+            <input type="submit" name="login-submit" id="login-submit" class="btn btn-simple btn-primary btn-lg" value="Entrar">
+        </div>
+        <div style="display: none; margin-top: 5px" id="loading" class="text-center">
+            <img src="~/Content/img/gif-load.gif" />
+        </div>
+        <div id="ValidationSummaryContainer">
+
+        </div>
+
+
+        <div class="text-center">
+            @Html.ActionLink("Esqueceu a senha?", "EsqueciMinhaSenha", null, new { @class = "btn btn-simple forgot-password" })
+        </div>
+    }
+</div>

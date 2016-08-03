@@ -1,0 +1,43 @@
+﻿@using SmartLMS.Dominio.Entidades;
+@model SmartLMS.WebUI.Models.CabecalhoViewModel
+<nav class="navbar navbar-primary navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink(Parametro.PROJETO, "Index", "Home", null, new { @class = "navbar-brand" })
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#about">Sobre</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administração <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Usuários</a></li>
+                        <li><a href="#">Cursos</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Relatórios de Acesso</li>
+                        <li><a href="#">Visualização de Aulas</a></li>
+                        <li><a href="#">Download de Materiais</a></li>
+                        <li><a href="#">Log Geral</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#contact">Fale Conosco</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">person</i>@Model.Nome <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Alterar Senha</a></li>
+                        <li><a href="#">Sair</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>

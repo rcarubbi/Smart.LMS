@@ -1,0 +1,62 @@
+﻿@model SmartLMS.WebUI.Models.CursoViewModel
+
+<div class="col-md-8">
+   <div id="indice-curso-container">
+       @Html.Partial("_indiceCurso", Model);
+   </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Veja também outras @(ViewBag.Curso.ToLower())s deste @ViewBag.Assunto.ToLower()</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+            @{ 
+                string label = string.Concat("Selecione uma ", ViewBag.Curso.ToString());
+            }
+            @Html.DropDownList("outrosCursos", ViewBag.OutrosCursos as SelectList, label, new { @class = "form-control dropdownjs" })
+        </div>
+    </div>
+</div>
+ 
+@section scripts {
+    <script>
+        (function () {
+            $(function () {
+                var optionAtivo = $('<option>', {
+                    value: '@Model.Id',
+                    text: '@Model.Nome'
+                });
+
+                $("#outrosCursos").on("dropdownjs.change", function () {
+                    var selectedItem = $(this).find("option:selected");
+                    var id = selectedItem.val();
+                    var text = selectedItem.text();
+                    if (id !== "")
+                    {
+                        $(this).append(optionAtivo);
+                        optionAtivo = $('<option>', {
+                            value: id,
+                            text: text
+                        });
+
+                        selectedItem.remove();
+                        $(this).dropdownjs();
+
+                        $("#indice-curso-container").fadeOut("fast", null, function () {
+                            $("#indice-curso-container").load(SmartLMS.api + "Aula/ExibirIndiceCurso/" + id, null,
+                                function () {
+                                    $("#indice-curso-container").fadeIn();
+                                });
+                        });
+                    }
+                });
+            });
+        }());
+
+    </script>
+}
+
+
+
+
