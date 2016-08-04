@@ -29,6 +29,7 @@ namespace SmartLMS.WebUI
                       "~/Scripts/material-kit/material.min.js",
                       "~/Scripts/material-kit/nouislider.min.js",
                       "~/Scripts/material-kit/material-kit.js",
+                      "~/Scripts/toastr/toastr.min.js",
                       "~/Scripts/app.js"));
                       
 
@@ -38,6 +39,7 @@ namespace SmartLMS.WebUI
                "~/Content/themes/notheme/jquery-ui.css",
                "~/Content/themes/notheme/jquery-ui.structure.css",
                "~/Content/material-kit/material-kit.css",
+               "~/Content/toastr/toastr.min.css",
                "~/Content/jquery.dropdown/jquery.dropdown.css",
                "~/Content/multi-carousel.css",
                "~/Content/figure-caption.css",

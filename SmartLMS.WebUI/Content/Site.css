@@ -1,4 +1,15 @@
-﻿.tipo-aviso {
+﻿ 
+
+.popover, .tooltip-inner {
+    color: white;
+    background-color: rgba(0, 100, 0, 0.9);
+}
+
+.tooltip.right .tooltip-arrow {
+    border-right-color: rgb(0, 100, 0);
+}
+
+.tipo-aviso {
     margin-bottom: 10px;
 }
 

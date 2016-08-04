@@ -40,6 +40,7 @@ namespace SmartLMS.DAL
 
             modelBuilder.Entity<Parametro>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity); 
             modelBuilder.Entity<Log>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Turma>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
             modelBuilder.Entity<Aluno>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Administrador>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
@@ -47,11 +48,20 @@ namespace SmartLMS.DAL
 
             modelBuilder.Entity<Aula>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
+            modelBuilder.Entity<Aula>().HasMany(x => x.Turmas).WithMany(x => x.AulasDisponiveis).Map(ua =>
+            {
+                ua.MapLeftKey("IdAula");
+                ua.MapRightKey("IdTurma");
+                ua.ToTable("AulaTurma");
+            }); ;
+
+
             modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Aluno);
             modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Arquivo);
 
             modelBuilder.Entity<AcessoAula>().HasRequired(x => x.Aluno);
             modelBuilder.Entity<AcessoAula>().HasRequired(x => x.Aula);
+           
 
             modelBuilder.Entity<AreaConhecimento>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<AreaConhecimento>().HasMany(x => x.Assuntos).WithRequired(a => a.AreaConhecimento);
@@ -153,5 +163,7 @@ namespace SmartLMS.DAL
             Configuration.LazyLoadingEnabled = false;
             Configuration.ProxyCreationEnabled = false;
         }
+
+        public System.Data.Entity.DbSet<SmartLMS.Dominio.Entidades.Aluno> Usuarios { get; set; }
     }
 }

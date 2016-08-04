@@ -1,0 +1,53 @@
+﻿@model SmartLMS.WebUI.Models.AlterarSenhaViewModel
+
+@{
+    ViewBag.Title = "AlterarSenha";
+}
+
+<div class="col-md-offset-2 col-md-8">
+    <div class="card">
+        <div class="content">
+            <h2 class="text-primary titulo-indice">Alteração de senha</h2>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <h4>Preencha os campos abaixo para modificar sua senha de acesso</h4>
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                
+                 
+                        <div class="form-group label-floating">
+                            <div class="col-md-offset-2 col-md-8">
+                                <label class="control-label">Digite sua nova senha</label>
+                                @Html.EditorFor(model => model.Senha, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Senha, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                    <div class="form-group label-floating">
+                        <div class="col-md-offset-2 col-md-8">
+                            <label class="control-label">Confirme a nova senha</label>
+                            @Html.EditorFor(model => model.ConfirmarSenha, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ConfirmarSenha, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Salvar" class="btn btn-primary" />
+                            @Html.ActionLink("Voltar para a Home", "Index", "Home", null, new { @class = "btn btn-default" })
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -28,9 +28,8 @@ namespace SmartLMS.WebUI.Controllers
 
         public ActionResult Index()
         {
-            RepositorioAreaConhecimento areaRepo = new RepositorioAreaConhecimento(_contexto);
+            var areaRepo = new RepositorioAreaConhecimento(_contexto);
             var viewModel = AreaConhecimentoViewModel.FromEntityList(areaRepo.ListarAreasConhecimento(), 2);
-
           
             TempData["TituloAulasAssistidas"] = Parametro.TITULO_AULAS_ASSISTIDAS;
             TempData["TituloUltimasAulas"] = Parametro.TITULO_ULTIMAS_AULAS;
@@ -47,7 +46,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult BuscaContextualPaginada(string termo, int pagina)
         {
             var resultados = servicoBusca.Pesquisar(termo, pagina);
-            return Json(resultados, JsonRequestBehavior.AllowGet);
+            return Json(new { paginaCorrente = pagina, resultados = resultados }, JsonRequestBehavior.AllowGet);
         }
     }
 }

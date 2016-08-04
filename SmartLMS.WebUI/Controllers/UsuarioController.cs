@@ -21,8 +21,8 @@ namespace SmartLMS.WebUI.Controllers
         [ChildActionOnly]
         public ActionResult ExibirCabecalho()
         {
-            RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
-            RepositorioAreaConhecimento areaConhecimentoRepo = new RepositorioAreaConhecimento(_contexto);
+            var usuarioRepo = new RepositorioUsuario(_contexto);
+            var areaConhecimentoRepo = new RepositorioAreaConhecimento(_contexto);
 
             CabecalhoViewModel viewModel = new CabecalhoViewModel
             {
@@ -42,13 +42,7 @@ namespace SmartLMS.WebUI.Controllers
         }
 
 
-        [ChildActionOnly]
-        public ActionResult ExibirAvisos()
-        {
-            var repo = new RepositorioAviso(_contexto);
-            var dateTimeHumanizerStrategy = new DefaultDateTimeHumanizeStrategy();
-            return PartialView("_PainelAvisos", AvisoViewModel.FromEntityList(repo.ListarAvisosNaoVistos(_usuarioLogado.Id), dateTimeHumanizerStrategy));
-        }
+      
 
     }
 }

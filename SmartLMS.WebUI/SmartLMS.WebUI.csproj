@@ -182,6 +182,7 @@
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\StructuremapWebApi.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AlunoController.cs" />
     <Compile Include="Controllers\AssuntoController.cs" />
     <Compile Include="Controllers\AulaController.cs" />
     <Compile Include="Controllers\AutenticacaoController.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CursoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RepositorioAula.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="DependencyResolution\ControllerConvention.cs" />
     <Compile Include="DependencyResolution\DefaultRegistry.cs" />
@@ -200,6 +202,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AlterarSenhaViewModel.cs" />
     <Compile Include="Models\AreaConhecimentoViewModel.cs" />
     <Compile Include="Models\ArquivoViewModel.cs" />
     <Compile Include="Models\AssuntoViewModel.cs" />
@@ -353,7 +356,6 @@
     <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Alert.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Autenticacao\EsqueciMinhaSenha.cshtml" />
     <Content Include="Views\Autenticacao\Login.cshtml" />
@@ -374,10 +376,19 @@
     <Content Include="Views\Shared\_PainelNovasAulas.cshtml" />
     <Content Include="Views\Shared\_PainelUltimasAulas.cshtml" />
     <Content Include="Views\Shared\_PainelAvisos.cshtml" />
+    <Content Include="Views\Autenticacao\AlterarSenha.cshtml" />
+    <Content Include="Views\Aluno\Create.cshtml" />
+    <Content Include="Views\Aluno\Delete.cshtml" />
+    <Content Include="Views\Aluno\Details.cshtml" />
+    <Content Include="Views\Aluno\Edit.cshtml" />
+    <Content Include="Views\Aluno\Index.cshtml" />
+    <Content Include="Views\Shared\_Alert.cshtml" />
+    <Content Include="Views\Aula\Ver.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Shared\DisplayTemplates\" />
+    <Folder Include="Views\teste\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="x-ua-compatible" content="IE=10">
     <title>Smart LMS - @Parametro.PROJETO - @ViewBag.Title</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
@@ -12,23 +13,13 @@
     <base href="@HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")" />
 </head>
 <body>
-
+   
     @Html.Action("ExibirCabecalho", "Usuario")
+  
     <div class="container">
         @RenderBody()
     </div>
-    <script id="vimeo-template" type="text/x-handlebars-template">
-        <tr class='video-row'>
-            <td colspan='4' class='embed-container'>
-                <iframe src='Aula/Visualizar/{{id}}'
-                        frameborder='0'
-                        webkitAllowFullScreen
-                        mozallowfullscreen
-                        allowFullScreen></iframe>
-
-            </td>
-        </tr>
-    </script>
+    
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     <script>
@@ -36,6 +27,6 @@
     </script>
     @RenderSection("scripts", required: false)
 
-
+    @Html.Partial("_Alert")
 </body>
 </html>

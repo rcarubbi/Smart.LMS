@@ -1,4 +1,5 @@
 ﻿using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
@@ -94,22 +95,17 @@ namespace SmartLMS.Dominio.Servicos
             {
                 resultado.Percentual = 100;
             }
-
-
+ 
             if (resultado.Tipo == TipoResultado.Aula)
             {
-                var acessoMaisLongo = contexto.ObterLista<AcessoAula>()
-                    .Where(x => x.Aula.Id == resultado.Id)
-                    .OrderByDescending(x => x.Percentual)
-                    .FirstOrDefault();
-
+                var acessoRepo = new RepositorioAcessoAula(contexto, _usuarioLogado.Id);
+                var acessoMaisLongo = acessoRepo.ObterMaiorPercentual(resultado.Id);
                 if (acessoMaisLongo != null)
                 {
                     resultado.Percentual = acessoMaisLongo.Percentual;
                 }
             }
-
-
+ 
             return resultado;
         }
 

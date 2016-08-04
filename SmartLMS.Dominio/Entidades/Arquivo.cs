@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SmartLMS.Dominio.Entidades
 {
@@ -8,6 +9,6 @@ namespace SmartLMS.Dominio.Entidades
 
         public string ArquivoFisico { get; set; }
 
-     
+        public virtual ICollection<AcessoArquivo> Acessos { get; set; }
     }
 }

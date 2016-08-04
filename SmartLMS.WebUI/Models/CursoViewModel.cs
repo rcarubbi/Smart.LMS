@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using SmartLMS.Dominio.Entidades;
 using System.Linq;
+using SmartLMS.Dominio.Repositorios;
+
 namespace SmartLMS.WebUI.Models
 {
     public class CursoViewModel
@@ -40,6 +42,20 @@ namespace SmartLMS.WebUI.Models
                 Aulas = profundidade > 2
                 ? AulaViewModel.FromEntityList(item.Aulas.Where(a => a.Ativo).OrderBy(x => x.Ordem), profundidade) 
                 : new List<AulaViewModel>()
+            };
+        }
+
+        internal static CursoViewModel FromEntity(IndiceCurso indice)
+        {
+            return new CursoViewModel
+            {
+                IdAssunto = indice.Curso.Assunto.Id,
+                Imagem = indice.Curso.Imagem,
+                Ordem = indice.Curso.Ordem,
+                Nome = indice.Curso.Nome,
+                Id = indice.Curso.Id,
+                NomeProfessorResponsavel = indice.Curso.ProfessorResponsavel.Nome,
+                Aulas = AulaViewModel.FromEntityList(indice.AulasInfo)
             };
         }
 

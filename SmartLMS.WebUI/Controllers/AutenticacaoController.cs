@@ -81,5 +81,27 @@ namespace SmartLMS.WebUI.Controllers
             return Redirect("Login");
         }
 
+
+        public ActionResult AlterarSenha()
+        {
+            AlterarSenhaViewModel viewModel = new AlterarSenhaViewModel();
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AlterarSenha(AlterarSenhaViewModel novaSenha)
+        {
+            if (ModelState.IsValid)
+            {
+                ServicoAutenticacao autenticacao = new ServicoAutenticacao(_contexto);
+                autenticacao.AlterarUsuario(_usuarioLogado.Id, _usuarioLogado.Nome, _usuarioLogado.Email, _usuarioLogado.Login, novaSenha.Senha, _usuarioLogado.Ativo);
+                TempData["TipoMensagem"] = "success";
+                TempData["TituloMensagem"] = "Notificação";
+                TempData["Mensagem"] = "Senha alterada com sucesso!";
+                return RedirectToAction("Index", "Home");
+            }
+            return View(novaSenha);
+        }
     }
 }

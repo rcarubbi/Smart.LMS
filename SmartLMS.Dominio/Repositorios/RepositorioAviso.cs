@@ -27,7 +27,7 @@ namespace SmartLMS.Dominio.Repositorios
                     || (a.Turma == null && a.Usuario == null))
                     && (!a.Usuarios.Any(u => u.DataVisualizacao.HasValue && u.IdUsuario == idUsuario)))
                     .OrderByDescending( x=> x.DataHora)
-                    .Take(10).ToList();
+                    .Take(2).ToList();
         }
 
     }

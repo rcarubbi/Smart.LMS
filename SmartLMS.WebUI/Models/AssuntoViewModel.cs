@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using SmartLMS.Dominio.Entidades;
 using System.Linq;
+using SmartLMS.Dominio.Repositorios;
+
 namespace SmartLMS.WebUI.Models
 {
     public class AssuntoViewModel

@@ -84,8 +84,12 @@
     <Compile Include="Entidades\Usuario.cs" />
     <Compile Include="IContexto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositorios\AulaInfo.cs" />
+    <Compile Include="Repositorios\IndiceCurso.cs" />
+    <Compile Include="Repositorios\RepositorioAcessoAula.cs" />
     <Compile Include="Repositorios\RepositorioAreaConhecimento.cs" />
     <Compile Include="Repositorios\RepositorioAssunto.cs" />
+    <Compile Include="Repositorios\RepositorioAula.cs" />
     <Compile Include="Repositorios\RepositorioAviso.cs" />
     <Compile Include="Repositorios\RepositorioCurso.cs" />
     <Compile Include="Repositorios\RepositorioParametro.cs" />

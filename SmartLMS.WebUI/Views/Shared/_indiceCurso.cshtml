@@ -6,25 +6,39 @@
         <div class="list-group">
             @foreach (var aula in Model.Aulas)
             {
-                <a href="@Url.Action("Ver", "Aula", new { Id = aula.Id })" class="link-group-item">
-                    <div class="list-group-item">
-                        <div class="row-action-primary">
-                            <i class="fa fa-laptop"></i>
-                        </div>
-                        <div class="row-content">
+                if (aula.Disponivel)
+                {
+                    @:<a href="@Url.Action("Ver", "Aula", new { Id = aula.Id })" class="link-group-item">
+                }
+                <div class="list-group-item">
+                    <div class="row-action-primary" @if (!aula.Disponivel) { <text>data-toggle="tooltip" data-placement="right" data-container="body" data-original-title="Você não tem acesso a esta aula"</text> } >
+                        <i class="fa fa-laptop"></i>
+                    </div>
+                    <div class="row-content">
+
+                        @if (aula.Disponivel)
+                        {
                             <div class="action-secondary">
                                 <div class="progress progress-line-primary">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 30%;">
-                                        <span class="sr-only">60% Complete</span>
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="@aula.Percentual" aria-valuemin="0" aria-valuemax="100" style="width: @aula.Percentual%;">
+                                        <span class="sr-only">">@(aula.Percentual)% Concluída</span>
                                     </div>
                                 </div>
                             </div>
-                            <h5>@aula.Nome</h5>
-                            <label>Professor: </label><span> @aula.NomeProfessor</span>
-                        </div>
+                        }
+                        else
+                        {
+                             <label class="pull-right label label-default"><i class="fa fa-lock"></i></label>
+                        }
+                        <h5>@aula.Nome</h5>
+                        <label>Professor: </label><span> @aula.NomeProfessor</span>
                     </div>
-                </a>
-                    <div class="list-group-separator"></div>
+                </div>
+                if (aula.Disponivel)
+                {
+                    @:</a>
+                }
+                <div class="list-group-separator"></div>
             }
         </div>
         <a href="@Url.Action("Index", "Curso", new { Id = Model.IdAssunto })" class="btn btn-primary pull-right">

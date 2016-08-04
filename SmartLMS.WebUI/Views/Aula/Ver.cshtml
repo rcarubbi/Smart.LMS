@@ -1,0 +1,70 @@
+﻿@model SmartLMS.WebUI.Models.AulaViewModel
+@{
+    ViewBag.Title = "Ver";
+}
+
+<div class="card">
+    <div class="content">
+        <h2 class="titulo-indice">@Model.Nome</h2>
+        <iframe id="videoFrame" src='@Url.Action("ReproduzirVideoVimeo", "Aula", new { id = Model.Id})'
+                frameborder='0'
+                webkitAllowFullScreen
+                mozallowfullscreen
+                allowFullScreen></iframe>
+    </div>
+
+</div>
+
+
+<script id="vimeo-template" type="text/x-handlebars-template">
+    <iframe src='Aula/ReproduzirVideoVimeo/{{id}}'
+            frameborder='0'
+            webkitAllowFullScreen
+            mozallowfullscreen
+            allowFullScreen></iframe>
+</script>
+
+@section scripts {
+    <script src="https://f.vimeocdn.com/js/froogaloop2.min.js"></script>
+    <script>
+        (function () {
+            var $private = {};
+            $(function () {
+                $private.progress = [];
+                var iframe = $('#videoFrame')[0];
+                var player = $f(iframe);
+                player.addEvent('ready', $private.vimeoReadyEvent);
+                player.addEvent('playProgress', $private.vimeoPlayProgressEvent);
+                player.addEvent('pause', vimeoPauseEvent);
+
+              
+                setInterval(updateProgress, 30000);
+            });
+
+
+            $private.vimeoPauseEvent = function (data) {
+                updateProgress();
+            }
+
+            $private.updateProgress = function () {
+                $.post('/callback', {
+                    progress: $private.progress
+                });
+            };
+
+            $private.vimeoPlayProgressEvent = function (data) {
+                var currentPercent = Math.ceil(data.percent * 100);
+
+                if ($private.progress.indexOf(currentPercent) != -1) {
+                    return;
+                }
+
+                $private.progress.push(currentPercent);
+            };
+
+
+        }());
+      
+
+    </script>
+}

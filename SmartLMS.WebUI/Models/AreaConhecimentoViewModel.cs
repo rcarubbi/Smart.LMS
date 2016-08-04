@@ -1,4 +1,5 @@
 ﻿using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace SmartLMS.WebUI.Models
             }
         }
 
-        internal static AreaConhecimentoViewModel FromEntity(AreaConhecimento area, int profundidade)
+        internal static AreaConhecimentoViewModel FromEntity(AreaConhecimento area, int profundidade )
         {
             return new AreaConhecimentoViewModel
             {

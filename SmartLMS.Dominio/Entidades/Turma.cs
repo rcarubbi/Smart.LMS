@@ -8,7 +8,10 @@ namespace SmartLMS.Dominio.Entidades
 {
         public DateTime DataInicio { get; set; }
 
+        public virtual ICollection<Aula> AulasDisponiveis { get; set; }
+
         public virtual Curso Curso { get; set; }
+
         public virtual ICollection<TurmaAluno> Alunos { get; set; }
     }
 }
