@@ -21,7 +21,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             var assuntoRepo = new RepositorioAssunto(_contexto);
             var assunto = assuntoRepo.ObterPorId(id);
-            AssuntoViewModel viewModel = AssuntoViewModel.FromEntity(assunto);
+            AssuntoViewModel viewModel = AssuntoViewModel.FromEntity(assunto, 3);
             return PartialView("_indiceAssunto", viewModel);
         }
 
@@ -29,7 +29,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             var assuntoRepo = new RepositorioAssunto(_contexto);
             var assunto = assuntoRepo.ObterPorId(id);
-            AssuntoViewModel viewModel = AssuntoViewModel.FromEntity(assunto);
+            AssuntoViewModel viewModel = AssuntoViewModel.FromEntity(assunto, 3);
             ViewBag.OutrosAssuntos = new SelectList(assunto.AreaConhecimento.Assuntos.Except(new List<Assunto> { assunto }), "Id", "Nome");
             return View(viewModel);
         }

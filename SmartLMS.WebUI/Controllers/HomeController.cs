@@ -17,8 +17,7 @@ namespace SmartLMS.WebUI.Controllers
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
-            servicoBusca = new ServicoBuscaContextual(_contexto, usuarioRepo.ObterPorLogin(HttpContext.User.Identity.Name));
+            servicoBusca = new ServicoBuscaContextual(_contexto, _usuarioLogado);
         }
 
         public HomeController(IContexto contexto)
@@ -30,11 +29,11 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult Index()
         {
             RepositorioAreaConhecimento areaRepo = new RepositorioAreaConhecimento(_contexto);
-            ConteudoPrincipalViewModel viewModel = new ConteudoPrincipalViewModel();
-            viewModel.TituloAulasAssistidas = Parametro.TITULO_AULAS_ASSISTIDAS;
-            viewModel.TituloUltimosCursos = Parametro.TITULO_ULTIMOS_CURSOS;
-            viewModel.TituloUltimasAulas = Parametro.TITULO_ULTIMAS_AULAS;
-            viewModel.AreasConhecimento = AreaConhecimentoViewModel.FromEntityList(areaRepo.ListarAreasConhecimento());
+            var viewModel = AreaConhecimentoViewModel.FromEntityList(areaRepo.ListarAreasConhecimento(), 2);
+
+          
+            TempData["TituloAulasAssistidas"] = Parametro.TITULO_AULAS_ASSISTIDAS;
+            TempData["TituloUltimasAulas"] = Parametro.TITULO_ULTIMAS_AULAS;
             return View(viewModel);
         }
 

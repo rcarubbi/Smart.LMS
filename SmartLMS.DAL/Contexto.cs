@@ -63,6 +63,7 @@ namespace SmartLMS.DAL
             modelBuilder.Entity<Curso>().HasMany(x => x.Aulas).WithRequired(a => a.Curso);
 
             modelBuilder.Configurations.Add(new TurmaAlunoConfiguration());
+            modelBuilder.Configurations.Add(new UsuarioAvisoConfiguration());
         }
 
         public IDbSet<TEntidade> ObterLista<TEntidade>() where TEntidade : class

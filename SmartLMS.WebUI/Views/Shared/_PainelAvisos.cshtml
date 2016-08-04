@@ -1,0 +1,55 @@
+﻿@model IEnumerable<SmartLMS.WebUI.Models.AvisoViewModel>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Avisos</h3>
+    </div>
+    <div class="panel-body" style="overflow: auto; height: 252px;" id="corpo-painel-avisos">
+            @foreach (var item in Model)
+            {
+                <div class="bs-component aviso" data-id="@item.Id">
+                    <div class="alert alert-dismissible alert-default">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        <div class="tipo-aviso">
+                            @if (item.MensagemDireta)
+                            {
+                                <span class="label label-danger">Pessoal</span>
+                            }
+                            else if (item.DataTurma.HasValue)
+                            {
+                                <span class="label label-warning">Turma @item.DataTurmaTexto</span>
+                            }
+                            else
+                            {
+                                <span class="label label-info">Geral</span>
+                            }
+                        </div>
+                        <strong>@item.DataHora</strong>
+                        @item.Texto
+                    </div>
+                </div>
+            }
+    </div>
+</div>
+
+
+
+<script id="aviso-template" type="text/x-handlebars-template">
+    <div class="bs-component aviso" data-id="{{Id}}">
+        <div class="alert alert-dismissible alert-default">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <div class="tipo-aviso">
+                {{#if MensagemDireta}}
+                <span class="label label-danger">Pessoal</span>
+                {{else}}
+                    {{#if MensagemDireta}}
+                        <span class="label label-warning">Turma {{DataTurmaTexto}}</span>
+                    {{else}}
+                        <span class="label label-info">Geral</span>
+                    {{/if}}
+                {{/if}}
+            </div>
+            <strong>{{DataHora}}</strong>
+            {{Texto}}
+        </div>
+    </div>
+</script>

@@ -20,7 +20,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             var cursoRepo = new RepositorioCurso(_contexto);
             var curso = cursoRepo.ObterPorId(id);
-            CursoViewModel viewModel = CursoViewModel.FromEntity(curso);
+            CursoViewModel viewModel = CursoViewModel.FromEntity(curso, 3);
             ViewBag.OutrosCursos = new SelectList(curso.Assunto.Cursos.Except(new List<Curso> { curso }), "Id", "Nome");
             return View(viewModel);
         }
@@ -29,8 +29,14 @@ namespace SmartLMS.WebUI.Controllers
         {
             var cursoRepo = new RepositorioCurso(_contexto);
             var curso = cursoRepo.ObterPorId(id);
-            CursoViewModel viewModel = CursoViewModel.FromEntity(curso);
+            CursoViewModel viewModel = CursoViewModel.FromEntity(curso, 3);
             return PartialView("_indiceCurso", viewModel);
         }
+
+        [ChildActionOnly]
+        public ActionResult ExibirPainelNovasAulas() {
+            return PartialView("_PainelNovasAulas", new List<AulaViewModel>());
+        }
+
     }
 }

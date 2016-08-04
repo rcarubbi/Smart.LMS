@@ -1,5 +1,6 @@
 ﻿using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Repositorios;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -7,6 +8,7 @@ namespace SmartLMS.WebUI.Controllers
 {
     public class BaseController : Controller
     {
+        protected Usuario _usuarioLogado;
         protected IContexto _contexto;
         public BaseController(IContexto contexto)
         {
@@ -22,6 +24,13 @@ namespace SmartLMS.WebUI.Controllers
             ViewBag.Curso = Parametro.CURSO;
             ViewBag.Aula = Parametro.AULA;
             ViewBag.AreaConhecimentoPlural = Parametro.AREA_CONHECIMENTO_PLURAL;
+            
+            RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                _usuarioLogado = usuarioRepo.ObterPorLogin(HttpContext.User.Identity.Name);
+                ViewBag.IdUsuarioLogado = _usuarioLogado.Id.ToString();
+            }
         }
     }
 }

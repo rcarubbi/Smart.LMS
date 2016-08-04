@@ -1,4 +1,6 @@
-﻿namespace SmartLMS.Dominio.Entidades
+﻿using System.Collections.Generic;
+
+namespace SmartLMS.Dominio.Entidades
 {
     public abstract class Usuario : Entidade
     {
@@ -12,6 +14,6 @@
 
         public string Email { get; set; }
 
-
+        public virtual ICollection<UsuarioAviso> Avisos { get; set; }
     }
 }

@@ -18,7 +18,7 @@
         public const string CHAVE_ARQUIVO = "NomeArquivo";
         public const string NOME_PROJETO = "NomeProjeto";
         public static string CHAVE_TITULO_AULAS_ASSISTIDAS = "TituloAulasAssistidas";
-        public static string CHAVE_TITULO_ULTIMOS_CURSOS = "TituloUltimosCursos";
+ 
         public static string CHAVE_TITULO_ULTIMAS_AULAS = "TituloUltimasAulas";
 
         public static string AREA_CONHECIMENTO_PLURAL { get; set; }
@@ -36,7 +36,7 @@
         public static string AULA { get;  set; }
         public static string ARQUIVO { get;  set; }
         public static string TITULO_AULAS_ASSISTIDAS { get; set; }
-        public static string TITULO_ULTIMOS_CURSOS { get; set; }
+        
         public static string TITULO_ULTIMAS_AULAS { get; set; }
     }
 }

@@ -18,6 +18,6 @@ namespace SmartLMS.Dominio.Entidades
 
         public int Ordem { get; set; }
 
-    
+        public DateTime DataInclusao { get; set; }
     }
 }

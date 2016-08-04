@@ -1,0 +1,31 @@
+﻿@model IEnumerable<SmartLMS.WebUI.Models.AulaViewModel>
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h3 class="panel-title">@TempData["TituloUltimasAulas"]</h3>
+    </div>
+    <div class="panel-body">
+        <div class="bs-component">
+            <div class="list-group">
+                @foreach (var item in Model)
+                {
+                    <div class="list-group-item">
+                        <a href="@Url.Action("Ver","Aula", new { Id = item.Id })" class='link-group-item'>
+                            <div class="row-action-primary">
+                                <i class="fa fa-laptop"></i>
+                            </div>
+                            <div class="row-content">
+                                <div class="least-content">@item.DataInclusao</div>
+                                <h4 class="list-group-item-heading">@item.NomeCurso</h4>
+                                <p class="list-group-item-text">@item.Nome</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="list-group-separator"></div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>

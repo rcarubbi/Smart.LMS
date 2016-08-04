@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Contexto.cs" />
     <Compile Include="Mapeamento\TurmaAlunoConfiguration.cs" />
+    <Compile Include="Mapeamento\UsuarioAvisoConfiguration.cs" />
     <Compile Include="Migrations\201607281626129_ModeloInicial.cs" />
     <Compile Include="Migrations\201607281626129_ModeloInicial.Designer.cs">
       <DependentUpon>201607281626129_ModeloInicial.cs</DependentUpon>
@@ -82,6 +83,18 @@
     <Compile Include="Migrations\201608012041549_v5.cs" />
     <Compile Include="Migrations\201608012041549_v5.Designer.cs">
       <DependentUpon>201608012041549_v5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608032114043_v6.cs" />
+    <Compile Include="Migrations\201608032114043_v6.Designer.cs">
+      <DependentUpon>201608032114043_v6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608032139334_v7.cs" />
+    <Compile Include="Migrations\201608032139334_v7.Designer.cs">
+      <DependentUpon>201608032139334_v7.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608032154114_v8.cs" />
+    <Compile Include="Migrations\201608032154114_v8.Designer.cs">
+      <DependentUpon>201608032154114_v8.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,6 +126,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608012041549_v5.resx">
       <DependentUpon>201608012041549_v5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608032114043_v6.resx">
+      <DependentUpon>201608032114043_v6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608032139334_v7.resx">
+      <DependentUpon>201608032139334_v7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608032154114_v8.resx">
+      <DependentUpon>201608032154114_v8.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,5 @@
 ﻿@using SmartLMS.Dominio.Entidades;
-@model SmartLMS.WebUI.Models.CabecalhoViewModel   
+@model SmartLMS.WebUI.Models.CabecalhoViewModel
 <nav class="navbar navbar-primary navbar-static-top">
     <div class="container">
         <div class="navbar-header">
@@ -13,7 +13,19 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-               
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        @ViewBag.AreaConhecimentoPlural
+                        <b class="caret"></b>
+                        <div class="ripple-container"></div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        @foreach (var item in Model.AreasConhecimento)
+                        {
+                            <li><a href="@Url.Action("Index", "Assunto", new { Id = item.Id })">@item.Nome</a></li>
+                        }
+                    </ul>
+                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administração <span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -33,13 +45,13 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">person</i>@Model.Usuario.Nome <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li><a href="#">Histórico</a></li>
                         <li><a href="#">Alterar Senha</a></li>
-                        <li><a href="#">Sair</a></li>
+                        <li><a href="@Url.Action("Sair", "Autenticacao")">Sair</a></li>
                     </ul>
                 </li>
-               
+
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </nav>
- 

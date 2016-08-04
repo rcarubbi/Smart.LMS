@@ -66,6 +66,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Humanizer, Version=2.1.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Humanizer.Core.2.1.0\lib\netstandard1.0\Humanizer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -181,6 +185,7 @@
     <Compile Include="Controllers\AssuntoController.cs" />
     <Compile Include="Controllers\AulaController.cs" />
     <Compile Include="Controllers\AutenticacaoController.cs" />
+    <Compile Include="Controllers\AvisoController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CursoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -199,8 +204,8 @@
     <Compile Include="Models\ArquivoViewModel.cs" />
     <Compile Include="Models\AssuntoViewModel.cs" />
     <Compile Include="Models\AulaViewModel.cs" />
+    <Compile Include="Models\AvisoViewModel.cs" />
     <Compile Include="Models\CabecalhoViewModel.cs" />
-    <Compile Include="Models\ConteudoPrincipalViewModel.cs" />
     <Compile Include="Models\CursoViewModel.cs" />
     <Compile Include="Models\EsqueciMinhaSenhaViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
@@ -219,8 +224,16 @@
     <Content Include="Content\img\arrow-left.png" />
     <Content Include="Content\img\arrow-right.cur" />
     <Content Include="Content\img\arrow-right.png" />
+    <Content Include="Content\img\aspnet.png" />
+    <Content Include="Content\img\csharp.png" />
+    <Content Include="Content\img\css.png" />
     <Content Include="Content\img\gif-load.gif" />
+    <Content Include="Content\img\html.png" />
+    <Content Include="Content\img\jquery.jpg" />
+    <Content Include="Content\img\mvc.png" />
     <Content Include="Content\img\sem-imagem.png" />
+    <Content Include="Content\img\smart.png" />
+    <Content Include="Content\img\universalapps.jpg" />
     <Content Include="Content\jquery.dropdown\jquery.dropdown.css" />
     <Content Include="Content\listgroup.css" />
     <Content Include="Content\material-design\bootstrap-material-design.css" />
@@ -358,6 +371,9 @@
     <Content Include="Views\Assunto\Index.cshtml" />
     <Content Include="Views\Shared\_indiceAssunto.cshtml" />
     <Content Include="Views\Shared\_indiceCurso.cshtml" />
+    <Content Include="Views\Shared\_PainelNovasAulas.cshtml" />
+    <Content Include="Views\Shared\_PainelUltimasAulas.cshtml" />
+    <Content Include="Views\Shared\_PainelAvisos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

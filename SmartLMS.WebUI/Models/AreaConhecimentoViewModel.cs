@@ -1,9 +1,7 @@
-﻿using System;
+﻿using SmartLMS.Dominio.Entidades;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SmartLMS.Dominio.Entidades;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -16,22 +14,24 @@ namespace SmartLMS.WebUI.Models
         public Guid Id { get; set; }
         public string Nome { get; set; }
 
-        internal static IEnumerable<AreaConhecimentoViewModel> FromEntityList(IEnumerable<AreaConhecimento> areas)
+        internal static IEnumerable<AreaConhecimentoViewModel> FromEntityList(IEnumerable<AreaConhecimento> areas, int profundidade)
         {
             foreach (var item in areas)
             {
-                yield return FromEntity(item);
+                yield return FromEntity(item, profundidade);
             }
         }
 
-        internal static AreaConhecimentoViewModel FromEntity(AreaConhecimento area)
+        internal static AreaConhecimentoViewModel FromEntity(AreaConhecimento area, int profundidade)
         {
             return new AreaConhecimentoViewModel
             {
                 Ordem = area.Ordem,
                 Nome = area.Nome,
                 Id = area.Id,
-                Assuntos = AssuntoViewModel.FromEntityList(area.Assuntos.Where(x =>x.Ativo).OrderBy(x => x.Ordem))
+                Assuntos = profundidade > 0
+                ? AssuntoViewModel.FromEntityList(area.Assuntos.Where(x =>x.Ativo).OrderBy(x => x.Ordem), profundidade)
+                : new List<AssuntoViewModel>()
             };
         }
     }

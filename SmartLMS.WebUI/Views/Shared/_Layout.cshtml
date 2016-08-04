@@ -31,6 +31,9 @@
     </script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script>
+        SmartLMS.IdUsuarioLogado = '@ViewBag.IdUsuarioLogado';
+    </script>
     @RenderSection("scripts", required: false)
 
 

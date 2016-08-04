@@ -64,11 +64,13 @@
     <Compile Include="Entidades\AcessoArquivo.cs" />
     <Compile Include="Entidades\Administrador.cs" />
     <Compile Include="Entidades\Aluno.cs" />
+    <Compile Include="Entidades\UsuarioAviso.cs" />
     <Compile Include="Entidades\AreaConhecimento.cs" />
     <Compile Include="Entidades\Arquivo.cs" />
     <Compile Include="Entidades\Assunto.cs" />
     <Compile Include="Entidades\Aula.cs" />
     <Compile Include="Entidades\AcessoAula.cs" />
+    <Compile Include="Entidades\Aviso.cs" />
     <Compile Include="Entidades\Curso.cs" />
     <Compile Include="Entidades\Entidade.cs" />
     <Compile Include="Entidades\IResultadoBusca.cs" />
@@ -84,8 +86,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositorios\RepositorioAreaConhecimento.cs" />
     <Compile Include="Repositorios\RepositorioAssunto.cs" />
+    <Compile Include="Repositorios\RepositorioAviso.cs" />
     <Compile Include="Repositorios\RepositorioCurso.cs" />
     <Compile Include="Repositorios\RepositorioParametro.cs" />
+    <Compile Include="Repositorios\RepositorioTurma.cs" />
     <Compile Include="Repositorios\RepositorioUsuario.cs" />
     <Compile Include="Servicos\ResultadoBusca.cs" />
     <Compile Include="Servicos\ServicoAutenticacao.cs" />

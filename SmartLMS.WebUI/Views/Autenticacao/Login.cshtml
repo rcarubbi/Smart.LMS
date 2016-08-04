@@ -51,16 +51,16 @@
          
         </div>
         <div class="footer text-center">
-            <input type="submit" name="login-submit" id="login-submit" class="btn btn-simple btn-primary btn-lg" value="Entrar">
+            <button name="login-submit" id="login-submit" class="btn btn-simple btn-primary btn-lg">Entrar</button>
         </div>
         <div style="display: none; margin-top: 5px" id="loading" class="text-center">
             <img src="~/Content/img/gif-load.gif" />
         </div>
-        <div id="ValidationSummaryContainer">
+       
+            <div id="ValidationSummaryContainer" class="container">
 
-        </div>
-
-
+            </div>
+        
         <div class="text-center">
             @Html.ActionLink("Esqueceu a senha?", "EsqueciMinhaSenha", null, new { @class = "btn btn-simple forgot-password" })
         </div>

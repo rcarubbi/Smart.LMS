@@ -2,10 +2,7 @@ namespace SmartLMS.DAL.Migrations
 {
     using Carubbi.Utils.Security;
     using Dominio.Entidades;
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<SmartLMS.DAL.Contexto>
     {
@@ -151,12 +148,6 @@ namespace SmartLMS.DAL.Migrations
                     {
                         Chave = Parametro.CHAVE_TITULO_AULAS_ASSISTIDAS,
                         Valor = "Últimos trechos assistidos",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        Chave = Parametro.CHAVE_TITULO_ULTIMOS_CURSOS,
-                        Valor = "Novas trilhas",
                         Ativo = true
                     },
                     new Parametro

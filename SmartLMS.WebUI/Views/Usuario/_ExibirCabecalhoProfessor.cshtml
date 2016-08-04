@@ -13,27 +13,39 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="#about">Sobre</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        @ViewBag.AreaConhecimentoPlural
+                        <b class="caret"></b>
+                        <div class="ripple-container"></div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        @foreach (var item in Model.AreasConhecimento)
+                        {
+                            <li><a href="@Url.Action("Index", "Assunto", new { Id = item.Id })">@item.Nome</a></li>
+                        }
+                    </ul>
+                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administração <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Usuários</a></li>
                         <li><a href="#">Cursos</a></li>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Relatórios de Acesso</li>
                         <li><a href="#">Visualização de Aulas</a></li>
                         <li><a href="#">Download de Materiais</a></li>
-                        <li><a href="#">Log Geral</a></li>
                     </ul>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="#about">Sobre</a></li>
                 <li><a href="#contact">Fale Conosco</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">person</i>@Model.Nome <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">person</i>@Model.Usuario.Nome <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li><a href="#">Histórico</a></li>
                         <li><a href="#">Alterar Senha</a></li>
-                        <li><a href="#">Sair</a></li>
+                        <li><a href="@Url.Action("Sair", "Autenticacao")">Sair</a></li>
                     </ul>
                 </li>
 
