@@ -1,4 +1,7 @@
 ﻿@model IEnumerable<SmartLMS.WebUI.Models.AreaConhecimentoViewModel>
+@{
+    ViewBag.Title = "Home";
+}
 @Html.Partial("_BuscaContextual")
 
 <div class="row">
@@ -71,11 +74,11 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-6">
         @Html.Action("ExibirPainelNovasAulas", "Aula")
     </div>
-    <div class="col-md-5">
-        @Html.Action("ExibirUltimasAulas", "Usuario")
+    <div class="col-md-6">
+        @Html.Action("ExibirUltimasAulas", "Aula")
       
     </div>
      

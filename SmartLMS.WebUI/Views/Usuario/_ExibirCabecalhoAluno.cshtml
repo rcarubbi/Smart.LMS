@@ -9,10 +9,16 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            @Html.ActionLink(Parametro.PROJETO, "Index", "Home", null, new { @class = "navbar-brand" })
+           
+            <div id="logo" class="img-circle img-raised navbar-brand">
+                <img src="~/content/img/logo.png" width="40" height="40" alt="@Parametro.PROJETO logo" rel="tooltip">
+            </div>  
+            @Html.ActionLink(Parametro.PROJETO, "Index", "Home", null, new { @class = "navbar-brand" })              
         </div>
         <div id="navbar" class="navbar-collapse collapse">
+            
             <ul class="nav navbar-nav">
+              
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         @ViewBag.AreaConhecimentoPlural

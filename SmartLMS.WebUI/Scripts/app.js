@@ -80,6 +80,8 @@ SmartLMS.App = (function () {
         }
     };
 
+    
+
     $private.initializeDropdownJs = function () {
         $("select.dropdownjs").dropdownjs();
     };
@@ -102,11 +104,40 @@ SmartLMS.App = (function () {
         });
     };
 
+    $private.initializeSlimControl = function () {
+        if ($private.resize) {
+            $('.sidebar-container').slimScroll({ destroy: true });
+        }
+        $('.sidebar-container').slimScroll({
+            height: window.innerHeight - $(".navbar").height() - $(".footer").height() - 40,
+            railOpacity: 0.4,
+            wheelStep: 10,
+            size: 10
+        });
+        $private.resize = true;
+    };
+
+    $private.resizeSlimControl = function () {
+        if ($private.mhResizeTimeout) {
+            window.clearTimeout($private.mhResizeTimeout);
+        }
+        $private.mhResizeTimeout = 0;
+        $private.mhResizeTimeout = window.setTimeout(doResizeStuff, 100);
+    };
+
+    function doResizeStuff() {
+        $private.mhResizeTimeout = 0;
+        $private.initializeSlimControl();
+    }
+
     $(function () {
         $.each($("input[data-autocomplete]"), $private.createAutoComplete);
         $private.initializeDropdownJs();
         $private.initializeToastr();
         $public.initializeCarouselMulti();
+        $private.initializeSlimControl();
+        $(window).on("resize", $private.resizeSlimControl);
+        
         $(document).ajaxError(function (event, xhr, options, thrownError) {
             var erro = $(xhr.responseText).filter("span").find("h2 > i").text();
             if (erro != "")

@@ -1,4 +1,64 @@
-﻿ 
+﻿body {
+    overflow: hidden;
+}
+
+#logo {
+    background-color: black;
+    width: 55px;
+    height: 55px;
+    margin-right: 10px;
+}
+
+#logo img {
+    top: 7px;
+    position: absolute;
+    left: 8px;
+}
+
+.navbar .navbar-brand {
+    text-transform: uppercase;
+}
+
+footer.footer-black {
+    padding: 0px 0;
+    background: #232323;
+    background: -moz-radial-gradient(center, ellipse cover, #585858 0%, #232323 100%);
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #585858), color-stop(100%, #232323));
+    background: -webkit-radial-gradient(center, ellipse cover, #585858 0%, #232323 100%);
+    background: -o-radial-gradient(center, ellipse cover, #585858 0%, #232323 100%);
+    background: -ms-radial-gradient(center, ellipse cover, #585858 0%, #232323 100%);
+    background: radial-gradient(ellipse at center, #585858 0%, #232323 100%);
+    background-size: 550% 450%;
+}
+
+    footer.footer-black .copyright {
+        color: white;
+    }
+
+        footer.footer-black .copyright a {
+            color: white;
+        }
+
+footer ul li {
+    color: white;
+    text-transform: uppercase;
+    padding: 15px;
+    font-weight: 400;
+}
+
+h2 {
+    font-size: 2.2em;
+}
+
+
+.nome-aula {
+    margin-bottom: 3px;
+}
+
+.progress {
+    height: 7px;
+    margin-bottom: 5px;
+}
 
 .popover, .tooltip-inner {
     color: white;
@@ -18,14 +78,13 @@
 }
 
 body {
-   	background: -webkit-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);
-	background: -moz-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);
-	background: -ms-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);
-	background: -o-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);
-	background: radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);
-	background-size: 10px 10px, 10px 10px, 100% 100%;
-	background-position: 1px 1px, 0px 0px, center center;
-
+    background: -webkit-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);
+    background: -moz-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);
+    background: -ms-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);
+    background: -o-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);
+    background: radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);
+    background-size: 10px 10px, 10px 10px, 100% 100%;
+    background-position: 1px 1px, 0px 0px, center center;
 }
 
 .panel-body-no-margin .form-group {
@@ -33,9 +92,9 @@ body {
 }
 
 .navbar .navbar-toggle .icon-bar {
-  background-color: inherit;
-  border: 1px solid;
-  color: white;
+    background-color: inherit;
+    border: 1px solid;
+    color: white;
 }
 
 .titulo-indice {
@@ -43,28 +102,28 @@ body {
 }
 
 .panel {
-  border-radius: 15px;
-  border: 0;
-  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.22), 0 5px 10px 0 rgba(0, 0, 0, 0.22);
+    border-radius: 15px;
+    border: 0;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.22), 0 5px 10px 0 rgba(0, 0, 0, 0.22);
 }
 
 
 .panel-heading {
-  border-top-right-radius: 15px;
-  border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
 }
 
-.panel-heading a:hover {
-    text-decoration: none;
-}
+    .panel-heading a:hover {
+        text-decoration: none;
+    }
 
 
-.nav-pills > li.active i , .nav-pills > li.active p {
+.nav-pills > li.active i, .nav-pills > li.active p {
     color: white;
 }
 
 .progress.progress-line-primary {
-  background: rgba(0, 100, 0, 0.2);
+    background: rgba(0, 100, 0, 0.2);
 }
 
 @media (min-width: 992px ) {
@@ -106,11 +165,12 @@ body {
 }
 
 .close {
-  color: #666 !important;
+    color: #666 !important;
 }
-.close:hover, .close:focus {
-  color: #ccc !important;
-}
+
+    .close:hover, .close:focus {
+        color: #ccc !important;
+    }
 
 
 

@@ -33,13 +33,7 @@ namespace SmartLMS.WebUI.Controllers
             return PartialView($"_ExibirCabecalho{viewModel.Usuario.NomePerfil}", viewModel);
         }
 
-        [ChildActionOnly]
-        public ActionResult ExibirUltimasAulas()
-        {
-          
-
-            return PartialView("_PainelUltimasAulas", new List<AulaViewModel>());
-        }
+     
 
 
       

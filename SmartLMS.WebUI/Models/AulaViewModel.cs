@@ -19,6 +19,10 @@ namespace SmartLMS.WebUI.Models
 
         public decimal Percentual { get; set; }
 
+        public decimal Segundos { get; set; }
+
+        public Guid IdCurso { get; set; }
+
         public Guid Id { get; set; }
         public IEnumerable<ArquivoViewModel> Arquivos { get; private set; }
         public string Conteudo { get; private set; }
@@ -40,6 +44,7 @@ namespace SmartLMS.WebUI.Models
             return new AulaViewModel
             {
                 Id = item.Id,
+                IdCurso = item.Curso.Id,
                 Nome = item.Nome,
                 Conteudo = item.Conteudo,
                 TipoConteudo = item.Tipo,
@@ -69,13 +74,16 @@ namespace SmartLMS.WebUI.Models
             return new AulaViewModel
             {
                 Id = item.Aula.Id,
+                IdCurso = item.Aula.Curso.Id,
                 Nome = item.Aula.Nome,
                 Conteudo = item.Aula.Conteudo,
                 TipoConteudo = item.Aula.Tipo,
                 NomeProfessor = item.Aula.Professor.Nome,
                 DataInclusao = item.Aula.DataInclusao,
                 NomeCurso = item.Aula.Curso.Nome,
-                Disponivel = item.Disponivel
+                Disponivel = item.Disponivel,
+                Percentual = item.Percentual,
+                Segundos = item.Segundos
             };
         }
 
@@ -84,6 +92,7 @@ namespace SmartLMS.WebUI.Models
             return new AulaViewModel
             {
                 Id = item.Aula.Id,
+                IdCurso = item.Aula.Curso.Id,
                 Nome = item.Aula.Nome,
                 Conteudo = item.Aula.Conteudo,
                 TipoConteudo = item.Aula.Tipo,
@@ -91,8 +100,12 @@ namespace SmartLMS.WebUI.Models
                 DataInclusao = item.Aula.DataInclusao,
                 NomeCurso = item.Aula.Curso.Nome,
                 Disponivel = item.Disponivel,
+                Percentual = item.Percentual,
+                Segundos = item.Segundos,
                 Arquivos = ArquivoViewModel.FromEntityList(item.Aula.Arquivos)
             };
         }
+
+        
     }
 }

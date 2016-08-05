@@ -8,10 +8,12 @@ namespace SmartLMS.Dominio.Entidades
 
         public virtual Aula Aula { get; set; }
 
-        public virtual Aluno Aluno { get; set; }
+        public virtual Usuario Usuario{ get; set; }
 
         public DateTime DataHoraAcesso { get; set; }
 
         public int Percentual { get; set; }
+
+        public decimal Segundos { get; set; }
     }
 }

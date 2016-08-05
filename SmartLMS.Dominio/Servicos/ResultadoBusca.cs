@@ -91,7 +91,8 @@ namespace SmartLMS.Dominio.Servicos
                 Tipo = (TipoResultado)(Enum.Parse(typeof(TipoResultado), ObjectContext.GetObjectType(item.GetType()).Name))
             };
 
-            if (resultado.Tipo == TipoResultado.Arquivo && contexto.ObterLista<AcessoArquivo>().Any(x => x.Arquivo.Id == resultado.Id))
+            // descomentar se quiser exibir barra de progresso da aula e icone de arquivo baixado no resultado da busca contextual
+            /*if (resultado.Tipo == TipoResultado.Arquivo && contexto.ObterLista<AcessoArquivo>().Any(x => x.Arquivo.Id == resultado.Id))
             {
                 resultado.Percentual = 100;
             }
@@ -104,7 +105,7 @@ namespace SmartLMS.Dominio.Servicos
                 {
                     resultado.Percentual = acessoMaisLongo.Percentual;
                 }
-            }
+            }*/
  
             return resultado;
         }

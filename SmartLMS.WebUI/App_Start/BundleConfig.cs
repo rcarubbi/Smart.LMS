@@ -30,6 +30,7 @@ namespace SmartLMS.WebUI
                       "~/Scripts/material-kit/nouislider.min.js",
                       "~/Scripts/material-kit/material-kit.js",
                       "~/Scripts/toastr/toastr.min.js",
+                      "~/Scripts/slimscroll/jquery.slimscroll.min.js",
                       "~/Scripts/app.js"));
                       
 

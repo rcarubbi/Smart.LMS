@@ -1,70 +1,139 @@
 ﻿@model SmartLMS.WebUI.Models.AulaViewModel
 @{
-    ViewBag.Title = "Ver";
+    ViewBag.Title = ViewBag.Aula + " " + Model.Nome;
+}
+@section styles {
+    <style type="text/css">
+        .videoWrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            padding-top: 25px;
+            height: 0;
+        }
+
+            .videoWrapper iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+    </style>
 }
 
-<div class="card">
-    <div class="content">
-        <h2 class="titulo-indice">@Model.Nome</h2>
-        <iframe id="videoFrame" src='@Url.Action("ReproduzirVideoVimeo", "Aula", new { id = Model.Id})'
-                frameborder='0'
-                webkitAllowFullScreen
-                mozallowfullscreen
-                allowFullScreen></iframe>
+<div class="col-md-8">
+    <div class="card">
+        <div class="content">
+            <h2 class="titulo-indice">@Model.Nome</h2>
+            <div class="videoWrapper">
+                <iframe id="videoFrame" src='http://player.vimeo.com/video/@Model.Conteudo'
+                        frameborder='0'
+                        webkitAllowFullScreen
+                        mozallowfullscreen
+                        allowFullScreen></iframe>
+            </div>
+        </div>
     </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Próximas aulas</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+            @Html.Action("ListarAulas", new { Id = Model.IdCurso, IdAulaCorrente = Model.Id })
+        </div>
+    </div>
+</div>
+<div class="col-md-8">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Discussão</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+             
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Material de apoio</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
 
+        </div>
+    </div>
 </div>
 
 
-<script id="vimeo-template" type="text/x-handlebars-template">
-    <iframe src='Aula/ReproduzirVideoVimeo/{{id}}'
-            frameborder='0'
-            webkitAllowFullScreen
-            mozallowfullscreen
-            allowFullScreen></iframe>
-</script>
-
 @section scripts {
-    <script src="https://f.vimeocdn.com/js/froogaloop2.min.js"></script>
+    <script src="https://player.vimeo.com/api/player.js"></script>
     <script>
         (function () {
-            var $private = {};
+            var $private = {}, pendingSeektoTime = parseFloat('@(Model.Segundos)');
             $(function () {
                 $private.progress = [];
-                var iframe = $('#videoFrame')[0];
-                var player = $f(iframe);
-                player.addEvent('ready', $private.vimeoReadyEvent);
-                player.addEvent('playProgress', $private.vimeoPlayProgressEvent);
-                player.addEvent('pause', vimeoPauseEvent);
 
-              
-                setInterval(updateProgress, 30000);
+                var player = new Vimeo.Player("videoFrame");
+                player.on('ended', $private.vimeoEndedEvent);
+                player.on('timeupdate', $private.vimeoPlayProgressEvent);
+                player.on('pause', $private.vimeoPauseEvent);
+                setInterval($private.updateProgress, 5000);
+
+                if (pendingSeektoTime != 0) {
+                    player.setCurrentTime(pendingSeektoTime);
+                    pendingSeektoTime = 0;
+                }
             });
 
 
             $private.vimeoPauseEvent = function (data) {
-                updateProgress();
+                $private.updateProgress();
             }
 
+            $private.vimeoEndedEvent = function (data) {
+                $private.updateProgress();
+            }
+
+
             $private.updateProgress = function () {
-                $.post('/callback', {
-                    progress: $private.progress
+                if ($private.lastSent == $private.lastUpdate) {
+                    return;
+                }
+                $private.lastSent = $private.lastUpdate;
+
+                var atualizacao = $private.progress[$private.progress.length - 1]
+                $private.progress = [];
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    url: '@Url.Action("AtualizarProgresso", "Aula")',
+                    data: JSON.stringify({
+                        Percentual: Math.ceil(atualizacao.percent * 100),
+                        IdAula: '@Model.Id',
+                        Segundos: atualizacao.seconds
+                    })
                 });
             };
 
             $private.vimeoPlayProgressEvent = function (data) {
                 var currentPercent = Math.ceil(data.percent * 100);
-
                 if ($private.progress.indexOf(currentPercent) != -1) {
                     return;
                 }
 
-                $private.progress.push(currentPercent);
+                var timestamp = (new Date()).getTime();
+                timestamp = Math.floor(timestamp / 1000);
+
+                $private.progress.push(data);
+                $private.lastUpdate = timestamp;
             };
 
 
         }());
-      
+
 
     </script>
 }

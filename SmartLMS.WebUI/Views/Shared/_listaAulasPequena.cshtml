@@ -1,0 +1,37 @@
+﻿ @model IEnumerable<SmartLMS.WebUI.Models.AulaViewModel>
+<div class="list-group">
+    @foreach (var aula in Model)
+            {
+                if (aula.Disponivel)
+                {
+            @:<a href="@Url.Action("Ver", "Aula", new { Id = aula.Id })" class="link-group-item">
+                }
+        <div class="list-group-item list-group-item-sm">
+            <div class="row-action-primary" @if (!aula.Disponivel) { <text> data-toggle="tooltip" data-placement="right" data-container="body" data-original-title="Você não tem acesso a esta aula" </text>  }>
+                <i class="fa fa-laptop @if (ViewBag.IdAulaCorrente == aula.Id) { <text>active</text> }"></i>
+            </div>
+            <div class="row-content">
+
+                @if (!aula.Disponivel)
+                {
+                    <label class="pull-right label label-default"><i class="fa fa-lock"></i></label>
+                }
+                <h5 class="nome-aula">@aula.Nome</h5>
+                @if (aula.Disponivel)
+                {
+                    <div class="progress progress-line-primary">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="@aula.Percentual" aria-valuemin="0" aria-valuemax="100" style="width: @aula.Percentual%;">
+                            <span class="sr-only">">@(aula.Percentual)% Concluída</span>
+                        </div>
+                    </div>
+                }
+                <label>Professor: </label><span> @aula.NomeProfessor</span>
+            </div>
+        </div>
+        if (aula.Disponivel)
+        {
+            @:</a>
+        }
+        <div class="list-group-separator list-group-separator-sm"></div>
+    }
+</div>

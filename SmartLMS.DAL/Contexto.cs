@@ -59,7 +59,7 @@ namespace SmartLMS.DAL
             modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Aluno);
             modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Arquivo);
 
-            modelBuilder.Entity<AcessoAula>().HasRequired(x => x.Aluno);
+            modelBuilder.Entity<AcessoAula>().HasRequired(x => x.Usuario);
             modelBuilder.Entity<AcessoAula>().HasRequired(x => x.Aula);
            
 

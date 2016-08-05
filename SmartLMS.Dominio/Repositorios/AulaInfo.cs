@@ -7,5 +7,7 @@ namespace SmartLMS.Dominio.Repositorios
         public Aula Aula { get; set; }
 
         public bool Disponivel { get; set; }
+        public int Percentual { get; set; }
+        public decimal Segundos { get; set; }
     }
 }

@@ -190,7 +190,6 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CursoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\RepositorioAula.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="DependencyResolution\ControllerConvention.cs" />
     <Compile Include="DependencyResolution\DefaultRegistry.cs" />
@@ -202,6 +201,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AcessoAulaViewModel.cs" />
     <Compile Include="Models\AlterarSenhaViewModel.cs" />
     <Compile Include="Models\AreaConhecimentoViewModel.cs" />
     <Compile Include="Models\ArquivoViewModel.cs" />
@@ -218,6 +218,24 @@
     <Compile Include="Servicos\ServicoNotificacao.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="android-icon-144x144.png" />
+    <Content Include="android-icon-192x192.png" />
+    <Content Include="android-icon-36x36.png" />
+    <Content Include="android-icon-48x48.png" />
+    <Content Include="android-icon-72x72.png" />
+    <Content Include="android-icon-96x96.png" />
+    <Content Include="apple-icon-114x114.png" />
+    <Content Include="apple-icon-120x120.png" />
+    <Content Include="apple-icon-144x144.png" />
+    <Content Include="apple-icon-152x152.png" />
+    <Content Include="apple-icon-180x180.png" />
+    <Content Include="apple-icon-57x57.png" />
+    <Content Include="apple-icon-60x60.png" />
+    <Content Include="apple-icon-72x72.png" />
+    <Content Include="apple-icon-76x76.png" />
+    <Content Include="apple-icon-precomposed.png" />
+    <Content Include="apple-icon.png" />
+    <Content Include="browserconfig.xml" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\figure-caption.css" />
@@ -233,6 +251,7 @@
     <Content Include="Content\img\gif-load.gif" />
     <Content Include="Content\img\html.png" />
     <Content Include="Content\img\jquery.jpg" />
+    <Content Include="Content\img\logo.png" />
     <Content Include="Content\img\mvc.png" />
     <Content Include="Content\img\sem-imagem.png" />
     <Content Include="Content\img\smart.png" />
@@ -290,11 +309,19 @@
     <Content Include="Content\themes\notheme\jquery-ui.min.css" />
     <Content Include="Content\themes\notheme\jquery-ui.structure.css" />
     <Content Include="Content\themes\notheme\jquery-ui.structure.min.css" />
+    <Content Include="Content\toastr\toastr.min.css" />
+    <Content Include="favicon-16x16.png" />
+    <Content Include="favicon-32x32.png" />
+    <Content Include="favicon-96x96.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="ms-icon-144x144.png" />
+    <Content Include="ms-icon-150x150.png" />
+    <Content Include="ms-icon-310x310.png" />
+    <Content Include="ms-icon-70x70.png" />
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -310,6 +337,7 @@
     <Content Include="Content\material-design\ripples.css.map" />
     <Content Include="Content\material-design\ripples.min.css.map" />
     <Content Include="Content\material-kit\material-kit.css.map" />
+    <Content Include="manifest.json" />
     <None Include="Properties\PublishProfiles\Homologacao.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\handlebars.amd.js" />
@@ -342,6 +370,8 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="Scripts\toastr\toastr.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -384,11 +414,12 @@
     <Content Include="Views\Aluno\Index.cshtml" />
     <Content Include="Views\Shared\_Alert.cshtml" />
     <Content Include="Views\Aula\Ver.cshtml" />
+    <Content Include="Views\Shared\_listaAulas.cshtml" />
+    <Content Include="Views\Shared\_listaAulasPequena.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Shared\DisplayTemplates\" />
-    <Folder Include="Views\teste\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
