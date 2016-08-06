@@ -14,7 +14,7 @@ namespace SmartLMS.Dominio.Entidades
 
         public virtual ICollection<Aula> Aulas { get; set; }
         public virtual Assunto Assunto { get; set; }
+        public virtual ICollection<Arquivo> Arquivos { get; set; }
 
-    
     }
 }

@@ -1,0 +1,84 @@
+﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.AcessoViewModel>
+@{
+    ViewBag.Title = "Histórico de acessos";
+    var paginaMax = Math.Ceiling(Model.Count / 10M);
+    if (paginaMax > 10)
+    {
+        paginaMax = 10;
+    }
+}
+
+
+
+<div class="card">
+    <div class="content">
+        <h5 class="titulo-indice">
+            Histórico de acessos
+        </h5>
+
+        <div id="historico-container" class="list-group">
+            @foreach (var item in Model.Entities)
+            {
+
+                <div class="list-group-item list-group-item-sm">
+
+                    @if (item.TipoAcesso == SmartLMS.Dominio.Servicos.TipoAcesso.Aula)
+                    {
+                        <a href="@Url.Action("Ver","Aula", new { Id = item.IdConteudo })" class='link-group-item'>
+                            <div class="row-action-primary">
+                                <i class="fa fa-laptop"></i>
+                            </div>
+                            <div class="row-content">
+                                <div class="least-content">@item.DataHoraTexto</div>
+                                <h5 class="list-group-item-heading">@item.Nome</h5>
+                                <div class="progress progress-line-primary">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="@item.Percentual" aria-valuemin="0" aria-valuemax="100" style="width: @item.Percentual%;">
+                                        <span class="sr-only">">@(item.Percentual)% Concluída</span>
+                                    </div>
+                                </div>
+                                <p class="list-group-item-text">@item.NomeCurso</p>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+
+                    }
+                </div>
+                <div class="list-group-separator list-group-separator-sm"></div>
+            }
+
+            <div class="text-center">
+                <ul class="pagination pagination-primary">
+                    @if (Model.HasPrevious)
+                    {
+                        <li><a class="historico-paginacao-anterior" href="javascript:void(0);">&lt; anterior</a></li>
+                    }
+
+                    @for (int i = 1; i < paginaMax; i++)
+                    {
+                        if (i == 1)
+                        {
+                            @: <li class="active">
+                        }
+                        else
+                        {
+                            @: <li>
+                        }
+
+                        <a href="javascript:void(0);" class="historico-paginacao-pagina">@i</a>
+                        @: </li>
+                  }
+
+                    @if (Model.HasNext)
+                    {
+                        <li><a class="busca-contextual-paginacao-proxima" href="javascript:void(0);">próxima &gt;</a></li>
+                    }
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>

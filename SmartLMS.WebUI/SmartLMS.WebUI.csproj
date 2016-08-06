@@ -42,8 +42,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Carubbi.GenericRepository, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.GenericRepository.1.0.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
+    <Reference Include="Carubbi.GenericRepository, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.GenericRepository.1.1.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Carubbi.Mailer, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -202,6 +202,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AcessoAulaViewModel.cs" />
+    <Compile Include="Models\AcessoViewModel.cs" />
     <Compile Include="Models\AlterarSenhaViewModel.cs" />
     <Compile Include="Models\AreaConhecimentoViewModel.cs" />
     <Compile Include="Models\ArquivoViewModel.cs" />
@@ -416,6 +417,7 @@
     <Content Include="Views\Aula\Ver.cshtml" />
     <Content Include="Views\Shared\_listaAulas.cshtml" />
     <Content Include="Views\Shared\_listaAulasPequena.cshtml" />
+    <Content Include="Views\Usuario\Historico.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

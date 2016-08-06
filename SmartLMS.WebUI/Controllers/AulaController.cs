@@ -19,6 +19,9 @@ namespace SmartLMS.WebUI.Controllers
 
         }
 
+
+
+
         [HttpPost]
         public ActionResult AtualizarProgresso(AcessoAulaViewModel viewModel)
         {
@@ -46,6 +49,9 @@ namespace SmartLMS.WebUI.Controllers
             }
             else
             {
+                TempData["TipoMensagem"] = "warning";
+                TempData["TituloMensagem"] = "Aviso";
+                TempData["Mensagem"] = "Esta aula não está disponível para você";
                 return RedirectToAction("Index", "Aula", new { Id = aula.Aula.Curso.Id });
             }
            

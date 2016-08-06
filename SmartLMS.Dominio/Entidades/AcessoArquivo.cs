@@ -6,7 +6,7 @@ namespace SmartLMS.Dominio.Entidades
     {
         public long Id { get; set; }
 
-        public virtual Aluno Aluno { get; set; }
+        public virtual Usuario Usuario { get; set; }
 
         public virtual Arquivo Arquivo { get; set; }
 

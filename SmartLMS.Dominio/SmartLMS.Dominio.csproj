@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Carubbi.GenericRepository, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.GenericRepository.1.0.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
+    <Reference Include="Carubbi.GenericRepository, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.GenericRepository.1.1.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Carubbi.Utils, Version=1.4.2.9, Culture=neutral, processorArchitecture=MSIL">
@@ -44,6 +44,10 @@
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Humanizer, Version=2.1.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Humanizer.Core.2.1.0\lib\netstandard1.0\Humanizer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -95,10 +99,13 @@
     <Compile Include="Repositorios\RepositorioParametro.cs" />
     <Compile Include="Repositorios\RepositorioTurma.cs" />
     <Compile Include="Repositorios\RepositorioUsuario.cs" />
+    <Compile Include="Servicos\AcessoInfo.cs" />
     <Compile Include="Servicos\ResultadoBusca.cs" />
     <Compile Include="Servicos\ServicoAutenticacao.cs" />
     <Compile Include="Servicos\ServicoBuscaContextual.cs" />
+    <Compile Include="Servicos\ServicoHistorico.cs" />
     <Compile Include="Servicos\TipoResultado.cs" />
+    <Compile Include="Servicos\TipoAcesso.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

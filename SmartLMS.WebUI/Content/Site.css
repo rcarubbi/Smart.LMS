@@ -1,4 +1,9 @@
-﻿body {
+﻿#toast-container>div {
+    margin-bottom: 90px;
+}
+
+
+body {
     overflow: hidden;
 }
 

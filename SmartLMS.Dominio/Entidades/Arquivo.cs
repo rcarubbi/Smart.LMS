@@ -10,5 +10,12 @@ namespace SmartLMS.Dominio.Entidades
         public string ArquivoFisico { get; set; }
 
         public virtual ICollection<AcessoArquivo> Acessos { get; set; }
+
+        public virtual Curso Curso { get; set; }
+
+        public virtual Aula Aula { get; set; }
+
+       
+
     }
 }

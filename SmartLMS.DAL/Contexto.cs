@@ -56,8 +56,11 @@ namespace SmartLMS.DAL
             }); ;
 
 
-            modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Aluno);
+            modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Usuario);
             modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Arquivo);
+
+            modelBuilder.Entity<Arquivo>().HasRequired(x => x.Curso).WithMany(c => c.Arquivos);
+            modelBuilder.Entity<Arquivo>().HasOptional(x => x.Aula).WithMany(c => c.Arquivos);
 
             modelBuilder.Entity<AcessoAula>().HasRequired(x => x.Usuario);
             modelBuilder.Entity<AcessoAula>().HasRequired(x => x.Aula);
