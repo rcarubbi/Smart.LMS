@@ -36,5 +36,18 @@ namespace SmartLMS.WebUI.Controllers
                 Segundos = ultimoAcesso == null ? 0 : ultimoAcesso.Segundos,
             };
         }
+
+        public void Comentar(Comentario comentario)
+        {
+            _contexto.ObterLista<Comentario>().Add(comentario);
+            _contexto.Salvar();
+        }
+
+        public void ExcluirComentario(long idComentario)
+        {
+            var comentario = _contexto.ObterLista<Comentario>().Find(idComentario);
+            _contexto.ObterLista<Comentario>().Remove(comentario);
+            _contexto.Salvar();
+        }
     }
 }

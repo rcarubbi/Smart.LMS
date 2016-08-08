@@ -9,6 +9,7 @@ using SmartLMS.Dominio.Entidades;
 
 namespace SmartLMS.WebUI.Controllers
 {
+    [Authorize]
     public class CursoController : BaseController
     {
         public CursoController(IContexto contexto)

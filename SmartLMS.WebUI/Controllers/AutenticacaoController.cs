@@ -74,20 +74,21 @@ namespace SmartLMS.WebUI.Controllers
             return View(viewModel);
         }
 
-
+        [Authorize]
         public ActionResult Sair()
         {
             FormsAuthentication.SignOut();
             return Redirect("Login");
         }
 
-
+        [Authorize]
         public ActionResult AlterarSenha()
         {
             AlterarSenhaViewModel viewModel = new AlterarSenhaViewModel();
             return View(viewModel);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AlterarSenha(AlterarSenhaViewModel novaSenha)

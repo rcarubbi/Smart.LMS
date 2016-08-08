@@ -7,13 +7,13 @@ namespace SmartLMS.DAL.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class v3 : IMigrationMetadata
+    public sealed partial class ModeloInicial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(v3));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ModeloInicial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201608052329395_v3"; }
+            get { return "201608082152478_ModeloInicial"; }
         }
         
         string IMigrationMetadata.Source

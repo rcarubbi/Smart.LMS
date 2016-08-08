@@ -11,6 +11,7 @@ using System.Net;
 
 namespace SmartLMS.WebUI.Controllers
 {
+    [Authorize]
     public class AulaController : BaseController
     {
         public AulaController(IContexto contexto)
@@ -101,5 +102,53 @@ namespace SmartLMS.WebUI.Controllers
             
             return PartialView("_PainelUltimasAulas", AcessoAulaViewModel.FromEntityList(acessoRepo.ListarUltimosAcessos(_usuarioLogado.Id), new DefaultDateTimeHumanizeStrategy()));
         }
+
+        [HttpPost]
+        public ActionResult ListarComentarios(Guid idAula, int pagina = 1)
+        {
+            var aulaRepo = new RepositorioAula(_contexto);
+            var aula = aulaRepo.ObterAula(idAula, _usuarioLogado.Id);
+            var humanizer = new DefaultDateTimeHumanizeStrategy();
+            var comentarios = aula.Aula.Comentarios
+                .OrderByDescending(x => x.DataHora)
+                .Skip(((pagina - 1) * 10))
+                .Take(10)
+                .ToList();
+
+            return Json(ComentarioViewModel.FromEntityList(comentarios, humanizer, _usuarioLogado.Id), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Comentar(FormCollection formData)
+        {
+            if (!string.IsNullOrEmpty(formData["Comentario"]))
+            {
+                ComentarioViewModel comentario = new ComentarioViewModel
+                {
+                    IdAula = new Guid(formData["IdAula"]),
+                    Comentario = formData["Comentario"]
+                };
+
+                var aulaRepo = new RepositorioAula(_contexto);
+                var aula = aulaRepo.ObterAula(comentario.IdAula, _usuarioLogado.Id);
+                comentario.DataHora = DateTime.Now;
+                aulaRepo.Comentar(comentario.ToEntity(_usuarioLogado, aula.Aula));
+                return new HttpStatusCodeResult(HttpStatusCode.OK);
+            }
+            else
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        [HttpPost]
+      
+        public ActionResult ExcluirComentario(long idComentario)
+        {
+                var aulaRepo = new RepositorioAula(_contexto);
+             
+                aulaRepo.ExcluirComentario(idComentario);
+                return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+        
     }
 }

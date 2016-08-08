@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace SmartLMS.WebUI.Controllers
 {
+    [Authorize]
     public class AvisoController : BaseController
     {
         public AvisoController(IContexto contexto)

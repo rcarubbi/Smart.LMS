@@ -11,6 +11,7 @@ using SmartLMS.Dominio.Entidades;
 
 namespace SmartLMS.WebUI.Controllers
 {
+    [Authorize]
     public class AlunoController : Controller
     {
         private Contexto db = new Contexto();

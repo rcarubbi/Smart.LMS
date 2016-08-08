@@ -1612,7 +1612,7 @@ label.control-label {
 }
 .form-group.label-floating label.control-label, .form-group.label-placeholder label.control-label {
   top: -7px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.42857;
 }
 .form-group.label-static label.control-label, .form-group.label-floating.is-focused label.control-label, .form-group.label-floating:not(.is-empty) label.control-label {

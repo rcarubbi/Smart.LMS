@@ -5,7 +5,7 @@ namespace SmartLMS.Dominio.Entidades
 {
     public class Aula : Entidade, IResultadoBusca
     {
-
+        public virtual ICollection<Comentario> Comentarios { get; set; }
         public virtual ICollection<AcessoAula> Acessos { get; set; }
 
         public virtual ICollection<Turma> Turmas { get; set; }

@@ -51,41 +51,187 @@
             <h3 class="panel-title">Discussão</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
-             
+            @Html.Partial("_formularioComentario", new SmartLMS.WebUI.Models.ComentarioViewModel { IdAula = Model.Id })
+            <div class="bs-component" id="comentarios-container" style="max-height: 655px; overflow-x: auto">
+
+                <div class="list-group" id="lista-comentarios">
+
+                </div>
+                <div id="sem-mais-resultados" class="text-primary text-center" style="display:none;">Não possuem mais comentários para esta aula.</div>
+            </div>
         </div>
     </div>
 </div>
+
 <div class="col-md-4">
     <div class="panel panel-success">
         <div class="panel-heading">
             <h3 class="panel-title">Material de apoio</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
-
+            <div class="bs-component">
+                <div class="list-group">
+                    @foreach (var item in Model.Arquivos)
+                    {
+                        <div class="list-group-item list-group-item-sm">
+                            <a href="~/@(SmartLMS.Dominio.Entidades.Parametro.STORAGE_ARQUIVOS)/@item.ArquivoFisico" class='link-group-item' download>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-file"></i>
+                                </div>
+                                <div class="row-content">
+                                    <h5 class="list-group-item-heading">@item.Nome</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator list-group-separator-sm"></div>
+                    }
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 
+<script id="comentario-template" type="text/x-handlebars-template">
+    {{#each Comentarios}}
+    <div class="list-group-item list-group-item-sm comentario" data-id="{{Id}}">
+        <div class="row-picture">
+            <i class="material-icons circle">person</i>
+            @*<img class="circle" src="{{ImagemUsuario}}">*@
+        </div>
+        <div class="row-content">
+            {{#if Editavel}}
+            <div class="least-content"><button type="button" class="close" aria-hidden="true">×</button></div>
+            {{/if}}
+            <h4 class="list-group-item-heading">{{NomeUsuario}}</h4>
+            <p class="list-group-item-text">{{Comentario}}</p>
+            <div class="footer-content">{{DataHoraTexto}}</div>
+        </div>
+    </div>
+    <div class="list-group-separator list-group-separator-sm"></div>
+    {{/each}}
+</script>
+
 @section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
     <script src="https://player.vimeo.com/api/player.js"></script>
     <script>
-        (function () {
+
+        SmartLMS.ComentariosProxy = (function () {
+            var $private = {}, $public = {};
+
+            $public.Listar = function (pagina) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Aula/ListarComentarios",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ idAula: '@Model.Id', pagina: pagina })
+                });
+            };
+
+            $public.Comentar = function (comentario) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Aula/Comentar",
+                    dataType: "json",
+                    data: comentario
+                });
+            };
+
+            $public.Excluir = function (idComentario) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Aula/ExcluirComentario",
+                    dataType: "json",
+                    data: { idComentario: idComentario }
+                });
+            };
+
+            return $public;
+        }());
+
+        (function (comentariosProxy) {
             var $private = {}, pendingSeektoTime = parseFloat('@(Model.Segundos)');
+
             $(function () {
+
                 $private.progress = [];
 
                 var player = new Vimeo.Player("videoFrame");
+                player.on("ready", function () {
+
+
+                    SmartLMS.App.initializeSlimControl(true);
+                    $("#comentarios-container").slimScroll({
+                        'size': '8px',
+                        'height': '450px'
+                    });
+                    $(".like-button").remove();
+                    $(".share-button").remove();
+
+                });
                 player.on('ended', $private.vimeoEndedEvent);
                 player.on('timeupdate', $private.vimeoPlayProgressEvent);
                 player.on('pause', $private.vimeoPauseEvent);
+              
+
                 setInterval($private.updateProgress, 5000);
 
                 if (pendingSeektoTime != 0) {
                     player.setCurrentTime(pendingSeektoTime);
                     pendingSeektoTime = 0;
                 }
+
+                $private.TemplateComentario = Handlebars.compile($("#comentario-template").html());
+                $private.Pagina = 1;
+                comentariosProxy.Listar($private.Pagina).done($private.exibirComentarios);
+                $("#comentarios-container").on("scroll", $private.carregarPaginaComentarios);
+                $("#comentar-form").on("submit", $private.comentar);
+                $("#comentarios-container").on("click", ".comentario .close", $private.removerComentario);
+
             });
+
+            $private.comentar = function (e) {
+                e.preventDefault();
+
+                comentariosProxy.Comentar($(this).serialize()).always(function () {
+                    $("#sem-mais-resultados").hide();
+                    //$("#Comentario").closest(".form-group").addClass("is-empty");
+                    $("#Comentario").val("");
+                    $private.Pagina = 1;
+                    comentariosProxy.Listar($private.Pagina).done($private.exibirComentarios);
+                });
+            };
+
+            $private.removerComentario = function () {
+                var idComentario = $(this).closest(".comentario").data("id");
+                comentariosProxy.Excluir(idComentario).always(function () {
+                    $private.Pagina = 1;
+                    comentariosProxy.Listar($private.Pagina).done($private.exibirComentarios);
+                })
+            }
+
+            $private.carregarPaginaComentarios = function (e) {
+                if ($("#comentarios-container").scrollTop() + $("#comentarios-container").innerHeight() >= $("#comentarios-container")[0].scrollHeight) {
+                    comentariosProxy.Listar(++$private.Pagina).done($private.atualizarComentarios);
+                }
+            };
+
+
+            $private.atualizarComentarios = function (data) {
+                if (data.length == 0) {
+                    $("#sem-mais-resultados").show();
+                }
+                else {
+                    $("#lista-comentarios").append($private.TemplateComentario({ Comentarios: data }));
+                }
+            }
+
+            $private.exibirComentarios = function (data) {
+                $("#lista-comentarios").html($private.TemplateComentario({ Comentarios: data }));
+                $("#comentarios-container").animate({ scrollTop: 0 }, 1000);
+            };
 
 
             $private.vimeoPauseEvent = function (data) {
@@ -95,6 +241,7 @@
             $private.vimeoEndedEvent = function (data) {
                 $private.updateProgress();
             }
+
 
 
             $private.updateProgress = function () {
@@ -132,7 +279,7 @@
             };
 
 
-        }());
+        }(SmartLMS.ComentariosProxy));
 
 
     </script>

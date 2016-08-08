@@ -29,7 +29,7 @@ namespace SmartLMS.WebUI
                 Parametro.AULA= parametroRepo.ObterValorPorChave(Parametro.CHAVE_AULA);
                 Parametro.ARQUIVO= parametroRepo.ObterValorPorChave(Parametro.CHAVE_ARQUIVO);
                 Parametro.TITULO_AULAS_ASSISTIDAS = parametroRepo.ObterValorPorChave(Parametro.CHAVE_TITULO_AULAS_ASSISTIDAS);
-                
+                Parametro.STORAGE_ARQUIVOS = parametroRepo.ObterValorPorChave(Parametro.CHAVE_STORAGE_ARQUIVOS);
                 Parametro.TITULO_ULTIMAS_AULAS = parametroRepo.ObterValorPorChave(Parametro.CHAVE_TITULO_ULTIMAS_AULAS);
             }
                 

@@ -33,7 +33,6 @@ namespace SmartLMS.WebUI
                       "~/Scripts/slimscroll/jquery.slimscroll.min.js",
                       "~/Scripts/app.js"));
                       
-
             bundles.Add(new StyleBundle("~/Content/css").Include(
                "~/Content/font-awesome.css",
                "~/Content/bootstrap.css",

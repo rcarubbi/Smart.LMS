@@ -64,17 +64,9 @@
     <Compile Include="Contexto.cs" />
     <Compile Include="Mapeamento\TurmaAlunoConfiguration.cs" />
     <Compile Include="Mapeamento\UsuarioAvisoConfiguration.cs" />
-    <Compile Include="Migrations\201608041948030_ModeloInicial.cs" />
-    <Compile Include="Migrations\201608041948030_ModeloInicial.Designer.cs">
-      <DependentUpon>201608041948030_ModeloInicial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608051403154_v2.cs" />
-    <Compile Include="Migrations\201608051403154_v2.Designer.cs">
-      <DependentUpon>201608051403154_v2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608052329395_v3.cs" />
-    <Compile Include="Migrations\201608052329395_v3.Designer.cs">
-      <DependentUpon>201608052329395_v3.cs</DependentUpon>
+    <Compile Include="Migrations\201608082152478_ModeloInicial.cs" />
+    <Compile Include="Migrations\201608082152478_ModeloInicial.Designer.cs">
+      <DependentUpon>201608082152478_ModeloInicial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,14 +84,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201608041948030_ModeloInicial.resx">
-      <DependentUpon>201608041948030_ModeloInicial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608051403154_v2.resx">
-      <DependentUpon>201608051403154_v2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608052329395_v3.resx">
-      <DependentUpon>201608052329395_v3.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201608082152478_ModeloInicial.resx">
+      <DependentUpon>201608082152478_ModeloInicial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

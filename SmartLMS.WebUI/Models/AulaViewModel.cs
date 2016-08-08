@@ -102,7 +102,7 @@ namespace SmartLMS.WebUI.Models
                 Disponivel = item.Disponivel,
                 Percentual = item.Percentual,
                 Segundos = item.Segundos,
-                Arquivos = ArquivoViewModel.FromEntityList(item.Aula.Arquivos)
+                Arquivos = ArquivoViewModel.FromEntityList(item.Aula.Arquivos.Where(x => x.Ativo))
             };
         }
 

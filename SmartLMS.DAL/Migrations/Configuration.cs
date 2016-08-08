@@ -160,7 +160,13 @@ namespace SmartLMS.DAL.Migrations
                         Chave = Parametro.CHAVE_TITULO_ULTIMAS_AULAS,
                         Valor = "Novos trechos",
                         Ativo = true
-                    });
+                    },
+                     new Parametro
+                     {
+                         Chave = Parametro.CHAVE_STORAGE_ARQUIVOS,
+                         Valor = "Content/Apoio",
+                         Ativo = true
+                     });
 
 
 
@@ -227,21 +233,39 @@ namespace SmartLMS.DAL.Migrations
             #endregion
 
             #region Aulas         
-            var a1 = new Aula { Curso = c1, Ativo = true, DataInclusao = DateTime.Now, Ordem = 1, Professor = professor, Tipo = Dominio.TipoConteudo.Vimeo, Nome = "visão geral da plataforma .net" };
-            var a2 = new Aula { Curso = c1, Ativo = true, DataInclusao = DateTime.Now, Ordem = 2, Professor = professor, Tipo = Dominio.TipoConteudo.Vimeo, Nome = "IDE's - Interface de desenvolvimento integrado" };
-            var a3 = new Aula { Curso = c1, Ativo = true, DataInclusao = DateTime.Now, Ordem = 3, Professor = professor, Tipo = Dominio.TipoConteudo.Vimeo, Nome = "Construindo a primeira aplicação em C#" };
-            var a4 = new Aula { Curso = c1, Ativo = true, DataInclusao = DateTime.Now, Ordem = 4, Professor = professor, Tipo = Dominio.TipoConteudo.Vimeo, Nome = "variáveis e operações" };
+            var a1 = new Aula { Curso = c1, Ativo = true, DataInclusao = DateTime.Now, Ordem = 1, Professor = professor, Tipo = Dominio.TipoConteudo.Vimeo, Nome = "visão geral da plataforma .net" , Conteudo= "177458612" };
+            var a2 = new Aula { Curso = c1, Ativo = true, DataInclusao = DateTime.Now, Ordem = 2, Professor = professor, Tipo = Dominio.TipoConteudo.Vimeo, Nome = "IDE's - Interface de desenvolvimento integrado", Conteudo = "177880740" };
+            var a3 = new Aula { Curso = c1, Ativo = true, DataInclusao = DateTime.Now, Ordem = 3, Professor = professor, Tipo = Dominio.TipoConteudo.Vimeo, Nome = "Construindo a primeira aplicação em C#", Conteudo = "178036554" };
+            var a4 = new Aula { Curso = c1, Ativo = true, DataInclusao = DateTime.Now, Ordem = 4, Professor = professor, Tipo = Dominio.TipoConteudo.Vimeo, Nome = "variáveis e operações", Conteudo = "153695056" };
 
             context.Set<Aula>().AddOrUpdate(u => u.Nome, a1, a2, a3,a4);
             context.Salvar();
             #endregion
 
+            #region Arquivos 
+
+            var ar1 = new Arquivo {
+                Aula = a1,
+                Curso = c1,
+                ArquivoFisico = "Trecho 1 – Visão geral da plataforma .net.pdf",
+                Nome = "Visão geral da plataforma .net",
+                Ativo = true
+            };
+
+            context.Set<Arquivo>().AddOrUpdate(a => a.Nome, ar1);
+            context.Salvar();
+
+            #endregion
+
             #region Turmas 
 
             var t = new Turma { Curso = c1, DataInicio = new System.DateTime(2016, 08, 04), Ativo = true };
+            t.AulasDisponiveis = new List<Aula>();
+            t.AulasDisponiveis.Add(a1);
+            t.AulasDisponiveis.Add(a2);
             context.Set<Turma>().AddOrUpdate(u => u.DataInicio, t);
             context.Salvar();
-
+            
             var ta = new TurmaAluno { Aluno = aluno, DataIngresso = new System.DateTime(2016, 08, 04), Turma = t };
             context.Set<TurmaAluno>().AddOrUpdate(u => u.DataIngresso, ta);
             context.Salvar();

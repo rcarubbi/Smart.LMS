@@ -45,6 +45,8 @@ Handlebars.registerHelper('for', function (from, to, incr, block) {
     return accum;
 });
 
+
+
 var SmartLMS = {};
 SmartLMS.api = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + "/";
  
@@ -104,8 +106,8 @@ SmartLMS.App = (function () {
         });
     };
 
-    $private.initializeSlimControl = function () {
-        if ($private.resize) {
+    $public.initializeSlimControl = function (restart) {
+        if ($private.resize || restart) {
             $('.sidebar-container').slimScroll({ destroy: true });
         }
         $('.sidebar-container').slimScroll({
@@ -127,7 +129,7 @@ SmartLMS.App = (function () {
 
     function doResizeStuff() {
         $private.mhResizeTimeout = 0;
-        $private.initializeSlimControl();
+        $public.initializeSlimControl(false);
     }
 
     $(function () {
@@ -135,7 +137,7 @@ SmartLMS.App = (function () {
         $private.initializeDropdownJs();
         $private.initializeToastr();
         $public.initializeCarouselMulti();
-        $private.initializeSlimControl();
+        $public.initializeSlimControl(false);
         $(window).on("resize", $private.resizeSlimControl);
         
         $(document).ajaxError(function (event, xhr, options, thrownError) {

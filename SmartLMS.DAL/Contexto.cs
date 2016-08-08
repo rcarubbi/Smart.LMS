@@ -20,6 +20,7 @@ namespace SmartLMS.DAL
               : base("name=StringConexao")
         {
         }
+
         private Dictionary<Type, object> _dicionarioSerializadores = new Dictionary<Type, object>();
 
         private Serializer<TEntidade> ObterSerializador<TEntidade>()
@@ -59,6 +60,8 @@ namespace SmartLMS.DAL
             modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Usuario);
             modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Arquivo);
 
+
+            modelBuilder.Entity<Arquivo>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Arquivo>().HasRequired(x => x.Curso).WithMany(c => c.Arquivos);
             modelBuilder.Entity<Arquivo>().HasOptional(x => x.Aula).WithMany(c => c.Arquivos);
 

@@ -94,6 +94,17 @@
   color: rgba(0, 0, 0, 0.54);
   font-size: 14px;
 }
+
+.list-group .list-group-item .row-content .footer-content {
+    position: absolute;
+    right: 20px;
+    bottom: 0;
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+}
+
+
+
 .list-group .list-group-item .list-group-item-heading {
   color: rgba(0, 0, 0, 0.77);
   font-size: 20px;
@@ -129,7 +140,7 @@
 }
 
 
-.list-group-item-sm .row-action-primary i {
+.list-group-item-sm .row-action-primary i,  .list-group-item-sm .row-picture i{
     line-height: 42px  !important;
     font-size: 15px  !important;
     width: 40px  !important;

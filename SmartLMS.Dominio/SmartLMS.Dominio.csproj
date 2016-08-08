@@ -68,6 +68,7 @@
     <Compile Include="Entidades\AcessoArquivo.cs" />
     <Compile Include="Entidades\Administrador.cs" />
     <Compile Include="Entidades\Aluno.cs" />
+    <Compile Include="Entidades\Comentario.cs" />
     <Compile Include="Entidades\UsuarioAviso.cs" />
     <Compile Include="Entidades\AreaConhecimento.cs" />
     <Compile Include="Entidades\Arquivo.cs" />
