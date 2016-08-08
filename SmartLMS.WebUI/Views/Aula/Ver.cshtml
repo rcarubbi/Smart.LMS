@@ -158,30 +158,31 @@
 
                 $private.progress = [];
 
+                SmartLMS.App.initializeSlimControl(true);
+                $("#comentarios-container").slimScroll({
+                    'size': '8px',
+                    'height': '450px'
+                });
+
                 var player = new Vimeo.Player("videoFrame");
                 player.on("ready", function () {
 
 
-                    SmartLMS.App.initializeSlimControl(true);
-                    $("#comentarios-container").slimScroll({
-                        'size': '8px',
-                        'height': '450px'
-                    });
-                    $(".like-button").remove();
-                    $(".share-button").remove();
+                   
+              
+                    if (pendingSeektoTime != 0) {
+                        player.setCurrentTime(pendingSeektoTime);
+                        pendingSeektoTime = 0;
+                    }
 
+                    setInterval($private.updateProgress, 5000);
                 });
+
                 player.on('ended', $private.vimeoEndedEvent);
                 player.on('timeupdate', $private.vimeoPlayProgressEvent);
                 player.on('pause', $private.vimeoPauseEvent);
               
-
-                setInterval($private.updateProgress, 5000);
-
-                if (pendingSeektoTime != 0) {
-                    player.setCurrentTime(pendingSeektoTime);
-                    pendingSeektoTime = 0;
-                }
+ 
 
                 $private.TemplateComentario = Handlebars.compile($("#comentario-template").html());
                 $private.Pagina = 1;
