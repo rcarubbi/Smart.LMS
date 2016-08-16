@@ -154,6 +154,20 @@ namespace SmartLMS.DAL.Migrations
                 .Index(t => t.IdTurma);
             
             CreateTable(
+                "dbo.AulaTurma",
+                c => new
+                    {
+                        IdAula = c.Guid(nullable: false),
+                        IdTurma = c.Guid(nullable: false),
+                        DataDisponibilizacao = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.IdAula, t.IdTurma })
+                .ForeignKey("dbo.Aula", t => t.IdAula, cascadeDelete: true)
+                .ForeignKey("dbo.Turma", t => t.IdTurma, cascadeDelete: true)
+                .Index(t => t.IdAula)
+                .Index(t => t.IdTurma);
+            
+            CreateTable(
                 "dbo.Curso",
                 c => new
                     {
@@ -239,19 +253,6 @@ namespace SmartLMS.DAL.Migrations
                 .ForeignKey("dbo.Usuario", t => t.Usuario_Id)
                 .Index(t => t.Usuario_Id);
             
-            CreateTable(
-                "dbo.AulaTurma",
-                c => new
-                    {
-                        IdAula = c.Guid(nullable: false),
-                        IdTurma = c.Guid(nullable: false),
-                    })
-                .PrimaryKey(t => new { t.IdAula, t.IdTurma })
-                .ForeignKey("dbo.Aula", t => t.IdAula, cascadeDelete: true)
-                .ForeignKey("dbo.Turma", t => t.IdTurma, cascadeDelete: true)
-                .Index(t => t.IdAula)
-                .Index(t => t.IdTurma);
-            
         }
         
         public override void Down()
@@ -263,8 +264,6 @@ namespace SmartLMS.DAL.Migrations
             DropForeignKey("dbo.AcessoArquivo", "Arquivo_Id", "dbo.Arquivo");
             DropForeignKey("dbo.Arquivo", "Curso_Id", "dbo.Curso");
             DropForeignKey("dbo.Arquivo", "Aula_Id", "dbo.Aula");
-            DropForeignKey("dbo.AulaTurma", "IdTurma", "dbo.Turma");
-            DropForeignKey("dbo.AulaTurma", "IdAula", "dbo.Aula");
             DropForeignKey("dbo.Aula", "Professor_Id", "dbo.Usuario");
             DropForeignKey("dbo.Comentario", "Usuario_Id", "dbo.Usuario");
             DropForeignKey("dbo.Comentario", "Aula_Id", "dbo.Aula");
@@ -278,17 +277,19 @@ namespace SmartLMS.DAL.Migrations
             DropForeignKey("dbo.Aula", "Curso_Id", "dbo.Curso");
             DropForeignKey("dbo.Curso", "Assunto_Id", "dbo.Assunto");
             DropForeignKey("dbo.Assunto", "AreaConhecimento_Id", "dbo.AreaConhecimento");
+            DropForeignKey("dbo.AulaTurma", "IdTurma", "dbo.Turma");
+            DropForeignKey("dbo.AulaTurma", "IdAula", "dbo.Aula");
             DropForeignKey("dbo.TurmaAluno", "IdTurma", "dbo.Turma");
             DropForeignKey("dbo.TurmaAluno", "IdAluno", "dbo.Usuario");
             DropForeignKey("dbo.AcessoAula", "Aula_Id", "dbo.Aula");
-            DropIndex("dbo.AulaTurma", new[] { "IdTurma" });
-            DropIndex("dbo.AulaTurma", new[] { "IdAula" });
             DropIndex("dbo.Log", new[] { "Usuario_Id" });
             DropIndex("dbo.Comentario", new[] { "Usuario_Id" });
             DropIndex("dbo.Comentario", new[] { "Aula_Id" });
             DropIndex("dbo.Assunto", new[] { "AreaConhecimento_Id" });
             DropIndex("dbo.Curso", new[] { "ProfessorResponsavel_Id" });
             DropIndex("dbo.Curso", new[] { "Assunto_Id" });
+            DropIndex("dbo.AulaTurma", new[] { "IdTurma" });
+            DropIndex("dbo.AulaTurma", new[] { "IdAula" });
             DropIndex("dbo.TurmaAluno", new[] { "IdTurma" });
             DropIndex("dbo.TurmaAluno", new[] { "IdAluno" });
             DropIndex("dbo.Turma", new[] { "Curso_Id" });
@@ -306,13 +307,13 @@ namespace SmartLMS.DAL.Migrations
             DropIndex("dbo.AcessoArquivo", new[] { "Aluno_Id" });
             DropIndex("dbo.AcessoArquivo", new[] { "Usuario_Id" });
             DropIndex("dbo.AcessoArquivo", new[] { "Arquivo_Id" });
-            DropTable("dbo.AulaTurma");
             DropTable("dbo.Log");
             DropTable("dbo.Parametro");
             DropTable("dbo.Comentario");
             DropTable("dbo.AreaConhecimento");
             DropTable("dbo.Assunto");
             DropTable("dbo.Curso");
+            DropTable("dbo.AulaTurma");
             DropTable("dbo.TurmaAluno");
             DropTable("dbo.Turma");
             DropTable("dbo.Aviso");

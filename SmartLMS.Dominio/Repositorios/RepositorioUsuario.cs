@@ -15,7 +15,7 @@ namespace SmartLMS.Dominio.Repositorios
 
         public Usuario ObterPorEmail(string login)
         {
-            return _contexto.ObterLista<Usuario>().FirstOrDefault(u => u.Login == login);
+            return _contexto.ObterLista<Usuario>().FirstOrDefault(u => u.Email == login);
         }
 
         public Usuario ObterPorId(Guid id)

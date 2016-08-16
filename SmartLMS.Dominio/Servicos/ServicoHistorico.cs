@@ -24,9 +24,10 @@ namespace SmartLMS.Dominio.Servicos
         {
             var acessos = _contexto.ObterLista<AcessoAula>()
                 .Where(a =>
-                    (!periodo.StartDate.HasValue || (periodo.StartDate.HasValue && periodo.StartDate.Value >= a.DataHoraAcesso)
+                    (!periodo.StartDate.HasValue || (periodo.StartDate.HasValue && periodo.StartDate.Value <= a.DataHoraAcesso)
                     && (!periodo.EndDate.HasValue || (periodo.EndDate.HasValue && periodo.EndDate.Value >= a.DataHoraAcesso)
-                    && a.Usuario.Id == idUsuario)))
+                    && a.Usuario.Id == idUsuario))
+                    && (tipo == TipoAcesso.Aula || tipo == TipoAcesso.Todos))
                 .Select(a =>
                     new AcessoInfo
                     {
@@ -40,7 +41,8 @@ namespace SmartLMS.Dominio.Servicos
                   .Where(a =>
                         (!periodo.StartDate.HasValue || (periodo.StartDate.HasValue && periodo.StartDate.Value >= a.DataHoraAcesso)
                         && (!periodo.EndDate.HasValue || (periodo.EndDate.HasValue && periodo.EndDate.Value >= a.DataHoraAcesso)
-                        && a.Usuario.Id == idUsuario)))
+                        && a.Usuario.Id == idUsuario))
+                        && (tipo == TipoAcesso.Arquivo || tipo == TipoAcesso.Todos))
                         .Select(a =>
                             new AcessoInfo
                             {

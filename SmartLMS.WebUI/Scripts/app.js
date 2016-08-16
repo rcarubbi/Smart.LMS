@@ -133,6 +133,8 @@ SmartLMS.App = (function () {
     }
 
     $(function () {
+        moment.locale('pt-br');
+
         $.each($("input[data-autocomplete]"), $private.createAutoComplete);
         $private.initializeDropdownJs();
         $private.initializeToastr();

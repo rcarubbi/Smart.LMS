@@ -24,6 +24,7 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel viewModel)
         {
 
@@ -34,15 +35,15 @@ namespace SmartLMS.WebUI.Controllers
                 {
                     FormsAuthentication.SetAuthCookie(viewModel.Login, viewModel.LembrarMe);
                     string url = FormsAuthentication.GetRedirectUrl(viewModel.Login, viewModel.LembrarMe);
-                    return new JavaScriptResult() { Script = $"document.location.href='{url}';" };
+                    return Json(new { Url = url, Autenticado = true }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
                     ModelState.AddModelError("UsuarioOuSenhaInvalidos", "Usuário ou Senha inválidos");
                 }
             }
-
-            return PartialView("_errosValidacao", viewModel);
+            return Json(new { ValidationSummary = RenderViewToString(PartialView("_errosValidacao", viewModel)), Autenticado = false }, JsonRequestBehavior.AllowGet);
+      
         }
 
         public ActionResult EsqueciMinhaSenha()

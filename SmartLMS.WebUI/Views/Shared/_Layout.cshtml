@@ -31,13 +31,15 @@
     <base href="@HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")" />
 </head>
 <body>
-   
+  
     @Html.Action("ExibirCabecalho", "Usuario")
     <div class="sidebar-container">
         <div class="container">
             @RenderBody()
+     
         </div>
     </div>
+
         <footer class="footer footer-black">
             <div class="container">
                 <nav class="pull-left">
@@ -52,7 +54,7 @@
                 </div>
             </div>
         </footer>
-    
+ 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     <script>
@@ -61,5 +63,7 @@
     @RenderSection("scripts", required: false)
 
     @Html.Partial("_Alert")
+    @Html.Partial("_sobre")
+    @Html.Partial("_faleConosco", new FaleConoscoViewModel())
 </body>
 </html>

@@ -260,15 +260,17 @@ namespace SmartLMS.DAL.Migrations
             #region Turmas 
 
             var t = new Turma { Curso = c1, DataInicio = new System.DateTime(2016, 08, 04), Ativo = true };
-            t.AulasDisponiveis = new List<Aula>();
-            t.AulasDisponiveis.Add(a1);
-            t.AulasDisponiveis.Add(a2);
             context.Set<Turma>().AddOrUpdate(u => u.DataInicio, t);
             context.Salvar();
             
             var ta = new TurmaAluno { Aluno = aluno, DataIngresso = new System.DateTime(2016, 08, 04), Turma = t };
-            context.Set<TurmaAluno>().AddOrUpdate(u => u.DataIngresso, ta);
+            context.Set<TurmaAluno>().AddOrUpdate(u => new { u.IdTurma, u.IdAluno }, ta);
             context.Salvar();
+
+
+            var at = new AulaTurma { Aula = a1, Turma = t, DataDisponibilizacao = DateTime.Now };
+            context.Set<AulaTurma>().AddOrUpdate(a => new { a.IdAula, a.IdTurma },  at);
+
 
             #endregion
 

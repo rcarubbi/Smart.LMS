@@ -106,6 +106,25 @@ namespace SmartLMS.WebUI.Models
             };
         }
 
-        
+        internal static IEnumerable<AulaViewModel> FromEntityList(IEnumerable<AulaTurma> aulas, DefaultDateTimeHumanizeStrategy humanizer)
+        {
+            foreach (var item in aulas)
+            {
+                yield return FromEntity(item, humanizer);
+            }
+        }
+
+        private static AulaViewModel FromEntity(AulaTurma item, DefaultDateTimeHumanizeStrategy humanizer)
+        {
+            return new AulaViewModel
+            {
+                Nome = item.Aula.Nome,
+                DataInclusaoTexto = humanizer.Humanize(item.DataDisponibilizacao, DateTime.Now, CultureInfo.CurrentUICulture),
+                DataInclusao = item.DataDisponibilizacao,
+                Id = item.Aula.Id,
+                NomeCurso = item.Aula.Curso.Nome,
+                NomeProfessor = item.Aula.Professor.Nome
+            };
+        }
     }
 }

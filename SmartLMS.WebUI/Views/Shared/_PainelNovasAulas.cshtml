@@ -7,10 +7,12 @@
     <div class="panel-body">
         <div class="bs-component">
             <div class="list-group">
-                @foreach (var item in Model)
+                @if (Model.Count() > 0)
                 {
+                    foreach (var item in Model)
+                    {
                     <div class="list-group-item list-group-item-sm">
-                        <a href="@Url.Action("Ver","Aula", new { Id = item.Id })" class='link-group-item'>
+                        <a href="@Url.Action("Ver", "Aula", new { Id = item.Id })" class='link-group-item'>
                             <div class="row-action-primary">
                                 <i class="fa fa-laptop"></i>
                             </div>
@@ -22,9 +24,12 @@
                         </a>
                     </div>
                     <div class="list-group-separator list-group-separator-sm"></div>
+                    }
                 }
-
-
+                else
+                {
+                    <div class="text-center">Nenhuma aula adicionada</div>
+                }
             </div>
         </div>
     </div>

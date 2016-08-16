@@ -1,13 +1,13 @@
-﻿using SmartLMS.Dominio;
+﻿using Humanizer.DateTimeHumanizeStrategy;
+using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.WebUI.Models;
 using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
 using System.Linq;
-using Humanizer.DateTimeHumanizeStrategy;
 using System.Net;
+using System.Web.Mvc;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -19,9 +19,6 @@ namespace SmartLMS.WebUI.Controllers
         {
 
         }
-
-
-
 
         [HttpPost]
         public ActionResult AtualizarProgresso(AcessoAulaViewModel viewModel)
@@ -92,7 +89,7 @@ namespace SmartLMS.WebUI.Controllers
         [ChildActionOnly]
         public ActionResult ExibirPainelNovasAulas() {
             var aulaRepo = new RepositorioAula(_contexto);
-            return PartialView("_PainelNovasAulas", AulaViewModel.FromEntityList(aulaRepo.ListarUltimasAulasAdicionadas(_usuarioLogado.Id), 3,  new DefaultDateTimeHumanizeStrategy()));
+            return PartialView("_PainelNovasAulas", AulaViewModel.FromEntityList(aulaRepo.ListarUltimasAulasAdicionadas(_usuarioLogado.Id), new DefaultDateTimeHumanizeStrategy()));
         }
 
         [ChildActionOnly]

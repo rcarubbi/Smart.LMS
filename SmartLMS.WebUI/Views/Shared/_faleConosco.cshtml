@@ -1,0 +1,89 @@
+﻿@model SmartLMS.WebUI.Models.FaleConoscoViewModel
+<div class="modal fade" id="faleConosco" tabindex="-1" role="dialog" aria-labelledby="Fale Conosco" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Fale conosco</h4>
+            </div>
+            @using (Html.BeginForm("FaleConsoco", "Home", null, FormMethod.Post, new { id = "frmFaleConosco" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">email</i>
+                        </span>
+                        <div class="form-group label-floating">
+                            <label class="control-label">Digite seu email</label>
+                            @Html.TextBoxFor(x => x.Email, new { @class = "form-control", id = "txtFaleConosco-Email" })
+                            @Html.ValidationMessageFor(x => x.Email)
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-group label-floating">
+                            <label class="control-label">Digite seu nome</label>
+                            @Html.TextBoxFor(x => x.Nome, new { @class = "form-control", id = "txtFaleConosco-Nome" })
+                            @Html.ValidationMessageFor(x => x.Nome)
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">message</i>
+                        </span>
+                        @Html.TextAreaFor(model => model.Mensagem, new { @class = "form-control", placeholder = "Digite sua mensagem", rows = "5", id= "txtFaleConosco-Mensagem" })
+                        @Html.ValidationMessageFor(x => x.Mensagem)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnFaleConosco-Enviar" class="btn btn-primary">Enviar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Fechar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        (function () {
+            var $private = {};
+
+            $(function () {
+                $("#frmFaleConosco").on("submit", $private.EnviarFaleConosco);
+            });
+
+            $private.EnviarFaleConosco = function (e) {
+                e.preventDefault();
+                $.validator.unobtrusive.parse($(this));
+              
+                if ($(this).valid()) {
+                    var enviarTextoOriginal = $("#btnFaleConosco-Enviar").text();
+                    var enviando = $("<img src=''> Enviando");
+                    $("#btnFaleConosco-Enviar").text(enviando);
+                    $("#btnFaleConosco-Enviar").prop('disabled', true);
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: $(this).serialize(),
+                        success: function (result) {
+                            SmartLMS.App.toastr['success']('Sua mensagem foi enviada com sucesso!', 'Fale Conosco');
+                            $("#txtFaleConosco-Nome").val("");
+                            $("#txtFaleConosco-Email").val("");
+                            $("#txtFaleConosco-Mensagem").val("");
+                            $("#btnFaleConosco-Enviar").text(enviarTextoOriginal);
+                            $("#btnFaleConosco-Enviar").prop('disabled', true);
+                        }
+                    });
+                }
+            };
+        }());
+    </script>
+}

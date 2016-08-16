@@ -1,11 +1,11 @@
-﻿using Carubbi.Utils.DataTypes;
+﻿using Carubbi.Utils.Data;
+using Carubbi.Utils.DataTypes;
 using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Dominio;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -39,8 +39,10 @@ namespace SmartLMS.WebUI.Controllers
 
         public ActionResult Historico()
         {
+            TipoAcesso tipo = TipoAcesso.Arquivo;
+            ViewBag.TiposAcesso = new SelectList(tipo.ToDataSource<TipoAcesso>(),"Key", "Value");
             var periodo = new DateRange();
-            periodo.StartDate = DateTime.Now.AddMonths(1);
+            periodo.StartDate = DateTime.Now.AddMonths(-1);
             periodo.EndDate = DateTime.Now;
             ServicoHistorico servico = new ServicoHistorico(_contexto, new DefaultDateTimeHumanizeStrategy());
             return View(AcessoViewModel.FromEntityList(servico.ListarHistorico(periodo, 1, _usuarioLogado.Id, TipoAcesso.Todos)));

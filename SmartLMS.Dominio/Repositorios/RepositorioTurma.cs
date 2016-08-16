@@ -21,7 +21,7 @@ namespace SmartLMS.Dominio.Repositorios
 
         public bool VerificarDisponivildiadeAula(Guid idAula, Guid idAluno)
         {
-            return ListarTurmasPorAluno(idAluno).SelectMany(x => x.AulasDisponiveis).Any(x => x.Id == idAula);
+            return ListarTurmasPorAluno(idAluno).SelectMany(x => x.AulasDisponiveis).Any(x => x.Aula.Id == idAula);
         }
     }
 }

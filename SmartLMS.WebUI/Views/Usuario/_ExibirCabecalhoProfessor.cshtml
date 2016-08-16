@@ -38,12 +38,12 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#about">Sobre</a></li>
-                <li><a href="#contact">Fale Conosco</a></li>
+                <li><a href="#"  data-toggle="modal" data-target="#sobre">Sobre</a></li>
+                <li><a href="#"  data-toggle="modal" data-target="#faleConosco">Fale Conosco</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">person</i>@Model.Usuario.Nome <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Histórico</a></li>
+                        <li><a href="@Url.Action("Historico", "Usuario")">Histórico de acessos</a></li>
                         <li><a href="#">Alterar Senha</a></li>
                         <li><a href="@Url.Action("Sair", "Autenticacao")">Sair</a></li>
                     </ul>

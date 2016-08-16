@@ -13,7 +13,10 @@ namespace SmartLMS.WebUI
                         "~/Scripts/jquery.unobtrusive-ajax.js",
                         "~/Scripts/jquery-ui-{version}.js",
                         "~/Scripts/jquery.dropdown/jquery.dropdown.js",
-                        "~/Scripts/handlebars.js"));
+                        "~/Scripts/handlebars.js",
+                        "~/Scripts/momentjs/moment-with-locales.js",
+                        "~/Scripts/jQuery.mask/jquery.mask.js"));
+
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -26,6 +29,7 @@ namespace SmartLMS.WebUI
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
+                      "~/Scripts/bootstrap-datepicker/bootstrap-datepicker.js",
                       "~/Scripts/material-kit/material.min.js",
                       "~/Scripts/material-kit/nouislider.min.js",
                       "~/Scripts/material-kit/material-kit.js",

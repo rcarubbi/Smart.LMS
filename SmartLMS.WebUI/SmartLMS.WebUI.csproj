@@ -213,6 +213,7 @@
     <Compile Include="Models\ComentarioViewModel.cs" />
     <Compile Include="Models\CursoViewModel.cs" />
     <Compile Include="Models\EsqueciMinhaSenhaViewModel.cs" />
+    <Compile Include="Models\FaleConoscoViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\UsuarioViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -240,6 +241,7 @@
     <Content Include="browserconfig.xml" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\datepicker\datepicker.css" />
     <Content Include="Content\figure-caption.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
@@ -266,15 +268,6 @@
     <Content Include="Content\material-design\ripples.min.css" />
     <Content Include="Content\material-kit\material-kit.css" />
     <Content Include="Content\multi-carousel.css" />
-    <Content Include="Content\themes\base\accordion.css" />
-    <Content Include="Content\themes\base\all.css" />
-    <Content Include="Content\themes\base\autocomplete.css" />
-    <Content Include="Content\themes\base\base.css" />
-    <Content Include="Content\themes\base\button.css" />
-    <Content Include="Content\themes\base\core.css" />
-    <Content Include="Content\themes\base\datepicker.css" />
-    <Content Include="Content\themes\base\dialog.css" />
-    <Content Include="Content\themes\base\draggable.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -295,18 +288,6 @@
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Content\themes\base\jquery-ui.css" />
-    <Content Include="Content\themes\base\jquery-ui.min.css" />
-    <Content Include="Content\themes\base\menu.css" />
-    <Content Include="Content\themes\base\progressbar.css" />
-    <Content Include="Content\themes\base\resizable.css" />
-    <Content Include="Content\themes\base\selectable.css" />
-    <Content Include="Content\themes\base\selectmenu.css" />
-    <Content Include="Content\themes\base\slider.css" />
-    <Content Include="Content\themes\base\sortable.css" />
-    <Content Include="Content\themes\base\spinner.css" />
-    <Content Include="Content\themes\base\tabs.css" />
-    <Content Include="Content\themes\base\theme.css" />
-    <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\themes\notheme\jquery-ui.css" />
     <Content Include="Content\themes\notheme\jquery-ui.min.css" />
     <Content Include="Content\themes\notheme\jquery-ui.structure.css" />
@@ -325,6 +306,7 @@
     <Content Include="ms-icon-310x310.png" />
     <Content Include="ms-icon-70x70.png" />
     <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\bootstrap-datepicker\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\FontAwesome.otf" />
@@ -354,6 +336,7 @@
     <Content Include="Scripts\jquery-1.12.4.js" />
     <Content Include="Scripts\jquery-1.12.4.min.js" />
     <Content Include="Scripts\jquery-1.12.4.min.map" />
+    <Content Include="Scripts\jQuery.mask\jquery.mask.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.12.0.js" />
     <Content Include="Scripts\jquery-ui-1.12.0.min.js" />
@@ -370,6 +353,7 @@
     <Content Include="Scripts\material-kit\material.min.js" />
     <Content Include="Scripts\material-kit\nouislider.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\momentjs\moment-with-locales.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\slimscroll\jquery.slimscroll.min.js" />
@@ -420,6 +404,8 @@
     <Content Include="Views\Shared\_listaAulasPequena.cshtml" />
     <Content Include="Views\Usuario\Historico.cshtml" />
     <Content Include="Views\Aula\_formularioComentario.cshtml" />
+    <Content Include="Views\Shared\_sobre.cshtml" />
+    <Content Include="Views\Shared\_faleConosco.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

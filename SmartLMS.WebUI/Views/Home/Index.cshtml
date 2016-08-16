@@ -16,10 +16,11 @@
                         @{
                             var primeiraLinha = true;
                         }
+
                         @foreach (var item in Model)
                         {
-                            <li class="@(primeiraLinha? "active" : "")">
-                                <a href="#areaConhecimento-@item.Ordem" role="tab" data-toggle="tab" aria-expanded="@(primeiraLinha? "true" : "false")">
+                            <li class="@(primeiraLinha ? "active" : "")">
+                                <a href="#areaConhecimento-@item.Ordem" role="tab" data-toggle="tab" aria-expanded="@(primeiraLinha ? "true" : "false")">
                                     <i class="fa fa-map-signs text-primary"></i>
                                     <p class="text-primary">@item.Nome</p>
                                 </a>
@@ -29,6 +30,7 @@
                                 primeiraLinha = false;
                             }
                         }
+
                     </ul>
                 </div>
                 <div class="card-footer">
@@ -68,7 +70,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="content">
-                <h4 class="text-primary"><i class="fa fa-bell"></i> Fique por dentro das novidades através dos paineis de acessos rápidos</h4>
+                <h4 class="text-primary"><i class="fa fa-exclamation-circle"></i> Fique por dentro das novidades através dos paineis de acessos rápidos</h4>
             </div>
         </div>
     </div>
@@ -79,9 +81,9 @@
     </div>
     <div class="col-md-6">
         @Html.Action("ExibirUltimasAulas", "Aula")
-      
+
     </div>
-     
+
 </div>
 
 
@@ -99,7 +101,7 @@
                     data: JSON.stringify({ termo: termo, pagina: pagina })
                 });
             };
-            
+
 
             $public.VisualizarAviso = function (idAviso, idUsuario) {
                 return $.ajax({
@@ -109,7 +111,8 @@
                     dataType: "json",
                     data: JSON.stringify({ idAviso: idAviso, idUsuario: idUsuario })
                 });
-            }
+            };
+
             return $public;
         }());
 
@@ -129,7 +132,7 @@
             $private.pesquisarTermo = function () {
                 buscaContextual.PaginaCorrente = 1;
                 buscaContextual.Termo = $("#q").val();
-               
+
                 $private.efetuarBusca();
             };
 
@@ -142,7 +145,7 @@
 
 
             $private.atualizarPagina = function () {
-             
+
                 proxy.BuscaContextual(buscaContextual.Termo, buscaContextual.PaginaCorrente)
                     .done($private.atualizarResultados)
                     .fail(function () { console.log("Erro"); });
@@ -165,19 +168,16 @@
             };
 
             $private.CalcularPaginaMinima = function (quantidade, pagina) {
-                if (pagina < 4)
-                {
+                if (pagina < 4) {
                     return 1;
                 }
-                else if (pagina > quantidade - 3)
-                {
+                else if (pagina > quantidade - 3) {
                     return quantidade - 4;
                 }
-                else
-                {
+                else {
                     return pagina - 2;
                 }
-            }
+            };
 
             $private.CalcularPaginaMaxima = function (quantidade, pagina) {
                 if (pagina < 4) {
@@ -188,14 +188,13 @@
                         return 6;
                     }
                 }
-                else if (pagina > quantidade - 3)
-                {
+                else if (pagina > quantidade - 3) {
                     return quantidade + 1;
                 }
                 else {
                     return pagina + 3;
                 }
-            }
+            };
 
             $private.exibirResultados = function (data) {
                 $("#resultado-busca-container").html($private.ResultadoBuscaTemplate(
@@ -224,11 +223,11 @@
                         paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.resultados.Count / 8), data.paginaCorrente),
                         paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.resultados.Count / 8), data.paginaCorrente)
                     }));
-           
+
             };
 
             $private.visualizarAviso = function (e) {
-                
+
                 var aviso = $(e.target).closest(".aviso");
                 var idAviso = aviso.data("id");
                 aviso.fadeOut("slow", null, function () {
@@ -239,8 +238,8 @@
             $private.atualizarAvisos = function (data) {
                 var aviso = $private.AvisoTemplate(data);
                 $(aviso).hide().appendTo($("#corpo-painel-avisos")).fadeIn("slow");
-               
-            }
+
+            };
         }(SmartLMS.HomeControllerProxy));
     </script>
 }

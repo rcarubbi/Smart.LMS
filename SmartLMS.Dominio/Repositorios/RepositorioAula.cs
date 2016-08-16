@@ -16,11 +16,16 @@ namespace SmartLMS.WebUI.Controllers
             _contexto = contexto;
         }
 
-        public IEnumerable<Aula> ListarUltimasAulasAdicionadas(Guid idAluno)
+        public IEnumerable<AulaTurma> ListarUltimasAulasAdicionadas(Guid idAluno)
         {
-            return _contexto.ObterLista<TurmaAluno>().Where(t => t.IdAluno == idAluno)
-                .SelectMany(x => x.Turma.AulasDisponiveis)
-                .OrderByDescending(x => x.DataInclusao).Take(6);
+            var turmasAluno = _contexto
+                .ObterLista<TurmaAluno>()
+                .Where(t => t.IdAluno == idAluno)
+                .Select(x => x.Turma);
+
+            return turmasAluno.SelectMany(a => a.AulasDisponiveis)
+                .OrderByDescending(x => x.DataDisponibilizacao)
+                .Take(6).ToList();
         }
 
         public AulaInfo ObterAula(Guid id, Guid idUsuario)
@@ -31,7 +36,7 @@ namespace SmartLMS.WebUI.Controllers
             return new AulaInfo
             {
                 Aula = _contexto.ObterLista<Aula>().Find(id),
-                Disponivel = aula.Turmas.Any(t => t.Alunos.Any(al => al.IdAluno == idUsuario)),
+                Disponivel = aula.Turmas.Any(t => t.Turma.Alunos.Any(al => al.IdAluno == idUsuario)),
                 Percentual = ultimoAcesso == null ? 0 : ultimoAcesso.Percentual,
                 Segundos = ultimoAcesso == null ? 0 : ultimoAcesso.Segundos,
             };

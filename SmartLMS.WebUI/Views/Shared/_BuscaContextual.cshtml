@@ -28,10 +28,14 @@
     </div>
 </div>
 <script id="resultado-busca-template" type="text/x-handlebars-template">
-    {{#equals paginas 1}}
-        <h4>Foi encontrada <strong>uma</strong> página para o termo <strong>"{{termo}}"</strong> </h4>
+    {{#equals paginas 0}}
+        <h4>Não foi encontrado nenhum resultado para o termo <strong>"{{termo}}"</strong> </h4>
     {{else}}
-        <h4>Foram encontradas <strong>{{paginas}}</strong> páginas para o termo <strong>"{{termo}}"</strong></h4>
+        {{#equals paginas 1}}
+            <h4>Foi encontrada <strong>uma</strong> página para o termo <strong>"{{termo}}"</strong> </h4>
+        {{else}}
+            <h4>Foram encontradas <strong>{{paginas}}</strong> páginas para o termo <strong>"{{termo}}"</strong></h4>
+        {{/equals}}
     {{/equals}}
     <div class="bs-component">
         <div class="list-group">

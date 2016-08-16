@@ -7,17 +7,10 @@
 
 <div class="card card-signup">
 
-    @using (Ajax.BeginForm("Login", "Autenticacao",
-                                    new
-                                    {
-                                        ReturnUrl = Request.QueryString["ReturnUrl"]
-                                    },
-                                    new AjaxOptions
-                                    {
-                                        LoadingElementId = "loading",
-                                        UpdateTargetId = "ValidationSummaryContainer"
-                                    }, new { @class = "form" }))
+    @using (Html.BeginForm("Login", "Autenticacao", new { ReturnUrl = Request.QueryString["ReturnUrl"] }, FormMethod.Post, new { @class = "form", id = "frmLogin" }))
     {
+        @Html.AntiForgeryToken()
+
         <div class="header header-primary text-center">
             <h2>Código Nerd</h2>
             <h4>Ensinando dinossauros a Programar</h4>
@@ -29,7 +22,7 @@
                 </span>
                 <div class="form-group label-floating">
                     <label class="control-label">Digite seu email cadastrado</label>
-                    @Html.TextBoxFor(x => x.Login, new { @class = "form-control" })
+                    @Html.TextBoxFor(x => x.Login, new { @class = "form-control", id="txtLogin-Login" })
                 </div>
             </div>
             <div class="input-group">
@@ -38,7 +31,7 @@
                 </span>
                 <div class="form-group label-floating">
                     <label class="control-label">Digite sua senha</label>
-                     @Html.EditorFor(x => x.Senha)
+                     @Html.EditorFor(x => x.Senha, new { HtmlAttributes = new { id = "txtLogin-Senha" } })
                 </div>
             </div>
             <div class="togglebutton text-center">
@@ -50,12 +43,9 @@
 
          
         </div>
-        <div class="footer text-center">
-            <button name="login-submit" id="login-submit" class="btn btn-simple btn-primary btn-lg">Entrar</button>
-        </div>
-        <div style="display: none; margin-top: 5px" id="loading" class="text-center">
-            <img src="~/Content/img/gif-load.gif" />
-        </div>
+            <div class="footer text-center">
+                <button name="login-submit" id="login-submit" class="btn btn-simple btn-primary btn-lg">Entrar</button>
+            </div>
        
             <div id="ValidationSummaryContainer" class="container">
 
@@ -66,3 +56,45 @@
         </div>
     }
 </div>
+
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        (function () {
+            var $private = {};
+
+            $(function () {
+                $("#frmLogin").on("submit", $private.EnviarFaleConosco);
+            });
+
+            $private.EnviarFaleConosco = function (e) {
+                e.preventDefault();
+                $.validator.unobtrusive.parse($(this));
+
+                if ($(this).valid()) {
+                    var enviarTextoOriginal = $("#btnLogin-Enviar").text();
+                    var enviando = $("<img src='@Url.Content("~/Content/imgs/loading.png")'> Autenticando");
+                    $("#btnFaleConosco-Enviar").text(enviando);
+                    $("#btnFaleConosco-Enviar").prop('disabled', true);
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: $(this).serialize(),
+                        success: function (result) {
+                            if (result.Autenticado)
+                                document.location.href = result.Url;
+                            else {
+                                $("#txtLogin-Login").val("");
+                                $("#txtLogin-Senha").val(""); 
+                                $("#btnLogin").text(enviarTextoOriginal);
+                                $("#btnLogin").prop('disabled', true);
+                                $("#ValidationSummaryContainer").html(result.ValidationSummary);
+                            }
+                        }
+                    });
+                }
+            };
+        }());
+    </script>
+}

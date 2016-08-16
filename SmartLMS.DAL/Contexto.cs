@@ -37,48 +37,23 @@ namespace SmartLMS.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            
 
             modelBuilder.Entity<Parametro>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity); 
             modelBuilder.Entity<Log>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Turma>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
             modelBuilder.Entity<Aluno>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Administrador>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Professor>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
             modelBuilder.Entity<Aula>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
-            modelBuilder.Entity<Aula>().HasMany(x => x.Turmas).WithMany(x => x.AulasDisponiveis).Map(ua =>
-            {
-                ua.MapLeftKey("IdAula");
-                ua.MapRightKey("IdTurma");
-                ua.ToTable("AulaTurma");
-            }); ;
-
-
-            modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Usuario);
-            modelBuilder.Entity<AcessoArquivo>().HasRequired(x => x.Arquivo);
-
-
-            modelBuilder.Entity<Arquivo>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            modelBuilder.Entity<Arquivo>().HasRequired(x => x.Curso).WithMany(c => c.Arquivos);
-            modelBuilder.Entity<Arquivo>().HasOptional(x => x.Aula).WithMany(c => c.Arquivos);
-
-            modelBuilder.Entity<AcessoAula>().HasRequired(x => x.Usuario);
-            modelBuilder.Entity<AcessoAula>().HasRequired(x => x.Aula);
-           
-
-            modelBuilder.Entity<AreaConhecimento>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            modelBuilder.Entity<AreaConhecimento>().HasMany(x => x.Assuntos).WithRequired(a => a.AreaConhecimento);
-
-            modelBuilder.Entity<Assunto>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            modelBuilder.Entity<Assunto>().HasMany(x => x.Cursos).WithRequired(a => a.Assunto);
-
-            modelBuilder.Entity<Curso>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            modelBuilder.Entity<Curso>().HasMany(x => x.Aulas).WithRequired(a => a.Curso);
-
+            modelBuilder.Configurations.Add(new AcessoArquivoConfiguration());
+            modelBuilder.Configurations.Add(new AcessoAulaConfiguration());
+            modelBuilder.Configurations.Add(new AssuntoConfiguration());
+            modelBuilder.Configurations.Add(new AreaConhecimentoConfiguration());
+            modelBuilder.Configurations.Add(new ArquivoConfiguration());
+            modelBuilder.Configurations.Add(new CursoConfiguration());
             modelBuilder.Configurations.Add(new TurmaAlunoConfiguration());
+            modelBuilder.Configurations.Add(new AulaTurmaConfiguration());
             modelBuilder.Configurations.Add(new UsuarioAvisoConfiguration());
         }
 

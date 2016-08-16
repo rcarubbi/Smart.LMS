@@ -66,7 +66,12 @@ namespace SmartLMS.WebUI.DependencyResolution {
         private HttpContextBase HttpContext {
             get {
                 var ctx = Container.TryGetInstance<HttpContextBase>();
-                return ctx ?? new HttpContextWrapper(System.Web.HttpContext.Current);
+                if (System.Web.HttpContext.Current != null)
+                {
+                    return ctx ?? new HttpContextWrapper(System.Web.HttpContext.Current);
+                }
+                else
+                    return null;
             }
         }
 

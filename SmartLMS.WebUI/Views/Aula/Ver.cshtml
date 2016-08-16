@@ -34,18 +34,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="col-md-4">
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            <h3 class="panel-title">Próximas aulas</h3>
-        </div>
-        <div class="panel-body panel-body-no-margin">
-            @Html.Action("ListarAulas", new { Id = Model.IdCurso, IdAulaCorrente = Model.Id })
-        </div>
-    </div>
-</div>
-<div class="col-md-8">
     <div class="panel panel-success">
         <div class="panel-heading">
             <h3 class="panel-title">Discussão</h3>
@@ -62,8 +50,20 @@
         </div>
     </div>
 </div>
-
 <div class="col-md-4">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Próximas aulas</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+            @Html.Action("ListarAulas", new { Id = Model.IdCurso, IdAulaCorrente = Model.Id })
+            <div class="text-center">
+                <a href="@Url.Action("Index", "Aula", new { Id = Model.IdCurso })" class="btn btn-simple">
+                    <i class="material-icons">reply</i> Voltar para o índice
+                </a>
+            </div>
+        </div>
+    </div>
     <div class="panel panel-success">
         <div class="panel-heading">
             <h3 class="panel-title">Material de apoio</h3>
@@ -90,7 +90,8 @@
         </div>
     </div>
 </div>
-
+ 
+ 
 
 <script id="comentario-template" type="text/x-handlebars-template">
     {{#each Comentarios}}
@@ -111,6 +112,7 @@
     <div class="list-group-separator list-group-separator-sm"></div>
     {{/each}}
 </script>
+
 
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -152,7 +154,7 @@
         }());
 
         (function (comentariosProxy) {
-            var $private = {}, pendingSeektoTime = parseFloat('@(Model.Segundos)');
+            var $private = {};
 
             $(function () {
 
@@ -165,11 +167,10 @@
                 });
 
                 var player = new Vimeo.Player("videoFrame");
-                player.on("ready", function () {
+                player.on("play", function () {
 
+                    var pendingSeektoTime = parseFloat('@(Model.Segundos)');
 
-                   
-              
                     if (pendingSeektoTime != 0) {
                         player.setCurrentTime(pendingSeektoTime);
                         pendingSeektoTime = 0;
@@ -190,7 +191,7 @@
                 $("#comentarios-container").on("scroll", $private.carregarPaginaComentarios);
                 $("#comentar-form").on("submit", $private.comentar);
                 $("#comentarios-container").on("click", ".comentario .close", $private.removerComentario);
-
+                player.ready();
             });
 
             $private.comentar = function (e) {
@@ -198,7 +199,7 @@
 
                 comentariosProxy.Comentar($(this).serialize()).always(function () {
                     $("#sem-mais-resultados").hide();
-                    //$("#Comentario").closest(".form-group").addClass("is-empty");
+                    
                     $("#Comentario").val("");
                     $private.Pagina = 1;
                     comentariosProxy.Listar($private.Pagina).done($private.exibirComentarios);
@@ -242,8 +243,6 @@
             $private.vimeoEndedEvent = function (data) {
                 $private.updateProgress();
             }
-
-
 
             $private.updateProgress = function () {
                 if ($private.lastSent == $private.lastUpdate) {

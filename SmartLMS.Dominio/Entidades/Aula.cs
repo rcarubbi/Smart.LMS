@@ -8,7 +8,7 @@ namespace SmartLMS.Dominio.Entidades
         public virtual ICollection<Comentario> Comentarios { get; set; }
         public virtual ICollection<AcessoAula> Acessos { get; set; }
 
-        public virtual ICollection<Turma> Turmas { get; set; }
+        public virtual ICollection<AulaTurma> Turmas { get; set; }
 
         public virtual Professor Professor { get; set; }
 

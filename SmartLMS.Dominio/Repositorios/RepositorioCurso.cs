@@ -24,7 +24,7 @@ namespace SmartLMS.Dominio.Repositorios
                 .OrderBy(x => x.Ordem)
                 .Select(a => new AulaInfo {
                     Aula = a,
-                    Disponivel = a.Turmas.Any(t => t.Alunos.Any(al => al.IdAluno == idUsuario)),
+                    Disponivel = a.Turmas.Any(t => t.Turma.Alunos.Any(al => al.IdAluno == idUsuario)),
                     Percentual = a.Acessos.Where(x => x.Usuario.Id == idUsuario).LastOrDefault()?.Percentual ?? 0
         });
 
