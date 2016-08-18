@@ -48,7 +48,7 @@ Handlebars.registerHelper('for', function (from, to, incr, block) {
 
 
 var SmartLMS = {};
-SmartLMS.api = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + "/";
+SmartLMS.api = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + "/SmartLMS/";
  
 
 

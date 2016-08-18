@@ -247,43 +247,5 @@
         }(SmartLMS.HomeControllerProxy));
 
 
-        (function () {
-            var $private = {};
-
-            $(function () {
-                $("#frmFaleConosco").on("submit", $private.EnviarFaleConosco);
-            });
-
-            $private.EnviarFaleConosco = function (e) {
-                e.preventDefault();
-                $.validator.unobtrusive.parse($(this));
-
-                if ($(this).valid()) {
-                    var enviarTextoOriginal = $("#btnFaleConosco-Enviar").text();
-                    var enviando = $("<img src='@Url.Content("~/Content/Img/loading-white.gif")'><span> Enviando</span>");
-                    $("#btnFaleConosco-Enviar").html(enviando);
-                    $("#btnFaleConosco-Enviar").prop('disabled', true);
-                    $.ajax({
-                        url: this.action,
-                        type: this.method,
-                        data: $(this).serialize(),
-                        success: function (result) {
-                            if (result.Success)
-                                SmartLMS.App.toastr['success']('Sua mensagem foi enviada com sucesso!', 'Fale Conosco');
-                            else
-                                SmartLMS.App.toastr['error']('Ocorreu um erro ao enviar a mensagem, tente novamente.    ', 'Fale Conosco');
-                            
-
-                            $("#txtFaleConosco-Nome").val("");
-                            $("#txtFaleConosco-Email").val("");
-                            $("#txtFaleConosco-Mensagem").val("");
-                            $("#btnFaleConosco-Enviar").text(enviarTextoOriginal);
-                            $("#btnFaleConosco-Enviar").prop('disabled', false);
-                        }
-                    });
-                }
-            };
-        }());
-
     </script>
  }

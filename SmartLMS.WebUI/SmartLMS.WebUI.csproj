@@ -324,6 +324,7 @@
     <Content Include="Content\material-kit\material-kit.css.map" />
     <Content Include="manifest.json" />
     <None Include="Properties\PublishProfiles\Homologacao.pubxml" />
+    <None Include="Properties\PublishProfiles\Produção.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\handlebars.amd.js" />
     <Content Include="Scripts\handlebars.amd.min.js" />
