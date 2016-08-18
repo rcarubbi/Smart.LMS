@@ -42,7 +42,7 @@ namespace SmartLMS.WebUI.Controllers
                     ModelState.AddModelError("UsuarioOuSenhaInvalidos", "Usuário ou Senha inválidos");
                 }
             }
-            return Json(new { ValidationSummary = RenderViewToString(PartialView("_errosValidacao", viewModel)), Autenticado = false }, JsonRequestBehavior.AllowGet);
+            return Json(new { ValidationSummary = RenderRazorViewToString("_errosValidacao", viewModel), Autenticado = false }, JsonRequestBehavior.AllowGet);
       
         }
 

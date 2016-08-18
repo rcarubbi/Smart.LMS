@@ -65,18 +65,18 @@
             var $private = {};
 
             $(function () {
-                $("#frmLogin").on("submit", $private.EnviarFaleConosco);
+                $("#frmLogin").on("submit", $private.Autenticar);
             });
 
-            $private.EnviarFaleConosco = function (e) {
+            $private.Autenticar = function (e) {
                 e.preventDefault();
                 $.validator.unobtrusive.parse($(this));
 
                 if ($(this).valid()) {
-                    var enviarTextoOriginal = $("#btnLogin-Enviar").text();
-                    var enviando = $("<img src='@Url.Content("~/Content/imgs/loading.png")'> Autenticando");
-                    $("#btnFaleConosco-Enviar").text(enviando);
-                    $("#btnFaleConosco-Enviar").prop('disabled', true);
+                    var enviarTextoOriginal = $("#login-submit").text();
+                    var enviando = $("<img src='@Url.Content("~/Content/img/loading-green.gif")'><span>Autenticando</span>");
+                    $("#login-submit").html(enviando);
+                    $("#login-submit").prop('disabled', true);
                     $.ajax({
                         url: this.action,
                         type: this.method,
@@ -87,8 +87,8 @@
                             else {
                                 $("#txtLogin-Login").val("");
                                 $("#txtLogin-Senha").val(""); 
-                                $("#btnLogin").text(enviarTextoOriginal);
-                                $("#btnLogin").prop('disabled', true);
+                                $("#login-submit").text(enviarTextoOriginal);
+                                $("#login-submit").prop('disabled', false);
                                 $("#ValidationSummaryContainer").html(result.ValidationSummary);
                             }
                         }

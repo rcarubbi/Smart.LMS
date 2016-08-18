@@ -18,10 +18,10 @@
         public const string CHAVE_ARQUIVO = "NomeArquivo";
         public const string NOME_PROJETO = "NomeProjeto";
         public const string CHAVE_STORAGE_ARQUIVOS = "StorageArquivos";
-
-        public static string CHAVE_TITULO_AULAS_ASSISTIDAS = "TituloAulasAssistidas";
-        
-        public static string CHAVE_TITULO_ULTIMAS_AULAS = "TituloUltimasAulas";
+        public const string CHAVE_TITULO_AULAS_ASSISTIDAS = "TituloAulasAssistidas";
+        public const string CHAVE_TITULO_ULTIMAS_AULAS = "TituloUltimasAulas";
+        public const string CHAVE_NOME_DESTINATARIO_FALE_CONOSCO = "NomeDestinatarioFaleConosco";
+        public const string CHAVE_EMAIL_DESTINATARIO_FALE_CONOSCO = "EmailDestinatarioFaleConosco";
 
         public static string AREA_CONHECIMENTO_PLURAL { get; set; }
 
@@ -42,5 +42,5 @@
         public static string TITULO_ULTIMAS_AULAS { get; set; }
 
         public static string STORAGE_ARQUIVOS { get; set; }
-    }
+        }
 }

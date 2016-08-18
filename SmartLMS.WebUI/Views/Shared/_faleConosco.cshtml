@@ -8,7 +8,7 @@
                 </button>
                 <h4 class="modal-title">Fale conosco</h4>
             </div>
-            @using (Html.BeginForm("FaleConsoco", "Home", null, FormMethod.Post, new { id = "frmFaleConosco" }))
+            @using (Html.BeginForm("FaleConosco", "Home", null, FormMethod.Post, new { id = "frmFaleConosco" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
@@ -41,49 +41,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnFaleConosco-Enviar" class="btn btn-primary">Enviar</button>
+                    <button type="submit" id="btnFaleConosco-Enviar" class="btn btn-primary">Enviar</button>
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Fechar</button>
                 </div>
             }
         </div>
     </div>
 </div>
-
-
-@section scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        (function () {
-            var $private = {};
-
-            $(function () {
-                $("#frmFaleConosco").on("submit", $private.EnviarFaleConosco);
-            });
-
-            $private.EnviarFaleConosco = function (e) {
-                e.preventDefault();
-                $.validator.unobtrusive.parse($(this));
-              
-                if ($(this).valid()) {
-                    var enviarTextoOriginal = $("#btnFaleConosco-Enviar").text();
-                    var enviando = $("<img src=''> Enviando");
-                    $("#btnFaleConosco-Enviar").text(enviando);
-                    $("#btnFaleConosco-Enviar").prop('disabled', true);
-                    $.ajax({
-                        url: this.action,
-                        type: this.method,
-                        data: $(this).serialize(),
-                        success: function (result) {
-                            SmartLMS.App.toastr['success']('Sua mensagem foi enviada com sucesso!', 'Fale Conosco');
-                            $("#txtFaleConosco-Nome").val("");
-                            $("#txtFaleConosco-Email").val("");
-                            $("#txtFaleConosco-Mensagem").val("");
-                            $("#btnFaleConosco-Enviar").text(enviarTextoOriginal);
-                            $("#btnFaleConosco-Enviar").prop('disabled', true);
-                        }
-                    });
-                }
-            };
-        }());
-    </script>
-}

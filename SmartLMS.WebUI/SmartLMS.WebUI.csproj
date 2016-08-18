@@ -252,9 +252,10 @@
     <Content Include="Content\img\aspnet.png" />
     <Content Include="Content\img\csharp.png" />
     <Content Include="Content\img\css.png" />
-    <Content Include="Content\img\gif-load.gif" />
     <Content Include="Content\img\html.png" />
     <Content Include="Content\img\jquery.jpg" />
+    <Content Include="Content\img\loading-green.gif" />
+    <Content Include="Content\img\loading-white.gif" />
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\img\mvc.png" />
     <Content Include="Content\img\sem-imagem.png" />
