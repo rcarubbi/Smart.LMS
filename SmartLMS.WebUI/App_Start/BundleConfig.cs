@@ -10,10 +10,15 @@ namespace SmartLMS.WebUI
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
-                        "~/Scripts/jquery.unobtrusive-ajax.js",
+                        "~/Scripts/jquery.unobtrusive-ajax.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                         "~/Scripts/jquery-ui-{version}.js",
                         "~/Scripts/jquery.dropdown/jquery.dropdown.js",
-                        "~/Scripts/handlebars.js",
+                        "~/Scripts/jquery.touchSwipe/jquery.touchSwipe.js"));
+
+            bundles.Add(new ScriptBundle("~/Bundles/data").Include(
+                "~/Scripts/handlebars.js",
                         "~/Scripts/momentjs/moment-with-locales.js",
                         "~/Scripts/jQuery.mask/jquery.mask.js"));
 
@@ -36,19 +41,21 @@ namespace SmartLMS.WebUI
                       "~/Scripts/toastr/toastr.min.js",
                       "~/Scripts/slimscroll/jquery.slimscroll.min.js",
                       "~/Scripts/app.js"));
-                      
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                "~/Content/font-awesome.css",
                "~/Content/bootstrap.css",
                "~/Content/themes/notheme/jquery-ui.css",
-               "~/Content/themes/notheme/jquery-ui.structure.css",
-               "~/Content/material-kit/material-kit.css",
-               "~/Content/toastr/toastr.min.css",
-               "~/Content/jquery.dropdown/jquery.dropdown.css",
-               "~/Content/multi-carousel.css",
-               "~/Content/figure-caption.css",
-               "~/Content/listgroup.css",
-               "~/Content/Site.css"));
+               "~/Content/themes/notheme/jquery-ui.structure.css"));
+
+            bundles.Add(new StyleBundle("~/Content/csscustom").Include(
+           "~/Content/material-kit/material-kit.css",
+           "~/Content/toastr/toastr.min.css",
+           "~/Content/jquery.dropdown/jquery.dropdown.css",
+           "~/Content/multi-carousel.css",
+           "~/Content/figure-caption.css",
+           "~/Content/listgroup.css",
+           "~/Content/Site.css"));
 
         }
     }

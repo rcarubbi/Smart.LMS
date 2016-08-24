@@ -8,8 +8,15 @@
     <meta name="viewport" content="width=device-width" />
     <title>@Parametro.PROJETO - Login</title>
     <meta http-equiv="x-ua-compatible" content="IE=10">
+    <script>
+        var SmartLMS = {};
+        SmartLMS.api = '@Url.Content("~/")';
+    </script>
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/csscustom")
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="~/favicon.ico" type="image/ico" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
@@ -58,6 +65,8 @@
          </div>
     </div>
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/data")
     @Scripts.Render("~/bundles/bootstrap")
    @RenderSection("scripts", false)
 </body>

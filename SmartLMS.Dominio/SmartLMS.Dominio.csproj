@@ -102,10 +102,12 @@
     <Compile Include="Repositorios\RepositorioTurma.cs" />
     <Compile Include="Repositorios\RepositorioUsuario.cs" />
     <Compile Include="Servicos\AcessoInfo.cs" />
+    <Compile Include="Servicos\AvisoInfo.cs" />
     <Compile Include="Servicos\ResultadoBusca.cs" />
     <Compile Include="Servicos\ServicoAutenticacao.cs" />
     <Compile Include="Servicos\ServicoBuscaContextual.cs" />
     <Compile Include="Servicos\ServicoHistorico.cs" />
+    <Compile Include="Servicos\TipoAviso.cs" />
     <Compile Include="Servicos\TipoResultado.cs" />
     <Compile Include="Servicos\TipoAcesso.cs" />
   </ItemGroup>

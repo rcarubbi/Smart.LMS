@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="x-ua-compatible" content="IE=10">
     <title>@Parametro.PROJETO - @ViewBag.Title</title>
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="~/favicon.ico" type="image/ico" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
@@ -25,37 +27,48 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
+    <script>
+        var SmartLMS = {};
+        SmartLMS.api = '@Url.Content("~/")';
+    </script>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/csscustom")
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("styles", required: false)
     <base href="@HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")" />
 </head>
 <body>
-  
+
     @Html.Action("ExibirCabecalho", "Usuario")
     <div class="sidebar-container">
         <div class="container">
             @RenderBody()
-     
+
         </div>
     </div>
 
-        <footer class="footer footer-black">
-            <div class="container">
+    <footer class="footer footer-black">
+        <div class="container">
+            <div class="col-sm-3">
                 <nav class="pull-left">
                     <ul>
                         <li>
-                            Smart 2.0 - LMS 
+                            Smart 2.0 - LMS
                         </li>
                     </ul>
                 </nav>
+            </div>
+            <div class="col-sm-9">
                 <div class="copyright pull-right">
                     © 2016, feito com <i class="fa fa-heart heart"></i> por <a href="http://www.itanio.com.br" target="_blank">Itanio</a>
                 </div>
             </div>
-        </footer>
- 
+        </div>
+    </footer>
+
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/data")
     @Scripts.Render("~/bundles/bootstrap")
     <script>
         SmartLMS.IdUsuarioLogado = '@ViewBag.IdUsuarioLogado';

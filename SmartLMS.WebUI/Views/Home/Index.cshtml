@@ -5,13 +5,16 @@
 @Html.Partial("_BuscaContextual")
 
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-5 col-md-push-7">
+        @Html.Action("ExibirAvisos", "Aviso")
+    </div>
+    <div class="col-md-7 col-md-pull-5">
         <div class="card" style="min-height: 295px;">
             <div class="content">
                 <h6 class="panel-title text-primary">
                     <strong>Selecione uma das áreas de conhecimento dísponíveis</strong>
                 </h6>
-                <div class="card-body">
+                <div class="card-body areas-conhecimento-bar">
                     <ul class="nav nav-pills" role="tablist">
                         @{
                             var primeiraLinha = true;
@@ -39,9 +42,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-5">
-        @Html.Action("ExibirAvisos", "Aviso")
-    </div>
+    
 </div>
 <div class="row">
     <div class="col-md-12">

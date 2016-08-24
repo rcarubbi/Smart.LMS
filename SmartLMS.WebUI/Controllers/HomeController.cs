@@ -81,6 +81,7 @@ namespace SmartLMS.WebUI.Controllers
                     MailAddress destinatario = new MailAddress(emailDestinatarioFaleConosco, nomeDestinatarioFaleConosco);
                     email.To.Add(destinatario);
                     email.From = new MailAddress(emailRemetente, Parametro.PROJETO);
+                    email.IsBodyHtml = true;
                     email.Body = $@"<div><h1>Fale Conosco - {Parametro.PROJETO}</h1>
                                     <dl>
                                         <dt>Nome:</dt>

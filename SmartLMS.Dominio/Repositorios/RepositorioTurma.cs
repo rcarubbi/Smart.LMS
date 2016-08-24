@@ -19,7 +19,7 @@ namespace SmartLMS.Dominio.Repositorios
             return _contexto.ObterLista<Turma>().Where(t => t.Alunos.Any(a => a.IdAluno == idAluno));
         }
 
-        public bool VerificarDisponivildiadeAula(Guid idAula, Guid idAluno)
+        public bool VerificarDisponibilidadeAula(Guid idAula, Guid idAluno)
         {
             return ListarTurmasPorAluno(idAluno).SelectMany(x => x.AulasDisponiveis).Any(x => x.Aula.Id == idAula);
         }

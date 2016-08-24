@@ -343,6 +343,8 @@
     <Content Include="Scripts\jquery-ui-1.12.0.js" />
     <Content Include="Scripts\jquery-ui-1.12.0.min.js" />
     <Content Include="Scripts\jquery.dropdown\jquery.dropdown.js" />
+    <Content Include="Scripts\jquery.touchSwipe\jquery.touchSwipe.js" />
+    <Content Include="Scripts\jquery.touchSwipe\jquery.touchSwipe.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -408,6 +410,8 @@
     <Content Include="Views\Aula\_formularioComentario.cshtml" />
     <Content Include="Views\Shared\_sobre.cshtml" />
     <Content Include="Views\Shared\_faleConosco.cshtml" />
+    <Content Include="Views\Aviso\Index.cshtml" />
+    <Content Include="Views\Shared\_paginacao.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

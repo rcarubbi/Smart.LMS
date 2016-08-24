@@ -1,0 +1,47 @@
+﻿@{ var paginaMax = Math.Ceiling(Model.Count / 8M);
+    if (paginaMax > 10)
+    {
+        paginaMax = 10;
+    }
+}
+<div class="text-center" id="paginacao-container">
+    <ul class="pagination pagination-primary">
+
+        <li>
+            <a class="historico-paginacao-anterior" @if (!Model.HasPrevious) { <text> style="display:none" </text>      } href="javascript:void(0);">&lt; anterior</a>
+        </li>
+
+        @for (int i = 1; i <= paginaMax; i++)
+        {
+            <li class="@(i == 1? "active" : string.Empty)">
+                <a href="javascript:void(0);" class="historico-paginacao-pagina">@i</a>
+            </li>
+        }
+        <li><a class="historico-paginacao-proxima" style="@(!Model.HasNext? "display:none;": string.Empty)" href="javascript:void(0);">próxima &gt;</a></li>
+    </ul>
+</div>
+
+<script id="paginacao-template" type="text/x-handlebars-template">
+
+    <ul class="pagination pagination-primary">
+        {{#if possuiAnterior}}
+        <li><a class="historico-paginacao-anterior" href="javascript:void(0);">&lt; anterior</a></li>
+        {{/if}}
+
+        {{#for paginaMin paginaMax 1}}
+        {{#equals this @@root.paginaCorrente}}
+        <li class="active">
+            {{else}}
+        <li>
+            {{/equals}}
+            <a href="javascript:void(0);" class="historico-paginacao-pagina">{{this}}</a>
+        </li>
+        {{/for}}
+
+
+        {{#if possuiProxima}}
+        <li><a class="historico-paginacao-proxima" href="javascript:void(0);">próxima &gt;</a></li>
+        {{/if}}
+    </ul>
+
+</script>

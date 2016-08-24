@@ -159,12 +159,21 @@
             $(function () {
 
                 $private.progress = [];
+                if (!SmartLMS.isMobile) {
+                    SmartLMS.App.initializeSlimControl(true);
+                    $("#comentarios-container").slimScroll({
+                        'size': '8px',
+                        'height': '450px'
+                    });
+                }
+                else
+                {
+                    $("#comentarios-container").css({
+                        "overflow": "auto",
+                        "height": "450px"
+                    });
+                }
 
-                SmartLMS.App.initializeSlimControl(true);
-                $("#comentarios-container").slimScroll({
-                    'size': '8px',
-                    'height': '450px'
-                });
 
                 var player = new Vimeo.Player("videoFrame");
                 player.on("play", function () {

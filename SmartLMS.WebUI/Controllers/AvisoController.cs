@@ -1,7 +1,11 @@
-﻿using Humanizer.DateTimeHumanizeStrategy;
+﻿using Carubbi.Utils.Data;
+using Carubbi.Utils.DataTypes;
+using Humanizer.DateTimeHumanizeStrategy;
+using SmartLMS.Domain.Servicos;
 using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Repositorios;
+using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
 using System;
 using System.Linq;
@@ -47,6 +51,18 @@ namespace SmartLMS.WebUI.Controllers
                 return Json(AvisoViewModel.FromEntity(proximoAviso, dateTimeHumanizerStrategy));
             else
                 return new EmptyResult();
+        }
+
+        public ActionResult Index()
+        {
+            TipoAviso tipo = TipoAviso.Geral;
+            ViewBag.TiposAcesso = new SelectList(tipo.ToDataSource<TipoAviso>(), "Key", "Value");
+            var periodo = new DateRange();
+            periodo.StartDate = DateTime.Now.AddMonths(-1);
+            periodo.EndDate = DateTime.Now;
+            ServicoHistorico servico = new ServicoHistorico(_contexto, new DefaultDateTimeHumanizeStrategy());
+            return View(AvisoViewModel.FromEntityList(servico.ListarHistoricoAvisos(periodo, 1, _usuarioLogado.Id, TipoAviso.Todos)));
+
         }
     }
 }

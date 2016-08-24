@@ -47,9 +47,10 @@ Handlebars.registerHelper('for', function (from, to, incr, block) {
 
 
 
-var SmartLMS = {};
-SmartLMS.api = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + "/SmartLMS/";
+
+SmartLMS.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
  
+
 
 
 SmartLMS.App = (function () {
@@ -104,27 +105,55 @@ SmartLMS.App = (function () {
                 next.children(':first-child').clone().appendTo($(this));
             }
         });
+
+        $(".carousel-inner").swipe({
+            //Generic swipe handler for all directions
+            swipeLeft: function (event, direction, distance, duration, fingerCount) {
+                $(this).parent().carousel('next');
+            },
+            swipeRight: function () {
+                $(this).parent().carousel('prev');
+            },                
+            //Default is 75px, set to 0 for demo so any distance triggers swipe
+            threshold: 0
+        });
+
+        $(".carousel-inner a").swipe({
+            tap: function () {
+                document.location.href = $(this).attr("href");
+            }
+        });
     };
 
     $public.initializeSlimControl = function (restart) {
-        if ($private.resize || restart) {
-            $('.sidebar-container').slimScroll({ destroy: true });
+        if (!SmartLMS.isMobile) {
+            if ($private.resize || restart) {
+                $('.sidebar-container').slimScroll({ destroy: true });
+            }
+            $('.sidebar-container').slimScroll({
+                height: window.innerHeight - $(".navbar").height() - $(".footer").height() - 40,
+                railOpacity: 0.4,
+                size: 10,
+            });
+            $private.resize = true;
         }
-        $('.sidebar-container').slimScroll({
-            height: window.innerHeight - $(".navbar").height() - $(".footer").height() - 40,
-            railOpacity: 0.4,
-            wheelStep: 10,
-            size: 10
-        });
-        $private.resize = true;
+        else
+        {
+            $('.sidebar-container').css({
+                "height": (window.innerHeight - $(".navbar").height() - $(".footer").height() - 40) + "px",
+                "overflow" : "auto"
+            });
+        }
     };
 
     $private.resizeSlimControl = function () {
-        if ($private.mhResizeTimeout) {
-            window.clearTimeout($private.mhResizeTimeout);
-        }
-        $private.mhResizeTimeout = 0;
-        $private.mhResizeTimeout = window.setTimeout(doResizeStuff, 100);
+        
+            if ($private.mhResizeTimeout) {
+                window.clearTimeout($private.mhResizeTimeout);
+            }
+            $private.mhResizeTimeout = 0;
+            $private.mhResizeTimeout = window.setTimeout(doResizeStuff, 100);
+        
     };
 
     function doResizeStuff() {

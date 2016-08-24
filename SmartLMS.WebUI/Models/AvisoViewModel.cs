@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using SmartLMS.Dominio.Entidades;
 using Humanizer.DateTimeHumanizeStrategy;
 using System.Globalization;
+using Carubbi.GenericRepository;
+using SmartLMS.Dominio.Servicos;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -20,6 +22,18 @@ namespace SmartLMS.WebUI.Models
             }
         }
 
+        public TipoAviso Tipo
+        {
+            get
+            {
+                if (MensagemDireta)
+                    return TipoAviso.Pessoal;
+                else if (DataTurma.HasValue)
+                    return TipoAviso.Turma;
+                else
+                    return TipoAviso.Geral;
+            }
+        }
         public string Texto { get; set; }
 
         internal static IEnumerable<AvisoViewModel> FromEntityList(IEnumerable<Aviso> avisos, DefaultDateTimeHumanizeStrategy humanizer)
@@ -40,6 +54,11 @@ namespace SmartLMS.WebUI.Models
                 DataTurma = item.Turma != null ? item.Turma.DataInicio : (DateTime?)null,
                 MensagemDireta = item.Usuario != null,
             };
+        }
+
+        internal static PagedListResult<AvisoViewModel> FromEntityList(PagedListResult<AvisoInfo> pagedListResult)
+        {
+             return 
         }
     }
 }
