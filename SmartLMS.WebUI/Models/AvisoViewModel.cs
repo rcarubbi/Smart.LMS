@@ -58,7 +58,7 @@ namespace SmartLMS.WebUI.Models
 
         internal static PagedListResult<AvisoViewModel> FromEntityList(PagedListResult<AvisoInfo> pagedListResult)
         {
-             return 
+            return null;
         }
     }
 }
