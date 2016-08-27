@@ -74,14 +74,12 @@ namespace SmartLMS.Dominio.Servicos
             Repositorios.RepositorioTurma turmaRepo = new Repositorios.RepositorioTurma(_contexto);
             var turmas = turmaRepo.ListarTurmasPorAluno(idUsuario);
 
-
-
             var avisos = _contexto.ObterLista<Aviso>()
              .Where(a =>
                  (!periodo.StartDate.HasValue || (periodo.StartDate.HasValue && periodo.StartDate.Value <= a.DataHora)
                  && (!periodo.EndDate.HasValue || (periodo.EndDate.HasValue && periodo.EndDate.Value >= a.DataHora)))
                  && (((tipo == TipoAviso.Pessoal || tipo == TipoAviso.Todos) && a.Usuario != null && a.Usuario.Id == idUsuario)
-                 || ((tipo == TipoAviso.Turma || tipo == TipoAviso.Todos) && a.Turma != null && tipo == TipoAviso.Turma && turmas.Any(t => t.Id == a.Turma.Id))
+                 || ((tipo == TipoAviso.Turma || tipo == TipoAviso.Todos) && a.Turma != null && turmas.Any(t => t.Id == a.Turma.Id))
                  || ((tipo == TipoAviso.Geral || tipo == TipoAviso.Todos) && a.Turma == null && a.Usuario == null)))
                  .Select(x => new AvisoInfo { Aviso = x });
 

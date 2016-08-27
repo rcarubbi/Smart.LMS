@@ -1,7 +1,7 @@
 ﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.AvisoViewModel>
 @{
     ViewBag.Title = "Histórico de avisos";
-  
+
 }
 <div class="panel panel-success">
     <div class="panel-heading">
@@ -44,23 +44,38 @@
                 {
 
                     <div class="list-group-item list-group-item-sm">
-                            <a href="@Url.Action("BaixarArquivo","Aula", new { Id = item.IdConteudo })" class='link-group-item'>
-                                <div class="row-action-primary">
-                                    <i class="fa fa-laptop"></i>
-                                </div>
-                                <div class="row-content">
-                                    <h5 class="list-group-item-heading">@item.Nome</h5>
-                                    <p class="list-group-item-text">@item.NomeCurso</p>
-                                    <div class="footer-content">@item.DataHoraTexto</div>
-                                </div>
-                            </a>
+                        <div class="row-action-primary">
+                            @switch (item.Tipo)
+                            {
+
+                                case SmartLMS.Domain.Servicos.TipoAviso.Geral:
+                                    <i class="material-icons">public</i>
+                                    break;
+                                case SmartLMS.Domain.Servicos.TipoAviso.Turma:
+                                    <i class="material-icons">people</i>
+                                    break;
+                                case SmartLMS.Domain.Servicos.TipoAviso.Pessoal:
+                                    <i class="material-icons">person</i>
+                                    break;
+                            }
+                         
+                        </div>
+                        <div class="row-content">
+                            <h5 class="list-group-item-heading">@item.Tipo</h5>
+                            @if (item.Tipo == SmartLMS.Domain.Servicos.TipoAviso.Turma)
+                            {
+                                <p class="list-group-item-text">@item.DataTurmaTexto</p>
+                            }
+                            <p class="list-group-item-text">@item.Texto</p>
+                            <div class="footer-content">@item.DataHora</div>
+                        </div>
                     </div>
                     <div class="list-group-separator list-group-separator-sm"></div>
                 }
 
 
             </div>
-           
+
             @Html.Partial("_paginacao")
         </div>
     </div>
@@ -70,49 +85,39 @@
     <script type="text/x-handlebars-template" id="historico-template">
         {{#each Entities}}
         <div class="list-group-item list-group-item-sm">
-
-            {{#equals TipoAcesso 1}}
-            <a href="@Url.Content("~/")Aula/Ver/{{IdConteudo}}" class='link-group-item'>
-                <div class="row-action-primary">
-                    <i class="fa fa-laptop"></i>
-                </div>
-                <div class="row-content">
-                    <h5 class="list-group-item-heading">{{Nome}}</h5>
-                    <div class="progress progress-line-primary">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="{{Percentual}}" aria-valuemin="0" aria-valuemax="100" style="width: {{Percentual}}%;">
-                            <span class="sr-only">{{Percentual}}% Concluída</span>
-                        </div>
-                    </div>
-                    <p class="list-group-item-text">{{NomeCurso}}</p>
-                    <div class="footer-content">{{DataHoraTexto}}</div>
-                </div>
-            </a>
-            {{else}}
-            <a href="@Url.Content("~/")Aula/BaixarArquivo/{{IdConteudo}}" class='link-group-item'>
-                <div class="row-action-primary">
-                    <i class="fa fa-laptop"></i>
-                </div>
-                <div class="row-content">
-                    <h5 class="list-group-item-heading">{{Nome}}</h5>
-                    <p class="list-group-item-text">{{NomeCurso}}</p>
-                    <div class="footer-content">{{DataHoraTexto}}</div>
-                </div>
-            </a>
-            {{/equals}}
+            <div class="row-action-primary">
+                {{#equals Tipo 1}}
+                    <i class="material-icons">public</i>
+                {{else}}
+                    {{#equals Tipo 2}}
+                        <i class="material-icons">people</i>
+                    {{else}}
+                        <i class="material-icons">person</i>
+                    {{/equals}}
+                {{/equals}}
+            </div>
+            <div class="row-content">
+                <h5 class="list-group-item-heading">{{TipoDescricao}}</h5>
+                {{#equals Tipo 2}}
+                <p class="list-group-item-text">{{DataTurmaTexto}}</p>
+                {{/equals}}
+                <p class="list-group-item-text">{{Texto}}</p>
+                <div class="footer-content">{{DataHora}}</div>
+            </div>
         </div>
         <div class="list-group-separator list-group-separator-sm"></div>
         {{/each}}
     </script>
 
     <script>
-        SmartLMS.HistoricoProxy = (function () {
+        SmartLMS.HistoricoAvisosProxy = (function () {
             $public = {}, $private = {};
 
-
+ 
             $public.Listar = function (dataInicio, dataFim, tipo, pagina) {
                 return $.ajax({
                     type: "POST",
-                    url: SmartLMS.api + "Usuario/ListarHistorico",
+                    url: SmartLMS.api + "Aviso/ListarHistoricoAvisos",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({ dataInicio: dataInicio, dataFim: dataFim, tipo: tipo, pagina: pagina })
@@ -131,7 +136,7 @@
                 $("#paginacao-container").on("click", ".historico-paginacao-pagina", $private.IrParaPagina);
                 $("#paginacao-container").on("click", ".historico-paginacao-proxima", $private.ProximaPagina);
                 $("#paginacao-container").on("click", ".historico-paginacao-anterior", $private.PaginaAnterior);
-                $("#TipoAcesso").on("dropdownjs.change", function () {
+                $("#TipoAviso").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
                     $private.TipoAcesso = selectedItem.val();
 
@@ -236,6 +241,6 @@
 
             };
 
-        }(SmartLMS.HistoricoProxy));
+        }(SmartLMS.HistoricoAvisosProxy));
     </script>
 }

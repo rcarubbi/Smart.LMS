@@ -5,6 +5,7 @@ using Humanizer.DateTimeHumanizeStrategy;
 using System.Globalization;
 using Carubbi.GenericRepository;
 using SmartLMS.Dominio.Servicos;
+using SmartLMS.Domain.Servicos;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -56,9 +57,40 @@ namespace SmartLMS.WebUI.Models
             };
         }
 
-        internal static PagedListResult<AvisoViewModel> FromEntityList(PagedListResult<AvisoInfo> pagedListResult)
+        public static PagedListResult<AvisoViewModel> FromEntityList(PagedListResult<AvisoInfo> avisos)
         {
-            return null;
+
+            PagedListResult<AvisoViewModel> pagina = new PagedListResult<AvisoViewModel>();
+
+            pagina.HasNext = avisos.HasNext;
+            pagina.HasPrevious = avisos.HasPrevious;
+            pagina.Count = avisos.Count;
+            List<AvisoViewModel> viewModels = new List<AvisoViewModel>();
+            foreach (var item in avisos.Entities)
+            {
+                viewModels.Add(FromEntity(item));
+            }
+
+            pagina.Entities = viewModels;
+            return pagina;
+        }
+
+        private static AvisoViewModel FromEntity(AvisoInfo item)
+        {
+            return new AvisoViewModel
+            {
+                DataHora = item.DataHoraTexto,
+                DataTurma = item.Aviso.Turma != null? item.Aviso.Turma.DataInicio : (DateTime?)null,
+                Texto = item.Aviso.Texto,
+                MensagemDireta = item.Aviso.Usuario != null
+            };
+        }
+
+        public string TipoDescricao
+        {
+            get {
+                return Tipo.ToString();
+            }
         }
     }
 }

@@ -56,13 +56,23 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult Index()
         {
             TipoAviso tipo = TipoAviso.Geral;
-            ViewBag.TiposAcesso = new SelectList(tipo.ToDataSource<TipoAviso>(), "Key", "Value");
+            ViewBag.TiposAviso = new SelectList(tipo.ToDataSource<TipoAviso>(), "Key", "Value");
             var periodo = new DateRange();
             periodo.StartDate = DateTime.Now.AddMonths(-1);
             periodo.EndDate = DateTime.Now;
             ServicoHistorico servico = new ServicoHistorico(_contexto, new DefaultDateTimeHumanizeStrategy());
             return View(AvisoViewModel.FromEntityList(servico.ListarHistoricoAvisos(periodo, 1, _usuarioLogado.Id, TipoAviso.Todos)));
 
+        }
+
+        public ActionResult ListarHistoricoAvisos(DateTime? dataInicio, DateTime? dataFim, TipoAviso tipo = TipoAviso.Todos, int pagina = 1)
+        {
+            var periodo = new DateRange();
+            periodo.StartDate = dataInicio;
+            periodo.EndDate = dataFim;
+
+            ServicoHistorico servico = new ServicoHistorico(_contexto, new DefaultDateTimeHumanizeStrategy());
+            return Json(AvisoViewModel.FromEntityList(servico.ListarHistoricoAvisos(periodo, pagina, _usuarioLogado.Id, tipo)), JsonRequestBehavior.AllowGet);
         }
     }
 }

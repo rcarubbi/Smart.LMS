@@ -126,7 +126,9 @@ var color = '';
             datepicker.removeClass('open');
 
             setTimeout(function () {
-                this.picker.hide();
+                if (this.picker) {
+                    this.picker.hide();
+                }
             }, 500);
 
             $(window).off('resize', this.place);
