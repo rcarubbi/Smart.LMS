@@ -15,5 +15,7 @@ namespace SmartLMS.Dominio
 
         IDbSet<TEntidade> ObterLista<TEntidade>() where TEntidade : class;
         void ConfigurarParaApi();
+
+        T UnProxy<T>(T proxyObject) where T : class;
     }
 }

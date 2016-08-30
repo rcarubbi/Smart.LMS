@@ -26,7 +26,8 @@ namespace SmartLMS.DAL.Migrations
                     Ativo = true,
                     Login = "administrador@itanio.com.br",
                     Email = "raphael@itanio.com.br",
-                    Senha = criptografia.Encrypt("Administrador")
+                    Senha = criptografia.Encrypt("Administrador"),
+                    DataCriacao = DateTime.Now
                 });
 
             var aluno = new Aluno
@@ -35,7 +36,8 @@ namespace SmartLMS.DAL.Migrations
                 Ativo = true,
                 Login = "aluno@itanio.com.br",
                 Email = "raphael@itanio.com.br",
-                Senha = criptografia.Encrypt("Aluno")
+                Senha = criptografia.Encrypt("Aluno"),
+                DataCriacao = DateTime.Now
             };
 
             context.Set<Usuario>().AddOrUpdate(u => u.Login, aluno);
@@ -46,7 +48,8 @@ namespace SmartLMS.DAL.Migrations
                 Ativo = true,
                 Login = "professor@itanio.com.br",
                 Email = "raphael@itanio.com.br",
-                Senha = criptografia.Encrypt("Professor")
+                Senha = criptografia.Encrypt("Professor"),
+                DataCriacao = DateTime.Now
             };
 
             context.Set<Usuario>().AddOrUpdate(u => u.Login, professor);

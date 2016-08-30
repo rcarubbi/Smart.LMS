@@ -6,6 +6,8 @@ namespace SmartLMS.WebUI.Models
 {
     public class ArquivoViewModel
     {
+        public Guid Id { get; set; }
+
         public string ArquivoFisico { get; private set; }
         public string Nome { get; private set; }
 
@@ -22,6 +24,7 @@ namespace SmartLMS.WebUI.Models
         {
             return new ArquivoViewModel
             {
+                Id = item.Id,
                 Nome = item.Nome,
                 ArquivoFisico = item.ArquivoFisico
             };

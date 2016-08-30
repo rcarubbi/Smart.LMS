@@ -1,41 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using SmartLMS.DAL;
+﻿using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Repositorios;
+using SmartLMS.Dominio.Servicos;
+using SmartLMS.WebUI.Models;
+using System;
+using System.Net;
+using System.Web.Mvc;
 
 namespace SmartLMS.WebUI.Controllers
 {
-    [Authorize]
-    public class AlunoController : Controller
+    [Authorize(Roles = "Administrador")]
+    public class AlunoController : BaseController
     {
-        private Contexto db = new Contexto();
+        public AlunoController(IContexto contexto)
+            : base(contexto)
+        {
+
+        }
+
+        [HttpPost]
+        public ActionResult ListarAlunos(string termo, string campoBusca, int pagina = 1)
+        {
+            RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
+            return Json(UsuarioViewModel.FromEntityList(usuarioRepo.ListarAlunos(termo, campoBusca, pagina)));
+        }
 
         // GET: Aluno
-        public ActionResult Index()
+        public ActionResult Index(string termo, string campoBusca, int pagina = 1)
         {
-            return View(db.Usuarios.ToList());
+            RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
+            ViewBag.CamposBusca = new SelectList(new string[] { "Nome", "Email", "Id" });
+            return View(UsuarioViewModel.FromEntityList(usuarioRepo.ListarAlunos(termo, campoBusca, pagina)));
         }
 
-        // GET: Aluno/Details/5
-        public ActionResult Details(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Aluno aluno = db.Usuarios.Find(id);
-            if (aluno == null)
-            {
-                return HttpNotFound();
-            }
-            return View(aluno);
-        }
+    
 
         // GET: Aluno/Create
         public ActionResult Create()
@@ -48,14 +46,28 @@ namespace SmartLMS.WebUI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Nome,Login,Senha,Email,Ativo")] Aluno aluno)
+        public ActionResult Create([Bind(Include = "Id,Nome,Login,Senha,Email")] Aluno aluno)
         {
             if (ModelState.IsValid)
             {
-                aluno.Id = Guid.NewGuid();
-                db.Usuarios.Add(aluno);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto);
+                    servicoAuth.CriarUsuario(aluno.Nome, aluno.Login, aluno.Email, aluno.Senha, Perfil.Aluno);
+
+                    TempData["TipoMensagem"] = "success";
+                    TempData["TituloMensagem"] = "Administração de alunos";
+                    TempData["Mensagem"] = "Aluno criado com sucesso";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    TempData["TipoMensagem"] = "error";
+                    TempData["TituloMensagem"] = "Administração de alunos";
+                    TempData["Mensagem"] = ex.Message;
+                }
+                
+               
             }
 
             return View(aluno);
@@ -68,7 +80,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Aluno aluno = db.Usuarios.Find(id);
+            Aluno aluno = _contexto.ObterLista<Aluno>().Find(id);
             if (aluno == null)
             {
                 return HttpNotFound();
@@ -85,9 +97,22 @@ namespace SmartLMS.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(aluno).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto);
+                    servicoAuth.AlterarUsuario(aluno.Id, aluno.Nome, aluno.Email, aluno.Login, aluno.Senha, aluno.Ativo, Perfil.Aluno);
+
+                    TempData["TipoMensagem"] = "success";
+                    TempData["TituloMensagem"] = "Administração de alunos";
+                    TempData["Mensagem"] = "Aluno alterado com sucesso";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    TempData["TipoMensagem"] = "error";
+                    TempData["TituloMensagem"] = "Administração de alunos";
+                    TempData["Mensagem"] = ex.Message;
+                }
             }
             return View(aluno);
         }
@@ -99,7 +124,9 @@ namespace SmartLMS.WebUI.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Aluno aluno = db.Usuarios.Find(id);
+            Aluno aluno = _contexto.ObterLista<Aluno>().Find(id);
+
+          
             if (aluno == null)
             {
                 return HttpNotFound();
@@ -112,19 +139,18 @@ namespace SmartLMS.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            Aluno aluno = db.Usuarios.Find(id);
-            db.Usuarios.Remove(aluno);
-            db.SaveChanges();
+            
+
+            var usuarioRepo = new RepositorioUsuario(_contexto);
+            usuarioRepo.ExcluirAluno(id);
+
+            TempData["TipoMensagem"] = "error";
+            TempData["TituloMensagem"] = "Administração de alunos";
+            TempData["Mensagem"] = "Aluno excluído com sucesso";
+
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+      
     }
 }

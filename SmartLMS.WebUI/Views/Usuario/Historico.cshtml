@@ -65,9 +65,9 @@
                         }
                         else
                         {
-                            <a href="@Url.Action("BaixarArquivo","Aula", new { Id = item.IdConteudo })" class='link-group-item'>
+                            <a href="@Url.Action("Baixar","Aula", new { Id = item.IdConteudo })" class='link-group-item'>
                                 <div class="row-action-primary">
-                                    <i class="fa fa-laptop"></i>
+                                    <i class="fa fa-file"></i>
                                 </div>
                                 <div class="row-content">
                                     <h5 class="list-group-item-heading">@item.Nome</h5>
@@ -148,9 +148,9 @@
             $(function () {
                 $private.UltimaQuantidade = @Model.Count
                 $private.TipoAcesso = 0;
-                $("#paginacao-container").on("click", ".historico-paginacao-pagina", $private.IrParaPagina);
-                $("#paginacao-container").on("click", ".historico-paginacao-proxima", $private.ProximaPagina);
-                $("#paginacao-container").on("click", ".historico-paginacao-anterior", $private.PaginaAnterior);
+                $("#paginacao-container").on("click", ".paginacao-pagina", $private.IrParaPagina);
+                $("#paginacao-container").on("click", ".paginacao-proxima", $private.ProximaPagina);
+                $("#paginacao-container").on("click", ".paginacao-anterior", $private.PaginaAnterior);
                 $("#TipoAcesso").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
                     $private.TipoAcesso = selectedItem.val();
@@ -230,17 +230,17 @@
             $private.AtualizarResultados = function (data) {
                 $("#historico-container").html($private.HistoricoTemplate(data));
                 if (data.HasNext) {
-                    $(".historico-paginacao-proxima").show();
+                    $(".paginacao-proxima").show();
                 }
                 else {
-                    $(".historico-paginacao-proxima").hide();
+                    $(".paginacao-proxima").hide();
                 }
 
                 if (data.HasPrevious) {
-                    $(".historico-paginacao-anterior").show();
+                    $(".paginacao-anterior").show();
                 }
                 else {
-                    $(".historico-paginacao-anterior").hide();
+                    $(".paginacao-anterior").hide();
                 }
 
                

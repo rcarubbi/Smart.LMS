@@ -146,6 +146,16 @@ namespace SmartLMS.WebUI.Controllers
                 aulaRepo.ExcluirComentario(idComentario);
                 return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
+
+
+        public ActionResult Baixar(Guid id)
+        {
+
+            RepositorioAula aulaRepo = new RepositorioAula(_contexto);
+            Arquivo arquivo = aulaRepo.ObterArquivo(id);
+            aulaRepo.GravarAcesso(arquivo, _usuarioLogado);
+            return File(Url.Content("~/" + SmartLMS.Dominio.Entidades.Parametro.STORAGE_ARQUIVOS + "/" + arquivo.ArquivoFisico), "application/octet-stream", arquivo.ArquivoFisico);
+        }
         
     }
 }

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SmartLMS.Dominio.Entidades;
+using System;
 using System.Linq;
-using SmartLMS.Dominio.Entidades;
 
 namespace SmartLMS.Dominio.Repositorios
 {
@@ -24,7 +23,7 @@ namespace SmartLMS.Dominio.Repositorios
                 .OrderBy(x => x.Ordem)
                 .Select(a => new AulaInfo {
                     Aula = a,
-                    Disponivel = a.Turmas.Any(t => t.Turma.Alunos.Any(al => al.IdAluno == idUsuario)),
+                    Disponivel = a.VerificarDisponibilidade(idUsuario),
                     Percentual = a.Acessos.Where(x => x.Usuario.Id == idUsuario).LastOrDefault()?.Percentual ?? 0
         });
 

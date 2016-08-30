@@ -74,7 +74,7 @@
 
                 if ($(this).valid()) {
                     var enviarTextoOriginal = $("#login-submit").text();
-                    var enviando = $("<img src='@Url.Content("~/Content/img/loading-green.gif")'><span>Autenticando</span>");
+                    var enviando = $("<img src='@Url.Content("~/Content/img/loading-green.gif")'> <span>Autenticando</span>");
                     $("#login-submit").html(enviando);
                     $("#login-submit").prop('disabled', true);
                     $.ajax({

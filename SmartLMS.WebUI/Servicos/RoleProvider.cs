@@ -58,7 +58,7 @@ namespace SmartLMS.WebUI.Servicos
             using (var contexto = new Contexto())
             {
                 RepositorioUsuario usuarioRepo = new RepositorioUsuario(contexto);
-                return new string[] { usuarioRepo.ObterPorLogin(username).GetType().Name };
+                return new string[] { contexto.UnProxy(usuarioRepo.ObterPorLogin(username)).GetType().Name };
             }
         }
 
@@ -76,7 +76,7 @@ namespace SmartLMS.WebUI.Servicos
             using (var contexto = new Contexto())
             {
                 RepositorioUsuario usuarioRepo = new RepositorioUsuario(contexto);
-                return (usuarioRepo.ObterPorLogin(username).GetType().Name == roleName);
+                return (contexto.UnProxy(usuarioRepo.ObterPorLogin(username)).GetType().Name == roleName);
             }
         }
 

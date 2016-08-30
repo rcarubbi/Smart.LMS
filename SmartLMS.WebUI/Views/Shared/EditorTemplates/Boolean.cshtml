@@ -1,0 +1,16 @@
+﻿@using System.ComponentModel.DataAnnotations;
+
+@model Boolean  
+
+@{
+    var name = ViewData.TemplateInfo.HtmlFieldPrefix;
+    var display = ViewData.ModelMetadata.DisplayName;
+    var htmlAttributes = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
+}
+
+
+<div class="checkbox">
+    <label>
+        <input name="@name" value="true" type="checkbox" @(Model? "checked" : "") class="@htmlAttributes["class"]">
+    </label>
+</div>

@@ -133,9 +133,9 @@
             $(function () {
                 $private.UltimaQuantidade = @Model.Count
                 $private.TipoAcesso = 0;
-                $("#paginacao-container").on("click", ".historico-paginacao-pagina", $private.IrParaPagina);
-                $("#paginacao-container").on("click", ".historico-paginacao-proxima", $private.ProximaPagina);
-                $("#paginacao-container").on("click", ".historico-paginacao-anterior", $private.PaginaAnterior);
+                $("#paginacao-container").on("click", ".paginacao-pagina", $private.IrParaPagina);
+                $("#paginacao-container").on("click", ".paginacao-proxima", $private.ProximaPagina);
+                $("#paginacao-container").on("click", ".paginacao-anterior", $private.PaginaAnterior);
                 $("#TipoAviso").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
                     $private.TipoAcesso = selectedItem.val();
@@ -215,17 +215,17 @@
             $private.AtualizarResultados = function (data) {
                 $("#historico-container").html($private.HistoricoTemplate(data));
                 if (data.HasNext) {
-                    $(".historico-paginacao-proxima").show();
+                    $(".paginacao-proxima").show();
                 }
                 else {
-                    $(".historico-paginacao-proxima").hide();
+                    $(".paginacao-proxima").hide();
                 }
 
                 if (data.HasPrevious) {
-                    $(".historico-paginacao-anterior").show();
+                    $(".paginacao-anterior").show();
                 }
                 else {
-                    $(".historico-paginacao-anterior").hide();
+                    $(".paginacao-anterior").hide();
                 }
 
 

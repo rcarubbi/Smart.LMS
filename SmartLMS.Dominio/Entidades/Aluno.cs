@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SmartLMS.Dominio.Servicos;
+using System;
+using System.Collections.Generic;
 
 namespace SmartLMS.Dominio.Entidades
 {
@@ -10,6 +12,8 @@ namespace SmartLMS.Dominio.Entidades
 
         public virtual ICollection<TurmaAluno> Turmas { get; set; }
 
-     
+      
+
+      
     }
 }

@@ -1,8 +1,10 @@
-﻿using Carubbi.Utils.Security;
+﻿using Carubbi.DiffAnalyzer;
+using Carubbi.Utils.Security;
 using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace SmartLMS.Dominio.Servicos
 {
@@ -26,7 +28,7 @@ namespace SmartLMS.Dominio.Servicos
             return _contexto.ObterLista<Usuario>().Any(u => u.Login == login && u.Senha == senhaCriptografada && u.Ativo);
         }
 
-        public void AlterarUsuario(Guid id, string nome, string email, string login, string senha, bool ativo)
+        public void AlterarUsuario(Guid id, string nome, string email, string login, string senha, bool ativo, Perfil perfil)
         {
             RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
             var entidade = usuarioRepo.ObterPorId(id);
@@ -37,18 +39,67 @@ namespace SmartLMS.Dominio.Servicos
                 throw new ApplicationException("Já existe outro usuário com esta conta");
             }
 
-            var usuarioAlterado = new Administrador
+            Usuario usuarioAlterado = null;
+
+            switch (perfil)
             {
-                Id = id,
-                Nome = nome,
-                Ativo = ativo,
-                Senha = _criptografia.Encrypt(senha),
-                Login = login,
-                Email = email,
+                case Perfil.Administrador:
+                    usuarioAlterado = new Administrador();
+                    break;
+                case Perfil.Professor:
+                    usuarioAlterado = new Professor();
+                    break;
+                case Perfil.Aluno:
+                    usuarioAlterado = new Aluno();
+                    break;
+             
+            }
+
+
+            usuarioAlterado.Id = id;
+            usuarioAlterado.Nome = nome;
+            usuarioAlterado.Ativo = ativo;
+            if (senha != entidade.Senha)
+            {
+                usuarioAlterado.Senha = _criptografia.Encrypt(senha);
+            }
+            else
+            {
+                usuarioAlterado.Senha = senha;
+            }
+
+            usuarioAlterado.Login = login;
+            usuarioAlterado.Email = email;
+            usuarioAlterado.DataCriacao = entidade.DataCriacao;
+            
+
+            DiffAnalyzer analyzer = new DiffAnalyzer(1);
+            var diferencas = analyzer.Compare(_contexto.UnProxy(entidade), usuarioAlterado, a => a.State == DiffState.Modified);
+
+            
+            StringBuilder textoDiferencas = new StringBuilder($"Seus dados foram alterados:{Environment.NewLine}<br />");
+            foreach (var item in diferencas)
+            {
+                if (item.PropertyName == "Senha")
+                {
+                    textoDiferencas.AppendLine("- Sua senha foi alterada <br />");
+                }
+                else
+                {
+                    textoDiferencas.AppendLine($"- {item.PropertyName} de {item.OldValue} para {item.NewValue}<br />");
+                }
+            }
+
+            Aviso avisoAlteracao = new Aviso {
+                Texto = textoDiferencas.ToString(),
+                DataHora = DateTime.Now,
+                Usuario = entidade,
             };
 
+            _contexto.ObterLista<Aviso>().Add(avisoAlteracao);
             _contexto.Atualizar(entidade, usuarioAlterado);
             _contexto.Salvar();
+ 
         }
 
         public Usuario CriarUsuario(string nome, string login, string email, string senha, Perfil perfil)
@@ -79,9 +130,19 @@ namespace SmartLMS.Dominio.Servicos
             usuario.Ativo = true;
             usuario.Email = email;
             usuario.Nome = nome;
+            usuario.DataCriacao = DateTime.Now;
 
+
+            var aviso = new Aviso
+            {
+                Usuario = usuario,
+                Texto = $"Bem vindo ao {Parametro.PROJETO}! Bons estudos!",
+                DataHora = DateTime.Now,
+            };
+            _contexto.ObterLista<Aviso>().Add(aviso);
             usuarioRepo.Salvar(usuario);
 
+ 
             NotificarUsuario(usuario, senha);
             return usuario;
         }

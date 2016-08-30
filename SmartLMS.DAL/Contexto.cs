@@ -38,7 +38,7 @@ namespace SmartLMS.DAL
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            modelBuilder.Entity<Parametro>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity); 
+            modelBuilder.Entity<Parametro>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Log>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Turma>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Aluno>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
@@ -143,6 +143,21 @@ namespace SmartLMS.DAL
         {
             Configuration.LazyLoadingEnabled = false;
             Configuration.ProxyCreationEnabled = false;
+        }
+
+        public T UnProxy<T>(T proxyObject) where T : class
+        {
+            var proxyCreationEnabled = Configuration.ProxyCreationEnabled;
+            try
+            {
+                Configuration.ProxyCreationEnabled = false;
+                T poco = Entry(proxyObject).CurrentValues.ToObject() as T;
+                return poco;
+            }
+            finally
+            {
+                Configuration.ProxyCreationEnabled = proxyCreationEnabled;
+            }
         }
 
         public System.Data.Entity.DbSet<SmartLMS.Dominio.Entidades.Aluno> Usuarios { get; set; }

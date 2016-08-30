@@ -399,7 +399,6 @@
     <Content Include="Views\Autenticacao\AlterarSenha.cshtml" />
     <Content Include="Views\Aluno\Create.cshtml" />
     <Content Include="Views\Aluno\Delete.cshtml" />
-    <Content Include="Views\Aluno\Details.cshtml" />
     <Content Include="Views\Aluno\Edit.cshtml" />
     <Content Include="Views\Aluno\Index.cshtml" />
     <Content Include="Views\Shared\_Alert.cshtml" />
@@ -412,11 +411,12 @@
     <Content Include="Views\Shared\_faleConosco.cshtml" />
     <Content Include="Views\Aviso\Index.cshtml" />
     <Content Include="Views\Shared\_paginacao.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\apoio\" />
-    <Folder Include="Views\Shared\DisplayTemplates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 namespace SmartLMS.Dominio.Entidades
 {
     public class Aula : Entidade, IResultadoBusca
@@ -24,5 +24,12 @@ namespace SmartLMS.Dominio.Entidades
         public int Ordem { get; set; }
 
         public DateTime DataInclusao { get; set; }
+
+        internal bool VerificarDisponibilidade(Guid idUsuario)
+        {
+            return Turmas.Any(t => t.Turma.Alunos.Any(al => al.IdAluno == idUsuario)) ||
+                Professor.Id == idUsuario ||
+                Curso.ProfessorResponsavel.Id == idUsuario;
+        }
     }
 }

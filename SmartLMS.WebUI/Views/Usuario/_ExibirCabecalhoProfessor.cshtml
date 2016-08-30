@@ -9,6 +9,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+
+            <div id="logo" class="img-circle img-raised navbar-brand">
+                <img src="~/content/img/logo.png" width="40" height="40" alt="@Parametro.PROJETO logo" rel="tooltip">
+            </div>
             @Html.ActionLink(Parametro.PROJETO, "Index", "Home", null, new { @class = "navbar-brand" })
         </div>
         <div id="navbar" class="navbar-collapse collapse">
@@ -31,9 +35,9 @@
                     <ul class="dropdown-menu">
                         <li><a href="#">Cursos</a></li>
                         <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Relatórios de Acesso</li>
-                        <li><a href="#">Visualização de Aulas</a></li>
-                        <li><a href="#">Download de Materiais</a></li>
+                        <li class="dropdown-header">Acompanhamento</li>
+                        <li><a href="#">Turmas</a></li>
+                        <li><a href="#">Acessos dos alunos</a></li>
                     </ul>
                 </li>
             </ul>
@@ -43,7 +47,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">person</i>@Model.Usuario.Nome <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="@Url.Action("Historico", "Usuario")">Histórico de acessos</a></li>
+                        <li><a href="@Url.Action("Index", "Aviso")">Avisos</a></li>
                         <li><a href="#">Alterar Senha</a></li>
                         <li><a href="@Url.Action("Sair", "Autenticacao")">Sair</a></li>
                     </ul>

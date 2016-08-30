@@ -1,11 +1,10 @@
 ﻿using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
-using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SmartLMS.WebUI.Controllers
+namespace SmartLMS.Dominio.Repositorios
 {
     public class RepositorioAula
     {
@@ -36,7 +35,7 @@ namespace SmartLMS.WebUI.Controllers
             return new AulaInfo
             {
                 Aula = _contexto.ObterLista<Aula>().Find(id),
-                Disponivel = aula.Turmas.Any(t => t.Turma.Alunos.Any(al => al.IdAluno == idUsuario)),
+                Disponivel = aula.VerificarDisponibilidade(idUsuario),
                 Percentual = ultimoAcesso == null ? 0 : ultimoAcesso.Percentual,
                 Segundos = ultimoAcesso == null ? 0 : ultimoAcesso.Segundos,
             };
@@ -52,6 +51,26 @@ namespace SmartLMS.WebUI.Controllers
         {
             var comentario = _contexto.ObterLista<Comentario>().Find(idComentario);
             _contexto.ObterLista<Comentario>().Remove(comentario);
+            _contexto.Salvar();
+        }
+
+        public Arquivo ObterArquivo(Guid id)
+        {
+            return _contexto.ObterLista<Arquivo>().Find(id);
+        }
+
+      
+
+        public void GravarAcesso(Arquivo arquivo, Usuario usuario)
+        {
+            
+            AcessoArquivo acesso = new AcessoArquivo {
+                Arquivo = arquivo,
+                Usuario = usuario,
+                DataHoraAcesso = DateTime.Now
+            };
+
+            _contexto.ObterLista<AcessoArquivo>().Add(acesso);
             _contexto.Salvar();
         }
     }

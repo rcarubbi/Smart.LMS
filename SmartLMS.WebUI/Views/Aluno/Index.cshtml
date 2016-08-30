@@ -1,57 +1,290 @@
-﻿@model IEnumerable<SmartLMS.Dominio.Entidades.Aluno>
+﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.UsuarioViewModel>
 
 @{
     ViewBag.Title = "Index";
 }
+@section styles {
+    <style type="text/css">
+        .checkbox {
+            margin: 0px;
+        }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nome)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Login)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Senha)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Ativo)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nome)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Login)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Senha)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Ativo)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+        .form-group {
+            margin-top: 10px !important;
+        }
+    </style>
 }
 
-</table>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Lista de Alunos
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <a href="@Url.Action("Create")" class="btn btn-sm btn-info"><i class="material-icons">person_add</i></a>
+            </div>
+            <div class="col-md-6 pull-right">
+                <div class="col-md-3">
+                    <div class="form-group label-static is-empty">
+                        <label for="CampoBusca" class="control-label">Pesquisar por</label>
+                        @Html.DropDownList("CampoBusca", ViewBag.CamposBusca as SelectList, new { @class = "form-control dropdownjs" })
+                    </div>
+                </div>
+                <div class="form-group label-floating is-empty col-md-9">
+                    <label class="control-label" for="q">digite o termo que deseja encontrar</label>
+                    <div class="input-group" style="display:block">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input type="search" name="termo" id="termo" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-sm" id="btnFiltrar">
+                                    <i class="material-icons">search</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Nome")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Email")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Ativo")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Id")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Criado em")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="resultado-container">
+                @foreach (var item in Model.Entities)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nome)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ativo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @item.DataCriacao.ToShortDateString()
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                                <a href="@Url.Action("Edit", new { Id = item.Id })" class="btn btn-success btn-sm">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                                <a href="@Url.Action("Delete", new { Id = item.Id })" class="btn btn-danger btn-sm">
+                                    <i class="material-icons">delete</i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            @if (Model.Entities.Count() == 0)
+            {
+                <tr>
+                    <td colspan="5" class="text-center">
+                        Nenhum aluno encontrado
+                    </td>
+                </tr>
+            }
+
+        </table>
+        @Html.Partial("_paginacao")
+    </div>
+</div>
+@section scripts {
+    <script type="text/x-handlebars-template" id="resultado-alunos-template">
+        {{#each Entities}}
+        <tr>
+            <td>
+                {{Nome}}
+            </td>
+            <td>
+                {{Email}}
+            </td>
+            <td>
+                <div class="checkbox">
+                    <label>
+                        <input name="Ativo" type="checkbox" disabled {{#if Ativo}} checked {{/if}}>
+                    </label>
+                </div>
+            </td>
+            <td>
+                {{Id}}
+            </td>
+            <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                    <a href="@Url.Content("~/Aluno/Edit/"){{Id}}" class="btn btn-success btn-sm">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a href="@Url.Content("~/Aluno/Delete/"){{Id}}" class="btn btn-danger btn-sm">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+        {{#equals Count 0}}
+            <tr>
+                <td colspan="5" class="text-center">
+                    Nenhum aluno encontrado
+                </td>
+            </tr>
+        {{/equals}}
+    </script>
+    <script>
+        SmartLMS.AlunoProxy = (function () {
+            $public = {}, $private = {};
+
+
+            $public.Listar = function (termo, campoBusca, pagina) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Aluno/ListarAlunos",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ termo: termo, campoBusca: campoBusca, pagina: pagina })
+                });
+            };
+
+            return $public;
+        }());
+
+        (function (alunoProxy) {
+            var $private = {}, $public = {}; 
+
+            $(function () {
+                $private.CampoBusca = "Nome";
+                $private.UltimaQuantidade = @Model.Count
+                $("#paginacao-container").on("click", ".paginacao-pagina", $private.IrParaPagina);
+                $("#paginacao-container").on("click", ".paginacao-proxima", $private.ProximaPagina);
+                $("#paginacao-container").on("click", ".paginacao-anterior", $private.PaginaAnterior);
+                $("#CampoBusca").on("dropdownjs.change", function () {
+                    var selectedItem = $(this).find("option:selected");
+                    $private.CampoBusca = selectedItem.val();
+
+                });
+                $("#btnFiltrar").on("click", $private.PesquisarAlunos);
+                $private.PaginacaoTemplate = Handlebars.compile($("#paginacao-template").html());
+                $private.ResultadoAlunosTemplate = Handlebars.compile($("#resultado-alunos-template").html());
+
+            });
+
+            $private.Pagina = 1;
+
+            $private.IrParaPagina = function () {
+                $private.Pagina = $(this).text();
+                var termo = $("#termo").val();
+
+                alunoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+
+            };
+            $private.ProximaPagina = function () {
+                $private.Pagina++;
+                var termo = $("#termo").val();
+
+                alunoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+
+
+            };
+            $private.PaginaAnterior = function () {
+                $private.Pagina--;
+                var termo = $("#termo").val();
+
+                alunoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+
+            };
+
+            $private.PesquisarAlunos = function () {
+                $private.Pagina = 1;
+                var termo = $("#termo").val();
+
+                alunoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+            };
+
+
+            $private.CalcularPaginaMinima = function (quantidade, pagina) {
+                if (pagina < 4) {
+                    return 1;
+                }
+                else if (pagina > quantidade - 3) {
+                    return quantidade - 4;
+                }
+                else {
+                    return pagina - 2;
+                }
+            };
+
+            $private.CalcularPaginaMaxima = function (quantidade, pagina) {
+                if (pagina < 4) {
+                    if (quantidade < 6) {
+                        return quantidade + 1;
+                    }
+                    else {
+                        return 6;
+                    }
+                }
+                else if (pagina > quantidade - 3) {
+                    return quantidade + 1;
+                }
+                else {
+                    return pagina + 3;
+                }
+            };
+
+            $private.AtualizarResultados = function (data) {
+                $("#resultado-container").html($private.ResultadoAlunosTemplate(data));
+                if (data.HasNext) {
+                    $(".paginacao-proxima").show();
+                }
+                else {
+                    $(".paginacao-proxima").hide();
+                }
+
+                if (data.HasPrevious) {
+                    $(".paginacao-anterior").show();
+                }
+                else {
+                    $(".paginacao-anterior").hide();
+                }
+
+
+                $("#paginacao-container").html($private.PaginacaoTemplate({
+                    paginas: Math.ceil(data.Count / 8),
+                    possuiAnterior: data.HasPrevious,
+                    possuiProxima: data.HasNext,
+                    paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.Count / 8), 1),
+                    paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.Count / 8), 1),
+                    paginaCorrente: $private.Pagina
+                }));
+                $.material.checkbox();
+
+            };
+
+        }(SmartLMS.AlunoProxy));
+    </script>
+}

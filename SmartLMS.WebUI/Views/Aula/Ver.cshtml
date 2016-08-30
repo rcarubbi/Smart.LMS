@@ -74,7 +74,8 @@
                     @foreach (var item in Model.Arquivos)
                     {
                         <div class="list-group-item list-group-item-sm">
-                            <a href="~/@(SmartLMS.Dominio.Entidades.Parametro.STORAGE_ARQUIVOS)/@item.ArquivoFisico" class='link-group-item' download>
+                            
+                            <a href="@Url.Action("Baixar", "Aula", new { Id = item.Id })" class='link-group-item'>
                                 <div class="row-action-primary">
                                     <i class="fa fa-file"></i>
                                 </div>

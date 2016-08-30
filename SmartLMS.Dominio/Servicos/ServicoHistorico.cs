@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SmartLMS.Domain.Servicos;
+using SmartLMS.Dominio.Repositorios;
 
 namespace SmartLMS.Dominio.Servicos
 {
@@ -40,7 +41,7 @@ namespace SmartLMS.Dominio.Servicos
                 .Union(
                   _contexto.ObterLista<AcessoArquivo>()
                   .Where(a =>
-                        (!periodo.StartDate.HasValue || (periodo.StartDate.HasValue && periodo.StartDate.Value >= a.DataHoraAcesso)
+                        (!periodo.StartDate.HasValue || (periodo.StartDate.HasValue && periodo.StartDate.Value <= a.DataHoraAcesso)
                         && (!periodo.EndDate.HasValue || (periodo.EndDate.HasValue && periodo.EndDate.Value >= a.DataHoraAcesso)
                         && a.Usuario.Id == idUsuario))
                         && (tipo == TipoAcesso.Arquivo || tipo == TipoAcesso.Todos))
@@ -71,11 +72,15 @@ namespace SmartLMS.Dominio.Servicos
 
         public PagedListResult<AvisoInfo> ListarHistoricoAvisos(DateRange periodo, int pagina, Guid idUsuario, TipoAviso tipo)
         {
-            Repositorios.RepositorioTurma turmaRepo = new Repositorios.RepositorioTurma(_contexto);
+            RepositorioTurma turmaRepo = new Repositorios.RepositorioTurma(_contexto);
+            RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
+
             var turmas = turmaRepo.ListarTurmasPorAluno(idUsuario);
+            var usuario = usuarioRepo.ObterPorId(idUsuario);
 
             var avisos = _contexto.ObterLista<Aviso>()
              .Where(a =>
+                a.DataHora > usuario.DataCriacao && 
                  (!periodo.StartDate.HasValue || (periodo.StartDate.HasValue && periodo.StartDate.Value <= a.DataHora)
                  && (!periodo.EndDate.HasValue || (periodo.EndDate.HasValue && periodo.EndDate.Value >= a.DataHora)))
                  && (((tipo == TipoAviso.Pessoal || tipo == TipoAviso.Todos) && a.Usuario != null && a.Usuario.Id == idUsuario)
