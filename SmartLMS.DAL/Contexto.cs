@@ -3,6 +3,10 @@ using Carubbi.Utils.Persistence;
 using SmartLMS.DAL.Mapeamento;
 using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Conteudo;
+using SmartLMS.Dominio.Entidades.Historico;
+using SmartLMS.Dominio.Entidades.Liberacao;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -41,20 +45,22 @@ namespace SmartLMS.DAL
             modelBuilder.Entity<Parametro>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Log>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Turma>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+           
             modelBuilder.Entity<Aluno>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Administrador>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Professor>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<Aula>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
+ 
             modelBuilder.Configurations.Add(new AcessoArquivoConfiguration());
             modelBuilder.Configurations.Add(new AcessoAulaConfiguration());
             modelBuilder.Configurations.Add(new AssuntoConfiguration());
             modelBuilder.Configurations.Add(new AreaConhecimentoConfiguration());
             modelBuilder.Configurations.Add(new ArquivoConfiguration());
             modelBuilder.Configurations.Add(new CursoConfiguration());
-            modelBuilder.Configurations.Add(new TurmaAlunoConfiguration());
-            modelBuilder.Configurations.Add(new AulaTurmaConfiguration());
+            modelBuilder.Configurations.Add(new TurmaCursoConfiguration());
+            modelBuilder.Configurations.Add(new AulaPlanejamentoConfiguration());
             modelBuilder.Configurations.Add(new UsuarioAvisoConfiguration());
+        
         }
 
         public IDbSet<TEntidade> ObterLista<TEntidade>() where TEntidade : class
@@ -160,6 +166,6 @@ namespace SmartLMS.DAL
             }
         }
 
-        public System.Data.Entity.DbSet<SmartLMS.Dominio.Entidades.Aluno> Usuarios { get; set; }
+        
     }
 }

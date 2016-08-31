@@ -1,4 +1,5 @@
 ﻿using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Comunicacao;
 using System.Data.Entity.ModelConfiguration;
 
 namespace SmartLMS.DAL.Mapeamento
@@ -8,7 +9,7 @@ namespace SmartLMS.DAL.Mapeamento
         public UsuarioAvisoConfiguration()
         {
             HasKey(ta => new { ta.IdUsuario, ta.IdAviso });
-            HasRequired(ta => ta.Usuario).WithMany(a => a.Avisos).HasForeignKey(x => x.IdUsuario);
+            HasRequired(ta => ta.Usuario).WithMany(a => a.AvisosVistos).HasForeignKey(x => x.IdUsuario);
             HasRequired(ta => ta.Aviso).WithMany(a => a.Usuarios).HasForeignKey(x => x.IdAviso);
         }
     }

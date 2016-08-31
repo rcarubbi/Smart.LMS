@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Linq;
 using System.Collections.Generic;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Conteudo;
 
 namespace SmartLMS.WebUI.Controllers
 {

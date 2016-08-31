@@ -4,6 +4,7 @@ using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Domain.Servicos;
 using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Comunicacao;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
@@ -28,7 +29,8 @@ namespace SmartLMS.WebUI.Controllers
         {
             var repo = new RepositorioAviso(_contexto);
             var dateTimeHumanizerStrategy = new DefaultDateTimeHumanizeStrategy();
-            return PartialView("_PainelAvisos", AvisoViewModel.FromEntityList(repo.ListarAvisosNaoVistos(_usuarioLogado.Id), dateTimeHumanizerStrategy));
+            var avisos = repo.ListarAvisosNaoVistos(_usuarioLogado.Id);
+            return PartialView("_PainelAvisos", AvisoViewModel.FromEntityList(avisos, dateTimeHumanizerStrategy));
         }
 
         [HttpPost]

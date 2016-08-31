@@ -1,5 +1,6 @@
 ﻿using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Conteudo;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.WebUI.Models;
 using System;

@@ -1,6 +1,7 @@
 ﻿using Carubbi.Utils.Data;
 using SmartLMS.DAL;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Linq;

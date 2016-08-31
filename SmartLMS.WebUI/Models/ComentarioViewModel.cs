@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Humanizer.DateTimeHumanizeStrategy;
+using SmartLMS.Dominio.Entidades.Comunicacao;
+using SmartLMS.Dominio.Entidades.Conteudo;
+using SmartLMS.Dominio.Entidades.Pessoa;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SmartLMS.Dominio.Entidades;
-using Humanizer.DateTimeHumanizeStrategy;
-using System.Globalization;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace SmartLMS.WebUI.Models
 {

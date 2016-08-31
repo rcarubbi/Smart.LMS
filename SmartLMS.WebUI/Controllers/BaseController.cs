@@ -1,5 +1,6 @@
 ﻿using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using System.IO;
 using System.Web.Mvc;
@@ -41,7 +42,10 @@ namespace SmartLMS.WebUI.Controllers
             ViewBag.Curso = Parametro.CURSO;
             ViewBag.Aula = Parametro.AULA;
             ViewBag.AreaConhecimentoPlural = Parametro.AREA_CONHECIMENTO_PLURAL;
-            
+            ViewBag.AssuntoPlural = Parametro.ASSUNTO_PLURAL;
+            ViewBag.CursoPlural = Parametro.CURSO_PLURAL;
+            ViewBag.AulaPlural = Parametro.AULA_PLURAL;
+
             RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
             if (HttpContext.User.Identity.IsAuthenticated)
             {

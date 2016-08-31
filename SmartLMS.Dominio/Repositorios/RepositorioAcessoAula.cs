@@ -1,9 +1,7 @@
-﻿using SmartLMS.Dominio.Entidades;
+﻿using SmartLMS.Dominio.Entidades.Historico;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartLMS.Dominio.Repositorios
 {
@@ -32,6 +30,7 @@ namespace SmartLMS.Dominio.Repositorios
         {
             var acessos = _contexto.ObterLista<AcessoAula>();
             var acessoExistente = acessos.Where(x => x.Aula.Id == acesso.Aula.Id && x.Usuario.Id == acesso.Usuario.Id).ToList().LastOrDefault();
+
             if (acessoExistente == null)
             {
                 acessos.Add(acesso);
@@ -41,6 +40,7 @@ namespace SmartLMS.Dominio.Repositorios
                 acesso.Id = acessoExistente.Id;
                 _contexto.Atualizar(acessoExistente, acesso);
             }
+
             _contexto.Salvar();
         }
 

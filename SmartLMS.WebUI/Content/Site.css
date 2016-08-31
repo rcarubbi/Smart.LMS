@@ -333,3 +333,17 @@ body {
   -webkit-transition: 0.3s ease-in-out left !important;
           transition: 0.3s ease-in-out left !important;
 }
+
+
+.texto-aviso {
+   margin-top: -20px;
+}
+
+.horario-aviso {
+     position: relative;
+    right: -290px;
+    bottom: 35px;
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+    width: 95px;
+}

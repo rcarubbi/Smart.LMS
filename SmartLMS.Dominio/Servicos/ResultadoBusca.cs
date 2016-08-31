@@ -1,8 +1,7 @@
 ﻿using SmartLMS.Dominio.Entidades;
-using SmartLMS.Dominio.Repositorios;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using System;
 using System.Data.Entity.Core.Objects;
-using System.Linq;
 namespace SmartLMS.Dominio.Servicos
 {
     public class ResultadoBusca

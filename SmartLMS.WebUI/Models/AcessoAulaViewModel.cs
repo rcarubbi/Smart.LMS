@@ -1,5 +1,8 @@
 ﻿using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Conteudo;
+using SmartLMS.Dominio.Entidades.Historico;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

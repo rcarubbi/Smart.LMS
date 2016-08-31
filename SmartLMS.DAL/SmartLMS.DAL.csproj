@@ -67,17 +67,13 @@
     <Compile Include="Mapeamento\AreaConhecimentoConfiguration.cs" />
     <Compile Include="Mapeamento\ArquivoConfiguration.cs" />
     <Compile Include="Mapeamento\AssuntoConfiguration.cs" />
-    <Compile Include="Mapeamento\AulaTurmaConfiguration.cs" />
+    <Compile Include="Mapeamento\AulaPlanejamentoConfiguration.cs" />
     <Compile Include="Mapeamento\CursoConfiguration.cs" />
-    <Compile Include="Mapeamento\TurmaAlunoConfiguration.cs" />
+    <Compile Include="Mapeamento\TurmaCursoConfiguration.cs" />
     <Compile Include="Mapeamento\UsuarioAvisoConfiguration.cs" />
-    <Compile Include="Migrations\201608091356458_ModeloInicial.cs" />
-    <Compile Include="Migrations\201608091356458_ModeloInicial.Designer.cs">
-      <DependentUpon>201608091356458_ModeloInicial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608292150580_dataCriacaoUsuario.cs" />
-    <Compile Include="Migrations\201608292150580_dataCriacaoUsuario.Designer.cs">
-      <DependentUpon>201608292150580_dataCriacaoUsuario.cs</DependentUpon>
+    <Compile Include="Migrations\201608311843131_ModeloInicial.cs" />
+    <Compile Include="Migrations\201608311843131_ModeloInicial.Designer.cs">
+      <DependentUpon>201608311843131_ModeloInicial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,11 +91,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201608091356458_ModeloInicial.resx">
-      <DependentUpon>201608091356458_ModeloInicial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608292150580_dataCriacaoUsuario.resx">
-      <DependentUpon>201608292150580_dataCriacaoUsuario.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201608311843131_ModeloInicial.resx">
+      <DependentUpon>201608311843131_ModeloInicial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

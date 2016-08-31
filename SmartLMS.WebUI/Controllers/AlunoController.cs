@@ -1,5 +1,6 @@
 ﻿using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
@@ -25,6 +26,17 @@ namespace SmartLMS.WebUI.Controllers
             return Json(UsuarioViewModel.FromEntityList(usuarioRepo.ListarAlunos(termo, campoBusca, pagina)));
         }
 
+        [HttpPost]
+        public ActionResult Excluir(string id)
+        {
+
+            RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
+            usuarioRepo.ExcluirAluno(new Guid(id));
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+
+        }
+
         // GET: Aluno
         public ActionResult Index(string termo, string campoBusca, int pagina = 1)
         {
@@ -33,7 +45,7 @@ namespace SmartLMS.WebUI.Controllers
             return View(UsuarioViewModel.FromEntityList(usuarioRepo.ListarAlunos(termo, campoBusca, pagina)));
         }
 
-    
+
 
         // GET: Aluno/Create
         public ActionResult Create()
@@ -46,7 +58,7 @@ namespace SmartLMS.WebUI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Nome,Login,Senha,Email")] Aluno aluno)
+        public ActionResult Create(UsuarioViewModel aluno)
         {
             if (ModelState.IsValid)
             {
@@ -66,8 +78,8 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["TituloMensagem"] = "Administração de alunos";
                     TempData["Mensagem"] = ex.Message;
                 }
-                
-               
+
+
             }
 
             return View(aluno);
@@ -81,11 +93,12 @@ namespace SmartLMS.WebUI.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Aluno aluno = _contexto.ObterLista<Aluno>().Find(id);
+
             if (aluno == null)
             {
                 return HttpNotFound();
             }
-            return View(aluno);
+            return View(UsuarioViewModel.FromEntity(aluno));
         }
 
         // POST: Aluno/Edit/5
@@ -126,7 +139,7 @@ namespace SmartLMS.WebUI.Controllers
             }
             Aluno aluno = _contexto.ObterLista<Aluno>().Find(id);
 
-          
+
             if (aluno == null)
             {
                 return HttpNotFound();
@@ -139,7 +152,7 @@ namespace SmartLMS.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            
+
 
             var usuarioRepo = new RepositorioUsuario(_contexto);
             usuarioRepo.ExcluirAluno(id);
@@ -151,6 +164,6 @@ namespace SmartLMS.WebUI.Controllers
             return RedirectToAction("Index");
         }
 
-      
+
     }
 }

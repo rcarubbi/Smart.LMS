@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SmartLMS.Dominio.Entidades;
+﻿using SmartLMS.Dominio.Entidades.Conteudo;
 using System.Collections.Generic;
 
 namespace SmartLMS.Dominio.Repositorios

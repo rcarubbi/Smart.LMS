@@ -1,6 +1,7 @@
 ﻿using Carubbi.Utils.Data;
 using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using System.Net.Mail;
 using System.Web;

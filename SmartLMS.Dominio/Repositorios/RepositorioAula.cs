@@ -1,5 +1,8 @@
-﻿using SmartLMS.Dominio;
-using SmartLMS.Dominio.Entidades;
+﻿using SmartLMS.Dominio.Entidades.Comunicacao;
+using SmartLMS.Dominio.Entidades.Conteudo;
+using SmartLMS.Dominio.Entidades.Historico;
+using SmartLMS.Dominio.Entidades.Liberacao;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,27 +18,56 @@ namespace SmartLMS.Dominio.Repositorios
             _contexto = contexto;
         }
 
-        public IEnumerable<AulaTurma> ListarUltimasAulasAdicionadas(Guid idAluno)
+        public IEnumerable<AulaPlanejamento> ListarUltimasAulasLiberadas(Guid idAluno)
         {
-            var turmasAluno = _contexto
-                .ObterLista<TurmaAluno>()
-                .Where(t => t.IdAluno == idAluno)
-                .Select(x => x.Turma);
+            
+            RepositorioUsuario usuRepo = new RepositorioUsuario(_contexto);
+            var usuario = usuRepo.ObterPorId(idAluno);
 
-            return turmasAluno.SelectMany(a => a.AulasDisponiveis)
-                .OrderByDescending(x => x.DataDisponibilizacao)
-                .Take(6).ToList();
+            if (usuario is Aluno)
+            {
+                return (usuario as Aluno).Planejamentos
+                    .SelectMany(x => x.AulasDisponiveis)
+                    .OrderByDescending(x => x.DataLiberacao)
+                    .Take(6)
+                    .ToList();
+            }
+            else
+                return new List<AulaPlanejamento>();
         }
+
+
+        public bool VerificarDisponibilidadeAula(Guid idAula, Guid idUsuario)
+        {
+            RepositorioUsuario usuRepo = new RepositorioUsuario(_contexto);
+            var usuario = usuRepo.ObterPorId(idUsuario);
+
+            if (usuario is Aluno)
+            {
+                return ((Aluno)usuario).Planejamentos
+                    .SelectMany(x => x.AulasDisponiveis)
+                    .Any(x => x.Aula.Id == idAula);
+            }
+            else if (usuario is Professor)
+            {
+                var aula = _contexto.ObterLista<Aula>().Find(idAula);
+                return aula.Professor.Id == idUsuario || aula.Curso.ProfessorResponsavel.Id == idUsuario;
+            }
+            else {
+                return true;
+            }
+        }
+
 
         public AulaInfo ObterAula(Guid id, Guid idUsuario)
         {
             var aula = _contexto.ObterLista<Aula>().Find(id);
             var ultimoAcesso = aula.Acessos.Where(x => x.Usuario.Id == idUsuario).LastOrDefault();
-
+            
             return new AulaInfo
             {
                 Aula = _contexto.ObterLista<Aula>().Find(id),
-                Disponivel = aula.VerificarDisponibilidade(idUsuario),
+                Disponivel = VerificarDisponibilidadeAula(id, idUsuario),
                 Percentual = ultimoAcesso == null ? 0 : ultimoAcesso.Percentual,
                 Segundos = ultimoAcesso == null ? 0 : ultimoAcesso.Segundos,
             };

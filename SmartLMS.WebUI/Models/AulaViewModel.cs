@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using SmartLMS.Dominio;
-using SmartLMS.Dominio.Entidades;
+﻿using Humanizer.DateTimeHumanizeStrategy;
+using SmartLMS.Dominio.Entidades.Conteudo;
+using SmartLMS.Dominio.Entidades.Liberacao;
 using SmartLMS.Dominio.Repositorios;
-using Humanizer.DateTimeHumanizeStrategy;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -29,6 +29,8 @@ namespace SmartLMS.WebUI.Models
         public string Nome { get; private set; }
         public string NomeProfessor { get; private set; }
         public TipoConteudo TipoConteudo { get; private set; }
+        public DateTime DataLiberacao { get; private set; }
+        public string DataLiberacaoTexto { get; private set; }
 
         internal static IEnumerable<AulaViewModel> FromEntityList(IEnumerable<Aula> aulas, int profundidade, DefaultDateTimeHumanizeStrategy humanizer)
         {
@@ -49,8 +51,9 @@ namespace SmartLMS.WebUI.Models
                 Conteudo = item.Conteudo,
                 TipoConteudo = item.Tipo,
                 NomeProfessor = item.Professor.Nome,
-                DataInclusaoTexto = humanizer != null? humanizer.Humanize(item.DataInclusao, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
-                DataInclusao = item.DataInclusao,
+                DataInclusaoTexto = humanizer != null? humanizer.Humanize(item.DataCriacao, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
+                DataInclusao = item.DataCriacao,
+                
                 NomeCurso = item.Curso.Nome,
                 Arquivos = profundidade > 3 ? ArquivoViewModel.FromEntityList(item.Arquivos) : new List<ArquivoViewModel>()
             };
@@ -79,7 +82,7 @@ namespace SmartLMS.WebUI.Models
                 Conteudo = item.Aula.Conteudo,
                 TipoConteudo = item.Aula.Tipo,
                 NomeProfessor = item.Aula.Professor.Nome,
-                DataInclusao = item.Aula.DataInclusao,
+                DataInclusao = item.Aula.DataCriacao,
                 NomeCurso = item.Aula.Curso.Nome,
                 Disponivel = item.Disponivel,
                 Percentual = item.Percentual,
@@ -97,7 +100,7 @@ namespace SmartLMS.WebUI.Models
                 Conteudo = item.Aula.Conteudo,
                 TipoConteudo = item.Aula.Tipo,
                 NomeProfessor = item.Aula.Professor.Nome,
-                DataInclusao = item.Aula.DataInclusao,
+                DataInclusao = item.Aula.DataCriacao,
                 NomeCurso = item.Aula.Curso.Nome,
                 Disponivel = item.Disponivel,
                 Percentual = item.Percentual,
@@ -106,7 +109,7 @@ namespace SmartLMS.WebUI.Models
             };
         }
 
-        internal static IEnumerable<AulaViewModel> FromEntityList(IEnumerable<AulaTurma> aulas, DefaultDateTimeHumanizeStrategy humanizer)
+        internal static IEnumerable<AulaViewModel> FromEntityList(IEnumerable<AulaPlanejamento> aulas, DefaultDateTimeHumanizeStrategy humanizer)
         {
             foreach (var item in aulas)
             {
@@ -114,16 +117,22 @@ namespace SmartLMS.WebUI.Models
             }
         }
 
-        private static AulaViewModel FromEntity(AulaTurma item, DefaultDateTimeHumanizeStrategy humanizer)
+        private static AulaViewModel FromEntity(AulaPlanejamento item, DefaultDateTimeHumanizeStrategy humanizer)
         {
             return new AulaViewModel
             {
-                Nome = item.Aula.Nome,
-                DataInclusaoTexto = humanizer.Humanize(item.DataDisponibilizacao, DateTime.Now, CultureInfo.CurrentUICulture),
-                DataInclusao = item.DataDisponibilizacao,
                 Id = item.Aula.Id,
+                IdCurso = item.Aula.Curso.Id,
+                Nome = item.Aula.Nome,
+                Conteudo = item.Aula.Conteudo,
+                TipoConteudo = item.Aula.Tipo,
+                NomeProfessor = item.Aula.Professor.Nome,
+                DataInclusao = item.Aula.DataCriacao,
+                DataLiberacao = item.DataLiberacao,
                 NomeCurso = item.Aula.Curso.Nome,
-                NomeProfessor = item.Aula.Professor.Nome
+                DataInclusaoTexto = humanizer != null ? humanizer.Humanize(item.Aula.DataCriacao, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
+                DataLiberacaoTexto = humanizer != null ? humanizer.Humanize(item.DataLiberacao, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
+                Disponivel = true,
             };
         }
     }

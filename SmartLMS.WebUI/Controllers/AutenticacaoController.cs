@@ -1,5 +1,6 @@
 ﻿using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
 using SmartLMS.WebUI.Servicos;

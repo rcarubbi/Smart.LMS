@@ -1,6 +1,8 @@
 ﻿using Carubbi.DiffAnalyzer;
 using Carubbi.Utils.Security;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Comunicacao;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Linq;
@@ -149,7 +151,7 @@ namespace SmartLMS.Dominio.Servicos
 
         private void NotificarUsuario(Usuario usuario, string senha)
         {
-             
+             // TODO: Implementar
         }
 
         public string RecuperarSenha(string email)

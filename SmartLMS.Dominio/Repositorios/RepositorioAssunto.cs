@@ -1,4 +1,5 @@
 ﻿using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Conteudo;
 using System;
 
 namespace SmartLMS.Dominio.Repositorios

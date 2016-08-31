@@ -1,7 +1,7 @@
 ﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.UsuarioViewModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Manutenação de alunos"; 
 }
 @section styles {
     <style type="text/css">
@@ -58,13 +58,13 @@
                     <th>
                         @Html.DisplayName("Email")
                     </th>
-                    <th>
+                    <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Ativo")
                     </th>
-                    <th>
+                    <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Id")
                     </th>
-                    <th>
+                    <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Criado em")
                     </th>
                     <th></th>
@@ -81,13 +81,13 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Email)
                         </td>
-                        <td>
+                        <td class="hidden-sm  hidden-xs">
                             @Html.DisplayFor(modelItem => item.Ativo)
                         </td>
-                        <td>
+                        <td class="hidden-sm  hidden-xs">
                             @Html.DisplayFor(modelItem => item.Id)
                         </td>
-                        <td>
+                        <td class="hidden-sm  hidden-xs">
                             @item.DataCriacao.ToShortDateString()
                         </td>
                         <td>
@@ -95,7 +95,7 @@
                                 <a href="@Url.Action("Edit", new { Id = item.Id })" class="btn btn-success btn-sm">
                                     <i class="material-icons">edit</i>
                                 </a>
-                                <a href="@Url.Action("Delete", new { Id = item.Id })" class="btn btn-danger btn-sm">
+                                <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="@item.Id" data-nome="@item.Nome">
                                     <i class="material-icons">delete</i>
                                 </a>
                             </div>
@@ -116,6 +116,28 @@
         @Html.Partial("_paginacao")
     </div>
 </div>
+
+<div class="modal fade" id="confirmacaoExclusao" tabindex="-1" role="dialog" aria-labelledby="Confirmação de Exclusão" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Excluir aluno</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-delete-agree" data-dismiss="modal"><i class="fa fa-thumbs-up"></i></button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-thumbs-down"></i></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @section scripts {
     <script type="text/x-handlebars-template" id="resultado-alunos-template">
         {{#each Entities}}
@@ -126,22 +148,25 @@
             <td>
                 {{Email}}
             </td>
-            <td>
+            <td class="hidden-sm hidden-xs">
                 <div class="checkbox">
                     <label>
                         <input name="Ativo" type="checkbox" disabled {{#if Ativo}} checked {{/if}}>
                     </label>
                 </div>
             </td>
-            <td>
+            <td class="hidden-sm  hidden-xs">
                 {{Id}}
+            </td>
+            <td class="hidden-sm  hidden-xs">
+                {{toShortDateString DataCriacao}}
             </td>
             <td>
                 <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
                     <a href="@Url.Content("~/Aluno/Edit/"){{Id}}" class="btn btn-success btn-sm">
                         <i class="material-icons">edit</i>
                     </a>
-                    <a href="@Url.Content("~/Aluno/Delete/"){{Id}}" class="btn btn-danger btn-sm">
+                    <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="{{Id}}" data-nome="{{Nome}}">
                         <i class="material-icons">delete</i>
                     </a>
                 </div>
@@ -149,11 +174,11 @@
         </tr>
         {{/each}}
         {{#equals Count 0}}
-            <tr>
-                <td colspan="5" class="text-center">
-                    Nenhum aluno encontrado
-                </td>
-            </tr>
+        <tr>
+            <td colspan="5" class="text-center">
+                Nenhum aluno encontrado
+            </td>
+        </tr>
         {{/equals}}
     </script>
     <script>
@@ -171,11 +196,20 @@
                 });
             };
 
+            $public.excluir = function (id) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Aluno/Excluir",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ id: id })
+                });
+            };
+
             return $public;
         }());
 
         (function (alunoProxy) {
-            var $private = {}, $public = {}; 
+            var $private = {}, $public = {};
 
             $(function () {
                 $private.CampoBusca = "Nome";
@@ -191,8 +225,29 @@
                 $("#btnFiltrar").on("click", $private.PesquisarAlunos);
                 $private.PaginacaoTemplate = Handlebars.compile($("#paginacao-template").html());
                 $private.ResultadoAlunosTemplate = Handlebars.compile($("#resultado-alunos-template").html());
-
+                $("#confirmacaoExclusao").on("click", ".btn-delete-agree", $private.excluir);
+                $(document).on("click", "#resultado-container .btn-delete", $private.confirmarExclusao);
             });
+
+
+            $private.excluir = function () {
+                var id = $(this).parent().parent().find(".modal-body").data("id");
+                alunoProxy.excluir(id).done($private.PesquisarAlunos);
+                SmartLMS.App.toastr['error']('Aluno excluído com sucesso!', 'Manutenção de Alunos');
+            };
+
+
+            $private.confirmarExclusao = function (e) {
+                e.preventDefault();
+
+                var aluno = {
+                    id: $(this).data("id"),
+                    nome: $(this).data("nome")
+                };
+                $("#confirmacaoExclusao").find(".modal-body").data("id", aluno.id);
+                $("#confirmacaoExclusao").find(".modal-body").html("<p>Deseja realmente excluir o aluno " + aluno.nome + "?</p>");
+                $("#confirmacaoExclusao").modal();
+            };
 
             $private.Pagina = 1;
 

@@ -1,6 +1,7 @@
 ﻿using SmartLMS.Dominio.Entidades;
 using System.Collections.Generic;
 using System;
+using SmartLMS.Dominio.Entidades.Conteudo;
 
 namespace SmartLMS.WebUI.Models
 {

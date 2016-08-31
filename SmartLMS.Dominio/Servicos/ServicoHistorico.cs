@@ -1,15 +1,13 @@
 ﻿using Carubbi.GenericRepository;
 using Carubbi.Utils.DataTypes;
 using Humanizer.DateTimeHumanizeStrategy;
-using SmartLMS.Dominio.Entidades;
+using SmartLMS.Domain.Servicos;
+using SmartLMS.Dominio.Entidades.Comunicacao;
+using SmartLMS.Dominio.Entidades.Historico;
+using SmartLMS.Dominio.Repositorios;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SmartLMS.Domain.Servicos;
-using SmartLMS.Dominio.Repositorios;
 
 namespace SmartLMS.Dominio.Servicos
 {
@@ -75,8 +73,8 @@ namespace SmartLMS.Dominio.Servicos
             RepositorioTurma turmaRepo = new Repositorios.RepositorioTurma(_contexto);
             RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
 
-            var turmas = turmaRepo.ListarTurmasPorAluno(idUsuario);
             var usuario = usuarioRepo.ObterPorId(idUsuario);
+            var turmas = usuarioRepo.ListarTurmas(idUsuario).Select(x => x.Id).ToList();
 
             var avisos = _contexto.ObterLista<Aviso>()
              .Where(a =>
@@ -84,7 +82,7 @@ namespace SmartLMS.Dominio.Servicos
                  (!periodo.StartDate.HasValue || (periodo.StartDate.HasValue && periodo.StartDate.Value <= a.DataHora)
                  && (!periodo.EndDate.HasValue || (periodo.EndDate.HasValue && periodo.EndDate.Value >= a.DataHora)))
                  && (((tipo == TipoAviso.Pessoal || tipo == TipoAviso.Todos) && a.Usuario != null && a.Usuario.Id == idUsuario)
-                 || ((tipo == TipoAviso.Turma || tipo == TipoAviso.Todos) && a.Turma != null && turmas.Any(t => t.Id == a.Turma.Id))
+                 || ((tipo == TipoAviso.Turma || tipo == TipoAviso.Todos) && a.Turma != null && turmas.Contains(a.Turma.Id))
                  || ((tipo == TipoAviso.Geral || tipo == TipoAviso.Todos) && a.Turma == null && a.Usuario == null)))
                  .Select(x => new AvisoInfo { Aviso = x });
 

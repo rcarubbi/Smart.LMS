@@ -1,10 +1,5 @@
-﻿using SmartLMS.Dominio.Entidades;
-using System;
-using System.Collections.Generic;
+﻿using SmartLMS.Dominio.Entidades.Historico;
 using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartLMS.DAL.Mapeamento
 {

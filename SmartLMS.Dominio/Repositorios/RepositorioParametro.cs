@@ -1,6 +1,5 @@
 ﻿using SmartLMS.Dominio.Entidades;
 using System.Linq;
-using System;
 
 namespace SmartLMS.Dominio.Repositorios
 {

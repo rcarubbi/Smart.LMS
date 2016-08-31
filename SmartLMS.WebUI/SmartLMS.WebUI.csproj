@@ -42,8 +42,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Carubbi.GenericRepository, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.GenericRepository.1.1.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
+    <Reference Include="Carubbi.GenericRepository, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.GenericRepository.1.4.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Carubbi.Mailer, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -182,6 +182,7 @@
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\StructuremapWebApi.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ProfessorController.cs" />
     <Compile Include="Controllers\AlunoController.cs" />
     <Compile Include="Controllers\AssuntoController.cs" />
     <Compile Include="Controllers\AulaController.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CursoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TurmaController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="DependencyResolution\ControllerConvention.cs" />
     <Compile Include="DependencyResolution\DefaultRegistry.cs" />
@@ -398,7 +400,6 @@
     <Content Include="Views\Shared\_PainelAvisos.cshtml" />
     <Content Include="Views\Autenticacao\AlterarSenha.cshtml" />
     <Content Include="Views\Aluno\Create.cshtml" />
-    <Content Include="Views\Aluno\Delete.cshtml" />
     <Content Include="Views\Aluno\Edit.cshtml" />
     <Content Include="Views\Aluno\Index.cshtml" />
     <Content Include="Views\Shared\_Alert.cshtml" />
@@ -413,10 +414,14 @@
     <Content Include="Views\Shared\_paginacao.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
+    <Content Include="Views\Professor\Create.cshtml" />
+    <Content Include="Views\Professor\Edit.cshtml" />
+    <Content Include="Views\Professor\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\apoio\" />
+    <Folder Include="Views\Turma\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

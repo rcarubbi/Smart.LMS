@@ -34,14 +34,14 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administração <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li>@Html.ActionLink("Alunos", "Index", "Aluno")</li>
-                        <li><a href="#">Professores</a></li>
+                        <li>@Html.ActionLink("Professores", "Index", "Professor")</li>
                         <li><a href="#">Turmas</a></li>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Gerenciar Conteúdo</li>
                         <li><a href="#">@Parametro.AREA_CONHECIMENTO_PLURAL</a></li>
-                        <li><a href="#">@Parametro.ASSUNTO</a></li>
-                        <li><a href="#">@Parametro.CURSO</a></li>
-                        <li><a href="#">@Parametro.AULA</a></li>
+                        <li><a href="#">@Parametro.ASSUNTO_PLURAL</a></li>
+                        <li><a href="#">@Parametro.CURSO_PLURAL</a></li>
+                        <li><a href="#">@Parametro.AULA_PLURAL</a></li>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Auditoria</li>
                         <li><a href="#">Log Geral</a></li>

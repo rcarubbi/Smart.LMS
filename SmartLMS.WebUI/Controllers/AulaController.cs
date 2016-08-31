@@ -1,6 +1,8 @@
 ﻿using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Conteudo;
+using SmartLMS.Dominio.Entidades.Historico;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.WebUI.Models;
 using System;
@@ -89,7 +91,7 @@ namespace SmartLMS.WebUI.Controllers
         [ChildActionOnly]
         public ActionResult ExibirPainelNovasAulas() {
             var aulaRepo = new RepositorioAula(_contexto);
-            return PartialView("_PainelNovasAulas", AulaViewModel.FromEntityList(aulaRepo.ListarUltimasAulasAdicionadas(_usuarioLogado.Id), new DefaultDateTimeHumanizeStrategy()));
+            return PartialView("_PainelNovasAulas", AulaViewModel.FromEntityList(aulaRepo.ListarUltimasAulasLiberadas(_usuarioLogado.Id), new DefaultDateTimeHumanizeStrategy()));
         }
 
         [ChildActionOnly]

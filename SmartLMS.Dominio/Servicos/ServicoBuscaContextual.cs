@@ -1,11 +1,9 @@
-﻿using Carubbi.GenericRepository;
-using Carubbi.Utils.Data;
+﻿
+using Carubbi.GenericRepository;
 using SmartLMS.Dominio.Entidades;
-using System;
-using System.Collections.Generic;
+using SmartLMS.Dominio.Entidades.Conteudo;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartLMS.Dominio.Servicos
 {

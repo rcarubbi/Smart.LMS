@@ -6,6 +6,7 @@ using System.Globalization;
 using Carubbi.GenericRepository;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.Domain.Servicos;
+using SmartLMS.Dominio.Entidades.Comunicacao;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -16,20 +17,16 @@ namespace SmartLMS.WebUI.Models
 
         public string DataHora { get; set; }
 
-        public DateTime? DataTurma { get; set; }
+        public string NomeTurma { get; set; }
 
-        public string DataTurmaTexto { get {
-                return DataTurma.HasValue? DataTurma.Value.ToShortDateString() : string.Empty;
-            }
-        }
-
+        
         public TipoAviso Tipo
         {
             get
             {
                 if (MensagemDireta)
                     return TipoAviso.Pessoal;
-                else if (DataTurma.HasValue)
+                else if (!string.IsNullOrEmpty(NomeTurma))
                     return TipoAviso.Turma;
                 else
                     return TipoAviso.Geral;
@@ -52,7 +49,7 @@ namespace SmartLMS.WebUI.Models
                 Id = item.Id,
                 DataHora = humanizer.Humanize(item.DataHora, DateTime.Now, CultureInfo.CurrentUICulture),
                 Texto = item.Texto,
-                DataTurma = item.Turma != null ? item.Turma.DataInicio : (DateTime?)null,
+                NomeTurma = item.Turma?.Nome,
                 MensagemDireta = item.Usuario != null,
             };
         }
@@ -80,7 +77,7 @@ namespace SmartLMS.WebUI.Models
             return new AvisoViewModel
             {
                 DataHora = item.DataHoraTexto,
-                DataTurma = item.Aviso.Turma != null? item.Aviso.Turma.DataInicio : (DateTime?)null,
+                NomeTurma = item.Aviso.Turma != null ? item.Aviso.Turma.Nome : string.Empty,
                 Texto = item.Aviso.Texto,
                 MensagemDireta = item.Aviso.Usuario != null
             };

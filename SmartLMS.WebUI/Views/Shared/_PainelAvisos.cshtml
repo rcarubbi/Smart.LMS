@@ -15,17 +15,17 @@
                             {
                                 <span class="label label-danger">Pessoal</span>
                             }
-                            else if (item.DataTurma.HasValue)
+                            else if (!string.IsNullOrEmpty(item.NomeTurma))
                             {
-                                <span class="label label-warning">Turma @item.DataTurmaTexto</span>
+                                <span class="label label-warning">Turma @item.NomeTurma</span>
                             }
                             else
                             {
                                 <span class="label label-info">Geral</span>
                             }
                         </div>
-                        <strong>@item.DataHora</strong>
-                        @item.Texto
+                        <div class="horario-aviso">@item.DataHora</div>
+                        <div class="texto-aviso">@Html.Raw(item.Texto)</div>
                     </div>
                 </div>
             }
@@ -48,14 +48,14 @@
                 <span class="label label-danger">Pessoal</span>
                 {{else}}
                     {{#if MensagemDireta}}
-                        <span class="label label-warning">Turma {{DataTurmaTexto}}</span>
+                        <span class="label label-warning">Turma {{NomeTurma}}</span>
                     {{else}}
                         <span class="label label-info">Geral</span>
                     {{/if}}
                 {{/if}}
             </div>
-            <strong>{{DataHora}}</strong>
-            {{Texto}}
+            <div class="horario-aviso">{{DataHora}}</div>
+            <div class="texto-aviso">{{{Texto}}}</div>
         </div>
     </div>
 </script>

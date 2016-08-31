@@ -45,7 +45,9 @@ Handlebars.registerHelper('for', function (from, to, incr, block) {
     return accum;
 });
 
-
+Handlebars.registerHelper("toShortDateString", function(datetime) {
+    return moment(datetime).format("DD/MM/YYYY");
+})
 
 
 SmartLMS.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

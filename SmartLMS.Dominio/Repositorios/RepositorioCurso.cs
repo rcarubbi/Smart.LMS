@@ -1,4 +1,4 @@
-﻿using SmartLMS.Dominio.Entidades;
+﻿using SmartLMS.Dominio.Entidades.Conteudo;
 using System;
 using System.Linq;
 
@@ -16,6 +16,7 @@ namespace SmartLMS.Dominio.Repositorios
         public IndiceCurso ObterIndiceCurso(Guid id, Guid idUsuario)
         {
             var indiceCurso = new IndiceCurso();
+            RepositorioAula repoAula = new RepositorioAula(_contexto);
             
 
             indiceCurso.Curso = _contexto.ObterLista<Curso>().Find(id);
@@ -23,7 +24,7 @@ namespace SmartLMS.Dominio.Repositorios
                 .OrderBy(x => x.Ordem)
                 .Select(a => new AulaInfo {
                     Aula = a,
-                    Disponivel = a.VerificarDisponibilidade(idUsuario),
+                    Disponivel = repoAula.VerificarDisponibilidadeAula(a.Id, idUsuario),
                     Percentual = a.Acessos.Where(x => x.Usuario.Id == idUsuario).LastOrDefault()?.Percentual ?? 0
         });
 

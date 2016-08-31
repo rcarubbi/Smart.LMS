@@ -1,4 +1,5 @@
 ﻿using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Conteudo;
 using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Collections.Generic;

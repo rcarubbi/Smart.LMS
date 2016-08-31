@@ -1,6 +1,6 @@
 ﻿@model SmartLMS.WebUI.Models.CursoViewModel
 @{
-    ViewBag.Title = "Índice de " + ViewBag.Curso + " - " + Model.Nome;
+    ViewBag.Title = "Índice de " + ViewBag.Curso  + " - " + Model.Nome;
 }
 <div class="col-md-8">
    <div id="indice-curso-container">
@@ -10,7 +10,7 @@
 <div class="col-md-4">
     <div class="panel panel-success">
         <div class="panel-heading">
-            <h3 class="panel-title">Veja também outros @(ViewBag.Curso.ToLower())s deste @ViewBag.Assunto.ToLower()</h3>
+            <h3 class="panel-title">Veja também outros @(ViewBag.CursoPlural.ToLower()) deste @ViewBag.Assunto.ToLower()</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
             @{ 

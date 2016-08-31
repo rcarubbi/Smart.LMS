@@ -1,4 +1,5 @@
 ﻿using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Historico;
 using System;
 using System.Collections.Generic;
 using System.Linq;

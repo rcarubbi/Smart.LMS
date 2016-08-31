@@ -64,9 +64,9 @@
                             <h5 class="list-group-item-heading">@item.Tipo</h5>
                             @if (item.Tipo == SmartLMS.Domain.Servicos.TipoAviso.Turma)
                             {
-                                <p class="list-group-item-text">@item.DataTurmaTexto</p>
+                                <p class="list-group-item-text">@item.NomeTurma</p>
                             }
-                            <p class="list-group-item-text">@item.Texto</p>
+                            <p class="list-group-item-text">@Html.Raw(item.Texto)</p>
                             <div class="footer-content">@item.DataHora</div>
                         </div>
                     </div>
@@ -99,9 +99,9 @@
             <div class="row-content">
                 <h5 class="list-group-item-heading">{{TipoDescricao}}</h5>
                 {{#equals Tipo 2}}
-                <p class="list-group-item-text">{{DataTurmaTexto}}</p>
+                <p class="list-group-item-text">{{NomeTurma}}</p>
                 {{/equals}}
-                <p class="list-group-item-text">{{Texto}}</p>
+                <p class="list-group-item-text">{{{Texto}}}</p>
                 <div class="footer-content">{{DataHora}}</div>
             </div>
         </div>

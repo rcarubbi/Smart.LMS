@@ -1,4 +1,5 @@
 ﻿using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Comunicacao;
 
 namespace SmartLMS.Dominio.Servicos
 {

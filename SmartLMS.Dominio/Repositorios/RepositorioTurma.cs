@@ -1,4 +1,4 @@
-﻿using SmartLMS.Dominio.Entidades;
+﻿using SmartLMS.Dominio.Entidades.Liberacao;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +13,9 @@ namespace SmartLMS.Dominio.Repositorios
             _contexto = contexto;
         }
 
-
-        public IEnumerable<Turma> ListarTurmasPorAluno(Guid idAluno)
+        public List<Planejamento> ListarPlanejamentosNaoConcluidos()
         {
-            return _contexto.ObterLista<Turma>().Where(t => t.Alunos.Any(a => a.IdAluno == idAluno));
-        }
-
-        public bool VerificarDisponibilidadeAula(Guid idAula, Guid idAluno)
-        {
-            return ListarTurmasPorAluno(idAluno).SelectMany(x => x.AulasDisponiveis).Any(x => x.Aula.Id == idAula);
+            return _contexto.ObterLista<Planejamento>().Where(p => !p.Concluido).ToList();
         }
     }
 }
