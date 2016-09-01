@@ -35,7 +35,7 @@
                     <ul class="dropdown-menu">
                         <li>@Html.ActionLink("Alunos", "Index", "Aluno")</li>
                         <li>@Html.ActionLink("Professores", "Index", "Professor")</li>
-                        <li><a href="#">Turmas</a></li>
+                        <li>@Html.ActionLink("Turmas", "Index", "Turma")</li>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Gerenciar Conteúdo</li>
                         <li><a href="#">@Parametro.AREA_CONHECIMENTO_PLURAL</a></li>
@@ -55,7 +55,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">person</i>@Model.Usuario.Nome <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="@Url.Action("Index", "Aviso")">Avisos</a></li>
-                        <li><a href="#">Alterar Senha</a></li>
+                        <li><a href="@Url.Action("AlterarSenha", "Autenticacao")">Alterar Senha</a></li>
                         <li><a href="@Url.Action("Sair", "Autenticacao")">Sair</a></li>
                     </ul>
                 </li>

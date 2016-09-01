@@ -1,13 +1,14 @@
 ﻿using SmartLMS.Dominio;
-using SmartLMS.Dominio.Entidades;
+using SmartLMS.Dominio.Entidades.Liberacao;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
 using System;
+using System.Linq;
 using System.Net;
+using System.Transactions;
 using System.Web.Mvc;
-
 namespace SmartLMS.WebUI.Controllers
 {
     [Authorize(Roles = "Administrador")]
@@ -50,6 +51,8 @@ namespace SmartLMS.WebUI.Controllers
         // GET: Aluno/Create
         public ActionResult Create()
         {
+            RepositorioTurma repo = new RepositorioTurma(_contexto);
+            ViewBag.Turmas = new SelectList(repo.ListarTurmas(), "Id", "Nome");
             return View();
         }
 
@@ -60,13 +63,36 @@ namespace SmartLMS.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(UsuarioViewModel aluno)
         {
+            RepositorioTurma repo = new RepositorioTurma(_contexto);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto);
-                    servicoAuth.CriarUsuario(aluno.Nome, aluno.Login, aluno.Email, aluno.Senha, Perfil.Aluno);
+                    using (TransactionScope tx = new TransactionScope())
+                    {
 
+                        ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto);
+                        var novoAluno = servicoAuth.CriarUsuario(aluno.Nome, aluno.Login, aluno.Email, aluno.Senha, Perfil.Aluno);
+
+                        var turma = repo.ObterPorId(aluno.Turma);
+
+                        var planejamento = turma.Planejamentos.SingleOrDefault(x => x.DataInicio.Date == DateTime.Today);
+                        if (planejamento == null)
+                        {
+                            planejamento = new Planejamento
+                            {
+                                DataInicio = DateTime.Today,
+                                Turma = turma
+                            };
+                            turma.Planejamentos.Add(planejamento);
+                            
+                        }
+
+                        planejamento.Alunos.Add((Aluno)novoAluno);
+
+                        _contexto.Salvar();
+                        tx.Complete();
+                    }
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de alunos";
                     TempData["Mensagem"] = "Aluno criado com sucesso";
@@ -78,10 +104,10 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["TituloMensagem"] = "Administração de alunos";
                     TempData["Mensagem"] = ex.Message;
                 }
-
-
             }
 
+            
+            ViewBag.Turmas = new SelectList(repo.ListarTurmas(), "Id", "Nome");
             return View(aluno);
         }
 

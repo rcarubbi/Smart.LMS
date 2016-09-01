@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.DAL", "SmartLMS.DA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Infraestrutura", "4. Infraestrutura", "{B66F478C-C9FB-4819-8110-5CE4FD1E1AE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgenteLiberacaoConteudo", "AgenteLiberacaoConteudo\AgenteLiberacaoConteudo.csproj", "{4CA80507-4109-4BDB-B7AE-200B845C789B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.AgenteLiberacaoConteudo", "SmartLMS.AgenteLiberacaoConteudo\SmartLMS.AgenteLiberacaoConteudo.csproj", "{4CA80507-4109-4BDB-B7AE-200B845C789B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

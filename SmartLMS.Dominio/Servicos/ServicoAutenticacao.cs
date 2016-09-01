@@ -79,7 +79,7 @@ namespace SmartLMS.Dominio.Servicos
             var diferencas = analyzer.Compare(_contexto.UnProxy(entidade), usuarioAlterado, a => a.State == DiffState.Modified);
 
             
-            StringBuilder textoDiferencas = new StringBuilder($"Seus dados foram alterados:{Environment.NewLine}<br />");
+            StringBuilder textoDiferencas = new StringBuilder($"Alteração de dados Cadastrais:{Environment.NewLine}<br />");
             foreach (var item in diferencas)
             {
                 if (item.PropertyName == "Senha")

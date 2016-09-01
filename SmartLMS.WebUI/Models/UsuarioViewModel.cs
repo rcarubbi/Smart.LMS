@@ -24,7 +24,9 @@ namespace SmartLMS.WebUI.Models
         [EmailAddress(ErrorMessage = "O campo Login não é um email válido")]
         public string Login { get;  set; }
 
-       
+        [Required(ErrorMessage = "Selecione uma turma")]
+        public Guid Turma { get; set; }
+
 
         [Required(ErrorMessage = "O campo Nome é obrigatório")]
         public string Nome { get; set; }
@@ -51,6 +53,8 @@ namespace SmartLMS.WebUI.Models
                 NomePerfil = ObjectContext.GetObjectType(usuario.GetType()).Name,
              };
         }
+
+        
 
         internal static UsuarioViewModel FromEntity(Aluno aluno)
         {

@@ -58,6 +58,14 @@
             </div>
 
             <div class="form-group">
+                @Html.LabelFor(model => model.Turma, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Turma, ViewBag.Turmas as SelectList, "-- Selecione --", new { @class= "form-control dropdownjs" })
+                    @Html.ValidationMessageFor(model => model.Turma, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <button type="submit" class="btn btn-success btn-sm">
                         <i class="fa fa-save"></i>

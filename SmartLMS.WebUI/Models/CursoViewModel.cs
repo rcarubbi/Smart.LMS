@@ -3,6 +3,7 @@ using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartLMS.Dominio.Entidades.Liberacao;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -42,6 +43,24 @@ namespace SmartLMS.WebUI.Models
                 Aulas = profundidade > 2
                 ? AulaViewModel.FromEntityList(item.Aulas.Where(a => a.Ativo).OrderBy(x => x.Ordem), profundidade) 
                 : new List<AulaViewModel>()
+            };
+        }
+
+        internal static IEnumerable<TurmaViewModel> FromEntityList(List<TurmaCurso> cursos)
+        {
+            foreach (var item in cursos.OrderBy(x => x.Ordem))
+            {
+                yield return FromEntity(item);
+            }
+        }
+
+        private static TurmaViewModel FromEntity(TurmaCurso item)
+        {
+            return new TurmaViewModel
+            {
+                Nome = item.Curso.Nome,
+                Id = item.Curso.Id,
+                Ordem = item.Ordem
             };
         }
 

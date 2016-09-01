@@ -49,7 +49,7 @@ namespace SmartLMS.WebUI.Models
                 Id = item.Id,
                 DataHora = humanizer.Humanize(item.DataHora, DateTime.Now, CultureInfo.CurrentUICulture),
                 Texto = item.Texto,
-                NomeTurma = item.Turma?.Nome,
+                NomeTurma = item.Planejamento?.Turma?.Nome,
                 MensagemDireta = item.Usuario != null,
             };
         }
@@ -77,7 +77,7 @@ namespace SmartLMS.WebUI.Models
             return new AvisoViewModel
             {
                 DataHora = item.DataHoraTexto,
-                NomeTurma = item.Aviso.Turma != null ? item.Aviso.Turma.Nome : string.Empty,
+                NomeTurma = item.Aviso?.Planejamento?.Turma?.Nome,
                 Texto = item.Aviso.Texto,
                 MensagemDireta = item.Aviso.Usuario != null
             };

@@ -1,4 +1,6 @@
 ﻿using SmartLMS.Dominio.Entidades.Comunicacao;
+using SmartLMS.Dominio.Entidades.Liberacao;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +21,19 @@ namespace SmartLMS.Dominio.Repositorios
 
             var repoUsuario = new RepositorioUsuario(_contexto);
             var usuario = repoUsuario.ObterPorId(idUsuario);
-            var turmas = repoUsuario.ListarTurmas(idUsuario).Select(x => x.Id).ToList();
+            var planejamentos = new List<long>();
+
+            if (usuario is Aluno)
+            {
+                planejamentos = (usuario as Aluno).Planejamentos.Select(x => x.Id).ToList();
+            }
    
 
             return _contexto.ObterLista<Aviso>().Where(a =>
                     a.DataHora >= usuario.DataCriacao &&
-                    ((a.Turma != null && turmas.Contains(a.Turma.Id))
+                    ((a.Planejamento != null && planejamentos.Contains(a.Planejamento.Id))
                     || (a.Usuario != null && a.Usuario.Id == idUsuario)
-                    || (a.Turma == null && a.Usuario == null))
+                    || (a.Planejamento == null && a.Usuario == null))
                     && (!a.Usuarios.Any(u => u.IdUsuario == idUsuario)))
                     .OrderByDescending( x=> x.DataHora)
                     .Take(2).ToList();

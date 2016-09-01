@@ -10,6 +10,7 @@
                 <div class="bs-component aviso" data-id="@item.Id">
                     <div class="alert alert-dismissible alert-default">
                         <button type="button" class="close" aria-hidden="true">×</button>
+                        <div class="horario-aviso">@item.DataHora</div>
                         <div class="tipo-aviso">
                             @if (item.MensagemDireta)
                             {
@@ -24,7 +25,7 @@
                                 <span class="label label-info">Geral</span>
                             }
                         </div>
-                        <div class="horario-aviso">@item.DataHora</div>
+                    
                         <div class="texto-aviso">@Html.Raw(item.Texto)</div>
                     </div>
                 </div>
@@ -43,18 +44,18 @@
     <div class="bs-component aviso" data-id="{{Id}}">
         <div class="alert alert-dismissible alert-default">
             <button type="button" class="close" aria-hidden="true">×</button>
+            <div class="horario-aviso">{{DataHora}}</div>
             <div class="tipo-aviso">
                 {{#if MensagemDireta}}
                 <span class="label label-danger">Pessoal</span>
                 {{else}}
-                    {{#if MensagemDireta}}
+                    {{#if NomeTurma}}
                         <span class="label label-warning">Turma {{NomeTurma}}</span>
                     {{else}}
                         <span class="label label-info">Geral</span>
                     {{/if}}
                 {{/if}}
             </div>
-            <div class="horario-aviso">{{DataHora}}</div>
             <div class="texto-aviso">{{{Texto}}}</div>
         </div>
     </div>

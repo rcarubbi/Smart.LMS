@@ -7,8 +7,8 @@
     <ProjectGuid>{4CA80507-4109-4BDB-B7AE-200B845C789B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgenteLiberacaoConteudo</RootNamespace>
-    <AssemblyName>AgenteLiberacaoConteudo</AssemblyName>
+    <RootNamespace>SmartLMS.AgenteLiberacaoConteudo</RootNamespace>
+    <AssemblyName>SmartLMS.AgenteLiberacaoConteudo</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

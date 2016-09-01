@@ -9,7 +9,7 @@ namespace SmartLMS.Dominio.Entidades.Comunicacao
     {
         public long Id { get; set; }
 
-        public virtual Turma Turma { get; set; }
+        public virtual Planejamento Planejamento { get; set; }
         public virtual Usuario Usuario { get; set; }
 
         public virtual ICollection<UsuarioAviso> Usuarios { get; set; }

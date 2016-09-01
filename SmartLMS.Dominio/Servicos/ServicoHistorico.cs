@@ -4,8 +4,10 @@ using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Domain.Servicos;
 using SmartLMS.Dominio.Entidades.Comunicacao;
 using SmartLMS.Dominio.Entidades.Historico;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -74,7 +76,12 @@ namespace SmartLMS.Dominio.Servicos
             RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
 
             var usuario = usuarioRepo.ObterPorId(idUsuario);
-            var turmas = usuarioRepo.ListarTurmas(idUsuario).Select(x => x.Id).ToList();
+            var planejamentos = new List<long>();
+            if (usuario is Aluno)
+            {
+                planejamentos = (usuario as Aluno).Planejamentos.Select(x => x.Id).ToList(); 
+            }
+            
 
             var avisos = _contexto.ObterLista<Aviso>()
              .Where(a =>
@@ -82,8 +89,8 @@ namespace SmartLMS.Dominio.Servicos
                  (!periodo.StartDate.HasValue || (periodo.StartDate.HasValue && periodo.StartDate.Value <= a.DataHora)
                  && (!periodo.EndDate.HasValue || (periodo.EndDate.HasValue && periodo.EndDate.Value >= a.DataHora)))
                  && (((tipo == TipoAviso.Pessoal || tipo == TipoAviso.Todos) && a.Usuario != null && a.Usuario.Id == idUsuario)
-                 || ((tipo == TipoAviso.Turma || tipo == TipoAviso.Todos) && a.Turma != null && turmas.Contains(a.Turma.Id))
-                 || ((tipo == TipoAviso.Geral || tipo == TipoAviso.Todos) && a.Turma == null && a.Usuario == null)))
+                 || ((tipo == TipoAviso.Turma || tipo == TipoAviso.Todos) && a.Planejamento != null && planejamentos.Contains(a.Planejamento.Id))
+                 || ((tipo == TipoAviso.Geral || tipo == TipoAviso.Todos) && a.Planejamento == null && a.Usuario == null)))
                  .Select(x => new AvisoInfo { Aviso = x });
 
 

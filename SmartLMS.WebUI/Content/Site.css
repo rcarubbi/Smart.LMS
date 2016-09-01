@@ -86,6 +86,11 @@ h2 {
     border-right-color: rgb(0, 100, 0);
 }
 
+
+.tooltip.top .tooltip-arrow {
+    border-top-color: rgb(0, 100, 0);
+}
+
 .tipo-aviso {
     margin-bottom: 10px;
 }
@@ -178,7 +183,7 @@ body {
 
 .alert, .alert.alert-default {
     color: black;
-    background-color: #f5f5f5;
+    background-color: #fbfbfb;
 }
 
 .close {
@@ -335,15 +340,31 @@ body {
 }
 
 
-.texto-aviso {
-   margin-top: -20px;
-}
+ 
 
 .horario-aviso {
-     position: relative;
-    right: -290px;
-    bottom: 35px;
-    color: rgba(0, 0, 0, 0.54);
+   color: rgba(0, 0, 0, 0.54);
     font-size: 12px;
-    width: 95px;
+    width: 124px;
+    text-align: right;
+    float: right;
+    margin-right: 10px;
+    margin-top: -5px;
+}
+
+.texto-aviso {
+    font-size: 13px;
+    color: #777
+}
+
+.texto-aviso a {
+    color: #777 !important;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.btn-planejamento {
+    font-size: 15px !important;
+    margin-top: 1px !important;
+    top: 0px !important;
 }

@@ -1,0 +1,512 @@
+﻿@model Carubbi.GenericRepository.PagedListResult<TurmaViewModel>
+@{
+    ViewBag.Title = "Manutenção de Turmas";
+}
+@section styles {
+    <style type="text/css">
+        .checkbox {
+            margin: 0px;
+        }
+
+        .form-group {
+            margin-top: 10px !important;
+        }
+    </style>
+}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Lista de Turmas
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <a href="@Url.Action("Create")" class="btn btn-sm btn-info"><i class="material-icons">group_add</i></a>
+            </div>
+            <div class="col-md-6 pull-right">
+                <div class="col-md-3">
+                    <div class="form-group label-static is-empty">
+                        <label for="CampoBusca" class="control-label">Pesquisar por</label>
+                        @Html.DropDownList("CampoBusca", ViewBag.CamposBusca as SelectList, new { @class = "form-control dropdownjs" })
+                    </div>
+                </div>
+                <div class="form-group label-floating is-empty col-md-9">
+                    <label class="control-label" for="q">digite o termo que deseja encontrar</label>
+                    <div class="input-group" style="display:block">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input type="search" name="termo" id="termo" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-sm" id="btnFiltrar">
+                                    <i class="material-icons">search</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Nome")
+                    </th>
+                    <th class="hidden-sm  hidden-xs">
+                        @Html.DisplayName("Ativo")
+                    </th>
+                    <th class="hidden-sm  hidden-xs">
+                        @Html.DisplayName("Criado em")
+                    </th>
+                    <th>@Html.DisplayName("Detalhes")</th>
+                    <th>@Html.DisplayName("Alterar/Excluir")</th>
+                </tr>
+            </thead>
+            <tbody id="resultado-container">
+                @foreach (var item in Model.Entities)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nome)
+                        </td>
+                        <td class="hidden-sm  hidden-xs">
+                            @Html.DisplayFor(modelItem => item.Ativo)
+                        </td>
+                        <td class="hidden-sm  hidden-xs">
+                            @item.DataCriacao.ToShortDateString()
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                                <a href="javascript:void(0);" class="btn btn-success btn-sm btn-ver-cursos" data-id="@item.Id" data-nome="@item.Nome" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Cursos">
+                                    <i class="material-icons">school</i>
+                                </a>
+                                <a href="javascript:void(0);" class="btn btn-warning btn-sm btn-ver-alunos" data-id="@item.Id " data-nome="@item.Nome" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Alunos">
+                                    <i class="material-icons">group</i>
+                                </a>
+                                <a href="@Url.Action("Planejamentos", new { Id = item.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Planejamento de entrega">
+                                    <i class="fa fa-calendar btn-planejamento"></i>
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                                <a href="@Url.Action("Edit", new { Id = item.Id })" class="btn btn-success btn-sm">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                                <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="@item.Id" data-nome="@item.Nome">
+                                    <i class="material-icons">delete</i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            @if (Model.Entities.Count() == 0)
+            {
+                <tr>
+                    <td colspan="5" class="text-center">
+                        Nenhuma turma encontrada
+                    </td>
+                </tr>
+            }
+
+        </table>
+        @Html.Partial("_paginacao")
+    </div>
+</div>
+
+
+<div class="modal fade" id="confirmacaoExclusao" tabindex="-1" role="dialog" aria-labelledby="Confirmação de Exclusão" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Excluir turma</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-delete-agree" data-dismiss="modal"><i class="fa fa-thumbs-up"></i></button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-thumbs-down"></i></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="verAlunos" tabindex="-1" role="dialog" aria-labelledby="Alunos da turma" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Alunos da Turma</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayName("Nome")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Ingressou em")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="alunos-container"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-simple" data-dismiss="modal">Fechar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="verCursos" tabindex="-1" role="dialog" aria-labelledby="Cursos inclusos" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Cursos inclusos</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayName("Nome")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="cursos-container"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-simple" data-dismiss="modal">Fechar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/x-handlebars-template" id="resultado-turmas-template">
+        {{#each Entities}}
+        <tr>
+            <td>
+                {{Nome}}
+            </td>
+            <td class="hidden-sm hidden-xs">
+                <div class="checkbox">
+                    <label>
+                        <input name="Ativo" type="checkbox" disabled {{#if Ativo}} checked {{/if}}>
+                    </label>
+                </div>
+            </td>
+            <td class="hidden-sm  hidden-xs">
+                {{toShortDateString DataCriacao}}
+            </td>
+            <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                    <a href="javascript:void(0);" class="btn btn-success btn-sm btn-ver-cursos" data-id="{{Id}}" data-nome="{{Nome}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Cursos">
+                        <i class="material-icons">school</i>
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-warning btn-sm btn-ver-alunos" data-id="{{Id}}" data-nome="{{Nome}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Alunos">
+                        <i class="material-icons">group</i>
+                    </a>
+                    <a href="@Url.Content("~/Turma/Planejamento/"){{Id}}" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Planejamento de entrega">
+                        <i class="fa fa-calendar btn-planejamento"></i>
+                    </a>
+                </div>
+            </td>
+            <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                    <a href="@Url.Content("~/Turma/Edit/"){{Id}}" class="btn btn-success btn-sm">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="{{Id}}" data-nome="{{Nome}}">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+        {{#equals Count 0}}
+        <tr>
+            <td colspan="5" class="text-center">
+                Nenhuma turma encontrada
+            </td>
+        </tr>
+        {{/equals}}
+    </script>
+
+    <script type="text/x-handlebars-template" id="cursos-turma-template">
+        {{#each this}}
+        <tr>
+            <td>
+                {{Nome}}
+            </td>
+        </tr>
+        {{/each}}
+        {{#equals Count 0}}
+        <tr>
+            <td class="text-center">
+                Nenhum curso encontrado
+            </td>
+        </tr>
+        {{/equals}}
+    </script>
+
+    <script type="text/x-handlebars-template" id="alunos-turma-template">
+        {{#each this}}
+        <tr>
+            <td>
+                {{Nome}}
+            </td>
+            <td>
+                {{toShortDateString DataIngresso}}
+            </td>
+        </tr>
+        {{/each}}
+        {{#equals Count 0}}
+        <tr>
+            <td colspan="2" class="text-center">
+                Nenhum aluno encontrado
+            </td>
+        </tr>
+        {{/equals}}
+    </script>
+
+    <script>
+        SmartLMS.TurmaProxy = (function () {
+            $public = {}, $private = {};
+
+
+            $public.Listar = function (termo, campoBusca, pagina) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Turma/ListarTurmas",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ termo: termo, campoBusca: campoBusca, pagina: pagina })
+                });
+            };
+
+            $public.ListarAlunos = function (id) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Turma/ListarAlunos",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ id: id })
+                });
+            };
+
+            $public.ListarCursos = function (id) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Turma/ListarCursos",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ id: id })
+                });
+            };
+
+            $public.excluir = function (id) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Turma/Excluir",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ id: id })
+                });
+            };
+
+            return $public;
+        }());
+
+        (function (turmaProxy) {
+            var $private = {}, $public = {};
+
+            $(function () {
+                $private.CampoBusca = "Nome";
+                $private.UltimaQuantidade = @Model.Count
+                $("#paginacao-container").on("click", ".paginacao-pagina", $private.IrParaPagina);
+                $("#paginacao-container").on("click", ".paginacao-proxima", $private.ProximaPagina);
+                $("#paginacao-container").on("click", ".paginacao-anterior", $private.PaginaAnterior);
+                $("#CampoBusca").on("dropdownjs.change", function () {
+                    var selectedItem = $(this).find("option:selected");
+                    $private.CampoBusca = selectedItem.val();
+
+                });
+                $("#btnFiltrar").on("click", $private.PesquisarTurmas);
+                $private.PaginacaoTemplate = Handlebars.compile($("#paginacao-template").html());
+                $private.ResultadoTurmasTemplate = Handlebars.compile($("#resultado-turmas-template").html());
+                $private.AlunosDaTurmaTemplate = Handlebars.compile($("#alunos-turma-template").html());
+                $private.CursosDaTurmaTemplate = Handlebars.compile($("#cursos-turma-template").html());
+
+
+                $("#confirmacaoExclusao").on("click", ".btn-delete-agree", $private.excluir);
+                $(document).on("click", "#resultado-container .btn-delete", $private.confirmarExclusao);
+                $(document).on("click", "#resultado-container .btn-ver-cursos", $private.verCursos);
+                $(document).on("click", "#resultado-container .btn-ver-alunos", $private.verAlunos);
+            });
+
+            $private.excluir = function () {
+                var id = $(this).parent().parent().find(".modal-body").data("id");
+                turmaProxy.excluir(id).done($private.PesquisarTurmas);
+                SmartLMS.App.toastr['error']('Turma excluída com sucesso!', 'Manutenção de Turmas');
+            };
+
+            $private.confirmarExclusao = function (e) {
+                e.preventDefault();
+
+                var turma = {
+                    id: $(this).data("id"),
+                    nome: $(this).data("nome")
+                };
+                $("#confirmacaoExclusao").find(".modal-body").data("id", aluno.id);
+                $("#confirmacaoExclusao").find(".modal-body").html("<p>Deseja realmente excluir a turma " + turma.nome + "?</p>");
+                $("#confirmacaoExclusao").modal();
+            };
+
+            $private.verAlunos = function (e) {
+                e.preventDefault();
+
+                var turma = {
+                    id: $(this).data("id"),
+                    nome: $(this).data("nome")
+                };
+                $("#verAlunos").find(".modal-title").text("Alunos inscritos na turma " + turma.nome);
+
+                turmaProxy.ListarAlunos(turma.id).done($private.exibirAlunos);
+
+            };
+
+            $private.exibirAlunos = function (data) {
+                $("#alunos-container").html($private.AlunosDaTurmaTemplate(data));
+                $("#verAlunos").modal();
+            };
+
+            $private.verCursos = function (e) {
+                e.preventDefault();
+
+                var turma = {
+                    id: $(this).data("id"),
+                    nome: $(this).data("nome")
+                };
+                $("#verCursos").find(".modal-title").text("Cursos inclusos na turma " + turma.nome);
+                turmaProxy.ListarCursos(turma.id).done($private.exibirCursos);
+            };
+
+            $private.exibirCursos = function (data) {
+                $("#cursos-container").html($private.CursosDaTurmaTemplate(data));
+                $("#verCursos").modal();
+            };
+
+            $private.Pagina = 1;
+
+            $private.IrParaPagina = function () {
+                $private.Pagina = $(this).text();
+                var termo = $("#termo").val();
+
+                turmaProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+
+            };
+
+            $private.ProximaPagina = function () {
+                $private.Pagina++;
+                var termo = $("#termo").val();
+
+                turmaProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+
+
+            };
+
+            $private.PaginaAnterior = function () {
+                $private.Pagina--;
+                var termo = $("#termo").val();
+
+                turmaProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+
+            };
+
+            $private.PesquisarTurmas = function () {
+                $private.Pagina = 1;
+                var termo = $("#termo").val();
+
+                turmaProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+            };
+
+            $private.CalcularPaginaMinima = function (quantidade, pagina) {
+                if (pagina < 4) {
+                    return 1;
+                }
+                else if (pagina > quantidade - 3) {
+                    return quantidade - 4;
+                }
+                else {
+                    return pagina - 2;
+                }
+            };
+
+            $private.CalcularPaginaMaxima = function (quantidade, pagina) {
+                if (pagina < 4) {
+                    if (quantidade < 6) {
+                        return quantidade + 1;
+                    }
+                    else {
+                        return 6;
+                    }
+                }
+                else if (pagina > quantidade - 3) {
+                    return quantidade + 1;
+                }
+                else {
+                    return pagina + 3;
+                }
+            };
+
+            $private.AtualizarResultados = function (data) {
+                $("#resultado-container").html($private.ResultadoTurmasTemplate(data));
+                if (data.HasNext) {
+                    $(".paginacao-proxima").show();
+                }
+                else {
+                    $(".paginacao-proxima").hide();
+                }
+
+                if (data.HasPrevious) {
+                    $(".paginacao-anterior").show();
+                }
+                else {
+                    $(".paginacao-anterior").hide();
+                }
+
+
+                $("#paginacao-container").html($private.PaginacaoTemplate({
+                    paginas: Math.ceil(data.Count / 8),
+                    possuiAnterior: data.HasPrevious,
+                    possuiProxima: data.HasNext,
+                    paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.Count / 8), 1),
+                    paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.Count / 8), 1),
+                    paginaCorrente: $private.Pagina
+                }));
+                $.material.checkbox();
+
+            };
+
+        }(SmartLMS.TurmaProxy));
+    </script>
+}
