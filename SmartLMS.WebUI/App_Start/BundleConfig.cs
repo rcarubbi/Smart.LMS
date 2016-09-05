@@ -35,6 +35,7 @@ namespace SmartLMS.WebUI
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
                       "~/Scripts/bootstrap-datepicker/bootstrap-datepicker.js",
+                      "~/Scripts/bootstrap-multiselect/bootstrap-multiselect.js",
                       "~/Scripts/material-kit/material.min.js",
                       "~/Scripts/material-kit/nouislider.min.js",
                       "~/Scripts/material-kit/material-kit.js",
@@ -45,6 +46,8 @@ namespace SmartLMS.WebUI
             bundles.Add(new StyleBundle("~/Content/css").Include(
                "~/Content/font-awesome.css",
                "~/Content/bootstrap.css",
+               "~/Content/bootstrap-datepicker/bootstrap-datepicker.css",
+               "~/Content/bootstrap-multiselect/bootstrap-multiselect.css",
                "~/Content/themes/notheme/jquery-ui.css",
                "~/Content/themes/notheme/jquery-ui.structure.css"));
 

@@ -1,0 +1,52 @@
+﻿@model SmartLMS.WebUI.Models.TurmaViewModel
+
+@{
+    ViewBag.Title = "Inclusão de nova turma";
+}
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        Inclusão de nova turma
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <h4>Dados da Turma</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IdsCursos, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IdsCursos, ViewBag.Cursos as SelectList, new { @class="multiselect" , multiple = "multiple" })
+                        @Html.ValidationMessageFor(model => model.IdsCursos, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="fa fa-save"></i>
+                        </button>
+                        @Html.ActionLink("Voltar", "Index", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

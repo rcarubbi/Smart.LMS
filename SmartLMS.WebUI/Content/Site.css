@@ -1,18 +1,19 @@
-﻿#toast-container>div {
+﻿#toast-container > div {
     margin-bottom: 90px;
 }
 
 .areas-conhecimento-bar .nav-pills {
-  overflow-x: auto;
-  overflow-y: hidden;
-  display: -webkit-box;
-  display: -moz-box;
-}
-.areas-conhecimento-bar .nav-pills>li {
-  float: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: -webkit-box;
+    display: -moz-box;
 }
 
- 
+    .areas-conhecimento-bar .nav-pills > li {
+        float: none;
+    }
+
+
 
 body {
     overflow: hidden;
@@ -26,11 +27,11 @@ body {
     margin-left: 5px;
 }
 
-#logo img {
-    top: 7px;
-    position: absolute;
-    left: 8px;
-}
+    #logo img {
+        top: 7px;
+        position: absolute;
+        left: 8px;
+    }
 
 .navbar .navbar-brand {
     text-transform: uppercase;
@@ -335,15 +336,15 @@ body {
 
 
 .carousel-inner > .item {
-  -webkit-transition: 0.3s ease-in-out left !important;
-          transition: 0.3s ease-in-out left !important;
+    -webkit-transition: 0.3s ease-in-out left !important;
+    transition: 0.3s ease-in-out left !important;
 }
 
 
- 
+
 
 .horario-aviso {
-   color: rgba(0, 0, 0, 0.54);
+    color: rgba(0, 0, 0, 0.54);
     font-size: 12px;
     width: 124px;
     text-align: right;
@@ -354,17 +355,69 @@ body {
 
 .texto-aviso {
     font-size: 13px;
-    color: #777
+    color: #777;
 }
 
-.texto-aviso a {
-    color: #777 !important;
-    font-weight: 500;
-    text-decoration: none;
-}
+    .texto-aviso a {
+        color: #777 !important;
+        font-weight: 500;
+        text-decoration: none;
+    }
 
 .btn-planejamento {
     font-size: 15px !important;
     margin-top: 1px !important;
     top: 0px !important;
+}
+
+
+.form-group .multiselect-container a label.checkbox {
+    text-align: left !important;
+    color: gray !important;
+}
+
+
+.form-group.is-focused .multiselect-container label {
+    color: gray !important;
+}
+
+select.multiselect {
+    display: none;
+}
+
+.form-group .multiselect-container a:focus,
+.form-group .multiselect-container a:hover {
+    background-color: #f5f5f5;
+}
+
+.form-group .multiselect-container a:hover label.checkbox
+ {
+    color : gray !important;
+}
+
+
+.form-group .multiselect-container .active a:hover label.checkbox,
+.form-group .multiselect-container .active a label.checkbox, 
+.form-group .multiselect-container .active a:focus label.checkbox
+.form-group .multiselect-container .active a:hover label b,
+.form-group .multiselect-container .active a label b, 
+.form-group .multiselect-container .active a:focus label b {
+    color: white !important;
+}
+
+.form-group .multiselect-container .active a:hover,
+.form-group .multiselect-container .active a,
+.form-group .multiselect-container .active a:focus {
+    background-color: #03a9f4;
+    margin-bottom: 5px;
+}
+
+.multiselect-container>li.multiselect-group label {
+    width: 93%;
+    text-align: left;
+}
+
+
+.multiselect-container.dropdown-menu {
+    min-width: 350px;
 }

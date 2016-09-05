@@ -243,6 +243,7 @@
     <Content Include="apple-icon-precomposed.png" />
     <Content Include="apple-icon.png" />
     <Content Include="browserconfig.xml" />
+    <Content Include="Content\bootstrap-multiselect\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\datepicker\datepicker.css" />
@@ -312,6 +313,7 @@
     <Content Include="ms-icon-70x70.png" />
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\bootstrap-datepicker\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap-multiselect\bootstrap-multiselect.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\FontAwesome.otf" />
@@ -420,6 +422,9 @@
     <Content Include="Views\Professor\Edit.cshtml" />
     <Content Include="Views\Professor\Index.cshtml" />
     <Content Include="Views\Turma\Index.cshtml" />
+    <Content Include="Views\Turma\Edit.cshtml" />
+    <Content Include="Views\Turma\Create.cshtml" />
+    <Content Include="Views\Turma\Planejamentos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

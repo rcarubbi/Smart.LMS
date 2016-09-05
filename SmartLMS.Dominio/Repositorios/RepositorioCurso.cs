@@ -1,5 +1,6 @@
 ﻿using SmartLMS.Dominio.Entidades.Conteudo;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SmartLMS.Dominio.Repositorios
@@ -11,6 +12,11 @@ namespace SmartLMS.Dominio.Repositorios
         public RepositorioCurso(IContexto contexto)
         {
             _contexto = contexto;
+        }
+
+        public List<Curso> ListarAtivos()
+        {
+            return _contexto.ObterLista<Curso>().Where(a => a.Ativo).OrderBy(a => a.Nome).ToList();
         }
 
         public IndiceCurso ObterIndiceCurso(Guid id, Guid idUsuario)

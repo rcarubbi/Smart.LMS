@@ -2,6 +2,7 @@
 using SmartLMS.Dominio.Entidades.Liberacao;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -10,6 +11,9 @@ namespace SmartLMS.WebUI.Models
     public class TurmaViewModel
     {
         public string Nome { get; set; }
+
+        [Display(Name="Cursos")]
+        public List<Guid> IdsCursos { get; set; }
 
         public bool Ativo { get; set; }
 
@@ -42,7 +46,8 @@ namespace SmartLMS.WebUI.Models
                 DataCriacao = item.DataCriacao,
                 Ativo = item.Ativo,
                 Id = item.Id,
-                Nome = item.Nome
+                Nome = item.Nome,
+                IdsCursos = item.Cursos.Select(a => a.IdCurso).ToList()
             };
         }
     }

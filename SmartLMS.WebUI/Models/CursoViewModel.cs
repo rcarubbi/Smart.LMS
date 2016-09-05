@@ -9,7 +9,7 @@ namespace SmartLMS.WebUI.Models
 {
     public class CursoViewModel
     {
-
+        public string NomeAssunto { get; set; }
         public Guid IdAssunto { get; set; }
 
         public int Ordem { get; set; }
@@ -35,6 +35,7 @@ namespace SmartLMS.WebUI.Models
             return new CursoViewModel
             {
                 IdAssunto = item.Assunto.Id,
+                NomeAssunto = item.Assunto.Nome,
                 Imagem = item.Imagem,
                 Ordem = item.Ordem,
                 Nome = item.Nome,

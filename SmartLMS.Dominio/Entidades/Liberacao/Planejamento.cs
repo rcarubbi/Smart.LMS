@@ -14,6 +14,7 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
             AulasDisponiveis = new List<AulaPlanejamento>();
         }
 
+        public virtual ICollection<Aviso> Avisos { get; set; }
 
         public long Id { get; set; }
 

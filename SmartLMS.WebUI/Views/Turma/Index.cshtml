@@ -376,7 +376,7 @@
                     id: $(this).data("id"),
                     nome: $(this).data("nome")
                 };
-                $("#confirmacaoExclusao").find(".modal-body").data("id", aluno.id);
+                $("#confirmacaoExclusao").find(".modal-body").data("id", turma.id);
                 $("#confirmacaoExclusao").find(".modal-body").html("<p>Deseja realmente excluir a turma " + turma.nome + "?</p>");
                 $("#confirmacaoExclusao").modal();
             };

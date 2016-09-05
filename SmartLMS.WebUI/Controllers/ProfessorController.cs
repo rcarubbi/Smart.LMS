@@ -1,6 +1,4 @@
-﻿using Carubbi.GenericRepository;
-using SmartLMS.Dominio;
-using SmartLMS.Dominio.Entidades;
+﻿using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.Dominio.Servicos;

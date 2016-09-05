@@ -85,7 +85,23 @@ SmartLMS.App = (function () {
         }
     };
 
-    
+    $private.initializeMultiselect = function () {
+        $(".multiselect").multiselect({
+            enableFiltering: true,
+            enableClickableOptGroups: true,
+            enableCollapsibleOptGroups: true,
+            enableCaseInsensitiveFiltering: true,
+            filterPlaceholder: 'Pesquisar',
+            nonSelectedText: 'Nenhum item selecionado',
+            nSelectedText: 'selecionado(s)',
+            allSelectedText: 'Todos',
+            buttonClass: 'btn btn-default',
+            maxHeight: '400',
+            templates: {
+                filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-sm btn-simple multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle"></i></button></span>',
+            }
+        });
+    };
 
     $private.initializeDropdownJs = function () {
         $("select.dropdownjs").dropdownjs();
@@ -163,6 +179,9 @@ SmartLMS.App = (function () {
         $public.initializeSlimControl(false);
     }
 
+    
+
+
     $(function () {
         moment.locale('pt-br');
 
@@ -171,6 +190,7 @@ SmartLMS.App = (function () {
         $private.initializeToastr();
         $public.initializeCarouselMulti();
         $public.initializeSlimControl(false);
+        $private.initializeMultiselect();
         $(window).on("resize", $private.resizeSlimControl);
         
         $(document).ajaxError(function (event, xhr, options, thrownError) {

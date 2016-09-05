@@ -1,6 +1,5 @@
 ﻿using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Dominio;
-using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using SmartLMS.Dominio.Entidades.Historico;
 using SmartLMS.Dominio.Repositorios;
