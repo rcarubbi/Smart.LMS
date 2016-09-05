@@ -74,6 +74,7 @@ namespace SmartLMS.Dominio.Repositorios
 
         public void CriarTurma(string nome, List<Guid> idsCursos)
         {
+            
             Turma novaTurma = new Turma();
             novaTurma.Ativo = true;
             novaTurma.DataCriacao = DateTime.Now;
@@ -86,6 +87,7 @@ namespace SmartLMS.Dominio.Repositorios
                 };
                 novaTurma.Cursos.Add(tc);
             }
+            _contexto.ObterLista<Turma>().Add(novaTurma);
             _contexto.Salvar();
         }
     }
