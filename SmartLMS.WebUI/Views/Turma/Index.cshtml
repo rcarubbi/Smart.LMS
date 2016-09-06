@@ -84,7 +84,7 @@
                                 <a href="javascript:void(0);" class="btn btn-warning btn-sm btn-ver-alunos" data-id="@item.Id " data-nome="@item.Nome" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Alunos">
                                     <i class="material-icons">group</i>
                                 </a>
-                                <a href="@Url.Action("Planejamentos", new { Id = item.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Planejamento de entrega">
+                                <a href="@Url.Action("Planejamentos", new { IdTurma = item.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Planejamento de entrega">
                                     <i class="fa fa-calendar btn-planejamento"></i>
                                 </a>
                             </div>
@@ -220,13 +220,13 @@
             </td>
             <td>
                 <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
-                    <a href="javascript:void(0);" class="btn btn-success btn-sm btn-ver-cursos" data-id="{{Id}}" data-nome="{{Nome}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Cursos">
+                    <a href="javascript:void(0);" class="btn btn-success btn-sm btn-ver-cursos" data-id="{{Id}}" data-nome="{{Nome}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Cursos" rel=tooltip>
                         <i class="material-icons">school</i>
                     </a>
-                    <a href="javascript:void(0);" class="btn btn-warning btn-sm btn-ver-alunos" data-id="{{Id}}" data-nome="{{Nome}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Alunos">
+                    <a href="javascript:void(0);" class="btn btn-warning btn-sm btn-ver-alunos" data-id="{{Id}}" data-nome="{{Nome}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Alunos" rel=tooltip>
                         <i class="material-icons">group</i>
                     </a>
-                    <a href="@Url.Content("~/Turma/Planejamento/"){{Id}}" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Planejamento de entrega">
+                    <a href="@Url.Content("~/Turma/Planejamento/"){{Id}}" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Planejamento de entrega" rel=tooltip>
                         <i class="fa fa-calendar btn-planejamento"></i>
                     </a>
                 </div>
@@ -361,12 +361,22 @@
                 $(document).on("click", "#resultado-container .btn-delete", $private.confirmarExclusao);
                 $(document).on("click", "#resultado-container .btn-ver-cursos", $private.verCursos);
                 $(document).on("click", "#resultado-container .btn-ver-alunos", $private.verAlunos);
+                $('body').tooltip({
+                    selector: '[rel=tooltip]'
+                });
+
             });
+
+            $private.TituloMensagem = "";
+            $private.Mensagem = "";
+            $private.TipoMensagem = "";
 
             $private.excluir = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
                 turmaProxy.excluir(id).done($private.PesquisarTurmas);
-                SmartLMS.App.toastr['error']('Turma excluída com sucesso!', 'Manutenção de Turmas');
+                $private.TituloMensagem = 'Manutenção de Turmas';
+                $private.Mensagem = 'Turma excluída com sucesso!';
+                $private.TipoMensagem = 'error';
             };
 
             $private.confirmarExclusao = function (e) {
@@ -505,6 +515,13 @@
                 }));
                 $.material.checkbox();
 
+                if ($private.Mensagem)
+                {
+                    SmartLMS.App.toastr[$private.TipoMensagem]($private.Mensagem, $private.TituloMensagem);
+                    $private.TipoMensagem = "";
+                    $private.TituloMensagem = "";
+                    $private.Mensagem = "";
+                }
             };
 
         }(SmartLMS.TurmaProxy));

@@ -5,6 +5,10 @@ using System;
 using System.Web.Mvc;
 using System.Linq;
 using System.Net;
+using SmartLMS.Dominio.Entidades.Pessoa;
+using SmartLMS.Dominio.Entidades.Liberacao;
+using SmartLMS.Dominio.Entidades.Conteudo;
+using System.Collections.Generic;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -75,15 +79,13 @@ namespace SmartLMS.WebUI.Controllers
         {
             RepositorioCurso cursoRepo = new RepositorioCurso(_contexto);
 
-            ViewBag.Cursos = new SelectList(CursoViewModel.FromEntityList(cursoRepo.ListarAtivos(), 0), "Id", "Nome", "NomeAssunto", new { });
+            ViewBag.Cursos = new SelectList(CursoViewModel.FromEntityList(cursoRepo.ListarAtivos(), 0), "Id", "Nome");
             return View();
         }
-
 
         [HttpPost]
         public ActionResult Create(TurmaViewModel viewModel)
         {
-
             if (ModelState.IsValid)
             {
                 try
@@ -104,22 +106,72 @@ namespace SmartLMS.WebUI.Controllers
             }
 
             RepositorioCurso cursoRepo = new RepositorioCurso(_contexto);
-            ViewBag.Cursos = new SelectList(CursoViewModel.FromEntityList(cursoRepo.ListarAtivos(), 0), "Id", "Nome", "NomeAssunto", new { });
+            ViewBag.Cursos = new SelectList(CursoViewModel.FromEntityList(cursoRepo.ListarAtivos(), 0), "Id", "Nome");
             return View(viewModel);
         }
 
+        private List<Curso> ReordenarCursos(Turma turma)
+        {
+            RepositorioCurso cursoRepo = new RepositorioCurso(_contexto);
 
+            var cursos = cursoRepo.ListarAtivos();
+            var cursosSelecionados = turma.Cursos.Select(c => c.Curso);
+            var cursosNaoSelecionados = cursos.Except(cursosSelecionados);
+            cursosSelecionados.ToList().ForEach(c =>
+                c.Ordem = turma.Cursos.Single(ct => ct.IdCurso == c.Id).Ordem
+            );
+            var ordemCursosNaoSelecionados = cursosSelecionados.Count() + 1;
+            cursosNaoSelecionados.ToList().ForEach(c => c.Ordem = ordemCursosNaoSelecionados++);
+            return cursosSelecionados.Union(cursosNaoSelecionados).OrderBy(x => x.Ordem).ToList();
+        }
 
         public ActionResult Edit(Guid id)
         {
-            return View();
-        }
+            RepositorioTurma repo = new RepositorioTurma(_contexto);
 
+            var turma = repo.ObterPorId(id);
+
+            var cursos = ReordenarCursos(turma);
+            ViewBag.Cursos = new SelectList(CursoViewModel.FromEntityList(cursos, 0), "Id", "Nome");
+
+            RepositorioUsuario repoUsu = new RepositorioUsuario(_contexto);
+            ViewBag.Alunos = new SelectList(repoUsu.ListarAlunosAtivos(), "id", "Nome");
+
+            return View(TurmaViewModel.FromEntity(turma));
+        }
 
         [HttpPost]
         public ActionResult Edit(Guid id, TurmaViewModel viewModel)
         {
+
+            RepositorioTurma repo = new RepositorioTurma(_contexto);
+            var turma = repo.ObterPorId(id);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    repo.AlterarTurma(turma, viewModel.Nome, viewModel.Ativo, viewModel.IdsCursos, viewModel.IdsAlunos);
+                    TempData["TipoMensagem"] = "success";
+                    TempData["TituloMensagem"] = "Administração de turmas";
+                    TempData["Mensagem"] = "Turma alterada com sucesso";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    TempData["TipoMensagem"] = "error";
+                    TempData["TituloMensagem"] = "Administração de turmas";
+                    TempData["Mensagem"] = ex.Message;
+                }
+            }
+
+            var cursos = ReordenarCursos(turma);
+            ViewBag.Cursos = new SelectList(CursoViewModel.FromEntityList(cursos, 0), "Id", "Nome");
+
+            RepositorioUsuario repoUsu = new RepositorioUsuario(_contexto);
+            ViewBag.Alunos = new SelectList(repoUsu.ListarAlunosAtivos(), "id", "Nome");
+
             return View();
+
         }
 
 

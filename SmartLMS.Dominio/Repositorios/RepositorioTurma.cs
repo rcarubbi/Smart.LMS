@@ -5,6 +5,8 @@ using System.Linq;
 using System.Collections;
 using Carubbi.GenericRepository;
 using SmartLMS.Dominio.Entidades.Comunicacao;
+using System.Transactions;
+using SmartLMS.Dominio.Entidades.Pessoa;
 
 namespace SmartLMS.Dominio.Repositorios
 {
@@ -40,8 +42,8 @@ namespace SmartLMS.Dominio.Repositorios
                                     string.IsNullOrEmpty(campoBusca));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Turma>("Nome"));
-            query.Take = 10;
-            query.Skip = ((pagina - 1) * 10);
+            query.Take = 8;
+            query.Skip = ((pagina - 1) * 8);
 
             return repo.Search(query);
         }
@@ -79,16 +81,126 @@ namespace SmartLMS.Dominio.Repositorios
             novaTurma.Ativo = true;
             novaTurma.DataCriacao = DateTime.Now;
             novaTurma.Nome = nome;
+            var ordem = 1;
             foreach (var item in idsCursos)
             {
                 TurmaCurso tc = new TurmaCurso {
                     Turma = novaTurma,
-                    IdCurso = item
+                    IdCurso = item,
+                    Ordem = ordem++
                 };
                 novaTurma.Cursos.Add(tc);
             }
             _contexto.ObterLista<Turma>().Add(novaTurma);
             _contexto.Salvar();
+        }
+
+        public void AlterarTurma(Turma turma, string nome, bool ativo, List<Guid> idsCursos, List<Guid> idsAlunos)
+        {
+            using (TransactionScope tx = new TransactionScope())
+            {
+                var turmaAlterada = new Turma
+                {
+                    Id = turma.Id,
+                    Nome = nome,
+                    Ativo = ativo,
+                    DataCriacao = turma.DataCriacao,
+                    Cursos = turma.Cursos,
+                    Planejamentos = turma.Planejamentos
+                };
+
+                _contexto.Atualizar(turma, turmaAlterada);
+                RemoverCursos(turma, idsCursos);
+                AtualizarCursos(turma, idsCursos);
+                RemoverAlunos(turma, idsAlunos);
+                AdicionarNovosAlunos(turma, idsAlunos);
+                
+                _contexto.Salvar();
+                tx.Complete();
+            }
+        }
+
+        private void AdicionarNovosAlunos(Turma turma, List<Guid> idsAlunos)
+        {
+            var planejamentoDoDia = turma.Planejamentos.FirstOrDefault(x => x.DataInicio == DateTime.Today);
+            if (planejamentoDoDia == null)
+            {
+                planejamentoDoDia = new Planejamento {
+                    DataInicio = DateTime.Today,
+                    Turma = turma
+                    
+                };
+                _contexto.ObterLista<Planejamento>().Add(planejamentoDoDia);
+                _contexto.Salvar();
+            }
+
+            foreach (var item in _contexto.ObterLista<Aluno>().Where(a => idsAlunos.Contains(a.Id)))
+            {
+                planejamentoDoDia.Alunos.Add(item);
+            }
+            _contexto.Atualizar(planejamentoDoDia, planejamentoDoDia);
+            planejamentoDoDia.LiberarAcessosPendentes(_contexto);
+        }
+
+        private void RemoverAlunos(Turma turma, List<Guid> idsAlunos)
+        {
+            var idsAtuais = turma.Planejamentos.SelectMany(x => x.Alunos).Select(x => x.Id);
+            var alunosAExcluir = idsAtuais.Except(idsAlunos).ToList();
+
+            foreach (var item in _contexto.ObterLista<Aluno>().Where(a => alunosAExcluir.Contains(a.Id)).ToList())
+            {
+                foreach (var planejamento in item.Planejamentos.Where(p => p.Turma.Id == turma.Id).ToList())
+                {
+                    planejamento.Alunos.Remove(item);
+                }
+            }
+        }
+
+        private void AtualizarCursos(Turma turma, List<Guid> idsCursos)
+        {
+            var ordem = 1;
+            foreach (var item in idsCursos)
+            {
+                var curso = turma.Cursos.FirstOrDefault(x => x.IdCurso == item);
+                if (curso != null)
+                {
+                    curso.Ordem = ordem++;
+                    _contexto.Atualizar<TurmaCurso>(curso, curso);
+                }
+                else
+                {
+                    turma.Cursos.Add(new TurmaCurso
+                    {
+                        Turma = turma,
+                        IdCurso = item,
+                        Ordem = ordem++
+                    });
+                }
+            }
+        }
+
+        private void RemoverCursos(Turma turma, List<Guid> idsCursos)
+        {
+            var idsAtuais = turma.Cursos.Select(x => x.IdCurso);
+            var cursosAExcluir = idsAtuais.Except(idsCursos).ToList();
+
+
+            foreach (var item in cursosAExcluir)
+            {
+                var tc = _contexto.ObterLista<TurmaCurso>().First(x=> x.IdTurma == turma.Id && x.IdCurso == item);
+                var aulasCurso = tc.Curso.Aulas.Select(x => x.Id);
+                RemoverAcessos(tc.Turma.Planejamentos, aulasCurso);
+                turma.Cursos.Remove(tc);
+            }
+        }
+
+        private void RemoverAcessos(ICollection<Planejamento> planejamentos, IEnumerable<Guid> idsAulas)
+        {
+            foreach (var item in planejamentos)
+            {
+                var aulas = item.AulasDisponiveis.Where(a => idsAulas.Contains(a.IdAula));
+                aulas.ToList().ForEach(a => item.AulasDisponiveis.Remove(a));
+            }
         }
     }
 }

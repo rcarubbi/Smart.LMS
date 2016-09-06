@@ -86,20 +86,23 @@ SmartLMS.App = (function () {
     };
 
     $private.initializeMultiselect = function () {
-        $(".multiselect").multiselect({
-            enableFiltering: true,
-            enableClickableOptGroups: true,
-            enableCollapsibleOptGroups: true,
-            enableCaseInsensitiveFiltering: true,
-            filterPlaceholder: 'Pesquisar',
-            nonSelectedText: 'Nenhum item selecionado',
-            nSelectedText: 'selecionado(s)',
-            allSelectedText: 'Todos',
-            buttonClass: 'btn btn-default',
-            maxHeight: '400',
-            templates: {
-                filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-sm btn-simple multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle"></i></button></span>',
-            }
+        $(".multiselect").each(function (index, item) {
+
+            $(item).multiselect({
+                enableFiltering: $(item).data("multiselect-filter") == "True",
+                enableClickableOptGroups: $(item).data("multiselect-group") == "True",
+                enableCollapsibleOptGroups: $(item).data("multiselect-group") == "True",
+                enableCaseInsensitiveFiltering:  $(item).data("multiselect-filter") == "True",
+                filterPlaceholder: 'Pesquisar',
+                nonSelectedText: 'Nenhum item selecionado',
+                nSelectedText: 'selecionado(s)',
+                allSelectedText: 'Todos',
+                buttonClass: 'btn btn-default',
+                maxHeight: '400',
+                templates: {
+                    filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-sm btn-simple multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle"></i></button></span>',
+                }
+            });
         });
     };
 

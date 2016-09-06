@@ -11,9 +11,8 @@ namespace SmartLMS.Dominio.Repositorios
 {
     public class RepositorioUsuario
     {
-     
-
         private IContexto _contexto;
+
         public RepositorioUsuario(IContexto contexto)
         {
             _contexto = contexto;
@@ -67,8 +66,8 @@ namespace SmartLMS.Dominio.Repositorios
                                              string.IsNullOrEmpty(campoBusca));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Professor>("Nome"));
-            query.Take = 10;
-            query.Skip = ((pagina - 1) * 10);
+            query.Take = 8;
+            query.Skip = ((pagina - 1) * 8);
 
             return repo.Search(query);
         }
@@ -96,12 +95,11 @@ namespace SmartLMS.Dominio.Repositorios
                                              string.IsNullOrEmpty(campoBusca));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Aluno>("Nome"));
-            query.Take = 10;
-            query.Skip = ((pagina - 1) * 10);
+            query.Take = 8;
+            query.Skip = ((pagina - 1) * 8);
 
             return repo.Search(query);
         }
-
 
         public Usuario ObterPorLogin(string login)
         {
@@ -113,9 +111,7 @@ namespace SmartLMS.Dominio.Repositorios
             return _contexto.ObterLista<Usuario>().Where(x => x.GetType().Name == roleName.ToString()).ToList();
         }
 
-       
-
-        public void ExcluirAluno(Guid id)
+       public void ExcluirAluno(Guid id)
         {
             Aluno aluno = _contexto.ObterLista<Aluno>().Find(id);
             var usuarioAvisos = _contexto.ObterLista<UsuarioAviso>();
@@ -135,6 +131,8 @@ namespace SmartLMS.Dominio.Repositorios
             _contexto.Salvar();
         }
 
-     
+        public List<Aluno> ListarAlunosAtivos() {
+            return _contexto.ObterLista<Aluno>().Where(x => x.Ativo).OrderBy(x => x.Nome).ToList();
+        }
     }
 }

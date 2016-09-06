@@ -24,14 +24,14 @@
                         @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
                 <div class="form-group">
-                    @Html.LabelFor(model => model.IdsCursos, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.IdsCursos, htmlAttributes: new { @class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.IdsCursos, ViewBag.Cursos as SelectList, new { @class="multiselect" , multiple = "multiple" })
+                        @Html.DropDownListFor(model => model.IdsCursos, ViewBag.Cursos as SelectList, new { @class="multiselect" , multiple = "multiple", data_multiselect_filter= false, data_multiselect_group = false })
                         @Html.ValidationMessageFor(model => model.IdsCursos, "", new { @class = "text-danger" })
                     </div>
                 </div>
+             
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button type="submit" class="btn btn-success btn-sm">
@@ -49,4 +49,37 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+            $("ul.multiselect-container").sortable({
+                group: 'cursos',
+                onDragStart: function ($item, container, _super) {
+                    var offset = $item.offset(),
+                        pointer = container.rootGroup.pointer;
+
+                    adjustment = {
+                        left: pointer.left - offset.left,
+                        top: pointer.top - offset.top + $item[0].offsetTop - $(".multiselect-container").scrollTop()
+                    };
+
+                    _super($item, container);
+                },
+                onDrag: function ($item, position) {
+                    $item.css({
+                        left: position.left - adjustment.left,
+                        top: position.top - adjustment.top 
+                    });
+                },
+                onDrop: function ($item, container, _super) {
+                    var options = $("select.multiselect").find("option");
+                    var option = $("select.multiselect").find("option[value='" + $item.find("input").val() + "']");
+                    var newIndex = $item.index();
+                    var oldIndex = option.index();
+                    $(options[oldIndex]).insertAfter($(options[newIndex]));
+                    _super($item, container);
+                }
+            });
+        });
+        
+    </script>
 }

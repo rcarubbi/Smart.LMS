@@ -9,6 +9,7 @@ namespace SmartLMS.WebUI.Models
 {
     public class CursoViewModel
     {
+     
         public string NomeAssunto { get; set; }
         public Guid IdAssunto { get; set; }
 
@@ -47,7 +48,7 @@ namespace SmartLMS.WebUI.Models
             };
         }
 
-        internal static IEnumerable<TurmaViewModel> FromEntityList(List<TurmaCurso> cursos)
+        internal static IEnumerable<CursoViewModel> FromEntityList(List<TurmaCurso> cursos)
         {
             foreach (var item in cursos.OrderBy(x => x.Ordem))
             {
@@ -55,9 +56,9 @@ namespace SmartLMS.WebUI.Models
             }
         }
 
-        private static TurmaViewModel FromEntity(TurmaCurso item)
+        private static CursoViewModel FromEntity(TurmaCurso item)
         {
-            return new TurmaViewModel
+            return new CursoViewModel
             {
                 Nome = item.Curso.Nome,
                 Id = item.Curso.Id,

@@ -15,6 +15,7 @@ namespace SmartLMS.WebUI
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                         "~/Scripts/jquery-ui-{version}.js",
                         "~/Scripts/jquery.dropdown/jquery.dropdown.js",
+                        "~/Scripts/jquery.sortable/jquery.sortable.js",
                         "~/Scripts/jquery.touchSwipe/jquery.touchSwipe.js"));
 
             bundles.Add(new ScriptBundle("~/Bundles/data").Include(

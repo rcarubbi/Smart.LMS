@@ -421,3 +421,23 @@ select.multiselect {
 .multiselect-container.dropdown-menu {
     min-width: 350px;
 }
+
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+.ui-sortable  li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+.ui-sortable li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+}
