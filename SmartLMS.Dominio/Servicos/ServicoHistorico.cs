@@ -8,6 +8,7 @@ using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 
@@ -85,14 +86,16 @@ namespace SmartLMS.Dominio.Servicos
 
             var avisos = _contexto.ObterLista<Aviso>()
              .Where(a =>
-                a.DataHora > usuario.DataCriacao && 
+                DbFunctions.TruncateTime(a.DataHora) >= DbFunctions.TruncateTime(usuario.DataCriacao) && 
                  (!periodo.StartDate.HasValue || (periodo.StartDate.HasValue && periodo.StartDate.Value <= a.DataHora)
                  && (!periodo.EndDate.HasValue || (periodo.EndDate.HasValue && periodo.EndDate.Value >= a.DataHora)))
-                 && (((tipo == TipoAviso.Pessoal || tipo == TipoAviso.Todos) && a.Usuario != null && a.Usuario.Id == idUsuario)
-                 || ((tipo == TipoAviso.Turma || tipo == TipoAviso.Todos) && a.Planejamento != null && planejamentos.Contains(a.Planejamento.Id))
-                 || ((tipo == TipoAviso.Geral || tipo == TipoAviso.Todos) && a.Planejamento == null && a.Usuario == null)))
+                   && (((tipo == TipoAviso.Pessoal || tipo == TipoAviso.Todos) && a.Usuario != null && a.Usuario.Id == idUsuario)
+              || ((tipo == TipoAviso.Turma || tipo == TipoAviso.Todos) && a.Planejamento != null && planejamentos.Contains(a.Planejamento.Id))
+              || ((tipo == TipoAviso.Geral || tipo == TipoAviso.Todos) && a.Planejamento == null && a.Usuario == null))
+                 )
                  .Select(x => new AvisoInfo { Aviso = x });
 
+            
 
             GenericRepository<AvisoInfo> repo = new GenericRepository<AvisoInfo>(_contexto, avisos);
             var query = new SearchQuery<AvisoInfo>() { Take = 8, Skip = (pagina - 1) * 8 };

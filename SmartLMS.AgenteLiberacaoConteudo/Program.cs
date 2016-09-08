@@ -14,6 +14,8 @@ namespace AgenteLiberacaoConteudo
         {
             HostFactory.Run(serviceConfig =>
             {
+                serviceConfig.UseNLog();
+
                 var container = new Container(cfg =>
                 {
                     cfg.For<IContexto>().Use<Contexto>();

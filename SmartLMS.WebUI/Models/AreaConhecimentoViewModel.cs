@@ -4,6 +4,7 @@ using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Carubbi.GenericRepository;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -35,6 +36,23 @@ namespace SmartLMS.WebUI.Models
                 ? AssuntoViewModel.FromEntityList(area.Assuntos.Where(x =>x.Ativo).OrderBy(x => x.Ordem), profundidade)
                 : new List<AssuntoViewModel>()
             };
+        }
+
+        internal static PagedListResult<AreaConhecimentoViewModel> FromEntityList(PagedListResult<AreaConhecimento> areasConhecimento)
+        {
+            PagedListResult<AreaConhecimentoViewModel> pagina = new PagedListResult<AreaConhecimentoViewModel>();
+
+            pagina.HasNext = areasConhecimento.HasNext;
+            pagina.HasPrevious = areasConhecimento.HasPrevious;
+            pagina.Count = areasConhecimento.Count;
+            List<AreaConhecimentoViewModel> viewModels = new List<AreaConhecimentoViewModel>();
+            foreach (var item in areasConhecimento.Entities)
+            {
+                viewModels.Add(FromEntity(item, 0));
+            }
+
+            pagina.Entities = viewModels;
+            return pagina;
         }
     }
 }

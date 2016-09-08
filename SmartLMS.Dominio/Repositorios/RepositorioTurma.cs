@@ -1,12 +1,14 @@
-﻿using SmartLMS.Dominio.Entidades.Liberacao;
+﻿using Carubbi.GenericRepository;
+using Carubbi.Mailer.Interfaces;
+using SmartLMS.Dominio.Entidades.Comunicacao;
+using SmartLMS.Dominio.Entidades.Conteudo;
+using SmartLMS.Dominio.Entidades.Liberacao;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
-using Carubbi.GenericRepository;
-using SmartLMS.Dominio.Entidades.Comunicacao;
 using System.Transactions;
-using SmartLMS.Dominio.Entidades.Pessoa;
 
 namespace SmartLMS.Dominio.Repositorios
 {
@@ -95,7 +97,7 @@ namespace SmartLMS.Dominio.Repositorios
             _contexto.Salvar();
         }
 
-        public void AlterarTurma(Turma turma, string nome, bool ativo, List<Guid> idsCursos, List<Guid> idsAlunos)
+        public void AlterarTurma(IMailSender sender, Turma turma, string nome, bool ativo, List<Guid> idsCursos, List<Guid> idsAlunos)
         {
             using (TransactionScope tx = new TransactionScope())
             {
@@ -113,14 +115,18 @@ namespace SmartLMS.Dominio.Repositorios
                 RemoverCursos(turma, idsCursos);
                 AtualizarCursos(turma, idsCursos);
                 RemoverAlunos(turma, idsAlunos);
-                AdicionarNovosAlunos(turma, idsAlunos);
+                AdicionarNovosAlunos(sender, turma, idsAlunos);
                 
                 _contexto.Salvar();
                 tx.Complete();
+              
+               
             }
+
+            
         }
 
-        private void AdicionarNovosAlunos(Turma turma, List<Guid> idsAlunos)
+        private void AdicionarNovosAlunos(IMailSender sender, Turma turma, List<Guid> idsAlunos)
         {
             var planejamentoDoDia = turma.Planejamentos.FirstOrDefault(x => x.DataInicio == DateTime.Today);
             if (planejamentoDoDia == null)
@@ -133,13 +139,14 @@ namespace SmartLMS.Dominio.Repositorios
                 _contexto.ObterLista<Planejamento>().Add(planejamentoDoDia);
                 _contexto.Salvar();
             }
-
-            foreach (var item in _contexto.ObterLista<Aluno>().Where(a => idsAlunos.Contains(a.Id)))
+            var idsAlunosExistentes = turma.Planejamentos.SelectMany(x => x.Alunos).Select(x => x.Id);
+            var idsAlunosNovos = idsAlunos.Except(idsAlunosExistentes);
+            foreach (var item in _contexto.ObterLista<Aluno>().Where(a => idsAlunosNovos.Contains(a.Id)))
             {
                 planejamentoDoDia.Alunos.Add(item);
             }
             _contexto.Atualizar(planejamentoDoDia, planejamentoDoDia);
-            planejamentoDoDia.LiberarAcessosPendentes(_contexto);
+            planejamentoDoDia.LiberarAcessosPendentes(_contexto, sender);
         }
 
         private void RemoverAlunos(Turma turma, List<Guid> idsAlunos)
@@ -159,9 +166,10 @@ namespace SmartLMS.Dominio.Repositorios
         private void AtualizarCursos(Turma turma, List<Guid> idsCursos)
         {
             var ordem = 1;
-            foreach (var item in idsCursos)
+            var cursos = _contexto.ObterLista<Curso>().Where(x => idsCursos.Contains(x.Id));
+            foreach (var item in cursos)
             {
-                var curso = turma.Cursos.FirstOrDefault(x => x.IdCurso == item);
+                var curso = turma.Cursos.FirstOrDefault(x => x.IdCurso == item.Id);
                 if (curso != null)
                 {
                     curso.Ordem = ordem++;
@@ -172,9 +180,11 @@ namespace SmartLMS.Dominio.Repositorios
                     turma.Cursos.Add(new TurmaCurso
                     {
                         Turma = turma,
-                        IdCurso = item,
+                        Curso = item,
                         Ordem = ordem++
                     });
+
+                    turma.Planejamentos.ToList().ForEach(x => x.Concluido = false);
                 }
             }
         }

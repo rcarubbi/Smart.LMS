@@ -166,6 +166,10 @@ namespace SmartLMS.DAL
             }
         }
 
-        
+        public void Recarregar<T>(T entidade) where T : class
+        {
+            Entry<T>(entidade).Reload();
+        }
+
     }
 }

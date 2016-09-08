@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SmartLMS.Dominio.Entidades.Liberacao;
 
 namespace SmartLMS.Dominio
 {
@@ -17,5 +18,6 @@ namespace SmartLMS.Dominio
         void ConfigurarParaApi();
 
         T UnProxy<T>(T proxyObject) where T : class;
+        void Recarregar<T>(T entidade) where T : class;
     }
 }

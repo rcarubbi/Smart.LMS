@@ -226,7 +226,14 @@ namespace SmartLMS.DAL.Migrations
                         Chave = Parametro.CHAVE_EMAIL_DESTINATARIO_FALE_CONOSCO,
                         Valor = "rcarubbi@gmail.com",
                         Ativo = true
-                    });
+                    },
+                      new Parametro
+                      {
+                          DataCriacao = DateTime.Now,
+                          Chave = Parametro.CHAVE_CORPO_NOTIFICACAO_AULA_LIBERADA,
+                          Valor = "",
+                          Ativo = true
+                      });
 
 
 

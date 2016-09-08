@@ -1,9 +1,15 @@
-﻿using SmartLMS.Dominio.Entidades.Comunicacao;
+﻿using Carubbi.Mailer.Interfaces;
+using Carubbi.Utils.Data;
+using SmartLMS.Dominio.Entidades.Comunicacao;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net.Mail;
+
+
 namespace SmartLMS.Dominio.Entidades.Liberacao
 {
     public class Planejamento
@@ -27,14 +33,18 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
 
         public bool Concluido { get; set; }
 
-        public void LiberarAcessosPendentes(IContexto contexto)
+        public void LiberarAcessosPendentes(IContexto contexto, IMailSender sender)
         {
+            if (Concluido)
+                return;
+
             var aulaLiberada = false;
+
             do
             {
 
                 var ultimaAulaLiberada = AulasDisponiveis.OrderByDescending(x => x.DataLiberacao).FirstOrDefault();
-            
+
 
                 var proximaAula = ObterProximaAula(ultimaAulaLiberada, ultimaAulaLiberada?.Aula?.Curso);
                 if (proximaAula == null)
@@ -50,14 +60,16 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
                 }
                 else
                 {
-                    aulaLiberada = VerificarLiberacao(contexto, proximaAula);
+                    aulaLiberada = VerificarLiberacao(contexto, sender, proximaAula);
                 }
             } while (aulaLiberada);
         }
 
-        private bool VerificarLiberacao(IContexto contexto, Aula aula)
+        private bool VerificarLiberacao(IContexto contexto, IMailSender sender, Aula aula)
         {
-            if (DataInicio.AddDays(aula.DiasLiberacao) <= DateTime.Now)
+            DateTime? dataUltimaLiberacao = AulasDisponiveis.OrderByDescending(x => x.DataLiberacao).Select(x => x.DataLiberacao).FirstOrDefault();
+
+            if ((dataUltimaLiberacao ?? DataInicio).AddDays(aula.DiasLiberacao) <= DateTime.Now)
             {
                 AulasDisponiveis.Add(new AulaPlanejamento
                 {
@@ -74,10 +86,53 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
                     Planejamento = this,
                 });
 
+                EnviarEmailsLiberacaoAula(contexto, sender, aula, Alunos);
+
                 contexto.Salvar();
                 return true;
             }
             return false;
+        }
+
+        private void EnviarEmailsLiberacaoAula(IContexto contexto, IMailSender sender, Aula aula, ICollection<Aluno> alunos)
+        {
+            foreach (var item in alunos)
+            {
+                EnviarEmailLiberacaoAula(contexto, sender, aula, item);
+            }
+        }
+
+        private void EnviarEmailLiberacaoAula(IContexto contexto, IMailSender sender, Aula aula, Aluno item)
+        {
+
+            sender.PortNumber = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_PORTA).Valor.To(0);
+            sender.Host = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_SERVIDOR).Valor;
+            sender.UseDefaultCredentials = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_USAR_CREDENCIAIS_PADRAO).Valor.To(false);
+            sender.UseSSL = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_USA_SSL).Valor.To(false);
+            if (!sender.UseDefaultCredentials)
+            {
+                sender.Username = ConfigurationManager.AppSettings["SMTPUsuario"] ?? contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_USUARIO).Valor;
+                sender.Password = ConfigurationManager.AppSettings["SMTPSenha"] ?? contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_SENHA).Valor;
+            }
+
+            var emailDestinatarioFaleConosco = item.Email;
+            var nomeDestinatarioFaleConosco = item.Nome;
+            var emailRemetente = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.REMETENTE_EMAIL).Valor;
+
+            MailMessage email = new MailMessage();
+            MailAddress destinatario = new MailAddress(emailDestinatarioFaleConosco, nomeDestinatarioFaleConosco);
+            email.To.Add(destinatario);
+            email.From = new MailAddress(emailRemetente, Parametro.PROJETO);
+            email.IsBodyHtml = true;
+            email.Body = Parametro.CORPO_NOTIFICACAO_AULA_LIBERADA
+                .Replace("{Nome}", item.Nome)
+                .Replace("{Aula}", aula.Nome)
+                .Replace("{IdAula}", aula.Id.ToString())
+                .Replace("{Curso}", aula.Curso.Nome)
+                .Replace("{IdCurso}", aula.Curso.Id.ToString());
+
+            email.Subject = $"{Parametro.PROJETO} - Nova aula disponível";
+            sender.Send(email);
         }
 
         private Curso ObterProximoCurso(AulaPlanejamento ultimaAulaLiberada)
@@ -89,6 +144,7 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
                     .Where(x => x.IdCurso == ultimaAulaLiberada.Aula.Curso.Id)
                     .Single().Ordem;
             }
+
 
             var curso = Turma.Cursos
                 .Where(a => a.Curso.Ativo)

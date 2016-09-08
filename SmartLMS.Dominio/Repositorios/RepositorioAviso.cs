@@ -1,8 +1,8 @@
 ﻿using SmartLMS.Dominio.Entidades.Comunicacao;
-using SmartLMS.Dominio.Entidades.Liberacao;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace SmartLMS.Dominio.Repositorios
@@ -30,7 +30,7 @@ namespace SmartLMS.Dominio.Repositorios
    
 
             return _contexto.ObterLista<Aviso>().Where(a =>
-                    a.DataHora >= usuario.DataCriacao &&
+                    DbFunctions.TruncateTime(a.DataHora) >= DbFunctions.TruncateTime(usuario.DataCriacao) &&
                     ((a.Planejamento != null && planejamentos.Contains(a.Planejamento.Id))
                     || (a.Usuario != null && a.Usuario.Id == idUsuario)
                     || (a.Planejamento == null && a.Usuario == null))

@@ -1,10 +1,5 @@
-﻿using SmartLMS.Dominio.Entidades;
-using SmartLMS.Dominio.Entidades.Historico;
+﻿using SmartLMS.Dominio.Entidades.Historico;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartLMS.Dominio.Servicos
 {

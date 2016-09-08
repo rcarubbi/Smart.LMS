@@ -46,12 +46,12 @@
       <HintPath>..\packages\Carubbi.GenericRepository.1.4.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Carubbi.Mailer, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.Mailer.1.2.2.0\lib\net45\Carubbi.Mailer.dll</HintPath>
+    <Reference Include="Carubbi.Mailer, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Mailer.1.2.3.0\lib\net45\Carubbi.Mailer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Carubbi.Mailer.Interfaces, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.Mailer.Interfaces.1.1.0.0\lib\net45\Carubbi.Mailer.Interfaces.dll</HintPath>
+    <Reference Include="Carubbi.Mailer.Interfaces, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Mailer.Interfaces.1.2.0.0\lib\net45\Carubbi.Mailer.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Carubbi.Utils, Version=1.4.2.9, Culture=neutral, processorArchitecture=MSIL">
@@ -183,6 +183,7 @@
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\StructuremapWebApi.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AreaConhecimentoController.cs" />
     <Compile Include="Controllers\ProfessorController.cs" />
     <Compile Include="Controllers\AlunoController.cs" />
     <Compile Include="Controllers\AssuntoController.cs" />
@@ -426,6 +427,7 @@
     <Content Include="Views\Turma\Edit.cshtml" />
     <Content Include="Views\Turma\Create.cshtml" />
     <Content Include="Views\Turma\Planejamentos.cshtml" />
+    <Content Include="Views\AreaConhecimento\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

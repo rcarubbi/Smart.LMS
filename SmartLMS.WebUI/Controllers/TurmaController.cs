@@ -9,6 +9,7 @@ using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Entidades.Liberacao;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using System.Collections.Generic;
+using Carubbi.Mailer.Implementation;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -150,7 +151,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 try
                 {
-                    repo.AlterarTurma(turma, viewModel.Nome, viewModel.Ativo, viewModel.IdsCursos, viewModel.IdsAlunos);
+                    repo.AlterarTurma(new SmtpSender(), turma, viewModel.Nome, viewModel.Ativo, viewModel.IdsCursos, viewModel.IdsAlunos);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de turmas";
                     TempData["Mensagem"] = "Turma alterada com sucesso";
@@ -170,7 +171,7 @@ namespace SmartLMS.WebUI.Controllers
             RepositorioUsuario repoUsu = new RepositorioUsuario(_contexto);
             ViewBag.Alunos = new SelectList(repoUsu.ListarAlunosAtivos(), "id", "Nome");
 
-            return View();
+            return View(viewModel);
 
         }
 

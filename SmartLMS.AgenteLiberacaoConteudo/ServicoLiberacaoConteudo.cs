@@ -1,4 +1,5 @@
-﻿using SmartLMS.Dominio;
+﻿using NLog;
+using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Repositorios;
 using System;
@@ -10,6 +11,7 @@ namespace AgenteLiberacaoConteudo
     {
         public static List<Parametro> Parametros { get; set; }
 
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         private IContexto _contexto;
         public ServicoLiberacaoConteudo(IContexto contexto)
@@ -33,12 +35,15 @@ namespace AgenteLiberacaoConteudo
             Parametro.TITULO_AULAS_ASSISTIDAS = parametroRepo.ObterValorPorChave(Parametro.CHAVE_TITULO_AULAS_ASSISTIDAS);
             Parametro.STORAGE_ARQUIVOS = parametroRepo.ObterValorPorChave(Parametro.CHAVE_STORAGE_ARQUIVOS);
             Parametro.TITULO_ULTIMAS_AULAS = parametroRepo.ObterValorPorChave(Parametro.CHAVE_TITULO_ULTIMAS_AULAS);
+            Parametro.CORPO_NOTIFICACAO_AULA_LIBERADA  = parametroRepo.ObterValorPorChave(Parametro.CHAVE_CORPO_NOTIFICACAO_AULA_LIBERADA);
 
-            Console.WriteLine($"{Parametro.PROJETO} - Agente de liberação de acesso a conteúdo iniciado");            
+            Console.WriteLine($"{Parametro.PROJETO} - Agente de liberação de acesso a conteúdo iniciado");
+            logger.Trace("Servico iniciado com sucesso");
             return true;
         }
 
         public bool Parar() {
+            logger.Trace("Serviço encerrado com sucesso");
             return true;
         }
 

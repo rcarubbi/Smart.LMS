@@ -25,8 +25,8 @@
         public const string CHAVE_TITULO_ULTIMAS_AULAS = "TituloUltimasAulas";
         public const string CHAVE_NOME_DESTINATARIO_FALE_CONOSCO = "NomeDestinatarioFaleConosco";
         public const string CHAVE_EMAIL_DESTINATARIO_FALE_CONOSCO = "EmailDestinatarioFaleConosco";
+        public const string CHAVE_CORPO_NOTIFICACAO_AULA_LIBERADA = "CorpoNotificacaoAulaLiberada";
 
-    
 
         public static string PROJETO { get; set; }
         
@@ -54,5 +54,6 @@
         public static string TITULO_ULTIMAS_AULAS { get; set; }
 
         public static string STORAGE_ARQUIVOS { get; set; }
-        }
+        public static string CORPO_NOTIFICACAO_AULA_LIBERADA { get; set; }
+    }
 }

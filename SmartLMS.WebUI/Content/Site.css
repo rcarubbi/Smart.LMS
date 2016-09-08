@@ -441,3 +441,7 @@ body.dragging, body.dragging * {
   position: absolute;
   /** Define arrowhead **/
 }
+
+#pre-loader-loading {
+    background: url(../Content/img/loading-green.gif) no-repeat -9999px -9999px;
+}
