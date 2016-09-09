@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Transactions;
 
 namespace SmartLMS.Dominio.Repositorios
@@ -97,9 +98,9 @@ namespace SmartLMS.Dominio.Repositorios
             _contexto.Salvar();
         }
 
-        public void AlterarTurma(IMailSender sender, Turma turma, string nome, bool ativo, List<Guid> idsCursos, List<Guid> idsAlunos)
+        public async Task AlterarTurma(IMailSender sender, Turma turma, string nome, bool ativo, List<Guid> idsCursos, List<Guid> idsAlunos)
         {
-            using (TransactionScope tx = new TransactionScope())
+            using (TransactionScope tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 var turmaAlterada = new Turma
                 {
@@ -116,18 +117,19 @@ namespace SmartLMS.Dominio.Repositorios
                 AtualizarCursos(turma, idsCursos);
                 RemoverAlunos(turma, idsAlunos);
                 AdicionarNovosAlunos(sender, turma, idsAlunos);
+                _contexto.Salvar();
                 
+                await turma.SincronizarAcessosAync(_contexto, sender);
                 _contexto.Salvar();
                 tx.Complete();
-              
-               
             }
-
-            
         }
 
         private void AdicionarNovosAlunos(IMailSender sender, Turma turma, List<Guid> idsAlunos)
         {
+            if (idsAlunos == null)
+                return;
+
             var planejamentoDoDia = turma.Planejamentos.FirstOrDefault(x => x.DataInicio == DateTime.Today);
             if (planejamentoDoDia == null)
             {
@@ -140,18 +142,30 @@ namespace SmartLMS.Dominio.Repositorios
                 _contexto.Salvar();
             }
             var idsAlunosExistentes = turma.Planejamentos.SelectMany(x => x.Alunos).Select(x => x.Id);
+
             var idsAlunosNovos = idsAlunos.Except(idsAlunosExistentes);
-            foreach (var item in _contexto.ObterLista<Aluno>().Where(a => idsAlunosNovos.Contains(a.Id)))
+            var novosAlunos = _contexto.ObterLista<Aluno>().Where(a => idsAlunosNovos.Contains(a.Id)).ToList();
+            foreach (var item in novosAlunos)
             {
                 planejamentoDoDia.Alunos.Add(item);
             }
             _contexto.Atualizar(planejamentoDoDia, planejamentoDoDia);
+
+            // Enviar emails das aulas já disponibilizadas no dia para os novos alunos
+            foreach (var aula in planejamentoDoDia.AulasDisponiveis)
+            {
+                planejamentoDoDia.EnviarEmailsLiberacaoAula(_contexto, sender, aula.Aula, novosAlunos);
+            }
+
             planejamentoDoDia.LiberarAcessosPendentes(_contexto, sender);
         }
 
         private void RemoverAlunos(Turma turma, List<Guid> idsAlunos)
         {
-            var idsAtuais = turma.Planejamentos.SelectMany(x => x.Alunos).Select(x => x.Id);
+            var idsAtuais = turma.Planejamentos.SelectMany(x => x.Alunos).Select(x => x.Id).ToList();
+            if (idsAlunos == null)
+                idsAlunos = new List<Guid>();
+
             var alunosAExcluir = idsAtuais.Except(idsAlunos).ToList();
 
             foreach (var item in _contexto.ObterLista<Aluno>().Where(a => alunosAExcluir.Contains(a.Id)).ToList())
@@ -165,28 +179,33 @@ namespace SmartLMS.Dominio.Repositorios
 
         private void AtualizarCursos(Turma turma, List<Guid> idsCursos)
         {
-            var ordem = 1;
+            
+            
             var cursos = _contexto.ObterLista<Curso>().Where(x => idsCursos.Contains(x.Id));
             foreach (var item in cursos)
             {
+             
                 var curso = turma.Cursos.FirstOrDefault(x => x.IdCurso == item.Id);
                 if (curso != null)
                 {
-                    curso.Ordem = ordem++;
+                    curso.Ordem = idsCursos.IndexOf(item.Id) + 1;
                     _contexto.Atualizar<TurmaCurso>(curso, curso);
                 }
                 else
                 {
+                   
                     turma.Cursos.Add(new TurmaCurso
                     {
                         Turma = turma,
                         Curso = item,
-                        Ordem = ordem++
+                        Ordem = idsCursos.IndexOf(item.Id) + 1
                     });
 
                     turma.Planejamentos.ToList().ForEach(x => x.Concluido = false);
                 }
             }
+
+          
         }
 
         private void RemoverCursos(Turma turma, List<Guid> idsCursos)

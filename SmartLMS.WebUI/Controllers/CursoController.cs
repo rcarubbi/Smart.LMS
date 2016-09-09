@@ -35,5 +35,10 @@ namespace SmartLMS.WebUI.Controllers
             ViewBag.OutrosAssuntos = new SelectList(assunto.AreaConhecimento.Assuntos.Except(new List<Assunto> { assunto }), "Id", "Nome");
             return View(viewModel);
         }
+
+        public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
+        {
+            return View();
+        }
     }
 }

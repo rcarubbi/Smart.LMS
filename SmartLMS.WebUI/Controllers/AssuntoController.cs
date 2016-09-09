@@ -37,5 +37,10 @@ namespace SmartLMS.WebUI.Controllers
             AreaConhecimentoViewModel viewModel = AreaConhecimentoViewModel.FromEntity(area, 2);
             return PartialView("_AreaConhecimentoPanel", viewModel);
         }
+
+        public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
+        {
+            return View();
+        }
     }
 }

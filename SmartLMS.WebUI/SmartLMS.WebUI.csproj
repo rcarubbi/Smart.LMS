@@ -428,6 +428,9 @@
     <Content Include="Views\Turma\Create.cshtml" />
     <Content Include="Views\Turma\Planejamentos.cshtml" />
     <Content Include="Views\AreaConhecimento\Index.cshtml" />
+    <Content Include="Views\Assunto\IndexAdmin.cshtml" />
+    <Content Include="Views\Turma\IndexAdmin.cshtml" />
+    <Content Include="Views\Curso\IndexAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

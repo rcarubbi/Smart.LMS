@@ -1,4 +1,5 @@
-﻿using SmartLMS.Dominio;
+﻿using Carubbi.Mailer.Implementation;
+using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades.Liberacao;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
@@ -89,6 +90,15 @@ namespace SmartLMS.WebUI.Controllers
                         }
 
                         planejamento.Alunos.Add((Aluno)novoAluno);
+                    
+                        // notifica as aulas já liberadas no dia
+                        foreach (var item in planejamento.AulasDisponiveis)
+                        {
+                            planejamento.EnviarEmailLiberacaoAula(_contexto, new SmtpSender(), item.Aula, (Aluno)novoAluno);
+                        }
+                        
+                        // força a liberação de aulas pendentes para o dia
+                        planejamento.LiberarAcessosPendentes(_contexto, new SmtpSender());
 
                         _contexto.Salvar();
                         tx.Complete();

@@ -39,22 +39,22 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
                 return;
 
             var aulaLiberada = false;
-
+          
             do
             {
 
                 var ultimaAulaLiberada = AulasDisponiveis.OrderByDescending(x => x.DataLiberacao).FirstOrDefault();
-
+                var proximoCurso = ObterProximoCurso(ultimaAulaLiberada);
 
                 var proximaAula = ObterProximaAula(ultimaAulaLiberada, ultimaAulaLiberada?.Aula?.Curso);
-                if (proximaAula == null)
+                if (proximaAula == null && (ultimaAulaLiberada == null || (ultimaAulaLiberada != null && ultimaAulaLiberada.DataLiberacao.Date < DateTime.Today)))
                 {
-                    proximaAula = ObterProximaAula(ultimaAulaLiberada, ObterProximoCurso(ultimaAulaLiberada));
+                    proximaAula = ObterProximaAula(ultimaAulaLiberada, proximoCurso);
                 }
 
                 if (proximaAula == null)
                 {
-                    Concluido = true;
+                    Concluido = proximoCurso == null;
                     aulaLiberada = false;
                     contexto.Salvar();
                 }
@@ -65,44 +65,48 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
             } while (aulaLiberada);
         }
 
+        internal void DisponibilizarAula(IContexto contexto, IMailSender sender, Aula aula)
+        {
+            AulasDisponiveis.Add(new AulaPlanejamento
+            {
+                Aula = aula,
+                DataLiberacao = DateTime.Now,
+                Planejamento = this
+            });
+
+            contexto.ObterLista<Aviso>().Add(new Aviso
+            {
+                Texto = $@"Novo <a href='Aula/Ver/{aula.Id}'>{Parametro.AULA} {aula.Nome}</a> disponível! <br />
+                               <a href='Aula/Index/{aula.Curso.Id}'>{Parametro.CURSO} {aula.Curso.Nome}</a> <br />",
+                DataHora = DateTime.Now,
+                Planejamento = this,
+            });
+            contexto.Salvar();
+            EnviarEmailsLiberacaoAula(contexto, sender, aula, Alunos);
+        }
+
         private bool VerificarLiberacao(IContexto contexto, IMailSender sender, Aula aula)
         {
             DateTime? dataUltimaLiberacao = AulasDisponiveis.OrderByDescending(x => x.DataLiberacao).Select(x => x.DataLiberacao).FirstOrDefault();
 
             if ((dataUltimaLiberacao ?? DataInicio).AddDays(aula.DiasLiberacao) <= DateTime.Now)
             {
-                AulasDisponiveis.Add(new AulaPlanejamento
-                {
-                    Aula = aula,
-                    DataLiberacao = DateTime.Now,
-                    Planejamento = this
-                });
-
-                contexto.ObterLista<Aviso>().Add(new Aviso
-                {
-                    Texto = $@"Novo <a href='Aula/Ver/{aula.Id}'>{Parametro.AULA} {aula.Nome}</a> disponível! <br />
-                               <a href='Aula/Index/{aula.Curso.Id}'>{Parametro.CURSO} {aula.Curso.Nome}</a> <br />",
-                    DataHora = DateTime.Now,
-                    Planejamento = this,
-                });
-
-                EnviarEmailsLiberacaoAula(contexto, sender, aula, Alunos);
-
-                contexto.Salvar();
+                DisponibilizarAula(contexto, sender, aula);
+             
                 return true;
             }
             return false;
         }
 
-        private void EnviarEmailsLiberacaoAula(IContexto contexto, IMailSender sender, Aula aula, ICollection<Aluno> alunos)
+        public void EnviarEmailsLiberacaoAula(IContexto contexto, IMailSender sender, Aula aula, ICollection<Aluno> alunos)
         {
-            foreach (var item in alunos)
+            foreach (var aluno in alunos)
             {
-                EnviarEmailLiberacaoAula(contexto, sender, aula, item);
+                EnviarEmailLiberacaoAula(contexto, sender, aula, aluno);
             }
         }
 
-        private void EnviarEmailLiberacaoAula(IContexto contexto, IMailSender sender, Aula aula, Aluno item)
+        public void EnviarEmailLiberacaoAula(IContexto contexto, IMailSender sender, Aula aula, Aluno aluno)
         {
 
             sender.PortNumber = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_PORTA).Valor.To(0);
@@ -115,17 +119,17 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
                 sender.Password = ConfigurationManager.AppSettings["SMTPSenha"] ?? contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_SENHA).Valor;
             }
 
-            var emailDestinatarioFaleConosco = item.Email;
-            var nomeDestinatarioFaleConosco = item.Nome;
+           
+         
             var emailRemetente = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.REMETENTE_EMAIL).Valor;
 
             MailMessage email = new MailMessage();
-            MailAddress destinatario = new MailAddress(emailDestinatarioFaleConosco, nomeDestinatarioFaleConosco);
+            MailAddress destinatario = new MailAddress(aluno.Email, aluno.Nome);
             email.To.Add(destinatario);
             email.From = new MailAddress(emailRemetente, Parametro.PROJETO);
             email.IsBodyHtml = true;
             email.Body = Parametro.CORPO_NOTIFICACAO_AULA_LIBERADA
-                .Replace("{Nome}", item.Nome)
+                .Replace("{Nome}", aluno.Nome)
                 .Replace("{Aula}", aula.Nome)
                 .Replace("{IdAula}", aula.Id.ToString())
                 .Replace("{Curso}", aula.Curso.Nome)

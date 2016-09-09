@@ -18,7 +18,7 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         // GET: AreaConhecimento
-        public ActionResult Index(string termo, string campoBusca, int pagina = 1)
+        public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
         {
             RepositorioAreaConhecimento repo = new RepositorioAreaConhecimento(_contexto);
             ViewBag.CamposBusca = new SelectList(new string[] { "Nome", "Id" });

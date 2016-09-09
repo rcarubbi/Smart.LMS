@@ -157,6 +157,11 @@ namespace SmartLMS.WebUI.Controllers
             aulaRepo.GravarAcesso(arquivo, _usuarioLogado);
             return File(Url.Content("~/" + SmartLMS.Dominio.Entidades.Parametro.STORAGE_ARQUIVOS + "/" + arquivo.ArquivoFisico), "application/octet-stream", arquivo.ArquivoFisico);
         }
-        
+
+        public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
+        {
+            return View();
+        }
+
     }
 }

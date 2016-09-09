@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Transactions;
+using System.Linq;
+using Carubbi.Mailer.Interfaces;
 
 namespace SmartLMS.Dominio.Entidades.Liberacao
 {
@@ -15,5 +20,29 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
 
         public virtual ICollection<Planejamento> Planejamentos { get; set; }
 
+        internal async Task SincronizarAcessosAync(IContexto contexto, IMailSender sender)
+        {
+            await Task.Run(() => { 
+                using (TransactionScope tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    foreach (var planejamento in Planejamentos)
+                    {
+                        AulaPlanejamento ultimaAulaLiberada = planejamento.AulasDisponiveis.OrderByDescending(x => x.DataLiberacao).FirstOrDefault();
+                        if (ultimaAulaLiberada != null)
+                        {
+                            var ordemCurso = Cursos.Single(c => c.IdCurso == ultimaAulaLiberada.Aula.Curso.Id).Ordem;
+                            var aulasCursosAnteriores = Cursos.Where(c => c.Ordem < ordemCurso).SelectMany(x => x.Curso.Aulas);
+                            var aulasCursosAnterioresNaoDisponibilizadas = aulasCursosAnteriores.Except(planejamento.AulasDisponiveis.Select(x => x.Aula));
+                            foreach (var item in aulasCursosAnterioresNaoDisponibilizadas)
+                            {
+                                planejamento.DisponibilizarAula(contexto, sender, item);
+                            }
+                        }
+
+                    }
+                    tx.Complete();
+                }
+            }).ConfigureAwait(false);
+        }
     }
 }

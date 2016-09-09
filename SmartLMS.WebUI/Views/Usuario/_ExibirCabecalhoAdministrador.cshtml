@@ -33,15 +33,16 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administração <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li class="dropdown-header">Gerenciar Pessoas</li>
                         <li>@Html.ActionLink("Alunos", "Index", "Aluno")</li>
                         <li>@Html.ActionLink("Professores", "Index", "Professor")</li>
                         <li>@Html.ActionLink("Turmas", "Index", "Turma")</li>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Gerenciar Conteúdo</li>
-                        <li><a href="#">@Parametro.AREA_CONHECIMENTO_PLURAL</a></li>
-                        <li><a href="#">@Parametro.ASSUNTO_PLURAL</a></li>
-                        <li><a href="#">@Parametro.CURSO_PLURAL</a></li>
-                        <li><a href="#">@Parametro.AULA_PLURAL</a></li>
+                        <li>@Html.ActionLink(Parametro.AREA_CONHECIMENTO_PLURAL, "IndexAdmin", "AreaConhecimento")</li>
+                        <li>@Html.ActionLink(Parametro.ASSUNTO_PLURAL, "IndexAdmin", "Assunto")</li>
+                        <li>@Html.ActionLink(Parametro.CURSO_PLURAL, "IndexAdmin", "Curso")</li>
+                        <li>@Html.ActionLink(Parametro.AULA_PLURAL, "IndexAdmin", "Aula")</li>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Auditoria</li>
                         <li><a href="#">Log Geral</a></li>

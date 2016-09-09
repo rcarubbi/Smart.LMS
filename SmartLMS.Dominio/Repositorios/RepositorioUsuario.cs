@@ -119,11 +119,13 @@ namespace SmartLMS.Dominio.Repositorios
             var acessosArquivo = _contexto.ObterLista<AcessoArquivo>();
             var avisos = _contexto.ObterLista<Aviso>();
             var planejamentos = _contexto.ObterLista<Planejamento>().Where(x => x.Alunos.Any(y => y.Id == id));
+            var comentariosAluno = _contexto.ObterLista<Comentario>().Where(x => x.Usuario.Id == id);
+            var comentarios = _contexto.ObterLista<Comentario>();
 
             aluno.AvisosVistos.ToList().ForEach(a => usuarioAvisos.Remove(a));
             aluno.AcessosAula.ToList().ForEach(a => acessosAula.Remove(a));
             aluno.AcessosArquivo.ToList().ForEach(a => acessosArquivo.Remove(a));
-            
+            comentariosAluno.ToList().ForEach(a => comentarios.Remove(a));
             avisos.Where(a => a.Usuario.Id == id).ToList().ForEach(a => avisos.Remove(a));
             planejamentos.ToList().ForEach(x => x.Alunos.Remove(aluno));
 

@@ -10,6 +10,7 @@ using SmartLMS.Dominio.Entidades.Liberacao;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using System.Collections.Generic;
 using Carubbi.Mailer.Implementation;
+using System.Threading.Tasks;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -142,7 +143,7 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Guid id, TurmaViewModel viewModel)
+        public async Task<ActionResult> Edit(Guid id, TurmaViewModel viewModel)
         {
 
             RepositorioTurma repo = new RepositorioTurma(_contexto);
@@ -151,7 +152,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 try
                 {
-                    repo.AlterarTurma(new SmtpSender(), turma, viewModel.Nome, viewModel.Ativo, viewModel.IdsCursos, viewModel.IdsAlunos);
+                    await repo.AlterarTurma(new SmtpSender(), turma, viewModel.Nome, viewModel.Ativo, viewModel.IdsCursos, viewModel.IdsAlunos);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de turmas";
                     TempData["Mensagem"] = "Turma alterada com sucesso";
@@ -181,5 +182,9 @@ namespace SmartLMS.WebUI.Controllers
             return View();
         }
 
+        public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
+        {
+            return View();
+        }
     }
 }

@@ -73,7 +73,13 @@
                     var option = $("select.multiselect").find("option[value='" + $item.find("input").val() + "']");
                     var newIndex = $item.index();
                     var oldIndex = option.index();
-                    $(options[oldIndex]).insertAfter($(options[newIndex]));
+                    if (oldIndex > newIndex) {
+                        $(options[oldIndex]).insertBefore($(options[newIndex]));
+                    }
+                    else
+                    {
+                        $(options[oldIndex]).insertAfter($(options[newIndex]));
+                    }
                     _super($item, container);
                 }
             });
