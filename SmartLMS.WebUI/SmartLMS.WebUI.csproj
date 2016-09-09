@@ -407,7 +407,7 @@
     <Content Include="Views\Autenticacao\AlterarSenha.cshtml" />
     <Content Include="Views\Aluno\Create.cshtml" />
     <Content Include="Views\Aluno\Edit.cshtml" />
-    <Content Include="Views\Aluno\Index.cshtml" />
+    <Content Include="Views\Aluno\IndexAdmin.cshtml" />
     <Content Include="Views\Shared\_Alert.cshtml" />
     <Content Include="Views\Aula\Ver.cshtml" />
     <Content Include="Views\Shared\_listaAulas.cshtml" />
@@ -422,15 +422,19 @@
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
     <Content Include="Views\Professor\Create.cshtml" />
     <Content Include="Views\Professor\Edit.cshtml" />
-    <Content Include="Views\Professor\Index.cshtml" />
-    <Content Include="Views\Turma\Index.cshtml" />
+    <Content Include="Views\Professor\IndexAdmin.cshtml" />
     <Content Include="Views\Turma\Edit.cshtml" />
     <Content Include="Views\Turma\Create.cshtml" />
     <Content Include="Views\Turma\Planejamentos.cshtml" />
-    <Content Include="Views\AreaConhecimento\Index.cshtml" />
+    <Content Include="Views\AreaConhecimento\IndexAdmin.cshtml" />
     <Content Include="Views\Assunto\IndexAdmin.cshtml" />
     <Content Include="Views\Turma\IndexAdmin.cshtml" />
     <Content Include="Views\Curso\IndexAdmin.cshtml" />
+    <Content Include="Views\AreaConhecimento\Create.cshtml" />
+    <Content Include="Views\AreaConhecimento\Edit.cshtml" />
+    <Content Include="Views\Assunto\Create.cshtml" />
+    <Content Include="Views\Assunto\Edit.cshtml" />
+    <Content Include="Views\Usuario\_Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -10,7 +10,7 @@ namespace SmartLMS.DAL.Mapeamento
         public AssuntoConfiguration()
         {
             Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            HasMany(x => x.Cursos).WithRequired(a => a.Assunto);
+            HasMany(x => x.Cursos).WithRequired(a => a.Assunto).WillCascadeOnDelete(true);
         }
     }
 }

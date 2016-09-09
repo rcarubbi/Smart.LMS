@@ -38,7 +38,7 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         // GET: professor
-        public ActionResult Index(string termo, string campoBusca, int pagina = 1)
+        public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
         {
             RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
             ViewBag.CamposBusca = new SelectList(new string[] { "Nome", "Email", "Id" });
@@ -70,7 +70,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de professores";
                     TempData["Mensagem"] = "Professor criado com sucesso";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
@@ -118,7 +118,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de professores";
                     TempData["Mensagem"] = "Professor alterado com sucesso";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
@@ -161,7 +161,7 @@ namespace SmartLMS.WebUI.Controllers
             TempData["TituloMensagem"] = "Administração de professores";
             TempData["Mensagem"] = "Professor excluído com sucesso";
 
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexAdmin");
         }
 
 

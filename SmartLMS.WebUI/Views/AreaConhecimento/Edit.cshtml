@@ -1,13 +1,13 @@
-﻿@model SmartLMS.WebUI.Models.UsuarioViewModel
+﻿@model SmartLMS.WebUI.Models.AreaConhecimentoViewModel
 
 @{
-    ViewBag.Title = "Alteração de dados de professor";
+    ViewBag.Title = "Alteração de área de conhecimento";
 }
 
 
 <div class="panel panel-success">
     <div class="panel-heading">
-        Alteração de dados de professor
+        Alteração de área de conhecimento
     </div>
     <div class="panel-body">
         @using (Html.BeginForm())
@@ -27,34 +27,10 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Ordem, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Senha, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Senha, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Senha, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ConfirmarSenha, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.ConfirmarSenha, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ConfirmarSenha, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Ordem, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Ordem, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
@@ -67,7 +43,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
@@ -82,7 +57,7 @@
         }
     </div>
 </div>
- 
+
 
 
 @section Scripts {

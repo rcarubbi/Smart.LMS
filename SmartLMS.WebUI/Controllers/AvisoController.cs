@@ -9,6 +9,7 @@ using SmartLMS.Dominio.Repositorios;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -20,16 +21,17 @@ namespace SmartLMS.WebUI.Controllers
         public AvisoController(IContexto contexto)
             : base(contexto)
         {
-           
-             
+
+
         }
+
 
         [ChildActionOnly]
         public ActionResult ExibirAvisos()
         {
             var repo = new RepositorioAviso(_contexto);
-            var dateTimeHumanizerStrategy = new DefaultDateTimeHumanizeStrategy();
             var avisos = repo.ListarAvisosNaoVistos(_usuarioLogado.Id);
+            var dateTimeHumanizerStrategy = new DefaultDateTimeHumanizeStrategy();
             return PartialView("_PainelAvisos", AvisoViewModel.FromEntityList(avisos, dateTimeHumanizerStrategy));
         }
 

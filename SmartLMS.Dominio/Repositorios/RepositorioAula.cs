@@ -91,7 +91,11 @@ namespace SmartLMS.Dominio.Repositorios
             return _contexto.ObterLista<Arquivo>().Find(id);
         }
 
-      
+        internal void Excluir(Guid id)
+        {
+            var aula = _contexto.ObterLista<Aula>().Find(id);
+             _contexto.ObterLista<Aula>().Remove(aula);
+        }
 
         public void GravarAcesso(Arquivo arquivo, Usuario usuario)
         {

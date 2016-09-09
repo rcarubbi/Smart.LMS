@@ -32,19 +32,8 @@ namespace SmartLMS.DAL.Migrations
                     Senha = criptografia.Encrypt("Administrador"),
                     DataCriacao = DateTime.Now
                 });
-
-            var aluno = new Aluno
-            {
-                Nome = "Aluno",
-                Ativo = true,
-                Login = "aluno@itanio.com.br",
-                Email = "raphael@itanio.com.br",
-                Senha = criptografia.Encrypt("Aluno"),
-                DataCriacao = DateTime.Now
-            };
-
-            context.Set<Usuario>().AddOrUpdate(u => u.Login, aluno);
-
+ 
+             
             var professor = new Professor
             {
                 Nome = "Professor",
@@ -125,7 +114,7 @@ namespace SmartLMS.DAL.Migrations
                     {
                         DataCriacao = DateTime.Now,
                         Chave = Parametro.SMTP_USAR_CREDENCIAIS_PADRAO,
-                        Valor = "true",
+                        Valor = "false",
                         Ativo = true
                     },
                     new Parametro
@@ -231,7 +220,7 @@ namespace SmartLMS.DAL.Migrations
                       {
                           DataCriacao = DateTime.Now,
                           Chave = Parametro.CHAVE_CORPO_NOTIFICACAO_AULA_LIBERADA,
-                          Valor = "",
+                          Valor = "Olá {Nome}, Tudo bem com você? <br /> Foi disponibilizado um novo trecho <a href='www.codigonerd.net/SmartLMS/Aula/Ver/{IdAula}'>{Aula}</a> na trilha <a href='www.codigonerd.net/SmartLMS/Aula/Index/{IdCurso}'>{Curso}</a> <br />Bons estudos! <br /><br /> Código Nerd",
                           Ativo = true
                       });
 
@@ -325,31 +314,6 @@ namespace SmartLMS.DAL.Migrations
             context.Salvar();
 
             #endregion
-
-            #region Turmas 
-
-            var t = new Turma { DataCriacao = DateTime.Now, Ativo = true, Nome = "Turma .net Iniciante" };
-            context.Set<Turma>().AddOrUpdate(u => u.Nome, t);
-            context.Salvar();
-
-            var ct = new TurmaCurso { Curso = c1, Turma = t, Ordem = 1 };
-            context.Set<TurmaCurso>().AddOrUpdate(c => c.Ordem, ct);
-            context.Salvar();
-
-            var plan = new Planejamento { Turma = t, DataInicio = DateTime.Now };
-      
-            context.Set<Planejamento>().AddOrUpdate(p => p.Concluido, plan);
-            context.Salvar();
-            plan.Alunos = new List<Aluno>();
-
-            plan.Alunos.Add(aluno);
-            context.Salvar();
-
-            var ap = new AulaPlanejamento { Aula = a1, Planejamento = plan, DataLiberacao = DateTime.Now };
-            context.Set<AulaPlanejamento>().AddOrUpdate(a => new { a.IdAula, a.IdPlanejamento}, ap);
-
-            #endregion
-
 
         }
     }

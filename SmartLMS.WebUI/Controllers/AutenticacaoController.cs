@@ -82,7 +82,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult Sair()
         {
             FormsAuthentication.SignOut();
-            return Redirect("Login");
+            return RedirectToAction("Index", "Home");
         }
 
         [Authorize]

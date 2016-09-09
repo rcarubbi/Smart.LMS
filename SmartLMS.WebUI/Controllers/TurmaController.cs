@@ -25,7 +25,7 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         // GET: Turma
-        public ActionResult Index(string termo, string campoBusca, int pagina = 1)
+        public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
         {
             RepositorioTurma turmaRepo = new RepositorioTurma(_contexto);
             ViewBag.CamposBusca = new SelectList(new string[] { "Nome", "Curso" });
@@ -97,7 +97,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de turmas";
                     TempData["Mensagem"] = "Turma criada com sucesso";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
@@ -156,7 +156,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de turmas";
                     TempData["Mensagem"] = "Turma alterada com sucesso";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
@@ -182,9 +182,6 @@ namespace SmartLMS.WebUI.Controllers
             return View();
         }
 
-        public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
-        {
-            return View();
-        }
+       
     }
 }

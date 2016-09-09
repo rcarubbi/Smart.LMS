@@ -34,15 +34,15 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administração <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">Gerenciar Pessoas</li>
-                        <li>@Html.ActionLink("Alunos", "Index", "Aluno")</li>
-                        <li>@Html.ActionLink("Professores", "Index", "Professor")</li>
-                        <li>@Html.ActionLink("Turmas", "Index", "Turma")</li>
+                        <li>@Html.ActionLink("Alunos", "IndexAdmin", "Aluno")</li>
+                        <li>@Html.ActionLink("Professores", "IndexAdmin", "Professor")</li>
+                        <li>@Html.ActionLink("Turmas", "IndexAdmin", "Turma")</li>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Gerenciar Conteúdo</li>
-                        <li>@Html.ActionLink(Parametro.AREA_CONHECIMENTO_PLURAL, "IndexAdmin", "AreaConhecimento")</li>
-                        <li>@Html.ActionLink(Parametro.ASSUNTO_PLURAL, "IndexAdmin", "Assunto")</li>
-                        <li>@Html.ActionLink(Parametro.CURSO_PLURAL, "IndexAdmin", "Curso")</li>
-                        <li>@Html.ActionLink(Parametro.AULA_PLURAL, "IndexAdmin", "Aula")</li>
+                        <li>@Html.ActionLink("Áreas de conhecimento", "IndexAdmin", "AreaConhecimento")</li>
+                        <li>@Html.ActionLink("Assuntos", "IndexAdmin", "Assunto")</li>
+                        <li>@Html.ActionLink("Cursos", "IndexAdmin", "Curso")</li>
+                        <li>@Html.ActionLink("Aulas", "IndexAdmin", "Aula")</li>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Auditoria</li>
                         <li><a href="#">Log Geral</a></li>

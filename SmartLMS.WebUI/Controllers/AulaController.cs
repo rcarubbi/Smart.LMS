@@ -56,17 +56,18 @@ namespace SmartLMS.WebUI.Controllers
            
         }
 
-
+        [AllowAnonymous]
         public ActionResult Index(Guid id)
         {
             var cursoRepo = new RepositorioCurso(_contexto);
-            var indice = cursoRepo.ObterIndiceCurso(id, _usuarioLogado.Id);
+            var indice = cursoRepo.ObterIndiceCurso(id, _usuarioLogado?.Id);
             var acessoRepo = new RepositorioAcessoAula(_contexto);
             CursoViewModel viewModel = CursoViewModel.FromEntity(indice);
             ViewBag.OutrosCursos = new SelectList(indice.Curso.Assunto.Cursos.Except(new List<Curso> { indice.Curso }), "Id", "Nome");
             return View(viewModel);
         }
 
+        [AllowAnonymous]
         public ActionResult ExibirIndiceCurso(Guid id)
         {
             var cursoRepo = new RepositorioCurso(_contexto);
@@ -87,17 +88,20 @@ namespace SmartLMS.WebUI.Controllers
             return PartialView("_listaAulasPequena", viewModel.Aulas);
         }
 
+     
         [ChildActionOnly]
         public ActionResult ExibirPainelNovasAulas() {
+
+          
             var aulaRepo = new RepositorioAula(_contexto);
             return PartialView("_PainelNovasAulas", AulaViewModel.FromEntityList(aulaRepo.ListarUltimasAulasLiberadas(_usuarioLogado.Id), new DefaultDateTimeHumanizeStrategy()));
         }
 
+     
         [ChildActionOnly]
         public ActionResult ExibirUltimasAulas()
         {
             var acessoRepo = new RepositorioAcessoAula(_contexto);
-            
             return PartialView("_PainelUltimasAulas", AcessoAulaViewModel.FromEntityList(acessoRepo.ListarUltimosAcessos(_usuarioLogado.Id), new DefaultDateTimeHumanizeStrategy()));
         }
 

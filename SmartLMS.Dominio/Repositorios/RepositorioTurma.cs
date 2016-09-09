@@ -36,8 +36,8 @@ namespace SmartLMS.Dominio.Repositorios
 
         public PagedListResult<Turma> ListarTurmas(string termo, string campoBusca, int pagina)
         {
-           
-            
+
+
             var repo = new GenericRepository<Turma>(_contexto);
             var query = new SearchQuery<Turma>();
             query.AddFilter(a => (campoBusca == "Nome" && a.Nome.Contains(termo)) ||
@@ -79,7 +79,7 @@ namespace SmartLMS.Dominio.Repositorios
 
         public void CriarTurma(string nome, List<Guid> idsCursos)
         {
-            
+
             Turma novaTurma = new Turma();
             novaTurma.Ativo = true;
             novaTurma.DataCriacao = DateTime.Now;
@@ -87,7 +87,8 @@ namespace SmartLMS.Dominio.Repositorios
             var ordem = 1;
             foreach (var item in idsCursos)
             {
-                TurmaCurso tc = new TurmaCurso {
+                TurmaCurso tc = new TurmaCurso
+                {
                     Turma = novaTurma,
                     IdCurso = item,
                     Ordem = ordem++
@@ -118,7 +119,7 @@ namespace SmartLMS.Dominio.Repositorios
                 RemoverAlunos(turma, idsAlunos);
                 AdicionarNovosAlunos(sender, turma, idsAlunos);
                 _contexto.Salvar();
-                
+
                 await turma.SincronizarAcessosAync(_contexto, sender);
                 _contexto.Salvar();
                 tx.Complete();
@@ -133,10 +134,11 @@ namespace SmartLMS.Dominio.Repositorios
             var planejamentoDoDia = turma.Planejamentos.FirstOrDefault(x => x.DataInicio == DateTime.Today);
             if (planejamentoDoDia == null)
             {
-                planejamentoDoDia = new Planejamento {
+                planejamentoDoDia = new Planejamento
+                {
                     DataInicio = DateTime.Today,
                     Turma = turma
-                    
+
                 };
                 _contexto.ObterLista<Planejamento>().Add(planejamentoDoDia);
                 _contexto.Salvar();
@@ -179,12 +181,12 @@ namespace SmartLMS.Dominio.Repositorios
 
         private void AtualizarCursos(Turma turma, List<Guid> idsCursos)
         {
-            
-            
+
+
             var cursos = _contexto.ObterLista<Curso>().Where(x => idsCursos.Contains(x.Id));
             foreach (var item in cursos)
             {
-             
+
                 var curso = turma.Cursos.FirstOrDefault(x => x.IdCurso == item.Id);
                 if (curso != null)
                 {
@@ -193,7 +195,7 @@ namespace SmartLMS.Dominio.Repositorios
                 }
                 else
                 {
-                   
+
                     turma.Cursos.Add(new TurmaCurso
                     {
                         Turma = turma,
@@ -205,7 +207,7 @@ namespace SmartLMS.Dominio.Repositorios
                 }
             }
 
-          
+
         }
 
         private void RemoverCursos(Turma turma, List<Guid> idsCursos)
@@ -216,7 +218,7 @@ namespace SmartLMS.Dominio.Repositorios
 
             foreach (var item in cursosAExcluir)
             {
-                var tc = _contexto.ObterLista<TurmaCurso>().First(x=> x.IdTurma == turma.Id && x.IdCurso == item);
+                var tc = _contexto.ObterLista<TurmaCurso>().First(x => x.IdTurma == turma.Id && x.IdCurso == item);
                 var aulasCurso = tc.Curso.Aulas.Select(x => x.Id);
                 RemoverAcessos(tc.Turma.Planejamentos, aulasCurso);
                 turma.Cursos.Remove(tc);

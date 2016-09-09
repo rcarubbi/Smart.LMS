@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmartLMS.Dominio.Entidades.Liberacao;
+using Carubbi.GenericRepository;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -19,6 +20,11 @@ namespace SmartLMS.WebUI.Models
 
         public Guid Id { get; set; }
 
+        public bool Ativo { get; set; }
+
+
+        public DateTime DataCriacao { get; set; }
+
         public string Imagem { get; set; }
 
         public string NomeProfessorResponsavel { get; set; }
@@ -31,10 +37,29 @@ namespace SmartLMS.WebUI.Models
             }
         }
 
+        internal static PagedListResult<CursoViewModel> FromEntityList(PagedListResult<Curso> cursos)
+        {
+            PagedListResult<CursoViewModel> pagina = new PagedListResult<CursoViewModel>();
+
+            pagina.HasNext = cursos.HasNext;
+            pagina.HasPrevious = cursos.HasPrevious;
+            pagina.Count = cursos.Count;
+            List<CursoViewModel> viewModels = new List<CursoViewModel>();
+            foreach (var item in cursos.Entities)
+            {
+                viewModels.Add(FromEntity(item, 0));
+            }
+
+            pagina.Entities = viewModels;
+            return pagina;
+        }
+
         public static CursoViewModel FromEntity(Curso item, int profundidade)
         {
             return new CursoViewModel
             {
+                Ativo = item.Ativo,
+                DataCriacao = item.DataCriacao,
                 IdAssunto = item.Assunto.Id,
                 NomeAssunto = item.Assunto.Nome,
                 Imagem = item.Imagem,

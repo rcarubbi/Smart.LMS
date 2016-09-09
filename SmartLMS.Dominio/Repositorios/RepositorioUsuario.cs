@@ -5,6 +5,7 @@ using SmartLMS.Dominio.Entidades.Liberacao;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 
 namespace SmartLMS.Dominio.Repositorios
@@ -26,11 +27,11 @@ namespace SmartLMS.Dominio.Repositorios
         internal ICollection<Turma> ListarTurmas(Guid idUsuario)
         {
             var usuario = ObterPorId(idUsuario);
-            var lista = new List<Turma>(); 
+            var lista = new List<Turma>();
             if (usuario is Aluno)
             {
                 ((Aluno)usuario).Planejamentos.Select(x => x.Turma).ToList().ForEach(x => lista.Add(_contexto.UnProxy(x)));
-              
+
             }
             else if (usuario is Aluno)
             {
@@ -39,7 +40,7 @@ namespace SmartLMS.Dominio.Repositorios
                             t.Cursos.Select(x => x.Curso.ProfessorResponsavel).Any(p => p.Id == idUsuario)
                             || t.Cursos.SelectMany(x => x.Curso.Aulas).Select(x => x.Professor).Any(x => x.Id == idUsuario)
                     ).ToList().ForEach(x => lista.Add(_contexto.UnProxy(x)));
-              
+
             }
 
             return lista;
@@ -80,9 +81,24 @@ namespace SmartLMS.Dominio.Repositorios
 
             professor.AvisosVistos.ToList().ForEach(a => usuarioAvisos.Remove(a));
             avisos.Where(a => a.Usuario.Id == id).ToList().ForEach(a => avisos.Remove(a));
-
+           
             _contexto.ObterLista<Professor>().Remove(professor);
-            _contexto.Salvar();
+
+            try
+            {
+                _contexto.Salvar();
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException.InnerException.Message.Contains("FK_dbo.Aula_dbo.Usuario_Professor_Id"))
+                {
+                    throw new ApplicationException("Este professor possui aulas associadas a ele");
+                }
+                else if (ex.InnerException.InnerException.Message.Contains("FK_dbo.Curso_dbo.Usuario_ProfessorResponsavel_Id"))
+                {
+                    throw new ApplicationException("Este professor possui cursos sob sua responsabilidade");
+                }
+            }
         }
 
         public PagedListResult<Aluno> ListarAlunos(string termo, string campoBusca, int pagina)
@@ -111,10 +127,10 @@ namespace SmartLMS.Dominio.Repositorios
             return _contexto.ObterLista<Usuario>().Where(x => x.GetType().Name == roleName.ToString()).ToList();
         }
 
-       public void ExcluirAluno(Guid id)
+        public void ExcluirAluno(Guid id)
         {
             Aluno aluno = _contexto.ObterLista<Aluno>().Find(id);
-            var usuarioAvisos = _contexto.ObterLista<UsuarioAviso>();
+           /* var usuarioAvisos = _contexto.ObterLista<UsuarioAviso>();
             var acessosAula = _contexto.ObterLista<AcessoAula>();
             var acessosArquivo = _contexto.ObterLista<AcessoArquivo>();
             var avisos = _contexto.ObterLista<Aviso>();
@@ -128,12 +144,13 @@ namespace SmartLMS.Dominio.Repositorios
             comentariosAluno.ToList().ForEach(a => comentarios.Remove(a));
             avisos.Where(a => a.Usuario.Id == id).ToList().ForEach(a => avisos.Remove(a));
             planejamentos.ToList().ForEach(x => x.Alunos.Remove(aluno));
-
+            */
             _contexto.ObterLista<Aluno>().Remove(aluno);
             _contexto.Salvar();
         }
 
-        public List<Aluno> ListarAlunosAtivos() {
+        public List<Aluno> ListarAlunosAtivos()
+        {
             return _contexto.ObterLista<Aluno>().Where(x => x.Ativo).OrderBy(x => x.Nome).ToList();
         }
     }

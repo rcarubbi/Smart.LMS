@@ -10,8 +10,9 @@ namespace SmartLMS.DAL.Mapeamento
         public ArquivoConfiguration()
         {
              Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-             HasRequired(x => x.Curso).WithMany(c => c.Arquivos);
-             HasOptional(x => x.Aula).WithMany(c => c.Arquivos);
+            HasOptional(x => x.Curso).WithMany(c => c.Arquivos);
+             HasOptional(x => x.Aula).WithMany(c => c.Arquivos).WillCascadeOnDelete(true);
+             HasMany(x => x.Acessos).WithRequired(x => x.Arquivo);
         }
     }
 }

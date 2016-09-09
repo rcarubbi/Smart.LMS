@@ -1,7 +1,368 @@
-﻿
+﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.CursoViewModel>
+
 @{
-    ViewBag.Title = "IndexAdmin";
+    ViewBag.Title = "Administração de cursos";
+}
+@section styles {
+    <style type="text/css">
+        .checkbox {
+            margin: 0px;
+        }
+
+        .form-group {
+            margin-top: 10px !important;
+        }
+    </style>
 }
 
-<h2>IndexAdmin</h2>
 
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Lista de cursos
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-5">
+                <a href="@Url.Action("Create")" class="btn btn-sm btn-info"><i class="fa fa-plus" style="font-size: 10px; top: 0px; left: 2px;"></i> <i class="fa fa-graduation-cap"></i> </a>
+            </div>
+            <div class="col-md-7 pull-right">
+                <div class="col-md-4">
+                    <div class="form-group label-static is-empty">
+                        <label for="CampoBusca" class="control-label">Pesquisar por</label>
+                        @Html.DropDownList("CampoBusca", ViewBag.CamposBusca as SelectList, new { @class = "form-control dropdownjs" })
+                    </div>
+                </div>
+                <div class="form-group label-floating is-empty col-md-7">
+                    <label class="control-label" for="q">digite o termo que deseja encontrar</label>
+                    <div class="input-group" style="display:block">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input type="search" name="termo" id="termo" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-sm" id="btnFiltrar">
+                                    <i class="material-icons">search</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Nome")
+                    </th>
+                    <th class="hidden-sm  hidden-xs">
+                        @Html.DisplayName("Ativo")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Ordem")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Assunto")
+                    </th>
+                    <th class="hidden-sm  hidden-xs">
+                        @Html.DisplayName("Id")
+                    </th>
+                    <th class="hidden-sm  hidden-xs">
+                        @Html.DisplayName("Criado em")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="resultado-container">
+                @foreach (var item in Model.Entities)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nome)
+                        </td>
+                        <td class="hidden-sm  hidden-xs">
+                            @Html.DisplayFor(modelItem => item.Ativo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ordem)
+                        </td>
+                        <td class="hidden-sm  hidden-xs">
+                            @Html.DisplayFor(modelItem => item.NomeAssunto)
+                        </td>
+                        <td class="hidden-sm  hidden-xs">
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+
+                        <td class="hidden-sm  hidden-xs">
+                            @item.DataCriacao.ToShortDateString()
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                                <a href="@Url.Action("Edit", new { Id = item.Id })" class="btn btn-success btn-sm">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                                <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="@item.Id" data-nome="@item.Nome">
+                                    <i class="material-icons">delete</i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            @if (Model.Entities.Count() == 0)
+            {
+                <tr>
+                    <td colspan="5" class="text-center">
+                        Nenhum curso encontrado
+                    </td>
+                </tr>
+            }
+
+        </table>
+        @Html.Partial("_paginacao")
+    </div>
+</div>
+
+<div class="modal fade" id="confirmacaoExclusao" tabindex="-1" role="dialog" aria-labelledby="Confirmação de Exclusão" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Excluir curso</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-delete-agree" data-dismiss="modal"><i class="fa fa-thumbs-up"></i></button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-thumbs-down"></i></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/x-handlebars-template" id="resultado-cursos-template">
+        {{#each Entities}}
+        <tr>
+            <td>
+                {{Nome}}
+            </td>
+            <td class="hidden-sm hidden-xs">
+                <div class="checkbox">
+                    <label>
+                        <input name="Ativo" type="checkbox" disabled {{#if Ativo}} checked {{/if}}>
+                    </label>
+                </div>
+            </td>
+            <td>
+                {{Ordem}}
+            </td>
+            <td class="hidden-sm  hidden-xs">
+                {{NomeAssunto}}
+            </td>
+            <td class="hidden-sm  hidden-xs">
+                {{Id}}
+            </td>
+
+            <td class="hidden-sm  hidden-xs">
+                {{toShortDateString DataCriacao}}
+            </td>
+            <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                    <a href="@Url.Content("~/Assunto/Edit/"){{Id}}" class="btn btn-success btn-sm">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="{{Id}}" data-nome="{{Nome}}">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+        {{#equals Count 0}}
+        <tr>
+            <td colspan="5" class="text-center">
+                Nenhum curso encontrado
+            </td>
+        </tr>
+        {{/equals}}
+    </script>
+    <script>
+        SmartLMS.CursosProxy = (function () {
+            $public = {}, $private = {};
+
+
+            $public.Listar = function (termo, campoBusca, pagina) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Curso/ListarCursos",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ termo: termo, campoBusca: campoBusca, pagina: pagina })
+                });
+            };
+
+            $public.excluir = function (id) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Curso/Excluir",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ id: id })
+                });
+            };
+
+            return $public;
+        }());
+
+        (function (cursoProxy) {
+            var $private = {}, $public = {};
+
+            $(function () {
+                $private.CampoBusca = "Nome";
+                $private.UltimaQuantidade = @Model.Count
+                $("#paginacao-container").on("click", ".paginacao-pagina", $private.IrParaPagina);
+                $("#paginacao-container").on("click", ".paginacao-proxima", $private.ProximaPagina);
+                $("#paginacao-container").on("click", ".paginacao-anterior", $private.PaginaAnterior);
+
+                $("#CampoBusca").on("dropdownjs.change", function () {
+                    var selectedItem = $(this).find("option:selected");
+                    $private.CampoBusca = selectedItem.val();
+                });
+
+                $("#btnFiltrar").on("click", $private.PesquisarAssuntos);
+                $private.PaginacaoTemplate = Handlebars.compile($("#paginacao-template").html());
+                $private.ResultadoCursosTemplate = Handlebars.compile($("#resultado-cursos-template").html());
+                $("#confirmacaoExclusao").on("click", ".btn-delete-agree", $private.excluir);
+                $(document).on("click", "#resultado-container .btn-delete", $private.confirmarExclusao);
+            });
+
+            $private.TituloMensagem = "";
+            $private.Mensagem = "";
+            $private.TipoMensagem = "";
+
+            $private.excluir = function () {
+                var id = $(this).parent().parent().find(".modal-body").data("id");
+                cursoProxy.excluir(id).done($private.PesquisarAssuntos);
+                $private.TituloMensagem = 'Administração de conteúdo';
+                $private.Mensagem = 'Curso excluído com sucesso!';
+                $private.TipoMensagem = 'error';
+            };
+
+
+            $private.confirmarExclusao = function (e) {
+                e.preventDefault();
+
+                var curso = {
+                    id: $(this).data("id"),
+                    nome: $(this).data("nome")
+                };
+                $("#confirmacaoExclusao").find(".modal-body").data("id", curso.id);
+                $("#confirmacaoExclusao").find(".modal-body").html("<p>Deseja realmente excluir o Curso " + curso.nome + "?</p>");
+                $("#confirmacaoExclusao").modal();
+            };
+
+            $private.Pagina = 1;
+
+            $private.IrParaPagina = function () {
+                $private.Pagina = $(this).text();
+                var termo = $("#termo").val();
+
+                cursoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+
+            };
+            $private.ProximaPagina = function () {
+                $private.Pagina++;
+                var termo = $("#termo").val();
+
+                cursoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+
+
+            };
+            $private.PaginaAnterior = function () {
+                $private.Pagina--;
+                var termo = $("#termo").val();
+
+                cursoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+
+            };
+
+            $private.PesquisarAssuntos = function () {
+                $private.Pagina = 1;
+                var termo = $("#termo").val();
+
+                cursoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+            };
+
+
+            $private.CalcularPaginaMinima = function (quantidade, pagina) {
+                if (pagina < 4) {
+                    return 1;
+                }
+                else if (pagina > quantidade - 3) {
+                    return quantidade - 4;
+                }
+                else {
+                    return pagina - 2;
+                }
+            };
+
+            $private.CalcularPaginaMaxima = function (quantidade, pagina) {
+                if (pagina < 4) {
+                    if (quantidade < 6) {
+                        return quantidade + 1;
+                    }
+                    else {
+                        return 6;
+                    }
+                }
+                else if (pagina > quantidade - 3) {
+                    return quantidade + 1;
+                }
+                else {
+                    return pagina + 3;
+                }
+            };
+
+            $private.AtualizarResultados = function (data) {
+                $("#resultado-container").html($private.ResultadoCursosTemplate(data));
+                if (data.HasNext) {
+                    $(".paginacao-proxima").show();
+                }
+                else {
+                    $(".paginacao-proxima").hide();
+                }
+
+                if (data.HasPrevious) {
+                    $(".paginacao-anterior").show();
+                }
+                else {
+                    $(".paginacao-anterior").hide();
+                }
+
+
+                $("#paginacao-container").html($private.PaginacaoTemplate({
+                    paginas: Math.ceil(data.Count / 8),
+                    possuiAnterior: data.HasPrevious,
+                    possuiProxima: data.HasNext,
+                    paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.Count / 8), 1),
+                    paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.Count / 8), 1),
+                    paginaCorrente: $private.Pagina
+                }));
+                $.material.checkbox();
+
+                if ($private.Mensagem) {
+                    SmartLMS.App.toastr[$private.TipoMensagem]($private.Mensagem, $private.TituloMensagem);
+                    $private.TipoMensagem = "";
+                    $private.TituloMensagem = "";
+                    $private.Mensagem = "";
+                }
+            };
+
+        }(SmartLMS.CursosProxy));
+    </script>
+}

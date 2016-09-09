@@ -20,20 +20,31 @@ namespace SmartLMS.WebUI.Controllers
 
         }
 
-
+        [AllowAnonymous]
         [ChildActionOnly]
         public ActionResult ExibirCabecalho()
         {
             var usuarioRepo = new RepositorioUsuario(_contexto);
             var areaConhecimentoRepo = new RepositorioAreaConhecimento(_contexto);
-
-            CabecalhoViewModel viewModel = new CabecalhoViewModel
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
-                Usuario = UsuarioViewModel.FromEntity(usuarioRepo.ObterPorLogin(HttpContext.User.Identity.Name)),
-                AreasConhecimento = AreaConhecimentoViewModel.FromEntityList(areaConhecimentoRepo.ListarAreasConhecimento(), 2).ToList(),
-            };
+                CabecalhoViewModel viewModel = new CabecalhoViewModel
+                {
+                    Usuario = UsuarioViewModel.FromEntity(usuarioRepo.ObterPorLogin(HttpContext.User.Identity.Name)),
+                    AreasConhecimento = AreaConhecimentoViewModel.FromEntityList(areaConhecimentoRepo.ListarAreasConhecimento(), 2).ToList(),
+                };
 
-            return PartialView($"_ExibirCabecalho{viewModel.Usuario.NomePerfil}", viewModel);
+                return PartialView($"_ExibirCabecalho{viewModel.Usuario.NomePerfil}", viewModel);
+            }
+            else
+            {
+                CabecalhoViewModel viewModel = new CabecalhoViewModel
+                {
+                    AreasConhecimento = AreaConhecimentoViewModel.FromEntityList(areaConhecimentoRepo.ListarAreasConhecimento(), 2).ToList(),
+                };
+                return PartialView("_Login", viewModel);
+            }
+                
         }
 
 

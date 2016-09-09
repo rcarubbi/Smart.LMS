@@ -1,7 +1,7 @@
-﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.UsuarioViewModel>
+﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.AreaConhecimentoViewModel>
 
 @{
-    ViewBag.Title = "Manutenação de professores";
+    ViewBag.Title = "Adminsitração de áreas de conhecimento";
 }
 @section styles {
     <style type="text/css">
@@ -18,12 +18,12 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Lista de Professores
+        Lista de Áreas de Conhecimento
     </div>
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4">
-                <a href="@Url.Action("Create")" class="btn btn-sm btn-info"><i class="material-icons">person_add</i></a>
+                <a href="@Url.Action("Create")" class="btn btn-sm btn-info"><i class="fa fa-plus" style="font-size: 10px; top: 0px; left: 1px;"></i> <i class="fa fa-map-signs"></i> </a>
             </div>
             <div class="col-md-6 pull-right">
                 <div class="col-md-3">
@@ -55,11 +55,11 @@
                     <th>
                         @Html.DisplayName("Nome")
                     </th>
-                    <th>
-                        @Html.DisplayName("Email")
-                    </th>
                     <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Ativo")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Ordem")
                     </th>
                     <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Id")
@@ -78,15 +78,16 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Nome)
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Email)
-                        </td>
                         <td class="hidden-sm  hidden-xs">
                             @Html.DisplayFor(modelItem => item.Ativo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ordem)
                         </td>
                         <td class="hidden-sm  hidden-xs">
                             @Html.DisplayFor(modelItem => item.Id)
                         </td>
+
                         <td class="hidden-sm  hidden-xs">
                             @item.DataCriacao.ToShortDateString()
                         </td>
@@ -107,7 +108,7 @@
             {
                 <tr>
                     <td colspan="5" class="text-center">
-                        Nenhum professor encontrado
+                        Nenhuma área de conhecimento encontrada
                     </td>
                 </tr>
             }
@@ -124,7 +125,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">Excluir professor</h4>
+                <h4 class="modal-title">Excluir área de conhecimento</h4>
             </div>
             <div class="modal-body">
 
@@ -139,14 +140,11 @@
 </div>
 
 @section scripts {
-    <script type="text/x-handlebars-template" id="resultado-professores-template">
+    <script type="text/x-handlebars-template" id="resultado-areasConhecimento-template">
         {{#each Entities}}
         <tr>
             <td>
                 {{Nome}}
-            </td>
-            <td>
-                {{Email}}
             </td>
             <td class="hidden-sm hidden-xs">
                 <div class="checkbox">
@@ -154,6 +152,9 @@
                         <input name="Ativo" type="checkbox" disabled {{#if Ativo}} checked {{/if}}>
                     </label>
                 </div>
+            </td>
+            <td>
+                {{Ordem}}
             </td>
             <td class="hidden-sm  hidden-xs">
                 {{Id}}
@@ -163,7 +164,7 @@
             </td>
             <td>
                 <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
-                    <a href="@Url.Content("~/Professor/Edit/"){{Id}}" class="btn btn-success btn-sm">
+                    <a href="@Url.Content("~/AreaConhecimento/Edit/"){{Id}}" class="btn btn-success btn-sm">
                         <i class="material-icons">edit</i>
                     </a>
                     <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="{{Id}}" data-nome="{{Nome}}">
@@ -176,20 +177,20 @@
         {{#equals Count 0}}
         <tr>
             <td colspan="5" class="text-center">
-                Nenhum professor encontrado
+                Nenhuma área de conhecimento encontrada
             </td>
         </tr>
         {{/equals}}
     </script>
     <script>
-        SmartLMS.ProfessorProxy = (function () {
+        SmartLMS.AreaConhecimentoProxy = (function () {
             $public = {}, $private = {};
 
 
             $public.Listar = function (termo, campoBusca, pagina) {
                 return $.ajax({
                     type: "POST",
-                    url: SmartLMS.api + "Professor/ListarProfessores",
+                    url: SmartLMS.api + "AreaConhecimento/ListarAreasConhecimento",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({ termo: termo, campoBusca: campoBusca, pagina: pagina })
@@ -199,7 +200,7 @@
             $public.excluir = function (id) {
                 return $.ajax({
                     type: "POST",
-                    url: SmartLMS.api + "Professor/Excluir",
+                    url: SmartLMS.api + "AreaConhecimento/Excluir",
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify({ id: id })
                 });
@@ -208,7 +209,7 @@
             return $public;
         }());
 
-        (function (professorProxy) {
+        (function (areaConhecimentoProxy) {
             var $private = {}, $public = {};
 
             $(function () {
@@ -217,35 +218,41 @@
                 $("#paginacao-container").on("click", ".paginacao-pagina", $private.IrParaPagina);
                 $("#paginacao-container").on("click", ".paginacao-proxima", $private.ProximaPagina);
                 $("#paginacao-container").on("click", ".paginacao-anterior", $private.PaginaAnterior);
+
                 $("#CampoBusca").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
                     $private.CampoBusca = selectedItem.val();
-
                 });
-                $("#btnFiltrar").on("click", $private.PesquisarProfessores);
+
+                $("#btnFiltrar").on("click", $private.PesquisarAreasConhecimento);
                 $private.PaginacaoTemplate = Handlebars.compile($("#paginacao-template").html());
-                $private.ResultadoProfessoresTemplate = Handlebars.compile($("#resultado-professores-template").html());
+                $private.ResultadoAreasConhecimentoTemplate = Handlebars.compile($("#resultado-areasConhecimento-template").html());
                 $("#confirmacaoExclusao").on("click", ".btn-delete-agree", $private.excluir);
                 $(document).on("click", "#resultado-container .btn-delete", $private.confirmarExclusao);
             });
 
+            $private.TituloMensagem = "";
+            $private.Mensagem = "";
+            $private.TipoMensagem = "";
 
             $private.excluir = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
-                professorProxy.excluir(id).done($private.PesquisarProfessores);
-                SmartLMS.App.toastr['error']('Professor excluído com sucesso!', 'Manutenção de Professores');
+                areaConhecimentoProxy.excluir(id).done($private.PesquisarAreasConhecimento);
+                $private.TituloMensagem = 'Administração de conteúdo';
+                $private.Mensagem = 'Área de conhecimento excluída com sucesso!';
+                $private.TipoMensagem = 'error';
             };
 
 
             $private.confirmarExclusao = function (e) {
                 e.preventDefault();
 
-                var professor = {
+                var area = {
                     id: $(this).data("id"),
                     nome: $(this).data("nome")
                 };
-                $("#confirmacaoExclusao").find(".modal-body").data("id", professor.id);
-                $("#confirmacaoExclusao").find(".modal-body").html("<p>Deseja realmente excluir o professor " + professor.nome + "?</p>");
+                $("#confirmacaoExclusao").find(".modal-body").data("id", area.id);
+                $("#confirmacaoExclusao").find(".modal-body").html("<p>Deseja realmente excluir a área de conhecimento " + area.nome + "?</p>");
                 $("#confirmacaoExclusao").modal();
             };
 
@@ -255,14 +262,14 @@
                 $private.Pagina = $(this).text();
                 var termo = $("#termo").val();
 
-                professorProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+                areaConhecimentoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
 
             };
             $private.ProximaPagina = function () {
                 $private.Pagina++;
                 var termo = $("#termo").val();
 
-                professorProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+                areaConhecimentoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
 
 
             };
@@ -270,15 +277,15 @@
                 $private.Pagina--;
                 var termo = $("#termo").val();
 
-                professorProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+                areaConhecimentoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
 
             };
 
-            $private.PesquisarProfessores = function () {
+            $private.PesquisarAreasConhecimento = function () {
                 $private.Pagina = 1;
                 var termo = $("#termo").val();
 
-                professorProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+                areaConhecimentoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
             };
 
 
@@ -312,7 +319,7 @@
             };
 
             $private.AtualizarResultados = function (data) {
-                $("#resultado-container").html($private.ResultadoProfessoresTemplate(data));
+                $("#resultado-container").html($private.ResultadoAreasConhecimentoTemplate(data));
                 if (data.HasNext) {
                     $(".paginacao-proxima").show();
                 }
@@ -338,8 +345,14 @@
                 }));
                 $.material.checkbox();
 
+                if ($private.Mensagem) {
+                    SmartLMS.App.toastr[$private.TipoMensagem]($private.Mensagem, $private.TituloMensagem);
+                    $private.TipoMensagem = "";
+                    $private.TituloMensagem = "";
+                    $private.Mensagem = "";
+                }
             };
 
-        }(SmartLMS.ProfessorProxy));
+        }(SmartLMS.AreaConhecimentoProxy));
     </script>
 }

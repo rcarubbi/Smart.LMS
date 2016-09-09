@@ -1,4 +1,5 @@
-﻿using SmartLMS.Dominio.Entidades.Conteudo;
+﻿using Carubbi.GenericRepository;
+using SmartLMS.Dominio.Entidades.Conteudo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace SmartLMS.Dominio.Repositorios
             return _contexto.ObterLista<Curso>().Where(a => a.Ativo).OrderBy(a => a.Nome).ToList();
         }
 
-        public IndiceCurso ObterIndiceCurso(Guid id, Guid idUsuario)
+        public IndiceCurso ObterIndiceCurso(Guid id, Guid? idUsuario)
         {
             var indiceCurso = new IndiceCurso();
             RepositorioAula repoAula = new RepositorioAula(_contexto);
@@ -30,12 +31,42 @@ namespace SmartLMS.Dominio.Repositorios
                 .OrderBy(x => x.Ordem)
                 .Select(a => new AulaInfo {
                     Aula = a,
-                    Disponivel = repoAula.VerificarDisponibilidadeAula(a.Id, idUsuario),
-                    Percentual = a.Acessos.Where(x => x.Usuario.Id == idUsuario).LastOrDefault()?.Percentual ?? 0
-        });
+                    Disponivel = idUsuario.HasValue ? repoAula.VerificarDisponibilidadeAula(a.Id, idUsuario.Value) : false,
+                    Percentual = idUsuario.HasValue ? a.Acessos.Where(x => x.Usuario.Id == idUsuario).LastOrDefault()?.Percentual ?? 0 : 0
+            });
 
             return indiceCurso;
             
+        }
+
+        public PagedListResult<Curso> ListarCursos(string termo, string campoBusca, int pagina)
+        {
+            var repo = new GenericRepository<Curso>(_contexto);
+            var query = new SearchQuery<Curso>();
+            query.AddFilter(a => (campoBusca == "Nome" && a.Nome.Contains(termo)) ||
+                                 (campoBusca == "Id" && a.Id.ToString().Contains(termo)) ||
+                                  (campoBusca == "Área de Conhecimento" && a.Assunto.AreaConhecimento.Id.ToString() == termo) ||
+                                  (campoBusca == "Assunto" && a.Assunto.Id.ToString() == termo) ||
+                                    string.IsNullOrEmpty(campoBusca));
+
+            query.AddSortCriteria(new DynamicFieldSortCriteria<Curso>("Assunto.AreaConhecimento.Ordem, Assunto.Ordem, Ordem"));
+
+            query.Take = 8;
+            query.Skip = ((pagina - 1) * 8);
+
+            return repo.Search(query);
+        }
+
+        public void Excluir(Guid id)
+        {
+            var curso = ObterPorId(id);
+            _contexto.ObterLista<Curso>().Remove(curso);
+            _contexto.Salvar();
+        }
+
+        private Curso ObterPorId(Guid id)
+        {
+            return _contexto.ObterLista<Curso>().Find(id);
         }
     }
 }

@@ -10,7 +10,8 @@ namespace SmartLMS.DAL.Mapeamento
         public CursoConfiguration()
         {
            Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-           HasMany(x => x.Aulas).WithRequired(a => a.Curso);
+            HasMany(x => x.Aulas).WithRequired(a => a.Curso);
+            HasMany(x => x.Arquivos).WithOptional(a => a.Curso);
         }
     }
 }

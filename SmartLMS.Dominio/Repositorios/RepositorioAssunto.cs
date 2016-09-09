@@ -1,10 +1,12 @@
-﻿using SmartLMS.Dominio.Entidades;
+﻿using Carubbi.GenericRepository;
+using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using System;
+using System.Collections.Generic;
 
 namespace SmartLMS.Dominio.Repositorios
 {
-    public class RepositorioAssunto 
+    public class RepositorioAssunto
     {
         private IContexto _contexto;
         public RepositorioAssunto(IContexto contexto)
@@ -15,6 +17,47 @@ namespace SmartLMS.Dominio.Repositorios
         public Assunto ObterPorId(Guid id)
         {
             return _contexto.ObterLista<Assunto>().Find(id);
+        }
+
+        public PagedListResult<Assunto> ListarAssuntos(string termo, string campoBusca, int pagina)
+        {
+            var repo = new GenericRepository<Assunto>(_contexto);
+            var query = new SearchQuery<Assunto>();
+            query.AddFilter(a => (campoBusca == "Nome" && a.Nome.Contains(termo)) ||
+                                 (campoBusca == "Id" && a.Id.ToString().Contains(termo)) ||
+                                 (campoBusca == "Área de Conhecimento" && a.AreaConhecimento.Id.ToString() == termo) ||
+                                    string.IsNullOrEmpty(campoBusca));
+
+            query.AddSortCriteria(new DynamicFieldSortCriteria<Assunto>("AreaConhecimento.Ordem, Ordem"));
+
+            query.Take = 8;
+            query.Skip = ((pagina - 1) * 8);
+
+            return repo.Search(query);
+        }
+
+        public void Excluir(Guid id)
+        {
+            var assunto = ObterPorId(id);
+            _contexto.ObterLista<Assunto>().Remove(assunto);
+            _contexto.Salvar();
+        }
+
+        public void Incluir(Assunto assunto)
+        {
+            assunto.Ativo = true;
+            assunto.DataCriacao = DateTime.Now;
+            _contexto.ObterLista<Assunto>().Add(assunto);
+            _contexto.Salvar();
+        }
+
+        public void Alterar(Assunto assunto)
+        {
+            var assuntoAtual = ObterPorId(assunto.Id);
+            assunto.DataCriacao = assuntoAtual.DataCriacao;
+            assunto.Cursos = assuntoAtual.Cursos;
+            _contexto.Atualizar(assuntoAtual, assunto);
+            _contexto.Salvar();
         }
     }
 }

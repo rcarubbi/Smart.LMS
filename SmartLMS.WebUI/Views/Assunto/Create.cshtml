@@ -1,0 +1,58 @@
+﻿@model SmartLMS.WebUI.Models.AssuntoViewModel
+
+@{
+    ViewBag.Title = "Inclusão de novo assunto";
+}
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        Inclusão de nova área de conhecimento
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Ordem, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Ordem, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Ordem, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+              
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IdArea, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IdArea, ViewBag.Areas as SelectList, "-- Selecione --", new { @class = "form-control dropdownjs" })
+                        @Html.ValidationMessageFor(model => model.IdArea, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="fa fa-save"></i>
+                        </button>
+                        @Html.ActionLink("Voltar", "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

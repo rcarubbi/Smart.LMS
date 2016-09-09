@@ -1,7 +1,7 @@
 ﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.UsuarioViewModel>
 
 @{
-    ViewBag.Title = "Manutenação de alunos"; 
+    ViewBag.Title = "Administração de alunos"; 
 }
 @section styles {
     <style type="text/css">
@@ -229,11 +229,16 @@
                 $(document).on("click", "#resultado-container .btn-delete", $private.confirmarExclusao);
             });
 
+            $private.TituloMensagem = "";
+            $private.Mensagem = "";
+            $private.TipoMensagem = "";
 
             $private.excluir = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
                 alunoProxy.excluir(id).done($private.PesquisarAlunos);
-                SmartLMS.App.toastr['error']('Aluno excluído com sucesso!', 'Manutenção de Alunos');
+                $private.TituloMensagem = 'Administração de Alunos';
+                $private.Mensagem = 'Aluno excluído com sucesso!';
+                $private.TipoMensagem = 'error';
             };
 
 
@@ -244,6 +249,7 @@
                     id: $(this).data("id"),
                     nome: $(this).data("nome")
                 };
+
                 $("#confirmacaoExclusao").find(".modal-body").data("id", aluno.id);
                 $("#confirmacaoExclusao").find(".modal-body").html("<p>Deseja realmente excluir o aluno " + aluno.nome + "?</p>");
                 $("#confirmacaoExclusao").modal();
@@ -258,26 +264,22 @@
                 alunoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
 
             };
+
             $private.ProximaPagina = function () {
                 $private.Pagina++;
                 var termo = $("#termo").val();
-
                 alunoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
-
             };
+
             $private.PaginaAnterior = function () {
                 $private.Pagina--;
                 var termo = $("#termo").val();
-
                 alunoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
             };
 
             $private.PesquisarAlunos = function () {
                 $private.Pagina = 1;
                 var termo = $("#termo").val();
-
                 alunoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
             };
 
@@ -338,6 +340,12 @@
                 }));
                 $.material.checkbox();
 
+                if ($private.Mensagem) {
+                    SmartLMS.App.toastr[$private.TipoMensagem]($private.Mensagem, $private.TituloMensagem);
+                    $private.TipoMensagem = "";
+                    $private.TituloMensagem = "";
+                    $private.Mensagem = "";
+                }
             };
 
         }(SmartLMS.AlunoProxy));

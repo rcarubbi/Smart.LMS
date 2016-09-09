@@ -8,8 +8,8 @@ namespace SmartLMS.DAL.Mapeamento
     {
         public AcessoAulaConfiguration()
         {
-           HasRequired(x => x.Usuario);
-           HasRequired(x => x.Aula);
+           HasRequired(x => x.Usuario).WithMany(a => a.AcessosAula).WillCascadeOnDelete(true); ;
+           HasRequired(x => x.Aula).WithMany(a => a.Acessos).WillCascadeOnDelete(true);
         }
     }
 }

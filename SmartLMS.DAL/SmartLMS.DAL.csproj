@@ -64,20 +64,21 @@
     <Compile Include="Contexto.cs" />
     <Compile Include="Mapeamento\AcessoAulaConfiguration.cs" />
     <Compile Include="Mapeamento\AcessoCursoConfiguration.cs" />
+    <Compile Include="Mapeamento\AlunoConfiguration.cs" />
     <Compile Include="Mapeamento\AreaConhecimentoConfiguration.cs" />
     <Compile Include="Mapeamento\ArquivoConfiguration.cs" />
     <Compile Include="Mapeamento\AssuntoConfiguration.cs" />
+    <Compile Include="Mapeamento\AulaConfiguration.cs" />
     <Compile Include="Mapeamento\AulaPlanejamentoConfiguration.cs" />
+    <Compile Include="Mapeamento\AvisoConfiguration.cs" />
     <Compile Include="Mapeamento\CursoConfiguration.cs" />
+    <Compile Include="Mapeamento\TurmaConfiguration.cs" />
     <Compile Include="Mapeamento\TurmaCursoConfiguration.cs" />
     <Compile Include="Mapeamento\UsuarioAvisoConfiguration.cs" />
-    <Compile Include="Migrations\201608311843131_ModeloInicial.cs" />
-    <Compile Include="Migrations\201608311843131_ModeloInicial.Designer.cs">
-      <DependentUpon>201608311843131_ModeloInicial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609011415541_v2.cs" />
-    <Compile Include="Migrations\201609011415541_v2.Designer.cs">
-      <DependentUpon>201609011415541_v2.cs</DependentUpon>
+    <Compile Include="Mapeamento\UsuarioConfiguration.cs" />
+    <Compile Include="Migrations\201609091806145_ModeloInicial.cs" />
+    <Compile Include="Migrations\201609091806145_ModeloInicial.Designer.cs">
+      <DependentUpon>201609091806145_ModeloInicial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,11 +96,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201608311843131_ModeloInicial.resx">
-      <DependentUpon>201608311843131_ModeloInicial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609011415541_v2.resx">
-      <DependentUpon>201609011415541_v2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201609091806145_ModeloInicial.resx">
+      <DependentUpon>201609091806145_ModeloInicial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

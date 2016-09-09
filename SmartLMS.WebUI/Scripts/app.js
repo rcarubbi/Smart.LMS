@@ -199,7 +199,7 @@ SmartLMS.App = (function () {
         $(document).ajaxError(function (event, xhr, options, thrownError) {
             var erro = $(xhr.responseText).filter("span").find("h2 > i").text();
             if (erro != "")
-                $public.toastr["error"](erro, "Erro não tratado")
+                $public.toastr["error"](erro, "Erro")
         });
     });
 

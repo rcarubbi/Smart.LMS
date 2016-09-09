@@ -1,14 +1,20 @@
 ﻿@model IEnumerable<SmartLMS.WebUI.Models.AreaConhecimentoViewModel>
 @{
     ViewBag.Title = "Home";
+    var areasBootstrapClass = "col-md-12"; 
 }
 @Html.Partial("_BuscaContextual")
 
 <div class="row">
-    <div class="col-md-5 col-md-push-7">
-        @Html.Action("ExibirAvisos", "Aviso")
-    </div>
-    <div class="col-md-7 col-md-pull-5">
+    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+    {
+        areasBootstrapClass = "col-md-7 col-md-pull-5";
+        <div class="col-md-5 col-md-push-7">
+            @Html.Action("ExibirAvisos", "Aviso")
+        </div>
+    }
+    
+    <div class="@areasBootstrapClass">
         <div class="card" style="min-height: 295px;">
             <div class="content">
                 <h6 class="panel-title text-primary">
@@ -67,26 +73,28 @@
 </div>
 
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="content">
-                <h4 class="text-primary"><i class="fa fa-exclamation-circle"></i> Fique por dentro das novidades através dos paineis de acessos rápidos</h4>
+@if (HttpContext.Current.User.Identity.IsAuthenticated)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="content">
+                    <h4 class="text-primary"><i class="fa fa-exclamation-circle"></i> Fique por dentro das novidades através dos paineis de acessos rápidos</h4>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-        @Html.Action("ExibirPainelNovasAulas", "Aula")
-    </div>
-    <div class="col-md-6">
-        @Html.Action("ExibirUltimasAulas", "Aula")
+    <div class="row">
+        <div class="col-md-6">
+            @Html.Action("ExibirPainelNovasAulas", "Aula")
+        </div>
+        <div class="col-md-6">
+            @Html.Action("ExibirUltimasAulas", "Aula")
+
+        </div>
 
     </div>
-
-</div>
-
+}
 
 @section scripts {
 @Scripts.Render("~/bundles/jqueryval")

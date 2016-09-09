@@ -1,12 +1,12 @@
 ﻿using SmartLMS.Dominio;
+using SmartLMS.Dominio.Entidades.Conteudo;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.WebUI.Models;
 using System;
-using System.Web.Mvc;
-using System.Linq;
 using System.Collections.Generic;
-using SmartLMS.Dominio.Entidades;
-using SmartLMS.Dominio.Entidades.Conteudo;
+using System.Linq;
+using System.Net;
+using System.Web.Mvc;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -19,6 +19,7 @@ namespace SmartLMS.WebUI.Controllers
 
         }
 
+        [AllowAnonymous]
         public ActionResult ExibirIndiceAssunto(Guid id)
         {
             var assuntoRepo = new RepositorioAssunto(_contexto);
@@ -27,6 +28,7 @@ namespace SmartLMS.WebUI.Controllers
             return PartialView("_indiceAssunto", viewModel);
         }
 
+        [AllowAnonymous]
         public ActionResult Index(Guid id)
         {
             var assuntoRepo = new RepositorioAssunto(_contexto);
@@ -36,9 +38,31 @@ namespace SmartLMS.WebUI.Controllers
             return View(viewModel);
         }
 
+
+        [Authorize(Roles = "Administrador")]
         public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
         {
-            return View();
+            ViewBag.CamposBusca = new SelectList(new string[] { "Nome", "Assunto", "Area de Conhecimento", "Id" });
+            RepositorioCurso repo = new RepositorioCurso(_contexto);
+            return View(CursoViewModel.FromEntityList(repo.ListarCursos(termo, campoBusca, pagina)));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrador")]
+        public ActionResult ListarCursos(string termo, string campoBusca, int pagina = 1)
+        {
+            RepositorioCurso repo = new RepositorioCurso(_contexto);
+            return Json(CursoViewModel.FromEntityList(repo.ListarCursos(termo, campoBusca, pagina)));
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Administrador")]
+        public ActionResult Excluir(string id)
+        {
+            RepositorioCurso repo = new RepositorioCurso(_contexto);
+            repo.Excluir(new Guid(id));
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }

@@ -7,8 +7,8 @@ namespace SmartLMS.DAL.Mapeamento
     {
         public AcessoArquivoConfiguration()
         {
-            HasRequired(x => x.Usuario);
-            HasRequired(x => x.Arquivo);
+            HasRequired(x => x.Usuario).WithMany(x => x.AcessosArquivo).WillCascadeOnDelete(true);
+            HasRequired(x => x.Arquivo).WithMany(x => x.Acessos).WillCascadeOnDelete(true);
 
         }
     }

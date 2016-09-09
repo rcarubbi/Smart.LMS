@@ -1,4 +1,5 @@
 ﻿using SmartLMS.Dominio.Entidades.Comunicacao;
+using SmartLMS.Dominio.Entidades.Historico;
 using SmartLMS.Dominio.Entidades.Liberacao;
 using System.Collections.Generic;
 
@@ -22,5 +23,13 @@ namespace SmartLMS.Dominio.Entidades.Pessoa
 
 
         public virtual ICollection<UsuarioAviso> AvisosVistos { get; set; }
+
+
+        public virtual ICollection<AcessoAula> AcessosAula { get; set; }
+
+        public virtual ICollection<AcessoArquivo> AcessosArquivo { get; set; }
+
+        public virtual ICollection<Aviso> AvisosPrivados { get; set; }
+
     }
 }
