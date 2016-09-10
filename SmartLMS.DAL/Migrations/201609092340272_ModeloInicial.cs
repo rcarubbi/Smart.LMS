@@ -219,14 +219,12 @@ namespace SmartLMS.DAL.Migrations
                         IdUsuario = c.Guid(nullable: false),
                         IdAviso = c.Long(nullable: false),
                         DataVisualizacao = c.DateTime(nullable: false),
-                        Aviso_Id = c.Long(nullable: false),
-                        Usuario_Id = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => new { t.IdUsuario, t.IdAviso })
-                .ForeignKey("dbo.Aviso", t => t.Aviso_Id, cascadeDelete: true)
-                .ForeignKey("dbo.Usuario", t => t.Usuario_Id, cascadeDelete: true)
-                .Index(t => t.Aviso_Id)
-                .Index(t => t.Usuario_Id);
+                .ForeignKey("dbo.Aviso", t => t.IdAviso, cascadeDelete: true)
+                .ForeignKey("dbo.Usuario", t => t.IdUsuario, cascadeDelete: true)
+                .Index(t => t.IdUsuario)
+                .Index(t => t.IdAviso);
             
             CreateTable(
                 "dbo.AulaPlanejamento",
@@ -298,8 +296,8 @@ namespace SmartLMS.DAL.Migrations
             DropForeignKey("dbo.AulaPlanejamento", "IdPlanejamento", "dbo.Planejamento");
             DropForeignKey("dbo.AlunoPlanejamento", "IdPlanejamento", "dbo.Planejamento");
             DropForeignKey("dbo.AlunoPlanejamento", "IdAluno", "dbo.Usuario");
-            DropForeignKey("dbo.UsuarioAviso", "Usuario_Id", "dbo.Usuario");
-            DropForeignKey("dbo.UsuarioAviso", "Aviso_Id", "dbo.Aviso");
+            DropForeignKey("dbo.UsuarioAviso", "IdUsuario", "dbo.Usuario");
+            DropForeignKey("dbo.UsuarioAviso", "IdAviso", "dbo.Aviso");
             DropForeignKey("dbo.Aula", "Curso_Id", "dbo.Curso");
             DropForeignKey("dbo.Curso", "Assunto_Id", "dbo.Assunto");
             DropForeignKey("dbo.Assunto", "AreaConhecimento_Id", "dbo.AreaConhecimento");
@@ -315,8 +313,8 @@ namespace SmartLMS.DAL.Migrations
             DropIndex("dbo.TurmaCurso", new[] { "IdCurso" });
             DropIndex("dbo.AulaPlanejamento", new[] { "IdPlanejamento" });
             DropIndex("dbo.AulaPlanejamento", new[] { "IdAula" });
-            DropIndex("dbo.UsuarioAviso", new[] { "Usuario_Id" });
-            DropIndex("dbo.UsuarioAviso", new[] { "Aviso_Id" });
+            DropIndex("dbo.UsuarioAviso", new[] { "IdAviso" });
+            DropIndex("dbo.UsuarioAviso", new[] { "IdUsuario" });
             DropIndex("dbo.Planejamento", new[] { "Turma_Id" });
             DropIndex("dbo.Aviso", new[] { "Usuario_Id" });
             DropIndex("dbo.Aviso", new[] { "Planejamento_Id" });

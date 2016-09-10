@@ -76,9 +76,9 @@
     <Compile Include="Mapeamento\TurmaCursoConfiguration.cs" />
     <Compile Include="Mapeamento\UsuarioAvisoConfiguration.cs" />
     <Compile Include="Mapeamento\UsuarioConfiguration.cs" />
-    <Compile Include="Migrations\201609091806145_ModeloInicial.cs" />
-    <Compile Include="Migrations\201609091806145_ModeloInicial.Designer.cs">
-      <DependentUpon>201609091806145_ModeloInicial.cs</DependentUpon>
+    <Compile Include="Migrations\201609092340272_ModeloInicial.cs" />
+    <Compile Include="Migrations\201609092340272_ModeloInicial.Designer.cs">
+      <DependentUpon>201609092340272_ModeloInicial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,8 +96,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609091806145_ModeloInicial.resx">
-      <DependentUpon>201609091806145_ModeloInicial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201609092340272_ModeloInicial.resx">
+      <DependentUpon>201609092340272_ModeloInicial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

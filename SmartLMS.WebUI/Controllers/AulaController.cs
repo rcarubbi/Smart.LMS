@@ -152,14 +152,26 @@ namespace SmartLMS.WebUI.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
-
+        [AllowAnonymous]
         public ActionResult Baixar(Guid id)
         {
 
             RepositorioAula aulaRepo = new RepositorioAula(_contexto);
             Arquivo arquivo = aulaRepo.ObterArquivo(id);
-            aulaRepo.GravarAcesso(arquivo, _usuarioLogado);
-            return File(Url.Content("~/" + SmartLMS.Dominio.Entidades.Parametro.STORAGE_ARQUIVOS + "/" + arquivo.ArquivoFisico), "application/octet-stream", arquivo.ArquivoFisico);
+
+            var disponivel = aulaRepo.VerificarDisponibilidadeAula(arquivo.Aula.Id, _usuarioLogado?.Id);
+            if (disponivel)
+            {
+                aulaRepo.GravarAcesso(arquivo, _usuarioLogado);
+                return File(Url.Content("~/" + SmartLMS.Dominio.Entidades.Parametro.STORAGE_ARQUIVOS + "/" + arquivo.ArquivoFisico), "application/octet-stream", arquivo.ArquivoFisico);
+            }
+            else
+            {
+                TempData["TipoMensagem"] = "error";
+                TempData["TituloMensagem"] = "Download de material de apoio";
+                TempData["Mensagem"] = "Você não possui permissão para baixar este material";
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)

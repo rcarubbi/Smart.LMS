@@ -42,7 +42,7 @@ namespace SmartLMS.Dominio.Servicos
                     case TipoResultado.Aula:
                         return string.Format("Aula/Ver/{0}", Id);
                     case TipoResultado.Arquivo:
-                        return string.Format("Arquivo/Download/{0}", Id);
+                        return string.Format("Aula/Baixar/{0}", Id);
                     default:
                         return string.Empty;
                 }

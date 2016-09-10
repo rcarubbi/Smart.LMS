@@ -17,7 +17,7 @@ namespace SmartLMS.WebUI
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
+            
             using (var contexto = new Contexto())
             {
                 RepositorioParametro parametroRepo = new RepositorioParametro(contexto);

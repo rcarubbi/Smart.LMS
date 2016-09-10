@@ -37,10 +37,13 @@ namespace SmartLMS.Dominio.Repositorios
         }
 
 
-        public bool VerificarDisponibilidadeAula(Guid idAula, Guid idUsuario)
+        public bool VerificarDisponibilidadeAula(Guid idAula, Guid? idUsuario)
         {
+            if (!idUsuario.HasValue)
+                return false;
+
             RepositorioUsuario usuRepo = new RepositorioUsuario(_contexto);
-            var usuario = usuRepo.ObterPorId(idUsuario);
+            var usuario = usuRepo.ObterPorId(idUsuario.Value);
 
             if (usuario is Aluno)
             {

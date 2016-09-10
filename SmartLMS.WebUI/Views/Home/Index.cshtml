@@ -139,7 +139,8 @@
                 $("#resultado-busca-container").on("click", ".busca-contextual-paginacao-anterior", $private.paginaAnterior);
                 $("#corpo-painel-avisos").on("click", ".aviso .alert button[aria-hidden]", $private.visualizarAviso);
                 $private.ResultadoBuscaTemplate = Handlebars.compile($("#resultado-busca-template").html());
-                $private.AvisoTemplate = Handlebars.compile($("#aviso-template").html());
+                if ($("#aviso-template").html())
+                    $private.AvisoTemplate = Handlebars.compile($("#aviso-template").html());
             });
 
             $private.pesquisarTermo = function () {

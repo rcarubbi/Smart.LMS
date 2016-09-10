@@ -50,7 +50,7 @@ namespace SmartLMS.WebUI.Controllers
             if (HttpContext.User.Identity.IsAuthenticated)
             {
                 _usuarioLogado = usuarioRepo.ObterPorLogin(HttpContext.User.Identity.Name);
-                ViewBag.IdUsuarioLogado = _usuarioLogado.Id.ToString();
+                ViewBag.IdUsuarioLogado = _usuarioLogado != null? _usuarioLogado.Id.ToString() : string.Empty;
             }
         }
     }

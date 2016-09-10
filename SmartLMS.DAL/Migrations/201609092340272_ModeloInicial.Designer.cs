@@ -13,7 +13,7 @@ namespace SmartLMS.DAL.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201609091806145_ModeloInicial"; }
+            get { return "201609092340272_ModeloInicial"; }
         }
         
         string IMigrationMetadata.Source
