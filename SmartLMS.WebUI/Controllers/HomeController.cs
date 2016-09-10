@@ -12,7 +12,7 @@ using System.Web.Routing;
 
 namespace SmartLMS.WebUI.Controllers
 {
-   
+
     public class HomeController : BaseController
     {
         ServicoBuscaContextual servicoBusca;

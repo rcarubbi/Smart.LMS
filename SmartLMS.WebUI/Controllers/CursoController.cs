@@ -42,7 +42,7 @@ namespace SmartLMS.WebUI.Controllers
         [Authorize(Roles = "Administrador")]
         public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
         {
-            ViewBag.CamposBusca = new SelectList(new string[] { "Nome", "Assunto", "Area de Conhecimento", "Id" });
+            ViewBag.CamposBusca = new SelectList(new string[] { "Nome", "Assunto", "Área de Conhecimento", "Id" });
             RepositorioCurso repo = new RepositorioCurso(_contexto);
             return View(CursoViewModel.FromEntityList(repo.ListarCursos(termo, campoBusca, pagina)));
         }

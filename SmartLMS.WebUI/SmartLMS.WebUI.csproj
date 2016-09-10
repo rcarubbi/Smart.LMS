@@ -435,6 +435,7 @@
     <Content Include="Views\Assunto\Create.cshtml" />
     <Content Include="Views\Assunto\Edit.cshtml" />
     <Content Include="Views\Usuario\_Login.cshtml" />
+    <Content Include="Views\Aula\IndexAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

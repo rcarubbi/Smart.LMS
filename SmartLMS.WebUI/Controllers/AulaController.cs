@@ -174,9 +174,22 @@ namespace SmartLMS.WebUI.Controllers
             }
         }
 
+
+        [Authorize(Roles = "Administrador")]
         public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
         {
-            return View();
+            ViewBag.CamposBusca = new SelectList(new string[] { "Nome", "Assunto", "Área de Conhecimento", "Curso", "Id" });
+            RepositorioAula repo = new RepositorioAula(_contexto);
+            return View(AulaViewModel.FromEntityList(repo.ListarAulas(termo, campoBusca, pagina)));
+
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrador")]
+        public ActionResult ListarAulas(string termo, string campoBusca, int pagina = 1)
+        {
+            RepositorioAula repo = new RepositorioAula(_contexto);
+            return Json(AulaViewModel.FromEntityList(repo.ListarAulas(termo, campoBusca, pagina)));
         }
 
     }

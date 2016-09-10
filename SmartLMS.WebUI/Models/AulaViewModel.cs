@@ -1,9 +1,11 @@
-﻿using Humanizer.DateTimeHumanizeStrategy;
+﻿using Carubbi.GenericRepository;
+using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using SmartLMS.Dominio.Entidades.Liberacao;
 using SmartLMS.Dominio.Repositorios;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 
@@ -11,6 +13,11 @@ namespace SmartLMS.WebUI.Models
 {
     public class AulaViewModel
     {
+
+        public int Ordem { get; set; }
+
+        [Display(Name="Dias para liberaçao")]
+        public int DiasLiberacao { get; set; }
         public bool Disponivel { get; set; }
         public DateTime DataInclusao { get; set; }
         public string DataInclusaoTexto { get; set; }
@@ -31,6 +38,10 @@ namespace SmartLMS.WebUI.Models
         public TipoConteudo TipoConteudo { get; private set; }
         public DateTime DataLiberacao { get; private set; }
         public string DataLiberacaoTexto { get; private set; }
+        public string NomeAssunto { get; private set; }
+        public string NomeAreaConhecimento { get; private set; }
+        public DateTime DataCriacao { get; private set; }
+        public bool Ativo { get; private set; }
 
         internal static IEnumerable<AulaViewModel> FromEntityList(IEnumerable<Aula> aulas, int profundidade, DefaultDateTimeHumanizeStrategy humanizer)
         {
@@ -38,6 +49,45 @@ namespace SmartLMS.WebUI.Models
             {
                 yield return FromEntity(item, profundidade, humanizer);
             }
+        }
+
+
+        internal static PagedListResult<AulaViewModel> FromEntityList(PagedListResult<Aula> aulas)
+        {
+            PagedListResult<AulaViewModel> pagina = new PagedListResult<AulaViewModel>();
+
+            pagina.HasNext = aulas.HasNext;
+            pagina.HasPrevious = aulas.HasPrevious;
+            pagina.Count = aulas.Count;
+            List<AulaViewModel> viewModels = new List<AulaViewModel>();
+            foreach (var item in aulas.Entities)
+            {
+                viewModels.Add(FromEntity(item));
+            }
+
+            pagina.Entities = viewModels;
+            return pagina;
+        }
+
+        private static AulaViewModel FromEntity(Aula item)
+        {
+            return new AulaViewModel
+            {
+                Id = item.Id,
+                IdCurso = item.Curso.Id,
+                Nome = item.Nome,
+                Conteudo = item.Conteudo,
+                TipoConteudo = item.Tipo,
+                NomeProfessor = item.Professor.Nome,
+                DataInclusao = item.DataCriacao,
+                NomeCurso = item.Curso.Nome,
+                NomeAssunto = item.Curso.Assunto.Nome,
+                NomeAreaConhecimento = item.Curso.Assunto.AreaConhecimento.Nome,
+                DataCriacao = item.DataCriacao,
+                Ativo = item.Ativo,
+                Ordem = item.Ordem,
+                DiasLiberacao = item.DiasLiberacao
+            };
         }
 
         public static AulaViewModel FromEntity(Aula item, int profundidade, DefaultDateTimeHumanizeStrategy humanizer)

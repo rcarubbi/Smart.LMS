@@ -1,4 +1,5 @@
-﻿using SmartLMS.Dominio.Entidades.Comunicacao;
+﻿using Carubbi.GenericRepository;
+using SmartLMS.Dominio.Entidades.Comunicacao;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using SmartLMS.Dominio.Entidades.Historico;
 using SmartLMS.Dominio.Entidades.Liberacao;
@@ -111,6 +112,25 @@ namespace SmartLMS.Dominio.Repositorios
 
             _contexto.ObterLista<AcessoArquivo>().Add(acesso);
             _contexto.Salvar();
+        }
+
+        public PagedListResult<Aula> ListarAulas(string termo, string campoBusca, int pagina)
+        {
+            var repo = new GenericRepository<Aula>(_contexto);
+            var query = new SearchQuery<Aula>();
+            query.AddFilter(a => (campoBusca == "Nome" && a.Nome.Contains(termo)) ||
+                                 (campoBusca == "Id" && a.Id.ToString().Contains(termo)) ||
+                                 (campoBusca == "Área de Conhecimento" && a.Curso.Assunto.AreaConhecimento.Id.ToString() == termo) ||
+                                 (campoBusca == "Assunto" && a.Curso.Assunto.Id.ToString() == termo) ||
+                                 (campoBusca == "Curso" && a.Curso.Id.ToString() == termo) ||
+                                    string.IsNullOrEmpty(campoBusca));
+
+            query.AddSortCriteria(new DynamicFieldSortCriteria<Aula>("Curso.Assunto.AreaConhecimento.Ordem, Curso.Assunto.Ordem, Curso.Ordem , Ordem"));
+
+            query.Take = 8;
+            query.Skip = ((pagina - 1) * 8);
+
+            return repo.Search(query);
         }
     }
 }

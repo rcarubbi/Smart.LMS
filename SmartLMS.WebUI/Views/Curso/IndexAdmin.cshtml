@@ -64,9 +64,7 @@
                     <th>
                         @Html.DisplayName("Assunto")
                     </th>
-                    <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Id")
-                    </th>
+                   
                     <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Criado em")
                     </th>
@@ -90,9 +88,7 @@
                         <td class="hidden-sm  hidden-xs">
                             @Html.DisplayFor(modelItem => item.NomeAssunto)
                         </td>
-                        <td class="hidden-sm  hidden-xs">
-                            @Html.DisplayFor(modelItem => item.Id)
-                        </td>
+                      
 
                         <td class="hidden-sm  hidden-xs">
                             @item.DataCriacao.ToShortDateString()
@@ -165,9 +161,7 @@
             <td class="hidden-sm  hidden-xs">
                 {{NomeAssunto}}
             </td>
-            <td class="hidden-sm  hidden-xs">
-                {{Id}}
-            </td>
+           
 
             <td class="hidden-sm  hidden-xs">
                 {{toShortDateString DataCriacao}}
