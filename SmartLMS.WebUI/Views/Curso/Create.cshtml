@@ -1,0 +1,181 @@
+﻿@model CursoViewModel
+
+@{
+    ViewBag.Title = "Inclusão de novo curso";
+}
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        Inclusão de nova curso
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Imagem, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="jumbotron jumbotron-upload">
+                        <form action="@Url.Action("SalvarImagem")" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneForm" style="background: none; border: none;">
+                            <div class="fallback">
+                                <input name="file" type="file" />
+                                <input type="submit" value="Enviar Imagem" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Imagem)
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Ordem, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Ordem, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Ordem, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IdAssunto, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IdAssunto, ViewBag.Assuntos as SelectList, "-- Selecione --", new { @class = "form-control dropdownjs" })
+                        @Html.ValidationMessageFor(model => model.IdAssunto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IdProfessorResponsavel, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IdProfessorResponsavel, ViewBag.Professores as SelectList, "-- Selecione --", new { @class = "form-control dropdownjs" })
+                        @Html.ValidationMessageFor(model => model.IdProfessorResponsavel, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="fa fa-save"></i>
+                        </button>
+                        @Html.ActionLink("Voltar", "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+</div>
+<div style="display:none"  id="dz-template-preview">
+    <div class="dz-preview dz-file-preview">
+        <div class="dz-details">
+            <div class="dz-filename">
+                <span data-dz-name></span>
+            </div>
+            <div class="dz-size" data-dz-size></div>
+            <img data-dz-thumbnail />
+        </div>
+        <div class="dz-progress">
+            <div class="progress progress-line-primary">
+                <div class="dz-upload progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress></div>
+            </div>
+        </div>
+            <div class="dz-success-mark"><span>✔</span></div>
+            <div class="dz-error-mark"><span>✘</span></div>
+            <div class="dz-error-message"><span data-dz-errormessage></span></div>
+        </div>
+</div>
+@section styles {
+    @Styles.Render("~/Content/dropzone/dropZoneStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/dropzone")
+    <script>
+        (function () {
+            var $private = {};
+
+            Dropzone.options.dropzoneForm = {
+                maxFiles: 1,
+
+                init: function () {
+                    this.on("complete", function (data) {
+                        if (data.xhr != null) {
+                            var res = JSON.parse(data.xhr.responseText);
+                            $("input[name='Imagem']").val(res.Message);
+                        }
+                    });
+                    this.on("removedfile", function (data) {
+                        var res = JSON.parse(data.xhr.response);
+                        $private.removerImagem(res.Message);
+                        $("input[name='Imagem']").val("");
+                    });
+                },
+                previewTemplate: $("#dz-template-preview").html(),
+                dictDefaultMessage: "Arraste a imagem do curso aqui, ou clique para selecioná-la",
+                addRemoveLinks: true,
+                dictMaxFilesExceeded: "O Curso só pode possuir uma imagem",
+                dictRemoveFile: "Remover"
+            };
+
+            $private.atualizarImagem = function (idCurso, nomeImagem) {
+
+                $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Curso/SalvarImagem",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ idCurso: idCurso, nomeImagem: nomeImagem })
+                });
+            };
+
+            $private.removerImagem = function (nomeImagem) {
+
+                $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Curso/RemoverImagem",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ nomeImagem: nomeImagem })
+                });
+            };
+
+
+            $private.carregarImagem = function (idCurso, dropzoneForm) {
+                var thumbnailUrl = SmartLMS.api + "Curso/RecuperarImagemCurso/" + idCurso;
+
+                $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Curso/ObterDadosImagem",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ idCurso: idCurso }),
+                    success: function (data) {
+
+                        var file = {
+                            name: data.name,
+                            size: data.size,
+                            url: thumbnailUrl,
+                            accepted: true,
+                            status: Dropzone.ADDED
+                        };
+
+                        dropzoneForm.emit("addedfile", file);
+                        dropzoneForm.emit("thumbnail", file, thumbnailUrl);
+                        dropzoneForm.emit("complete", file);
+                        dropzoneForm.files.push(file);
+                    }
+                });
+
+            };
+        }());
+    </script>
+}

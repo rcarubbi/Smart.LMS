@@ -1,5 +1,4 @@
 ﻿using SmartLMS.Dominio;
-using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
@@ -101,7 +100,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 
                 ServicoAutenticacao autenticacao = new ServicoAutenticacao(_contexto);
-                autenticacao.AlterarUsuario(_usuarioLogado.Id, _usuarioLogado.Nome, _usuarioLogado.Email, _usuarioLogado.Login, novaSenha.Senha, _usuarioLogado.Ativo, (Perfil)Enum.Parse(typeof(Perfil), _usuarioLogado.GetType().Name));
+                autenticacao.AlterarUsuario(_usuarioLogado.Id, _usuarioLogado.Nome, _usuarioLogado.Email, _usuarioLogado.Login, novaSenha.Senha, _usuarioLogado.Ativo, (Perfil)Enum.Parse(typeof(Perfil), _contexto.UnProxy(_usuarioLogado).GetType().Name));
                 TempData["TipoMensagem"] = "success";
                 TempData["TituloMensagem"] = "Notificação";
                 TempData["Mensagem"] = "Senha alterada com sucesso!";

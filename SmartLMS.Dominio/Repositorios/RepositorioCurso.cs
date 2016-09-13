@@ -45,8 +45,8 @@ namespace SmartLMS.Dominio.Repositorios
             var query = new SearchQuery<Curso>();
             query.AddFilter(a => (campoBusca == "Nome" && a.Nome.Contains(termo)) ||
                                  (campoBusca == "Id" && a.Id.ToString().Contains(termo)) ||
-                                  (campoBusca == "Área de Conhecimento" && a.Assunto.AreaConhecimento.Id.ToString() == termo) ||
-                                  (campoBusca == "Assunto" && a.Assunto.Id.ToString() == termo) ||
+                                  (campoBusca == "Área de Conhecimento" && a.Assunto.AreaConhecimento.Nome.Contains(termo)) ||
+                                  (campoBusca == "Assunto" && a.Assunto.Nome.Contains(termo)) ||
                                     string.IsNullOrEmpty(campoBusca));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Curso>("Assunto.AreaConhecimento.Ordem, Assunto.Ordem, Ordem"));
@@ -64,9 +64,41 @@ namespace SmartLMS.Dominio.Repositorios
             _contexto.Salvar();
         }
 
-        private Curso ObterPorId(Guid id)
+        public Curso ObterPorId(Guid id)
         {
             return _contexto.ObterLista<Curso>().Find(id);
+        }
+
+        public void Incluir(Curso curso)
+        {
+            curso.DataCriacao = DateTime.Now;
+            curso.Ativo = true;
+            _contexto.ObterLista<Curso>().Add(curso);
+            _contexto.Salvar();
+        }
+
+        public void Atualizar(Curso curso)
+        {
+            var cursoAtual = ObterPorId(curso.Id);
+            _contexto.Atualizar(cursoAtual, curso);
+            _contexto.Salvar();
+        }
+
+        public Curso ObterPorNomeImagem(string nomeImagem)
+        {
+            return _contexto
+                .ObterLista<Curso>()
+                .Where(x => x.Imagem == nomeImagem)
+                .FirstOrDefault();
+        }
+
+        public void Alterar(Curso curso)
+        {
+            var cursoAtual = ObterPorId(curso.Id);
+            curso.DataCriacao = cursoAtual.DataCriacao;
+            curso.Aulas = cursoAtual.Aulas;
+            _contexto.Atualizar(cursoAtual, curso);
+            _contexto.Salvar();
         }
     }
 }

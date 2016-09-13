@@ -53,15 +53,14 @@
             <thead>
                 <tr>
                     <th>
+                        @Html.DisplayName("Ordem")
+                    </th>
+                    <th>
                         @Html.DisplayName("Nome")
                     </th>
                     <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Ativo")
                     </th>
-                    <th>
-                        @Html.DisplayName("Ordem")
-                    </th>
-                    
                     <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Criado em")
                     </th>
@@ -74,16 +73,14 @@
 
                     <tr>
                         <td>
+                            @Html.DisplayFor(modelItem => item.Ordem)
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.Nome)
                         </td>
                         <td class="hidden-sm  hidden-xs">
                             @Html.DisplayFor(modelItem => item.Ativo)
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Ordem)
-                        </td>
-                       
-
                         <td class="hidden-sm  hidden-xs">
                             @item.DataCriacao.ToShortDateString()
                         </td>
@@ -140,6 +137,9 @@
         {{#each Entities}}
         <tr>
             <td>
+                {{Ordem}}
+            </td>
+            <td>
                 {{Nome}}
             </td>
             <td class="hidden-sm hidden-xs">
@@ -149,10 +149,6 @@
                     </label>
                 </div>
             </td>
-            <td>
-                {{Ordem}}
-            </td>
-             
             <td class="hidden-sm  hidden-xs">
                 {{toShortDateString DataCriacao}}
             </td>

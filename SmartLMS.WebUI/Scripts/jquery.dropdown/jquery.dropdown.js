@@ -236,8 +236,11 @@
           } else {
             $ul.attr("placement", "bottom-left");
           }
-
-          $(this).next("ul").css("max-height", height - 20);
+          if (height > 400)
+          {
+              height = 400;
+          }
+          $(this).next("ul").css("max-height", height - 100);
           $(this).addClass("focus");
         });
         // Close every dropdown on click outside

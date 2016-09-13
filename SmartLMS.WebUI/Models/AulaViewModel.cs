@@ -23,6 +23,7 @@ namespace SmartLMS.WebUI.Models
         public string DataInclusaoTexto { get; set; }
 
         public string NomeCurso { get; set; }
+ 
 
         public decimal Percentual { get; set; }
 

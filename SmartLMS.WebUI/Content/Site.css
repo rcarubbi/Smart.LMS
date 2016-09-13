@@ -37,6 +37,18 @@ body {
     text-transform: uppercase;
 }
 
+footer.footer {
+    font-size: 11px;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    line-height: 6px;
+    height: 36px;
+}
+
+footer .copyright {
+    padding-top: 13px;
+}
+
 footer.footer-black {
     padding: 0px 0;
     background: #232323;
@@ -390,17 +402,15 @@ select.multiselect {
     background-color: #f5f5f5;
 }
 
-.form-group .multiselect-container a:hover label.checkbox
- {
-    color : gray !important;
-}
+    .form-group .multiselect-container a:hover label.checkbox {
+        color: gray !important;
+    }
 
 
 .form-group .multiselect-container .active a:hover label.checkbox,
-.form-group .multiselect-container .active a label.checkbox, 
-.form-group .multiselect-container .active a:focus label.checkbox
-.form-group .multiselect-container .active a:hover label b,
-.form-group .multiselect-container .active a label b, 
+.form-group .multiselect-container .active a label.checkbox,
+.form-group .multiselect-container .active a:focus label.checkbox .form-group .multiselect-container .active a:hover label b,
+.form-group .multiselect-container .active a label b,
 .form-group .multiselect-container .active a:focus label b {
     color: white !important;
 }
@@ -412,7 +422,7 @@ select.multiselect {
     margin-bottom: 5px;
 }
 
-.multiselect-container>li.multiselect-group label {
+.multiselect-container > li.multiselect-group label {
     width: 93%;
     text-align: left;
 }
@@ -424,24 +434,33 @@ select.multiselect {
 
 
 body.dragging, body.dragging * {
-  cursor: move !important;
+    cursor: move !important;
 }
 
 .dragged {
-  position: absolute;
-  opacity: 0.5;
-  z-index: 2000;
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
 }
 
-.ui-sortable  li.placeholder {
-  position: relative;
-  /** More li styles **/
+.ui-sortable li.placeholder {
+    position: relative;
+    /** More li styles **/
 }
-.ui-sortable li.placeholder:before {
-  position: absolute;
-  /** Define arrowhead **/
-}
+
+    .ui-sortable li.placeholder:before {
+        position: absolute;
+        /** Define arrowhead **/
+    }
 
 #pre-loader-loading {
     background: url(../Content/img/loading-green.gif) no-repeat -9999px -9999px;
+}
+
+
+.jumbotron-upload {
+    background-color: #f0f0f0;
+    color: darkgreen !important;
+    margin: 0px;
+    padding: 10px 0px 10px 0px !important;
 }

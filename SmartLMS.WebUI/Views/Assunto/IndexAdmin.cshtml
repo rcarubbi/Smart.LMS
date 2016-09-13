@@ -22,17 +22,17 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <a href="@Url.Action("Create")" class="btn btn-sm btn-info"><i class="fa fa-plus" style="font-size: 10px; top: 0px; "></i> <i class="fa fa-map"></i> </a>
             </div>
-            <div class="col-md-6 pull-right">
-                <div class="col-md-3">
+            <div class="col-md-7 pull-right">
+                <div class="col-md-4">
                     <div class="form-group label-static is-empty">
                         <label for="CampoBusca" class="control-label">Pesquisar por</label>
                         @Html.DropDownList("CampoBusca", ViewBag.CamposBusca as SelectList, new { @class = "form-control dropdownjs" })
                     </div>
                 </div>
-                <div class="form-group label-floating is-empty col-md-9">
+                <div class="form-group label-floating is-empty col-md-7">
                     <label class="control-label" for="q">digite o termo que deseja encontrar</label>
                     <div class="input-group" style="display:block">
                         <div class="row">
@@ -53,18 +53,17 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayName("Nome")
-                    </th>
-                    <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Ativo")
+                        @Html.DisplayName("Ordem")
                     </th>
                     <th>
-                        @Html.DisplayName("Ordem")
+                        @Html.DisplayName("Nome")
                     </th>
                     <th>
                         @Html.DisplayName("Área de conhecimento")
                     </th>
-                  
+                    <th class="hidden-sm  hidden-xs">
+                        @Html.DisplayName("Ativo")
+                    </th>
                     <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Criado em")
                     </th>
@@ -77,19 +76,17 @@
 
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Nome)
-                        </td>
-                        <td class="hidden-sm  hidden-xs">
-                            @Html.DisplayFor(modelItem => item.Ativo)
+                            @Html.DisplayFor(modelItem => item.Ordem)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Ordem)
+                            @Html.DisplayFor(modelItem => item.Nome)
                         </td>
                         <td class="hidden-sm  hidden-xs">
                             @Html.DisplayFor(modelItem => item.NomeArea)
                         </td>
-                      
-
+                        <td class="hidden-sm  hidden-xs">
+                            @Html.DisplayFor(modelItem => item.Ativo)
+                        </td>
                         <td class="hidden-sm  hidden-xs">
                             @item.DataCriacao.ToShortDateString()
                         </td>
@@ -146,7 +143,13 @@
         {{#each Entities}}
         <tr>
             <td>
+                {{Ordem}}
+            </td>
+            <td>
                 {{Nome}}
+            </td>
+            <td class="hidden-sm  hidden-xs">
+                {{NomeArea}}
             </td>
             <td class="hidden-sm hidden-xs">
                 <div class="checkbox">
@@ -155,14 +158,6 @@
                     </label>
                 </div>
             </td>
-            <td>
-                {{Ordem}}
-            </td>
-            <td class="hidden-sm  hidden-xs">
-                {{NomeArea}}
-            </td>
-          
-
             <td class="hidden-sm  hidden-xs">
                 {{toShortDateString DataCriacao}}
             </td>

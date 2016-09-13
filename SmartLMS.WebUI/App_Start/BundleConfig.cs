@@ -29,6 +29,10 @@ namespace SmartLMS.WebUI
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/dropzone").Include(
+                   "~/Scripts/dropzone/dropzone.js"));
+
+
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -62,6 +66,11 @@ namespace SmartLMS.WebUI
            "~/Content/figure-caption.css",
            "~/Content/listgroup.css",
            "~/Content/Site.css"));
+
+            // dropZone styles
+            bundles.Add(new StyleBundle("~/Content/dropzone/dropZoneStyles").Include(
+                      "~/Content/dropzone/basic.css",
+                      "~/Content/dropzone/dropzone.css"));
 
         }
     }

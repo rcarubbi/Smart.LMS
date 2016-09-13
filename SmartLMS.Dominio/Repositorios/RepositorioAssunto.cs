@@ -1,8 +1,8 @@
 ﻿using Carubbi.GenericRepository;
-using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartLMS.Dominio.Repositorios
 {
@@ -25,7 +25,7 @@ namespace SmartLMS.Dominio.Repositorios
             var query = new SearchQuery<Assunto>();
             query.AddFilter(a => (campoBusca == "Nome" && a.Nome.Contains(termo)) ||
                                  (campoBusca == "Id" && a.Id.ToString().Contains(termo)) ||
-                                 (campoBusca == "Área de Conhecimento" && a.AreaConhecimento.Id.ToString() == termo) ||
+                                 (campoBusca == "Área de Conhecimento" && a.AreaConhecimento.Nome.Contains(termo)) ||
                                     string.IsNullOrEmpty(campoBusca));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Assunto>("AreaConhecimento.Ordem, Ordem"));
@@ -58,6 +58,15 @@ namespace SmartLMS.Dominio.Repositorios
             assunto.Cursos = assuntoAtual.Cursos;
             _contexto.Atualizar(assuntoAtual, assunto);
             _contexto.Salvar();
+        }
+
+        public List<Assunto> ListarAssuntosAtivos()
+        {
+            return _contexto
+                .ObterLista<Assunto>()
+                .Where(x => x.Ativo)
+                .OrderBy(x => x.Nome)
+                .ToList();
         }
     }
 }

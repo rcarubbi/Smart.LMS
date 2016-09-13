@@ -192,5 +192,7 @@ namespace SmartLMS.WebUI.Controllers
             return Json(AulaViewModel.FromEntityList(repo.ListarAulas(termo, campoBusca, pagina)));
         }
 
+
+
     }
 }

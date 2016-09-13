@@ -1,4 +1,4 @@
-﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.AulaViewModel>
+﻿@model Carubbi.GenericRepository.PagedListResult<AulaViewModel>
 
 @{
     ViewBag.Title = "Administração de aulas";
@@ -53,13 +53,10 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayName("Nome")
-                    </th>
-                    <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Ativo")
+                        @Html.DisplayName("Ordem")
                     </th>
                     <th>
-                        @Html.DisplayName("Ordem")
+                        @Html.DisplayName("Nome")
                     </th>
                     <th>
                         @Html.DisplayName("Curso")
@@ -67,7 +64,12 @@
                     <th>
                         @Html.DisplayName("Assunto")
                     </th>
-                  
+                    <th>
+                        @Html.DisplayName("Área de Conhecimento")
+                    </th>
+                    <th class="hidden-sm  hidden-xs">
+                        @Html.DisplayName("Ativo")
+                    </th>
                     <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Criado em")
                     </th>
@@ -80,13 +82,10 @@
 
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Nome)
-                        </td>
-                        <td class="hidden-sm  hidden-xs">
-                            @Html.DisplayFor(modelItem => item.Ativo)
+                            @Html.DisplayFor(modelItem => item.Ordem)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Ordem)
+                            @Html.DisplayFor(modelItem => item.Nome)
                         </td>
                         <td class="hidden-sm  hidden-xs">
                             @Html.DisplayFor(modelItem => item.NomeCurso)
@@ -94,8 +93,12 @@
                         <td class="hidden-sm  hidden-xs">
                             @Html.DisplayFor(modelItem => item.NomeAssunto)
                         </td>
-                     
-
+                        <td class="hidden-sm  hidden-xs">
+                            @Html.DisplayFor(modelItem => item.NomeAreaConhecimento)
+                        </td>
+                        <td class="hidden-sm  hidden-xs">
+                            @Html.DisplayFor(modelItem => item.Ativo)
+                        </td>
                         <td class="hidden-sm  hidden-xs">
                             @item.DataCriacao.ToShortDateString()
                         </td>
@@ -151,8 +154,20 @@
     <script type="text/x-handlebars-template" id="resultado-aulas-template">
         {{#each Entities}}
         <tr>
+            <td class="col-md-1">
+                {{Ordem}}
+            </td>
             <td>
                 {{Nome}}
+            </td>
+            <td class="hidden-sm  hidden-xs">
+                {{NomeCurso}}
+            </td>
+            <td class="hidden-sm  hidden-xs">
+                {{NomeAssunto}}
+            </td>
+            <td class="hidden-sm  hidden-xs">
+                {{NomeAreaConhecimento}}
             </td>
             <td class="hidden-sm hidden-xs">
                 <div class="checkbox">
@@ -160,15 +175,6 @@
                         <input name="Ativo" type="checkbox" disabled {{#if Ativo}} checked {{/if}}>
                     </label>
                 </div>
-            </td>
-            <td>
-                {{Ordem}}
-            </td>
-            <td class="hidden-sm  hidden-xs">
-                {{NomeCurso}}
-            </td>
-            <td class="hidden-sm  hidden-xs">
-                {{NomeAssunto}}
             </td>
             <td class="hidden-sm  hidden-xs">
                 {{toShortDateString DataCriacao}}

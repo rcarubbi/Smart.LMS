@@ -101,6 +101,13 @@ namespace SmartLMS.Dominio.Repositorios
             }
         }
 
+        public List<Professor> ListarProfessoresAtivos()
+        {
+            return _contexto.ObterLista<Professor>().Where(x => x.Ativo).OrderBy(x => x.Nome).ToList();
+        }
+
+       
+
         public PagedListResult<Aluno> ListarAlunos(string termo, string campoBusca, int pagina)
         {
             var repo = new GenericRepository<Aluno>(_contexto);

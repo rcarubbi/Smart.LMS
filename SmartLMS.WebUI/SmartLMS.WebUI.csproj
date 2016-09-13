@@ -184,6 +184,7 @@
     <Compile Include="App_Start\StructuremapWebApi.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AreaConhecimentoController.cs" />
+    <Compile Include="Controllers\ImagemUploader.cs" />
     <Compile Include="Controllers\ProfessorController.cs" />
     <Compile Include="Controllers\AlunoController.cs" />
     <Compile Include="Controllers\AssuntoController.cs" />
@@ -248,6 +249,10 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\datepicker\datepicker.css" />
+    <Content Include="Content\dropzone\basic.css" />
+    <Content Include="Content\dropzone\dropzone.css" />
+    <Content Include="Content\img\spritemap%402x.png" />
+    <Content Include="Content\img\spritemap.png" />
     <Content Include="Content\figure-caption.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
@@ -255,18 +260,18 @@
     <Content Include="Content\img\arrow-left.png" />
     <Content Include="Content\img\arrow-right.cur" />
     <Content Include="Content\img\arrow-right.png" />
-    <Content Include="Content\img\aspnet.png" />
-    <Content Include="Content\img\csharp.png" />
-    <Content Include="Content\img\css.png" />
-    <Content Include="Content\img\html.png" />
-    <Content Include="Content\img\jquery.jpg" />
+    <Content Include="Content\img\cursos\aspnet.png" />
+    <Content Include="Content\img\cursos\csharp.png" />
+    <Content Include="Content\img\cursos\css.png" />
+    <Content Include="Content\img\cursos\html.png" />
+    <Content Include="Content\img\cursos\jquery.jpg" />
     <Content Include="Content\img\loading-green.gif" />
     <Content Include="Content\img\loading-white.gif" />
     <Content Include="Content\img\logo.png" />
-    <Content Include="Content\img\mvc.png" />
-    <Content Include="Content\img\sem-imagem.png" />
+    <Content Include="Content\img\cursos\mvc.png" />
+    <Content Include="Content\img\cursos\sem-imagem.png" />
     <Content Include="Content\img\smart.png" />
-    <Content Include="Content\img\universalapps.jpg" />
+    <Content Include="Content\img\cursos\universalapps.jpg" />
     <Content Include="Content\jquery.dropdown\jquery.dropdown.css" />
     <Content Include="Content\listgroup.css" />
     <Content Include="Content\material-design\bootstrap-material-design.css" />
@@ -333,6 +338,7 @@
     <None Include="Properties\PublishProfiles\Homologacao.pubxml" />
     <None Include="Properties\PublishProfiles\Produção.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\dropzone\dropzone.js" />
     <Content Include="Scripts\handlebars.amd.js" />
     <Content Include="Scripts\handlebars.amd.min.js" />
     <Content Include="Scripts\handlebars.js" />
@@ -436,6 +442,8 @@
     <Content Include="Views\Assunto\Edit.cshtml" />
     <Content Include="Views\Usuario\_Login.cshtml" />
     <Content Include="Views\Aula\IndexAdmin.cshtml" />
+    <Content Include="Views\Curso\Create.cshtml" />
+    <Content Include="Views\Curso\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
