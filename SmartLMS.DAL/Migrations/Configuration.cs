@@ -33,19 +33,7 @@ namespace SmartLMS.DAL.Migrations
                     DataCriacao = DateTime.Now
                 });
  
-             
-            var professor = new Professor
-            {
-                Nome = "Professor",
-                Ativo = true,
-                Login = "professor@itanio.com.br",
-                Email = "raphael@itanio.com.br",
-                Senha = criptografia.Encrypt("Professor"),
-                DataCriacao = DateTime.Now
-            };
-
-            context.Set<Usuario>().AddOrUpdate(u => u.Login, professor);
-
+      
             context.Salvar();
 
 
