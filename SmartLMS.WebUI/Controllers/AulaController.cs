@@ -370,5 +370,27 @@ namespace SmartLMS.WebUI.Controllers
 
             return View(viewModel);
         }
+
+
+
+        [HttpPost]
+        [Authorize(Roles = "Administrador")]
+        public ActionResult Excluir(string id)
+        {
+            RepositorioAula repo = new RepositorioAula(_contexto);
+            MaterialApoioUploader uploader = new MaterialApoioUploader(id);
+            var aula = repo.ObterPorId(new Guid(id));
+            using (TransactionScope tx = new TransactionScope())
+            {
+                foreach (var arquivo in aula.Arquivos)
+                {
+                    uploader.DeleteFile(arquivo.ArquivoFisico);
+                }
+                    
+                repo.Excluir(aula.Id);
+                tx.Complete();
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
     }
 }

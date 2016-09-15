@@ -3,7 +3,7 @@
     <div class="content">
         <h3 class="text-primary titulo-indice"><i class="fa fa-map text-primary"></i> @ViewBag.Assunto @Model.Nome</h3>
         <p>
-            Selecione abaixo um dos @(ViewBag.AulaPlural.ToLower()) disponíveis neste @ViewBag.Assunto.ToLower()
+            Selecione abaixo uma das @(ViewBag.AulaPlural.ToLower()) disponíveis neste @ViewBag.Assunto.ToLower()
         </p>
         <div class="list-group">
             @foreach (var curso in Model.Cursos)
@@ -15,9 +15,7 @@
                             <i class="fa fa-graduation-cap"></i>
                         </div>
                         <div class="row-content">
-                            <div class="action-secondary"><i class="material-icons">info</i></div>
                             <h4 class="list-group-item-heading">@curso.Nome</h4>
-
                             <p class="list-group-item-text">@curso.Aulas.Count() @(ViewBag.Aula)(s)</p>
                             <p><label>Professor: </label> @curso.NomeProfessorResponsavel</p>
                         </div>

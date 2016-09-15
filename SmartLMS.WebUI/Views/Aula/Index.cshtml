@@ -14,7 +14,7 @@
         </div>
         <div class="panel-body panel-body-no-margin">
             @{ 
-                string label = string.Concat("Selecione uma ", ViewBag.Curso.ToString());
+                string label = string.Concat("Selecione um ", ViewBag.Curso.ToString());
             }
             @Html.DropDownList("outrosCursos", ViewBag.OutrosCursos as SelectList, label, new { @class = "form-control dropdownjs" })
         </div>
