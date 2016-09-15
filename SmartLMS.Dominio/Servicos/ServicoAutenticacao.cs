@@ -1,4 +1,5 @@
 ﻿using Carubbi.DiffAnalyzer;
+using Carubbi.Mailer.Interfaces;
 using Carubbi.Utils.Security;
 using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Entidades.Comunicacao;
@@ -13,6 +14,7 @@ namespace SmartLMS.Dominio.Servicos
     public class ServicoAutenticacao
     {
         private IContexto _contexto;
+        
         public ServicoAutenticacao(IContexto contexo)
         {
             _contexto = contexo;
@@ -151,7 +153,7 @@ namespace SmartLMS.Dominio.Servicos
 
         private void NotificarUsuario(Usuario usuario, string senha)
         {
-             // TODO: Implementar
+              
         }
 
         public string RecuperarSenha(string email)

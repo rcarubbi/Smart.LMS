@@ -18,6 +18,6 @@ namespace SmartLMS.Dominio.Entidades.Conteudo
         public virtual ICollection<Arquivo> Arquivos { get; set; }
 
         public virtual ICollection<TurmaCurso> Turmas { get; set; }
-
+      
     }
 }

@@ -3,6 +3,7 @@ using Carubbi.Utils.Data;
 using SmartLMS.Dominio.Entidades.Comunicacao;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using SmartLMS.Dominio.Entidades.Pessoa;
+using SmartLMS.Dominio.Servicos;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -100,44 +101,15 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
 
         public void EnviarEmailsLiberacaoAula(IContexto contexto, IMailSender sender, Aula aula, ICollection<Aluno> alunos)
         {
+            ServicoNotificacao servico = new ServicoNotificacao(contexto, sender);
             foreach (var aluno in alunos)
             {
-                EnviarEmailLiberacaoAula(contexto, sender, aula, aluno);
+                servico.EnviarEmailLiberacaoAula(aula, aluno);
+                
             }
         }
 
-        public void EnviarEmailLiberacaoAula(IContexto contexto, IMailSender sender, Aula aula, Aluno aluno)
-        {
-
-            sender.PortNumber = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_PORTA).Valor.To(0);
-            sender.Host = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_SERVIDOR).Valor;
-            sender.UseDefaultCredentials = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_USAR_CREDENCIAIS_PADRAO).Valor.To(false);
-            sender.UseSSL = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_USA_SSL).Valor.To(false);
-            if (!sender.UseDefaultCredentials)
-            {
-                sender.Username = ConfigurationManager.AppSettings["SMTPUsuario"] ?? contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_USUARIO).Valor;
-                sender.Password = ConfigurationManager.AppSettings["SMTPSenha"] ?? contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_SENHA).Valor;
-            }
-
-           
-         
-            var emailRemetente = contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.REMETENTE_EMAIL).Valor;
-
-            MailMessage email = new MailMessage();
-            MailAddress destinatario = new MailAddress(aluno.Email, aluno.Nome);
-            email.To.Add(destinatario);
-            email.From = new MailAddress(emailRemetente, Parametro.PROJETO);
-            email.IsBodyHtml = true;
-            email.Body = Parametro.CORPO_NOTIFICACAO_AULA_LIBERADA
-                .Replace("{Nome}", aluno.Nome)
-                .Replace("{Aula}", aula.Nome)
-                .Replace("{IdAula}", aula.Id.ToString())
-                .Replace("{Curso}", aula.Curso.Nome)
-                .Replace("{IdCurso}", aula.Curso.Id.ToString());
-
-            email.Subject = $"{Parametro.PROJETO} - Nova aula disponível";
-            sender.Send(email);
-        }
+   
 
         private Curso ObterProximoCurso(AulaPlanejamento ultimaAulaLiberada)
         {

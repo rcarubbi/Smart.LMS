@@ -68,5 +68,7 @@ namespace SmartLMS.Dominio.Repositorios
                 .OrderBy(x => x.Nome)
                 .ToList();
         }
+
+   
     }
 }

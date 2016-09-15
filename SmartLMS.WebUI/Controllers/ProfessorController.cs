@@ -1,4 +1,5 @@
-﻿using SmartLMS.Dominio;
+﻿using Carubbi.Mailer.Implementation;
+using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.Dominio.Servicos;

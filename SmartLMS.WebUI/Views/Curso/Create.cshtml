@@ -6,7 +6,7 @@
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        Inclusão de nova curso
+        Inclusão de novo curso
     </div>
     <div class="panel-body">
         <div class="form-horizontal">
@@ -123,20 +123,11 @@
                 dictDefaultMessage: "Arraste a imagem do curso aqui, ou clique para selecioná-la",
                 addRemoveLinks: true,
                 dictMaxFilesExceeded: "O Curso só pode possuir uma imagem",
-                dictRemoveFile: "Remover"
+                dictRemoveFile: "Remover",
+                dictCancelUpload: "Cancelar"
             };
 
-            $private.atualizarImagem = function (idCurso, nomeImagem) {
-
-                $.ajax({
-                    type: "POST",
-                    url: SmartLMS.api + "Curso/SalvarImagem",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: JSON.stringify({ idCurso: idCurso, nomeImagem: nomeImagem })
-                });
-            };
-
+           
             $private.removerImagem = function (nomeImagem) {
 
                 $.ajax({

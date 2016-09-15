@@ -132,5 +132,44 @@ namespace SmartLMS.Dominio.Repositorios
 
             return repo.Search(query);
         }
+
+        public void Incluir(Aula aula)
+        {
+            aula.Ativo = true;
+            aula.DataCriacao = DateTime.Now;
+            _contexto.ObterLista<Aula>().Add(aula);
+            _contexto.Salvar();
+        }
+
+        public void Atualizar(Aula aula)
+        {
+            var aulaCorrente = ObterPorId(aula.Id);
+            aula.DataCriacao = aulaCorrente.DataCriacao;
+            aula.Comentarios = aulaCorrente.Comentarios;
+            aula.PlanejamentosLiberados = aulaCorrente.PlanejamentosLiberados;
+            aula.Acessos = aulaCorrente.Acessos;
+            aula.Arquivos = aulaCorrente.Arquivos;
+
+            _contexto.Atualizar(aulaCorrente, aula);
+            _contexto.Salvar();
+        }
+
+   
+
+        public Aula ObterPorId(Guid id)
+        {
+            return _contexto.ObterLista<Aula>().Find(id);
+        }
+
+        public void Alterar(Aula aula)
+        {
+            var aulaAtual = ObterPorId(aula.Id);
+            aula.DataCriacao = aulaAtual.DataCriacao;
+            aula.Acessos = aulaAtual.Acessos;
+            aula.Comentarios = aulaAtual.Comentarios;
+            aula.PlanejamentosLiberados = aulaAtual.PlanejamentosLiberados;
+            _contexto.Atualizar(aulaAtual, aula);
+            _contexto.Salvar();
+        }
     }
 }

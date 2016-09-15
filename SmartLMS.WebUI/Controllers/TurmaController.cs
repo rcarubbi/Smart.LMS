@@ -1,16 +1,15 @@
-﻿using SmartLMS.Dominio;
+﻿using Carubbi.Mailer.Implementation;
+using SmartLMS.Dominio;
+using SmartLMS.Dominio.Entidades.Conteudo;
+using SmartLMS.Dominio.Entidades.Liberacao;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.WebUI.Models;
 using System;
-using System.Web.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using SmartLMS.Dominio.Entidades.Pessoa;
-using SmartLMS.Dominio.Entidades.Liberacao;
-using SmartLMS.Dominio.Entidades.Conteudo;
-using System.Collections.Generic;
-using Carubbi.Mailer.Implementation;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -81,7 +80,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             RepositorioCurso cursoRepo = new RepositorioCurso(_contexto);
 
-            ViewBag.Cursos = new SelectList(CursoViewModel.FromEntityList(cursoRepo.ListarAtivos(), 0), "Id", "Nome");
+            ViewBag.Cursos = new SelectList(CursoViewModel.FromEntityList(cursoRepo.ListarCursosAtivos(), 0), "Id", "Nome");
             return View();
         }
 
@@ -108,7 +107,7 @@ namespace SmartLMS.WebUI.Controllers
             }
 
             RepositorioCurso cursoRepo = new RepositorioCurso(_contexto);
-            ViewBag.Cursos = new SelectList(CursoViewModel.FromEntityList(cursoRepo.ListarAtivos(), 0), "Id", "Nome");
+            ViewBag.Cursos = new SelectList(CursoViewModel.FromEntityList(cursoRepo.ListarCursosAtivos(), 0), "Id", "Nome");
             return View(viewModel);
         }
 
@@ -116,7 +115,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             RepositorioCurso cursoRepo = new RepositorioCurso(_contexto);
 
-            var cursos = cursoRepo.ListarAtivos();
+            var cursos = cursoRepo.ListarCursosAtivos();
             var cursosSelecionados = turma.Cursos.Select(c => c.Curso);
             var cursosNaoSelecionados = cursos.Except(cursosSelecionados);
             cursosSelecionados.ToList().ForEach(c =>

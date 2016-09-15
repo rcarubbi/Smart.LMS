@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Transactions;
+using System.Web;
 using System.Web.Mvc;
 namespace SmartLMS.WebUI.Controllers
 {
@@ -85,11 +86,13 @@ namespace SmartLMS.WebUI.Controllers
                         }
 
                         planejamento.Alunos.Add((Aluno)novoAluno);
-                    
+
+                        ServicoNotificacao servicoNotificacao = new ServicoNotificacao(_contexto, new SmtpSender());
+                        
                         // notifica as aulas já liberadas no dia
                         foreach (var item in planejamento.AulasDisponiveis)
                         {
-                            planejamento.EnviarEmailLiberacaoAula(_contexto, new SmtpSender(), item.Aula, (Aluno)novoAluno);
+                            servicoNotificacao.EnviarEmailLiberacaoAula(item.Aula, (Aluno)novoAluno);
                         }
                         
                         // força a liberação de aulas pendentes para o dia

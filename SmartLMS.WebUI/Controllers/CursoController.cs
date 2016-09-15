@@ -5,11 +5,9 @@ using SmartLMS.Dominio.Repositorios;
 using SmartLMS.WebUI.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Transactions;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SmartLMS.WebUI.Controllers
@@ -109,9 +107,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 try
                 {
-                  
                     var assunto = assuntoRepo.ObterPorId(curso.IdAssunto);
- 
                     var professor = (Professor)usuarioRepo.ObterPorId(curso.IdProfessorResponsavel);
 
                     RepositorioCurso repo = new RepositorioCurso(_contexto);

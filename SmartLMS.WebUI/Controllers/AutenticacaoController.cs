@@ -1,4 +1,5 @@
-﻿using SmartLMS.Dominio;
+﻿using Carubbi.Mailer.Implementation;
+using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
@@ -64,9 +65,9 @@ namespace SmartLMS.WebUI.Controllers
                 if (senha != null)
                 {
                     
-                    ServicoNotificacao servicoNotificacao = new ServicoNotificacao(_contexto);
+                    ServicoNotificacao servicoNotificacao = new ServicoNotificacao(_contexto, new SmtpSender());
                     await Task.Run(() => servicoNotificacao.NotificarRecuperacaoSenha(viewModel.Email, senha, this.Url.Action("Login", "Autenticacao"))).ConfigureAwait(false);
-                    ViewBag.Mensagem = "Enviamos um e-mail para você com uma senha temporária, utilize-a no seu próximo acesso.";
+                    ViewBag.Mensagem = "Enviamos um e-mail para você com a sua senha.";
                 }
                 else
                 {

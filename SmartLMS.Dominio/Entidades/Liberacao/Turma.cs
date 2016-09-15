@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Carubbi.Mailer.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
-using System.Linq;
-using Carubbi.Mailer.Interfaces;
 
 namespace SmartLMS.Dominio.Entidades.Liberacao
 {

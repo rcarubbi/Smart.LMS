@@ -112,6 +112,7 @@
     <Compile Include="Repositorios\RepositorioParametro.cs" />
     <Compile Include="Repositorios\RepositorioTurma.cs" />
     <Compile Include="Repositorios\RepositorioUsuario.cs" />
+    <Compile Include="Servicos\ServicoNotificacao.cs" />
     <Compile Include="Servicos\AcessoInfo.cs" />
     <Compile Include="Servicos\AvisoInfo.cs" />
     <Compile Include="Servicos\ResultadoBusca.cs" />

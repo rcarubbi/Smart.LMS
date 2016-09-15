@@ -1,33 +1,18 @@
-﻿@model CursoViewModel
+﻿@model AulaViewModel
 
 @{
-    ViewBag.Title = "Alteração de curso";
+    ViewBag.Title = "Alteração de aula";
 }
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        Alteração de curso
+        Alteração de aula
     </div>
     <div class="panel-body">
-        <div class="form-horizontal">
-            <div class="form-group">
-                @Html.LabelFor(model => model.Imagem, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    <div class="jumbotron jumbotron-upload">
-                        <form action="@Url.Action("SalvarImagem")" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneForm" style="background: none; border: none;">
-                            <div class="fallback">
-                                <input name="file" type="file" />
-                                <input type="submit" value="Enviar Imagem" />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(model => model.Imagem)
+            @Html.HiddenFor(model => model.Id)
          
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -46,10 +31,17 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.IdAssunto, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.DiasLiberacao, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.IdAssunto, ViewBag.Assuntos as SelectList, "-- Selecione --", new { @class = "form-control dropdownjs" })
-                        @Html.ValidationMessageFor(model => model.IdAssunto, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.DiasLiberacao, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DiasLiberacao, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IdCurso, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IdCurso, ViewBag.Cursos as SelectList, "-- Selecione --", new { @class = "form-control dropdownjs" })
+                        @Html.ValidationMessageFor(model => model.IdCurso, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
@@ -62,13 +54,19 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.IdProfessorResponsavel, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.IdProfessor, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.IdProfessorResponsavel, ViewBag.Professores as SelectList, "-- Selecione --", new { @class = "form-control dropdownjs" })
-                        @Html.ValidationMessageFor(model => model.IdProfessorResponsavel, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.IdProfessor, ViewBag.Professores as SelectList, "-- Selecione --", new { @class = "form-control dropdownjs" })
+                        @Html.ValidationMessageFor(model => model.IdProfessor, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Conteudo, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Conteudo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Conteudo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button type="submit" class="btn btn-success btn-sm">
@@ -79,7 +77,22 @@
                 </div>
             </div>
         }
-
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Arquivos, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="jumbotron jumbotron-upload">
+                        <form action="@Url.Action("SalvarMaterialApoio")" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneForm" style="background: none; border: none;">
+                             @Html.HiddenFor(x => x.Id)
+                             <div class="fallback">
+                                <input name="file" type="file" />
+                                <input type="submit" value="Enviar Imagem" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -114,70 +127,53 @@
             var $private = {};
 
             Dropzone.options.dropzoneForm = {
-                maxFiles: 1,
                 init: function () {
-                    this.on("complete", function (data) {
-                        if (data.xhr != null) {
-                            var res = JSON.parse(data.xhr.responseText);
-                            $("input[name='Imagem']").val(res.Message);
-                        }
-                    });
                     this.on("removedfile", function (data) {
-                        var res = JSON.parse(data.xhr.response);
-                        $private.removerImagem(res.Message);
-                        $("input[name='Imagem']").val("");
+                      
+                        $private.removerMaterialApoio('@Model.Id.ToString()', data.name);
                     });
 
-                    $private.carregarImagem('@Model.Id.ToString()', this);
+                    $private.carregarMateriaisApoio('@Model.Id.ToString()', this);
                 },
+
                 previewTemplate: $("#dz-template-preview").html(),
-                dictDefaultMessage: "Arraste a imagem do curso aqui, ou clique para selecioná-la",
+                dictDefaultMessage: "Arraste os documentos da aula aqui, ou clique para selecioná-los",
                 addRemoveLinks: true,
-                dictMaxFilesExceeded: "O Curso só pode possuir uma imagem",
                 dictRemoveFile: "Remover",
                 dictCancelUpload: "Cancelar"
             };
 
-           
-
-            $private.removerImagem = function (nomeImagem) {
-
+            $private.removerMaterialApoio = function (id, nomeArquivo) {
                 $.ajax({
                     type: "POST",
-                    url: SmartLMS.api + "Curso/RemoverImagem",
+                    url: SmartLMS.api + "Aula/RemoverMaterialApoio",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    data: JSON.stringify({ nomeImagem: nomeImagem })
+                    data: JSON.stringify({ id: id, nomeArquivo: nomeArquivo })
                 });
             };
 
-
-            $private.carregarImagem = function (idCurso, dropzoneForm) {
-                var thumbnailUrl = SmartLMS.api + "Curso/RecuperarImagemCurso/" + idCurso;
-
+            $private.carregarMateriaisApoio = function (idAula, dropzoneForm) {
                 $.ajax({
                     type: "POST",
-                    url: SmartLMS.api + "Curso/ObterDadosImagem",
+                    url: SmartLMS.api + "Aula/ListarMateriaisDeApoio",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    data: JSON.stringify({ idCurso: idCurso }),
+                    data: JSON.stringify({ idAula: idAula }),
                     success: function (data) {
-
-                        var file = {
-                            name: data.name,
-                            size: data.size,
-                            url: thumbnailUrl,
-                            accepted: true,
-                            status: Dropzone.ADDED
-                        };
-
-                        dropzoneForm.emit("addedfile", file);
-                        dropzoneForm.emit("thumbnail", file, thumbnailUrl);
-                        dropzoneForm.emit("complete", file);
-                        dropzoneForm.files.push(file);
+                        $.each(data.Arquivos, function (index, item) {
+                            var file = {
+                                name: item.Nome,
+                                size: item.size,
+                                accepted: true,
+                                status: Dropzone.ADDED
+                            };
+                            dropzoneForm.emit("addedfile", file);
+                            dropzoneForm.emit("complete", file);
+                            dropzoneForm.files.push(file);
+                        });
                     }
                 });
-
             };
         }());
     </script>

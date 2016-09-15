@@ -185,6 +185,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AreaConhecimentoController.cs" />
     <Compile Include="Controllers\ImagemUploader.cs" />
+    <Compile Include="Controllers\MaterialApoioUploader.cs" />
     <Compile Include="Controllers\ProfessorController.cs" />
     <Compile Include="Controllers\AlunoController.cs" />
     <Compile Include="Controllers\AssuntoController.cs" />
@@ -224,7 +225,6 @@
     <Compile Include="Models\UsuarioViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicos\RoleProvider.cs" />
-    <Compile Include="Servicos\ServicoNotificacao.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="android-icon-144x144.png" />
@@ -260,18 +260,11 @@
     <Content Include="Content\img\arrow-left.png" />
     <Content Include="Content\img\arrow-right.cur" />
     <Content Include="Content\img\arrow-right.png" />
-    <Content Include="Content\img\cursos\aspnet.png" />
-    <Content Include="Content\img\cursos\csharp.png" />
-    <Content Include="Content\img\cursos\css.png" />
-    <Content Include="Content\img\cursos\html.png" />
-    <Content Include="Content\img\cursos\jquery.jpg" />
     <Content Include="Content\img\loading-green.gif" />
     <Content Include="Content\img\loading-white.gif" />
     <Content Include="Content\img\logo.png" />
-    <Content Include="Content\img\cursos\mvc.png" />
     <Content Include="Content\img\cursos\sem-imagem.png" />
     <Content Include="Content\img\smart.png" />
-    <Content Include="Content\img\cursos\universalapps.jpg" />
     <Content Include="Content\jquery.dropdown\jquery.dropdown.css" />
     <Content Include="Content\listgroup.css" />
     <Content Include="Content\material-design\bootstrap-material-design.css" />
@@ -444,6 +437,8 @@
     <Content Include="Views\Aula\IndexAdmin.cshtml" />
     <Content Include="Views\Curso\Create.cshtml" />
     <Content Include="Views\Curso\Edit.cshtml" />
+    <Content Include="Views\Aula\Create.cshtml" />
+    <Content Include="Views\Aula\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -5,6 +5,7 @@ using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
+using SmartLMS.WebUI.Servicos;
 using System.Linq;
 using System.Net.Mail;
 using System.Web.Mvc;
@@ -61,39 +62,9 @@ namespace SmartLMS.WebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
-                    SmtpSender sender = new SmtpSender();
-                    sender.PortNumber = _contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_PORTA).Valor.To(0);
-                    sender.Host = _contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_SERVIDOR).Valor;
-                    sender.UseDefaultCredentials = _contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_USAR_CREDENCIAIS_PADRAO).Valor.To(false);
-                    sender.UseSSL = _contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_USA_SSL).Valor.To(false);
-                    if (!sender.UseDefaultCredentials)
-                    {
-                        sender.Username = _contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_USUARIO).Valor;
-                        sender.Password = _contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.SMTP_SENHA).Valor;
-                    }
-
-                    var emailDestinatarioFaleConosco = _contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.CHAVE_EMAIL_DESTINATARIO_FALE_CONOSCO).Valor;
-                    var nomeDestinatarioFaleConosco = _contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.CHAVE_NOME_DESTINATARIO_FALE_CONOSCO).Valor;
-                    var emailRemetente = _contexto.ObterLista<Parametro>().Single(x => x.Chave == Parametro.REMETENTE_EMAIL).Valor;
-
-                    MailMessage email = new MailMessage();
-                    MailAddress destinatario = new MailAddress(emailDestinatarioFaleConosco, nomeDestinatarioFaleConosco);
-                    email.To.Add(destinatario);
-                    email.From = new MailAddress(emailRemetente, Parametro.PROJETO);
-                    email.IsBodyHtml = true;
-                    email.Body = $@"<div><h1>Fale Conosco - {Parametro.PROJETO}</h1>
-                                    <dl>
-                                        <dt>Nome:</dt>
-                                        <dd>{viewModel.Nome}</dd>
-                                        <dt>Email:</dt>
-                                        <dd>{viewModel.Email}</dd>
-                                        <dt>Mensagem:</dt>
-                                        <dd>{viewModel.Mensagem}</dd>
-                                    </dl>
-                                    </div>";
-                    email.Subject = $"Fale Conosco - {Parametro.PROJETO}";
-                    sender.Send(email);
+                    ServicoNotificacao servico = new ServicoNotificacao(_contexto, new SmtpSender());
+                    servico.EnviarFaleConosco(viewModel.Nome, viewModel.Email, viewModel.Mensagem);
+                  
                     return Json(new { Success = true });
                 }
                 else

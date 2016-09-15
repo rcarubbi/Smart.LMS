@@ -27,7 +27,7 @@ namespace SmartLMS.Dominio.Repositorios
             
 
             indiceCurso.Curso = _contexto.ObterLista<Curso>().Find(id);
-            indiceCurso.AulasInfo = indiceCurso.Curso.Aulas.Where(a => a.Ativo = true)
+            indiceCurso.AulasInfo = indiceCurso.Curso.Aulas.Where(a => a.Ativo)
                 .OrderBy(x => x.Ordem)
                 .Select(a => new AulaInfo {
                     Aula = a,
@@ -99,6 +99,11 @@ namespace SmartLMS.Dominio.Repositorios
             curso.Aulas = cursoAtual.Aulas;
             _contexto.Atualizar(cursoAtual, curso);
             _contexto.Salvar();
+        }
+
+        public List<Curso> ListarCursosAtivos()
+        {
+            return _contexto.ObterLista<Curso>().Where(x => x.Ativo).OrderBy(x => x.Nome).ToList();
         }
     }
 }

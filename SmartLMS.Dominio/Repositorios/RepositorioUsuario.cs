@@ -137,7 +137,7 @@ namespace SmartLMS.Dominio.Repositorios
         public void ExcluirAluno(Guid id)
         {
             Aluno aluno = _contexto.ObterLista<Aluno>().Find(id);
-           /* var usuarioAvisos = _contexto.ObterLista<UsuarioAviso>();
+            var usuarioAvisos = _contexto.ObterLista<UsuarioAviso>();
             var acessosAula = _contexto.ObterLista<AcessoAula>();
             var acessosArquivo = _contexto.ObterLista<AcessoArquivo>();
             var avisos = _contexto.ObterLista<Aviso>();
@@ -151,7 +151,7 @@ namespace SmartLMS.Dominio.Repositorios
             comentariosAluno.ToList().ForEach(a => comentarios.Remove(a));
             avisos.Where(a => a.Usuario.Id == id).ToList().ForEach(a => avisos.Remove(a));
             planejamentos.ToList().ForEach(x => x.Alunos.Remove(aluno));
-            */
+            
             _contexto.ObterLista<Aluno>().Remove(aluno);
             _contexto.Salvar();
         }
@@ -160,5 +160,7 @@ namespace SmartLMS.Dominio.Repositorios
         {
             return _contexto.ObterLista<Aluno>().Where(x => x.Ativo).OrderBy(x => x.Nome).ToList();
         }
+
+    
     }
 }

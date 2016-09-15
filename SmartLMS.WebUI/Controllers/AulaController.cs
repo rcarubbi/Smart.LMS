@@ -1,13 +1,16 @@
-﻿using Humanizer.DateTimeHumanizeStrategy;
+﻿using Carubbi.Utils.Data;
+using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using SmartLMS.Dominio.Entidades.Historico;
+using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.WebUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Transactions;
 using System.Web.Mvc;
 
 namespace SmartLMS.WebUI.Controllers
@@ -26,7 +29,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             var acessoRepo = new RepositorioAcessoAula(_contexto);
             var usuarioRepo = new RepositorioUsuario(_contexto);
-           
+
             var aulaRepo = new RepositorioAula(_contexto);
             var aula = aulaRepo.ObterAula(viewModel.IdAula, _usuarioLogado.Id);
             acessoRepo.AtualizarProgresso(viewModel.ToEntity(_usuarioLogado, aula.Aula));
@@ -34,14 +37,12 @@ namespace SmartLMS.WebUI.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.OK, "Atualizado");
         }
 
-       
-
         public ActionResult Ver(Guid id)
         {
             var aulaRepo = new RepositorioAula(_contexto);
             var acessoRepo = new RepositorioAcessoAula(_contexto);
             var aula = aulaRepo.ObterAula(id, _usuarioLogado.Id);
-            if (aula.Disponivel)
+            if (aula.Disponivel && aula.Aula.Ativo)
             {
                 acessoRepo.CriarAcesso(new AcessoAula { Aula = aula.Aula, Usuario = _usuarioLogado, DataHoraAcesso = DateTime.Now, Percentual = aula.Percentual, Segundos = aula.Segundos });
                 return View(AulaViewModel.FromEntityComArquivos(aula));
@@ -53,7 +54,7 @@ namespace SmartLMS.WebUI.Controllers
                 TempData["Mensagem"] = "Esta aula não está disponível para você";
                 return RedirectToAction("Index", "Aula", new { Id = aula.Aula.Curso.Id });
             }
-           
+
         }
 
         [AllowAnonymous]
@@ -88,16 +89,16 @@ namespace SmartLMS.WebUI.Controllers
             return PartialView("_listaAulasPequena", viewModel.Aulas);
         }
 
-     
-        [ChildActionOnly]
-        public ActionResult ExibirPainelNovasAulas() {
 
-          
+        [ChildActionOnly]
+        public ActionResult ExibirPainelNovasAulas()
+        {
+
+
             var aulaRepo = new RepositorioAula(_contexto);
             return PartialView("_PainelNovasAulas", AulaViewModel.FromEntityList(aulaRepo.ListarUltimasAulasLiberadas(_usuarioLogado.Id), new DefaultDateTimeHumanizeStrategy()));
         }
 
-     
         [ChildActionOnly]
         public ActionResult ExibirUltimasAulas()
         {
@@ -143,13 +144,13 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         [HttpPost]
-      
+
         public ActionResult ExcluirComentario(long idComentario)
         {
-                var aulaRepo = new RepositorioAula(_contexto);
-             
-                aulaRepo.ExcluirComentario(idComentario);
-                return new HttpStatusCodeResult(HttpStatusCode.OK);
+            var aulaRepo = new RepositorioAula(_contexto);
+
+            aulaRepo.ExcluirComentario(idComentario);
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
         [AllowAnonymous]
@@ -163,7 +164,7 @@ namespace SmartLMS.WebUI.Controllers
             if (disponivel)
             {
                 aulaRepo.GravarAcesso(arquivo, _usuarioLogado);
-                return File(Url.Content("~/" + SmartLMS.Dominio.Entidades.Parametro.STORAGE_ARQUIVOS + "/" + arquivo.ArquivoFisico), "application/octet-stream", arquivo.ArquivoFisico);
+                return File(Url.Content("~/" + SmartLMS.Dominio.Entidades.Parametro.STORAGE_ARQUIVOS + "/" + arquivo.Aula.Id + "/" + arquivo.ArquivoFisico), "application/octet-stream", arquivo.ArquivoFisico);
             }
             else
             {
@@ -173,7 +174,6 @@ namespace SmartLMS.WebUI.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-
 
         [Authorize(Roles = "Administrador")]
         public ActionResult IndexAdmin(string termo, string campoBusca, int pagina = 1)
@@ -192,7 +192,183 @@ namespace SmartLMS.WebUI.Controllers
             return Json(AulaViewModel.FromEntityList(repo.ListarAulas(termo, campoBusca, pagina)));
         }
 
+        [Authorize(Roles = "Administrador")]
+        public ActionResult Create()
+        {
+            var cursoRepo = new RepositorioCurso(_contexto);
+            var cursos = cursoRepo.ListarCursosAtivos();
+            ViewBag.Cursos = new SelectList(cursos, "Id", "Nome");
+
+            var usuarioRepo = new RepositorioUsuario(_contexto);
+            var professores = usuarioRepo.ListarProfessoresAtivos();
+            ViewBag.Professores = new SelectList(professores, "Id", "Nome");
+            TipoConteudo tiposAula = TipoConteudo.Vimeo;
+
+            ViewBag.TiposAula = new SelectList(tiposAula.ToDataSource<TipoConteudo>(), "Key", "Value");
+
+            return View();
+        }
+
+        // POST: professor/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
+        public ActionResult Create(AulaViewModel aula)
+        {
+            var cursoRepo = new RepositorioCurso(_contexto);
+            var usuarioRepo = new RepositorioUsuario(_contexto);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var curso = cursoRepo.ObterPorId(aula.IdCurso);
+                    var professor = (Professor)usuarioRepo.ObterPorId(aula.IdProfessor);
+
+                    RepositorioAula repo = new RepositorioAula(_contexto);
+                    repo.Incluir(AulaViewModel.ToEntity(aula, curso, professor));
+
+                    TempData["TipoMensagem"] = "success";
+                    TempData["TituloMensagem"] = "Administração de conteúdo";
+                    TempData["Mensagem"] = "Aula criada com sucesso";
+                    return RedirectToAction("IndexAdmin");
+                }
+                catch (Exception ex)
+                {
+                    TempData["TipoMensagem"] = "error";
+                    TempData["TituloMensagem"] = "Administração de conteúdo";
+                    TempData["Mensagem"] = ex.Message;
+                }
+            }
+
+            TipoConteudo tiposAula = TipoConteudo.Vimeo;
+            ViewBag.TiposAula = new SelectList(tiposAula.ToDataSource<TipoConteudo>(), "Key", "Value");
+
+            var cursos = cursoRepo.ListarCursosAtivos();
+            ViewBag.Cursos = new SelectList(cursos, "Id", "Nome");
+            var professores = usuarioRepo.ListarProfessoresAtivos();
+            ViewBag.Professores = new SelectList(professores, "Id", "Nome");
+            return View(aula);
+        }
+
+        [Authorize(Roles = "Administrador")]
+        public ActionResult SalvarMaterialApoio(string id)
+        {
+            using (TransactionScope tx = new TransactionScope())
+            {
+                MaterialApoioUploader uploader = new MaterialApoioUploader(id);
+                RepositorioAula repo = new RepositorioAula(_contexto);
+                var uploadResult = uploader.Upload(Request.Files[0]);
+                var aula = repo.ObterPorId(new Guid(id));
+                aula.Arquivos.Add(new Arquivo
+                {
+                    ArquivoFisico = uploadResult.Message,
+                    DataCriacao = DateTime.Now,
+                    Ativo = true,
+                    Nome = Request.Files[0].FileName,
+                    Aula = aula
+                });
+                _contexto.Salvar();
+                tx.Complete();
+                return Json(uploadResult);
+            }
+        }
+
+        [Authorize(Roles = "Administrador")]
+        public ActionResult RemoverMaterialApoio(string id, string nomeArquivo)
+        {
+            using (TransactionScope tx = new TransactionScope())
+            {
+                RepositorioAula repo = new RepositorioAula(_contexto);
+                MaterialApoioUploader uploader = new MaterialApoioUploader(id);
+                var aula = repo.ObterPorId(new Guid(id));
+                var arquivo = aula.Arquivos.Single(x => x.ArquivoFisico == nomeArquivo);
+                aula.Arquivos.Remove(arquivo);
+                repo.Atualizar(aula);
+                uploader.DeleteFile(nomeArquivo);
+                tx.Complete();
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
+        public ActionResult ListarMateriaisDeApoio(string idAula)
+        {
+            RepositorioAula repo = new RepositorioAula(_contexto);
+            var aula = repo.ObterPorId(new Guid(idAula));
+            List<dynamic> arquivos = new List<dynamic>();
+            MaterialApoioUploader uploader = new MaterialApoioUploader(idAula);
+            
+            foreach (var item in aula.Arquivos)
+            {
+                arquivos.Add(new { Nome = item.Nome, size = uploader.GetFileInfo(item.ArquivoFisico).Length });
+            }
+
+            return Json(new { Arquivos = arquivos });
+        }
 
 
+        [Authorize(Roles = "Administrador")]
+        public ActionResult Edit(Guid id)
+        {
+            var cursoRepo = new RepositorioCurso(_contexto);
+            var cursos = cursoRepo.ListarCursosAtivos();
+            ViewBag.Cursos = new SelectList(cursos, "Id", "Nome");
+
+            var usuarioRepo = new RepositorioUsuario(_contexto);
+            var professores = usuarioRepo.ListarProfessoresAtivos();
+            ViewBag.Professores = new SelectList(professores, "Id", "Nome");
+            TipoConteudo tiposAula = TipoConteudo.Vimeo;
+
+            ViewBag.TiposAula = new SelectList(tiposAula.ToDataSource<TipoConteudo>(), "Key", "Value");
+
+
+            var repo = new RepositorioAula(_contexto);
+            var aula = repo.ObterPorId(id);
+            return View(AulaViewModel.FromEntity(aula, 0, new DefaultDateTimeHumanizeStrategy()));
+        }
+
+        [Authorize(Roles = "Administrador")]
+        [HttpPost]
+        public ActionResult Edit(Guid id, AulaViewModel viewModel)
+        {
+
+            var cursoRepo = new RepositorioCurso(_contexto);
+            var usuarioRepo = new RepositorioUsuario(_contexto);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var curso = cursoRepo.ObterPorId(viewModel.IdCurso);
+                    var professor = (Professor)usuarioRepo.ObterPorId(viewModel.IdProfessor);
+                    var repo = new RepositorioAula(_contexto);
+                    repo.Alterar(AulaViewModel.ToEntity(viewModel, curso, professor));
+                    TempData["TipoMensagem"] = "success";
+                    TempData["TituloMensagem"] = "Administração de conteúdo";
+                    TempData["Mensagem"] = "Aula alterada com sucesso";
+                    return RedirectToAction("IndexAdmin");
+                }
+                catch (Exception ex)
+                {
+                    TempData["TipoMensagem"] = "error";
+                    TempData["TituloMensagem"] = "Administração de conteúdo";
+                    TempData["Mensagem"] = ex.Message;
+                }
+            }
+
+
+            var cursos = cursoRepo.ListarCursosAtivos();
+            ViewBag.Cursos = new SelectList(cursos, "Id", "Nome");
+
+            var professores = usuarioRepo.ListarProfessoresAtivos();
+            ViewBag.Professores = new SelectList(professores, "Id", "Nome");
+            TipoConteudo tiposAula = TipoConteudo.Vimeo;
+
+            ViewBag.TiposAula = new SelectList(tiposAula.ToDataSource<TipoConteudo>(), "Key", "Value");
+
+            return View(viewModel);
+        }
     }
 }
