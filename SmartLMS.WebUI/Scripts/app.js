@@ -60,7 +60,16 @@ SmartLMS.App = (function () {
     $private.createAutoComplete = function () {
         var $input = $(this);
         var options = {
-            source: $input.attr("data-autocomplete")
+            source: $input.attr("data-autocomplete"),
+            open: function () {
+                $('ul.ui-autocomplete').addClass('opened').css({ 'z-index': '1000' });
+            },
+            close: function () { 
+                $('ul.ui-autocomplete').removeClass('opened').css({ 'display': 'block' });
+                setTimeout(function () {
+                    $('ul.ui-autocomplete').removeClass('opened').css({ 'z-index': '-1000' });
+                }, 250);
+            },
         };
 
         $input.autocomplete(options);

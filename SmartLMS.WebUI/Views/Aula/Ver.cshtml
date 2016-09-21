@@ -175,25 +175,23 @@
                     });
                 }
 
+                $private.pendingSeektoTime = parseFloat('@(Model.Segundos)');
 
                 var player = new Vimeo.Player("videoFrame");
                 player.on("play", function () {
-
-                    var pendingSeektoTime = parseFloat('@(Model.Segundos)');
-
-                    if (pendingSeektoTime != 0) {
-                        player.setCurrentTime(pendingSeektoTime);
-                        pendingSeektoTime = 0;
+                    if ($private.pendingSeektoTime != 0) {
+                        player.setCurrentTime($private.pendingSeektoTime);
+                        $private.pendingSeektoTime = 0;
                     }
-
+                  
                     setInterval($private.updateProgress, 5000);
                 });
 
                 player.on('ended', $private.vimeoEndedEvent);
                 player.on('timeupdate', $private.vimeoPlayProgressEvent);
                 player.on('pause', $private.vimeoPauseEvent);
-              
- 
+
+
 
                 $private.TemplateComentario = Handlebars.compile($("#comentario-template").html());
                 $private.Pagina = 1;
@@ -204,12 +202,18 @@
                 player.ready();
             });
 
+            $private.updateProgressBar = function (segundos, percentual) {
+                $private.pendingSeektoTime = segundos;
+                $(".fa.fa-laptop.active").parent().parent().find(".progress-bar").css("width", (percentual * 100) + "%");
+                $(".fa.fa-laptop.active").parent().parent().find(".sr-only").text((percentual * 100) + "% Concluída");
+            }
+
             $private.comentar = function (e) {
                 e.preventDefault();
 
                 comentariosProxy.Comentar($(this).serialize()).always(function () {
                     $("#sem-mais-resultados").hide();
-                    
+
                     $("#Comentario").val("");
                     $private.Pagina = 1;
                     comentariosProxy.Listar($private.Pagina).done($private.exibirComentarios);
@@ -271,12 +275,11 @@
                         IdAula: '@Model.Id',
                         Segundos: atualizacao.seconds
                     }),
-                    success: function (data) {
-                     
-                        $(".fa.fa-laptop.active").parent().parent().find(".progress-bar").css("width", (atualizacao.percent * 100) + "%");
-                        $(".fa.fa-laptop.active").parent().parent().find(".sr-only").text((atualizacao.percent * 100) + "% Concluída");
-                    }
+                    
                 });
+             
+                $private.updateProgressBar(atualizacao.seconds, atualizacao.percent);
+             
             };
 
             $private.vimeoPlayProgressEvent = function (data) {

@@ -7,13 +7,14 @@
     overflow-y: hidden;
     display: -webkit-box;
     display: -moz-box;
+    display: flex;
 }
 
     .areas-conhecimento-bar .nav-pills > li {
-        float: none;
+       float: none;
     }
 
-
+ 
 
 body {
     overflow: hidden;
@@ -464,3 +465,19 @@ body.dragging, body.dragging * {
     margin: 0px;
     padding: 10px 0px 10px 0px !important;
 }
+
+
+.ui-autocomplete {
+    opacity: 0;
+    display: none;
+    transition: all .25s ease;
+    -moz-transition: all .25s ease;
+    -webkit-transition: all .25s ease;
+    -o-transition: all .25s ease;
+   
+}
+
+    .ui-autocomplete.opened {
+        opacity: 1;
+       
+    }
