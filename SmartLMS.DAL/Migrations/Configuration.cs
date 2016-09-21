@@ -205,7 +205,7 @@ namespace SmartLMS.DAL.Migrations
                       {
                           DataCriacao = DateTime.Now,
                           Chave = Parametro.CHAVE_CORPO_NOTIFICACAO_AULA_LIBERADA,
-                          Valor = "Olá {Nome}, Tudo bem com você? <br /> Foi disponibilizado um novo trecho <a href='www.codigonerd.net/SmartLMS/Aula/Ver/{IdAula}'>{Aula}</a> na trilha <a href='www.codigonerd.net/SmartLMS/Aula/Index/{IdCurso}'>{Curso}</a> <br />Bons estudos! <br /><br /> Código Nerd",
+                          Valor = "Olá {Nome}, Tudo bem com você? <br /> Foi disponibilizado uma nova aula <a href='www.codigonerd.net/SmartLMS/Aula/Ver/{IdAula}'>{Aula}</a> no curso <a href='www.codigonerd.net/SmartLMS/Aula/Index/{IdCurso}'>{Curso}</a> <br />Bons estudos! <br /><br /> Código Nerd",
                           Ativo = true
                       });
 

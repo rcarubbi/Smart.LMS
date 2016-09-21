@@ -297,6 +297,7 @@
 
 
             $private.CalcularPaginaMinima = function (quantidade, pagina) {
+                pagina = parseInt(pagina);
                 if (pagina < 4) {
                     return 1;
                 }
@@ -309,6 +310,7 @@
             };
 
             $private.CalcularPaginaMaxima = function (quantidade, pagina) {
+                pagina = parseInt(pagina);
                 if (pagina < 4) {
                     if (quantidade < 6) {
                         return quantidade + 1;

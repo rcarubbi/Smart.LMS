@@ -265,13 +265,17 @@
                 $.ajax({
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
-                    dataType: "json",
                     url: '@Url.Action("AtualizarProgresso", "Aula")',
                     data: JSON.stringify({
                         Percentual: Math.ceil(atualizacao.percent * 100),
                         IdAula: '@Model.Id',
                         Segundos: atualizacao.seconds
-                    })
+                    }),
+                    success: function (data) {
+                     
+                        $(".fa.fa-laptop.active").parent().parent().find(".progress-bar").css("width", (atualizacao.percent * 100) + "%");
+                        $(".fa.fa-laptop.active").parent().parent().find(".sr-only").text((atualizacao.percent * 100) + "% Concluída");
+                    }
                 });
             };
 

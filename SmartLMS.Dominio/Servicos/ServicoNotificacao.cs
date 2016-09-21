@@ -43,7 +43,7 @@ namespace SmartLMS.Dominio.Servicos
                                     Senha: {senhaRecuperada}.
                                 </div>
                                 <div>
-                                    Acesso nossa plataforma pelo endereço <a href='{link}'>{link}</a>.
+                                    Acesse nossa plataforma pelo endereço <a href='{link}'>{link}</a>.
                                 </div>
                                 <div>
                                     Atenciosamente, {Parametro.PROJETO}
@@ -134,7 +134,7 @@ namespace SmartLMS.Dominio.Servicos
                                     Senha: {senha}.
                                 </div>
                                 <div>
-                                    Acesso nossa plataforma pelo endereço <a href='{link}'>{link}</a>.
+                                    Acesse nossa plataforma pelo endereço <a href='{link}'>{link}</a>.
                                 </div>
                                 <div>
                                     Atenciosamente, {Parametro.PROJETO}
