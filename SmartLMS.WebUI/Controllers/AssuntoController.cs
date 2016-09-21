@@ -25,6 +25,13 @@ namespace SmartLMS.WebUI.Controllers
             var areaRepo = new RepositorioAreaConhecimento(_contexto);
             var areas = areaRepo.ListarAreasConhecimento();
             var areaSelecionada = areas.Single(x => x.Id == id);
+            if (areaSelecionada == null)
+            {
+                TempData["TipoMensagem"] = "warning";
+                TempData["TituloMensagem"] = "Aviso";
+                TempData["Mensagem"] = "Esta área de conhecimento não está disponível no momento";
+                return RedirectToAction("Index", "Home");
+            }
             AreaConhecimentoViewModel viewModel = AreaConhecimentoViewModel.FromEntity(areaSelecionada, 2);
             ViewBag.OutrasAreas = new SelectList(areas.Except(new List<AreaConhecimento> { areaSelecionada }), "Id", "Nome");
             return View(viewModel);

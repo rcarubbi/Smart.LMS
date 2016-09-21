@@ -33,7 +33,7 @@ namespace SmartLMS.WebUI.Controllers
 
             if (ModelState.IsValid)
             {
-                ServicoAutenticacao autenticacao = new ServicoAutenticacao(_contexto);
+                ServicoAutenticacao autenticacao = new ServicoAutenticacao(_contexto, new SmtpSender());
                 if (autenticacao.Login(viewModel.Login, viewModel.Senha))
                 {
                     FormsAuthentication.SetAuthCookie(viewModel.Login, viewModel.LembrarMe);
@@ -60,12 +60,13 @@ namespace SmartLMS.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                ServicoAutenticacao servico = new ServicoAutenticacao(_contexto);
+                var sender = new SmtpSender();
+                ServicoAutenticacao servico = new ServicoAutenticacao(_contexto, sender);
                 var senha = servico.RecuperarSenha(viewModel.Email);
                 if (senha != null)
                 {
                     
-                    ServicoNotificacao servicoNotificacao = new ServicoNotificacao(_contexto, new SmtpSender());
+                    ServicoNotificacao servicoNotificacao = new ServicoNotificacao(_contexto, sender);
                     await Task.Run(() => servicoNotificacao.NotificarRecuperacaoSenha(viewModel.Email, senha, this.Url.Action("Login", "Autenticacao"))).ConfigureAwait(false);
                     ViewBag.Mensagem = "Enviamos um e-mail para você com a sua senha.";
                 }
@@ -100,7 +101,7 @@ namespace SmartLMS.WebUI.Controllers
             if (ModelState.IsValid)
             {
                 
-                ServicoAutenticacao autenticacao = new ServicoAutenticacao(_contexto);
+                ServicoAutenticacao autenticacao = new ServicoAutenticacao(_contexto, new SmtpSender());
                 autenticacao.AlterarUsuario(_usuarioLogado.Id, _usuarioLogado.Nome, _usuarioLogado.Email, _usuarioLogado.Login, novaSenha.Senha, _usuarioLogado.Ativo, (Perfil)Enum.Parse(typeof(Perfil), _contexto.UnProxy(_usuarioLogado).GetType().Name));
                 TempData["TipoMensagem"] = "success";
                 TempData["TituloMensagem"] = "Notificação";

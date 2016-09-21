@@ -114,8 +114,16 @@
                         }
                     });
                     this.on("removedfile", function (data) {
-                        var res = JSON.parse(data.xhr.response);
-                        $private.removerImagem(res.Message);
+                        var id = "";
+                        if (data.xhr) {
+                            var res = JSON.parse(data.xhr.response);
+                            id = res.Message
+                        }
+                        else {
+                            id = data.name;
+                        }
+
+                        $private.removerImagem(id);
                         $("input[name='Imagem']").val("");
                     });
                 },

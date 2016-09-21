@@ -65,8 +65,8 @@ namespace SmartLMS.WebUI.Controllers
             {
                 try
                 {
-                    ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto);
-                    servicoAuth.CriarUsuario(professor.Nome, professor.Login, professor.Email, professor.Senha, Perfil.Professor);
+                    ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto, new SmtpSender());
+                    servicoAuth.CriarUsuario(professor.Nome, professor.Login, professor.Email, professor.Senha, Perfil.Professor, Url.Action("Login", "Autentitcacao"));
 
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de professores";
@@ -113,7 +113,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 try
                 {
-                    ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto);
+                    ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto, new SmtpSender());
                     servicoAuth.AlterarUsuario(professor.Id, professor.Nome, professor.Email, professor.Login, professor.Senha, professor.Ativo, Perfil.Professor);
 
                     TempData["TipoMensagem"] = "success";

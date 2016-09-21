@@ -14,8 +14,6 @@
         }
     </style>
 }
-
-
 <div class="panel panel-primary">
     <div class="panel-heading">
         Lista de cursos
@@ -58,10 +56,10 @@
                     <th>
                         @Html.DisplayName("Nome")
                     </th>
-                    <th>
+                    <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Área de Conhecimento")
                     </th>
-                    <th>
+                    <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Assunto")
                     </th>
                     <th class="hidden-sm  hidden-xs">
@@ -173,7 +171,7 @@
             </td>
             <td>
                 <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
-                    <a href="@Url.Content("~/Assunto/Edit/"){{Id}}" class="btn btn-success btn-sm">
+                    <a href="@Url.Content("~/Curso/Edit/"){{Id}}" class="btn btn-success btn-sm">
                         <i class="material-icons">edit</i>
                     </a>
                     <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="{{Id}}" data-nome="{{Nome}}">
@@ -348,8 +346,8 @@
                     paginas: Math.ceil(data.Count / 8),
                     possuiAnterior: data.HasPrevious,
                     possuiProxima: data.HasNext,
-                    paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.Count / 8), 1),
-                    paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.Count / 8), 1),
+                    paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.Count / 8), $private.Pagina),
+                    paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.Count / 8), $private.Pagina),
                     paginaCorrente: $private.Pagina
                 }));
                 $.material.checkbox();

@@ -27,7 +27,7 @@
             $(function () {
                 var optionAtivo = $('<option>', {
                     value: '@Model.Id',
-                    text: '@Model.Nome'
+                    text: '@Html.Raw(Model.Nome)'
                 });
 
                 $("#outrasAreasConhecimento").on("dropdownjs.change", function () {

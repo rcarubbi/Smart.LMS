@@ -96,8 +96,21 @@ namespace SmartLMS.Dominio.Repositorios
         {
             var cursoAtual = ObterPorId(curso.Id);
             curso.DataCriacao = cursoAtual.DataCriacao;
+            cursoAtual.Assunto = curso.Assunto;
+            cursoAtual.ProfessorResponsavel = curso.ProfessorResponsavel;
             curso.Aulas = cursoAtual.Aulas;
             _contexto.Atualizar(cursoAtual, curso);
+
+            if (!curso.Ativo)
+            {
+                foreach (var aula in curso.Aulas)
+                {
+                    RepositorioAula aulaRepo = new RepositorioAula(_contexto);
+                    aula.Ativo = false;
+                    aulaRepo.Alterar(aula);
+                }
+            }
+
             _contexto.Salvar();
         }
 

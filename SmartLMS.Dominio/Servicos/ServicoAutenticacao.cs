@@ -14,11 +14,12 @@ namespace SmartLMS.Dominio.Servicos
     public class ServicoAutenticacao
     {
         private IContexto _contexto;
-        
-        public ServicoAutenticacao(IContexto contexo)
+        private IMailSender _sender;
+        public ServicoAutenticacao(IContexto contexo, IMailSender sender)
         {
+            _sender = sender;
             _contexto = contexo;
-
+            _servicoNotificacao = new ServicoNotificacao(_contexto, _sender);
             _criptografia = new CriptografiaSimetrica(SymmetricCryptProvider.TripleDES);
             RepositorioParametro parametroRepo = new RepositorioParametro(_contexto);
             _criptografia.Key = parametroRepo.ObterValorPorChave(Parametro.CHAVE_CRIPTOGRAFIA);
@@ -26,6 +27,7 @@ namespace SmartLMS.Dominio.Servicos
 
         private CriptografiaSimetrica _criptografia;
 
+        private ServicoNotificacao _servicoNotificacao;
         public bool Login(string login, string senha)
         {
             var senhaCriptografada = _criptografia.Encrypt(senha);
@@ -106,7 +108,7 @@ namespace SmartLMS.Dominio.Servicos
  
         }
 
-        public Usuario CriarUsuario(string nome, string login, string email, string senha, Perfil perfil)
+        public Usuario CriarUsuario(string nome, string login, string email, string senha, Perfil perfil, string link)
         {
             RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
 
@@ -136,25 +138,25 @@ namespace SmartLMS.Dominio.Servicos
             usuario.Nome = nome;
             usuario.DataCriacao = DateTime.Now;
 
-
-            var aviso = new Aviso
+            if (perfil == Perfil.Aluno)
             {
-                Usuario = usuario,
-                Texto = $"Bem vindo ao {Parametro.PROJETO}! Bons estudos!",
-                DataHora = DateTime.Now,
-            };
-            _contexto.ObterLista<Aviso>().Add(aviso);
+                var aviso = new Aviso
+                {
+                    Usuario = usuario,
+                    Texto = $"Bem vindo ao {Parametro.PROJETO}! Bons estudos!",
+                    DataHora = DateTime.Now,
+                };
+                _contexto.ObterLista<Aviso>().Add(aviso);
+            }
+
             usuarioRepo.Salvar(usuario);
 
  
-            NotificarUsuario(usuario, senha);
+            _servicoNotificacao.NotificarCriacaoUsuario(usuario, senha, link);
             return usuario;
         }
 
-        private void NotificarUsuario(Usuario usuario, string senha)
-        {
-              
-        }
+       
 
         public string RecuperarSenha(string email)
         {

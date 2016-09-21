@@ -12,7 +12,7 @@
             {
                 <div class="container">
                     <div class="container text-center">
-                        <div class="carousel slide row" data-ride="carousel" data-type="multi" data-interval="2000" id="carousel-@Model.Ordem">
+                        <div class="carousel slide row" data-ride="carousel" data-type="multi" data-interval="2000" id="carousel-@Model.IdArea-@Model.Ordem">
                             <div class="carousel-inner">
                                 @{
                                     bool primeiro = true;
@@ -33,8 +33,8 @@
                                 }
                             </div>
                         </div>
-                        <a class="left carousel-control" href="#carousel-@Model.Ordem" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
-                        <a class="right carousel-control" href="#carousel-@Model.Ordem" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                        <a class="left carousel-control" href="#carousel-@Model.IdArea-@Model.Ordem" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                        <a class="right carousel-control" href="#carousel-@Model.IdArea-@Model.Ordem" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
                     </div>
                 </div>
                 <a class="btn btn-simple btn-primary pull-right" href="@Url.Action("Index", "Curso", new { Id = Model.Id })">Veja o índice completo <span class="label label-info">@Model.Cursos.Count()</span></a>

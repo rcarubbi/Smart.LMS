@@ -129,8 +129,15 @@
             Dropzone.options.dropzoneForm = {
                 init: function () {
                     this.on("removedfile", function (data) {
-                      
-                        $private.removerMaterialApoio('@Model.Id.ToString()', data.name);
+                        var id = "";
+                        if (data.xhr) {
+                            var res = JSON.parse(data.xhr.response);
+                            id = res.Message
+                        }
+                        else {
+                            id = data.name;
+                        }
+                        $private.removerMaterialApoio('@Model.Id.ToString()', id);
                     });
 
                     $private.carregarMateriaisApoio('@Model.Id.ToString()', this);

@@ -57,6 +57,18 @@ namespace SmartLMS.Dominio.Repositorios
             assunto.DataCriacao = assuntoAtual.DataCriacao;
             assunto.Cursos = assuntoAtual.Cursos;
             _contexto.Atualizar(assuntoAtual, assunto);
+
+
+            if (!assunto.Ativo)
+            {
+                foreach (var curso in assunto.Cursos)
+                {
+                    RepositorioCurso repoCurso = new RepositorioCurso(_contexto);
+                    curso.Ativo = false;
+                    repoCurso.Alterar(curso);
+                }
+            }
+
             _contexto.Salvar();
         }
 

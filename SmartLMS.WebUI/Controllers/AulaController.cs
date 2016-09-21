@@ -52,7 +52,7 @@ namespace SmartLMS.WebUI.Controllers
                 TempData["TipoMensagem"] = "warning";
                 TempData["TituloMensagem"] = "Aviso";
                 TempData["Mensagem"] = "Esta aula não está disponível para você";
-                return RedirectToAction("Index", "Aula", new { Id = aula.Aula.Curso.Id });
+                return RedirectToAction("Index", "Home");
             }
 
         }
@@ -62,9 +62,18 @@ namespace SmartLMS.WebUI.Controllers
         {
             var cursoRepo = new RepositorioCurso(_contexto);
             var indice = cursoRepo.ObterIndiceCurso(id, _usuarioLogado?.Id);
+
+            if (!indice.Curso.Ativo)
+            {
+                TempData["TipoMensagem"] = "warning";
+                TempData["TituloMensagem"] = "Aviso";
+                TempData["Mensagem"] = "Este curso não está disponível no momento";
+                return RedirectToAction("Index", "Home");
+            }
+
             var acessoRepo = new RepositorioAcessoAula(_contexto);
             CursoViewModel viewModel = CursoViewModel.FromEntity(indice);
-            ViewBag.OutrosCursos = new SelectList(indice.Curso.Assunto.Cursos.Except(new List<Curso> { indice.Curso }), "Id", "Nome");
+            ViewBag.OutrosCursos = new SelectList(indice.Curso.Assunto.Cursos.Where(c => c.Ativo).Except(new List<Curso> { indice.Curso }), "Id", "Nome");
             return View(viewModel);
         }
 
@@ -73,7 +82,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             var cursoRepo = new RepositorioCurso(_contexto);
             var acessoRepo = new RepositorioAcessoAula(_contexto);
-            var indice = cursoRepo.ObterIndiceCurso(id, _usuarioLogado.Id);
+            var indice = cursoRepo.ObterIndiceCurso(id, _usuarioLogado?.Id);
             CursoViewModel viewModel = CursoViewModel.FromEntity(indice);
             return PartialView("_indiceCurso", viewModel);
         }

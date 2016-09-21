@@ -273,6 +273,8 @@
     <Content Include="Content\material-design\ripples.min.css" />
     <Content Include="Content\material-kit\material-kit.css" />
     <Content Include="Content\multi-carousel.css" />
+    <Content Include="Content\pace\green-loading-bar.css" />
+    <Content Include="Content\pace\green-minimal.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -365,6 +367,7 @@
     <Content Include="Scripts\material-kit\nouislider.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\momentjs\moment-with-locales.js" />
+    <Content Include="Scripts\pace\pace.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\slimscroll\jquery.slimscroll.min.js" />

@@ -58,7 +58,7 @@
                     <th>
                         @Html.DisplayName("Nome")
                     </th>
-                    <th>
+                    <th class="hidden-sm  hidden-xs">
                         @Html.DisplayName("Área de conhecimento")
                     </th>
                     <th class="hidden-sm  hidden-xs">
@@ -338,8 +338,8 @@
                     paginas: Math.ceil(data.Count / 8),
                     possuiAnterior: data.HasPrevious,
                     possuiProxima: data.HasNext,
-                    paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.Count / 8), 1),
-                    paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.Count / 8), 1),
+                    paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.Count / 8), $private.Pagina),
+                    paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.Count / 8), $private.Pagina),
                     paginaCorrente: $private.Pagina
                 }));
                 $.material.checkbox();

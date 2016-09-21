@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<SmartLMS.WebUI.Models.AreaConhecimentoViewModel>
 @{
     ViewBag.Title = "Home";
-    var areasBootstrapClass = "col-md-12"; 
+    var areasBootstrapClass = "col-md-12";
 }
 @Html.Partial("_BuscaContextual")
 
@@ -9,11 +9,11 @@
     @if (HttpContext.Current.User.Identity.IsAuthenticated)
     {
         areasBootstrapClass = "col-md-7 col-md-pull-5";
-        <div class="col-md-5 col-md-push-7">
-            @Html.Action("ExibirAvisos", "Aviso")
-        </div>
+    <div class="col-md-5 col-md-push-7">
+        @Html.Action("ExibirAvisos", "Aviso")
+    </div>
     }
-    
+
     <div class="@areasBootstrapClass">
         <div class="card" style="min-height: 295px;">
             <div class="content">
@@ -28,12 +28,12 @@
 
                         @foreach (var item in Model)
                         {
-                            <li class="@(primeiraLinha ? "active" : "")">
-                                <a href="#areaConhecimento-@item.Ordem" role="tab" data-toggle="tab" aria-expanded="@(primeiraLinha ? "true" : "false")">
-                                    <i class="fa fa-map-signs text-primary"></i>
-                                    <p class="text-primary">@item.Nome</p>
-                                </a>
-                            </li>
+                        <li class="@(primeiraLinha ? "active" : "")">
+                            <a href="#areaConhecimento-@item.Ordem" role="tab" data-toggle="tab" aria-expanded="@(primeiraLinha ? "true" : "false")">
+                                <i class="fa fa-map-signs text-primary"></i>
+                                <p class="text-primary">@item.Nome</p>
+                            </a>
+                        </li>
                             if (primeiraLinha)
                             {
                                 primeiraLinha = false;
@@ -48,7 +48,7 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -59,9 +59,9 @@
             @foreach (var item in Model)
             {
 
-                <div id="areaConhecimento-@item.Ordem" class="tab-pane fade @(primeiraLinha? "in active" : "")">
-                    @Html.Partial("_AreaConhecimentoPanel", item)
-                </div>
+            <div id="areaConhecimento-@item.Ordem" class="tab-pane fade @(primeiraLinha? "in active" : "")">
+                @Html.Partial("_AreaConhecimentoPanel", item)
+            </div>
 
                 if (primeiraLinha)
                 {
@@ -97,10 +97,7 @@
 }
 
 @section scripts {
-@Scripts.Render("~/bundles/jqueryval")
-
-
-
+    @Scripts.Render("~/bundles/jqueryval")
     <script>
         SmartLMS.HomeControllerProxy = (function () {
             var $private = {}, $public = {};
@@ -258,4 +255,6 @@
 
 
     </script>
- }
+}
+
+

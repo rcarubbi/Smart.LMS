@@ -35,8 +35,15 @@ namespace SmartLMS.WebUI.Controllers
         {
             var assuntoRepo = new RepositorioAssunto(_contexto);
             var assunto = assuntoRepo.ObterPorId(id);
+            if (!assunto.Ativo)
+            {
+                TempData["TipoMensagem"] = "warning";
+                TempData["TituloMensagem"] = "Aviso";
+                TempData["Mensagem"] = "Este assunto não está disponível no momento";
+                return RedirectToAction("Index", "Home");
+            }
             AssuntoViewModel viewModel = AssuntoViewModel.FromEntity(assunto, 3);
-            ViewBag.OutrosAssuntos = new SelectList(assunto.AreaConhecimento.Assuntos.Except(new List<Assunto> { assunto }), "Id", "Nome");
+            ViewBag.OutrosAssuntos = new SelectList(assunto.AreaConhecimento.Assuntos.Where(a => a.Ativo).Except(new List<Assunto> { assunto }), "Id", "Nome");
             return View(viewModel);
         }
 
@@ -102,7 +109,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             var assuntoRepo = new RepositorioAssunto(_contexto);
             var usuarioRepo = new RepositorioUsuario(_contexto);
-        
+
             if (ModelState.IsValid)
             {
                 try
@@ -136,16 +143,16 @@ namespace SmartLMS.WebUI.Controllers
         [Authorize(Roles = "Administrador")]
         public ActionResult SalvarImagem()
         {
-            
-                ImagemUploader uploader = new ImagemUploader();
-                RepositorioCurso repo = new RepositorioCurso(_contexto);
 
-               
+            ImagemUploader uploader = new ImagemUploader();
+            RepositorioCurso repo = new RepositorioCurso(_contexto);
 
-                var uploadResult = uploader.Upload(Request.Files[0]);
-              
-                return Json(uploadResult);
-           
+
+
+            var uploadResult = uploader.Upload(Request.Files[0]);
+
+            return Json(uploadResult);
+
         }
 
 
@@ -227,12 +234,12 @@ namespace SmartLMS.WebUI.Controllers
 
             var assuntoRepo = new RepositorioAssunto(_contexto);
             var usuarioRepo = new RepositorioUsuario(_contexto);
-           
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    
+
                     var assunto = assuntoRepo.ObterPorId(viewModel.IdAssunto);
                     var professor = (Professor)usuarioRepo.ObterPorId(viewModel.IdProfessorResponsavel);
                     var repo = new RepositorioCurso(_contexto);

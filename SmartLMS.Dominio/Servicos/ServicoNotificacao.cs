@@ -6,6 +6,8 @@ using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
 using System.Linq;
 using System.Net.Mail;
+using System;
+
 namespace SmartLMS.Dominio.Servicos
 {
     public class ServicoNotificacao
@@ -31,16 +33,7 @@ namespace SmartLMS.Dominio.Servicos
 
             RepositorioParametro parametroRepo = new RepositorioParametro(_contexto);
 
-            string corpo = $@"<!DOCTYPE html>
-                            <html>
-                            <head>
-                                <meta name='viewport' content='width=device-width' />
-                                <title>
-
-                                </title>
-                            </head>
-                            <body>
-                                <div>
+            string corpo = $@"<div>
                                     Olá {usuario.Nome}, seus dados de acesso ao Código Nerd são:
                                 </div>
                                 <div>
@@ -54,9 +47,7 @@ namespace SmartLMS.Dominio.Servicos
                                 </div>
                                 <div>
                                     Atenciosamente, {Parametro.PROJETO}
-                                </div>
-                            </body>
-                            </html>";
+                                </div>";
 
 
             MailMessage message = new MailMessage();
@@ -126,6 +117,38 @@ namespace SmartLMS.Dominio.Servicos
 
             email.Subject = $"{Parametro.PROJETO} - Nova aula disponível";
             _sender.Send(email);
+        }
+
+        internal void NotificarCriacaoUsuario(Usuario usuario, string senha, string link)
+        {
+            RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
+            RepositorioParametro parametroRepo = new RepositorioParametro(_contexto);
+
+            string corpo = $@"<div>
+                                    Olá {usuario.Nome}, seus dados de acesso ao Código Nerd são:
+                                </div>
+                                <div>
+                                    Login: {usuario.Login}.
+                                </div>
+                                <div>
+                                    Senha: {senha}.
+                                </div>
+                                <div>
+                                    Acesso nossa plataforma pelo endereço <a href='{link}'>{link}</a>.
+                                </div>
+                                <div>
+                                    Atenciosamente, {Parametro.PROJETO}
+                                </div>";
+
+
+            MailMessage message = new MailMessage();
+            message.To.Add(usuario.Email);
+            message.From = new MailAddress(parametroRepo.ObterValorPorChave(Parametro.REMETENTE_EMAIL), Parametro.PROJETO);
+            message.Subject = string.Format("Bem vindo ao {0}", Parametro.PROJETO);
+            message.IsBodyHtml = true;
+            message.Body = corpo;
+
+            _sender.Send(message);
         }
     }
 }

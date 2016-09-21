@@ -68,8 +68,9 @@ namespace SmartLMS.WebUI.Controllers
                     using (TransactionScope tx = new TransactionScope())
                     {
 
-                        ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto);
-                        var novoAluno = servicoAuth.CriarUsuario(aluno.Nome, aluno.Login, aluno.Email, aluno.Senha, Perfil.Aluno);
+                        var sender = new SmtpSender();
+                        ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto, sender);
+                        var novoAluno = servicoAuth.CriarUsuario(aluno.Nome, aluno.Login, aluno.Email, aluno.Senha, Perfil.Aluno, Url.Action("Login", "Autenticacao"));
 
                         var turma = repo.ObterPorId(aluno.Turma);
 
@@ -87,7 +88,7 @@ namespace SmartLMS.WebUI.Controllers
 
                         planejamento.Alunos.Add((Aluno)novoAluno);
 
-                        ServicoNotificacao servicoNotificacao = new ServicoNotificacao(_contexto, new SmtpSender());
+                        ServicoNotificacao servicoNotificacao = new ServicoNotificacao(_contexto, sender);
                         
                         // notifica as aulas já liberadas no dia
                         foreach (var item in planejamento.AulasDisponiveis)
@@ -146,7 +147,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 try
                 {
-                    ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto);
+                    ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto, new SmtpSender());
                     servicoAuth.AlterarUsuario(aluno.Id, aluno.Nome, aluno.Email, aluno.Login, aluno.Senha, aluno.Ativo, Perfil.Aluno);
 
                     TempData["TipoMensagem"] = "success";

@@ -61,6 +61,17 @@ namespace SmartLMS.Dominio.Repositorios
             areaConhecimento.Assuntos = areaConhecimentoAtual.Assuntos;
             areaConhecimento.DataCriacao = areaConhecimentoAtual.DataCriacao;
             _contexto.Atualizar(areaConhecimentoAtual, areaConhecimento);
+
+            if (!areaConhecimento.Ativo)
+            {
+                RepositorioAssunto repoAssunto = new RepositorioAssunto(_contexto);
+                foreach (var assunto in areaConhecimento.Assuntos)
+                {
+                    assunto.Ativo = false;
+                    repoAssunto.Alterar(assunto);
+                }
+            }
+
             _contexto.Salvar();
         }
     }

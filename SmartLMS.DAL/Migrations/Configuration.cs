@@ -2,11 +2,8 @@ namespace SmartLMS.DAL.Migrations
 {
     using Carubbi.Utils.Security;
     using Dominio.Entidades;
-    using Dominio.Entidades.Conteudo;
-    using Dominio.Entidades.Liberacao;
     using Dominio.Entidades.Pessoa;
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity.Migrations;
 
     internal sealed class Configuration : DbMigrationsConfiguration<SmartLMS.DAL.Contexto>

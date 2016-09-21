@@ -38,6 +38,7 @@ namespace SmartLMS.WebUI.Models
 
         public decimal Segundos { get; set; }
 
+        [Display(Name = "Curso")]
         [Required(ErrorMessage = "Selecione um curso")]
         public Guid IdCurso { get; set; }
 
