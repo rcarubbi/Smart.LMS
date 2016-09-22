@@ -11,7 +11,7 @@ namespace SmartLMS.DAL.Migrations
                 "dbo.Parametro",
                 c => new
                     {
-                        Id = c.Guid(nullable: false, identity: true),
+                        Id = c.Guid(nullable: false),
                         Chave = c.String(),
                         Valor = c.String(),
                         Ativo = c.Boolean(nullable: false),
@@ -39,7 +39,7 @@ namespace SmartLMS.DAL.Migrations
                 "dbo.Usuario",
                 c => new
                     {
-                        Id = c.Guid(nullable: false, identity: true),
+                        Id = c.Guid(nullable: false),
                         Nome = c.String(),
                         Login = c.String(),
                         Senha = c.String(),
@@ -69,7 +69,7 @@ namespace SmartLMS.DAL.Migrations
                 "dbo.Arquivo",
                 c => new
                     {
-                        Id = c.Guid(nullable: false, identity: true),
+                        Id = c.Guid(nullable: false),
                         Nome = c.String(),
                         ArquivoFisico = c.String(),
                         Ativo = c.Boolean(nullable: false),
@@ -87,7 +87,7 @@ namespace SmartLMS.DAL.Migrations
                 "dbo.Aula",
                 c => new
                     {
-                        Id = c.Guid(nullable: false, identity: true),
+                        Id = c.Guid(nullable: false),
                         DiasLiberacao = c.Int(nullable: false),
                         Nome = c.String(),
                         Conteudo = c.String(),
@@ -141,7 +141,7 @@ namespace SmartLMS.DAL.Migrations
                 "dbo.Curso",
                 c => new
                     {
-                        Id = c.Guid(nullable: false, identity: true),
+                        Id = c.Guid(nullable: false),
                         Ordem = c.Int(nullable: false),
                         Imagem = c.String(),
                         Nome = c.String(),
@@ -160,7 +160,7 @@ namespace SmartLMS.DAL.Migrations
                 "dbo.Assunto",
                 c => new
                     {
-                        Id = c.Guid(nullable: false, identity: true),
+                        Id = c.Guid(nullable: false),
                         Ordem = c.Int(nullable: false),
                         Nome = c.String(),
                         Ativo = c.Boolean(nullable: false),
@@ -175,7 +175,7 @@ namespace SmartLMS.DAL.Migrations
                 "dbo.AreaConhecimento",
                 c => new
                     {
-                        Id = c.Guid(nullable: false, identity: true),
+                        Id = c.Guid(nullable: false),
                         Ordem = c.Int(nullable: false),
                         Nome = c.String(),
                         Ativo = c.Boolean(nullable: false),
@@ -244,7 +244,7 @@ namespace SmartLMS.DAL.Migrations
                 "dbo.Turma",
                 c => new
                     {
-                        Id = c.Guid(nullable: false, identity: true),
+                        Id = c.Guid(nullable: false),
                         Nome = c.String(),
                         Ativo = c.Boolean(nullable: false),
                         DataCriacao = c.DateTime(nullable: false),

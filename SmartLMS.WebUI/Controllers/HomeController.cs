@@ -5,9 +5,7 @@ using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Repositorios;
 using SmartLMS.Dominio.Servicos;
 using SmartLMS.WebUI.Models;
-using SmartLMS.WebUI.Servicos;
 using System.Linq;
-using System.Net.Mail;
 using System.Web.Mvc;
 using System.Web.Routing;
 

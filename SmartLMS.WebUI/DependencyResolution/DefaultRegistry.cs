@@ -15,9 +15,10 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace SmartLMS.WebUI.DependencyResolution {
-    using Dominio;
+namespace SmartLMS.WebUI.DependencyResolution
+{
     using DAL;
+    using Dominio;
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
 

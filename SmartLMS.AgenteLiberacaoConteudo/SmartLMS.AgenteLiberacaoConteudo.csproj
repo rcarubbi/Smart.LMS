@@ -45,8 +45,8 @@
       <HintPath>..\packages\Carubbi.Mailer.Interfaces.1.2.0.0\lib\net45\Carubbi.Mailer.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Carubbi.Utils, Version=1.4.2.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.Utils.1.4.2.9\lib\net45\Carubbi.Utils.dll</HintPath>
+    <Reference Include="Carubbi.Utils, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Utils.1.4.3.0\lib\net45\Carubbi.Utils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
@@ -122,6 +122,9 @@
     <Compile Include="ServicoLiberacaoConteudo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\config.png" />
+    <Content Include="Resources\excel.png" />
+    <Content Include="Resources\play.png" />
     <None Include="App.config" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>

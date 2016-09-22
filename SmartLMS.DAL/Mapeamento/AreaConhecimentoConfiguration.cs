@@ -8,7 +8,7 @@ namespace SmartLMS.DAL.Mapeamento
     {
         public AreaConhecimentoConfiguration()
         {
-            Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             HasMany(x => x.Assuntos).WithRequired(a => a.AreaConhecimento);
         }
     }

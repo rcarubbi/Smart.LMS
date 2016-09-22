@@ -34,8 +34,8 @@
       <HintPath>..\packages\Carubbi.GenericRepository.1.4.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Carubbi.Utils, Version=1.4.2.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.Utils.1.4.2.9\lib\net45\Carubbi.Utils.dll</HintPath>
+    <Reference Include="Carubbi.Utils, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Utils.1.4.3.0\lib\net45\Carubbi.Utils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -76,9 +76,9 @@
     <Compile Include="Mapeamento\TurmaCursoConfiguration.cs" />
     <Compile Include="Mapeamento\UsuarioAvisoConfiguration.cs" />
     <Compile Include="Mapeamento\UsuarioConfiguration.cs" />
-    <Compile Include="Migrations\201609092340272_ModeloInicial.cs" />
-    <Compile Include="Migrations\201609092340272_ModeloInicial.Designer.cs">
-      <DependentUpon>201609092340272_ModeloInicial.cs</DependentUpon>
+    <Compile Include="Migrations\201609221919350_ModeloInicial.cs" />
+    <Compile Include="Migrations\201609221919350_ModeloInicial.Designer.cs">
+      <DependentUpon>201609221919350_ModeloInicial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,8 +96,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609092340272_ModeloInicial.resx">
-      <DependentUpon>201609092340272_ModeloInicial.cs</DependentUpon>
+    <Content Include="Resources\config.png" />
+    <Content Include="Resources\excel.png" />
+    <Content Include="Resources\play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201609221919350_ModeloInicial.resx">
+      <DependentUpon>201609221919350_ModeloInicial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

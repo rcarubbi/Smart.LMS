@@ -8,7 +8,7 @@ namespace SmartLMS.DAL.Mapeamento
     {
         public TurmaConfiguration()
         {
-            Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             HasMany(x => x.Planejamentos).WithRequired(x => x.Turma);
 
         }

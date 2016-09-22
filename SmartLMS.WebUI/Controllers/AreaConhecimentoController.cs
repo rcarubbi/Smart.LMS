@@ -61,6 +61,7 @@ namespace SmartLMS.WebUI.Controllers
                 {
                     RepositorioAreaConhecimento repo = new RepositorioAreaConhecimento(_contexto);
                     repo.Incluir(AreaConhecimentoViewModel.ToEntity(areaConhecimento));
+                    _contexto.Salvar(_usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de conteúdo";
                     TempData["Mensagem"] = "Área de conhecimento criada com sucesso";

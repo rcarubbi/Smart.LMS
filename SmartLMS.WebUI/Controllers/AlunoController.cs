@@ -9,7 +9,6 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Transactions;
-using System.Web;
 using System.Web.Mvc;
 namespace SmartLMS.WebUI.Controllers
 {

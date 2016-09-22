@@ -8,7 +8,7 @@ namespace SmartLMS.DAL.Mapeamento
     {
         public UsuarioConfiguration()
         {
-            Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             HasMany(x => x.AcessosArquivo).WithRequired(x => x.Usuario);
             HasMany(x => x.AcessosAula).WithRequired(x => x.Usuario);
             

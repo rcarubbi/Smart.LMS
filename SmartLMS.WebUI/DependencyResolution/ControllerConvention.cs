@@ -15,14 +15,14 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace SmartLMS.WebUI.DependencyResolution {
-    using System;
-    using System.Web.Mvc;
-
+namespace SmartLMS.WebUI.DependencyResolution
+{
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
     using StructureMap.Pipeline;
     using StructureMap.TypeRules;
+    using System;
+    using System.Web.Mvc;
 
     public class ControllerConvention : IRegistrationConvention {
         #region Public Methods and Operators

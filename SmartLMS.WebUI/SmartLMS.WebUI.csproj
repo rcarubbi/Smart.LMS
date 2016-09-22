@@ -54,8 +54,8 @@
       <HintPath>..\packages\Carubbi.Mailer.Interfaces.1.2.0.0\lib\net45\Carubbi.Mailer.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Carubbi.Utils, Version=1.4.2.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.Utils.1.4.2.9\lib\net45\Carubbi.Utils.dll</HintPath>
+    <Reference Include="Carubbi.Utils, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Utils.1.4.3.0\lib\net45\Carubbi.Utils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -312,6 +312,9 @@
     <Content Include="ms-icon-150x150.png" />
     <Content Include="ms-icon-310x310.png" />
     <Content Include="ms-icon-70x70.png" />
+    <Content Include="Resources\config.png" />
+    <Content Include="Resources\excel.png" />
+    <Content Include="Resources\play.png" />
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\bootstrap-datepicker\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-multiselect\bootstrap-multiselect.js" />

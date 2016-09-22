@@ -12,6 +12,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace SmartLMS.DAL
 {
@@ -41,7 +42,7 @@ namespace SmartLMS.DAL
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
 
-            modelBuilder.Entity<Parametro>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Parametro>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             modelBuilder.Entity<Log>().Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
             modelBuilder.Configurations.Add(new AvisoConfiguration());
@@ -73,49 +74,69 @@ namespace SmartLMS.DAL
 
         public void Salvar()
         {
-            Salvar(ObterVisitante());
+            Salvar(null);
         }
 
         public void Salvar(Usuario usuarioLogado)
         {
             DateTime agora = DateTime.Now;
-            /*   if (usuarioLogado != null)
-               {
-                   foreach (var entry in ChangeTracker?.Entries()?.Where(x => x.Entity?.GetType() != typeof(Log)))
-                   {
-                       GerarLog(entry, usuarioLogado);
-                   }
-               }*/
+            if (usuarioLogado != null)
+            {
+                foreach (var entry in ChangeTracker?.Entries()?.Where(x => x.Entity?.GetType() != typeof(Log)))
+                {
+                    GerarLog(entry, usuarioLogado);
+                }
+            }
             SaveChanges();
         }
+
+
+        public Type GetType(object entity)
+        {
+            var thisType = entity.GetType();
+
+            if (thisType.Namespace == "System.Data.Entity.DynamicProxies")
+                return thisType.BaseType;
+
+            return thisType;
+        }
+
 
         private void GerarLog(DbEntityEntry entry, Usuario usuarioLogado)
         {
             var serializador = this
-                          .GetType()
-                          .GetMethod("ObterSerializador")
-                          .MakeGenericMethod(entry.Entity.GetType())
-                          .Invoke(this, null);
+                      .GetType()
+                      .GetMethod("ObterSerializador", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                      .MakeGenericMethod(GetType(entry.Entity))
+                      .Invoke(this, null);
 
             var tipoSerializador = serializador.GetType();
 
             var metodoSerializar = tipoSerializador
-              .GetMethod("XmlSerialize");
-
+              .GetMethod("XmlSerialize", new Type[] { GetType(entry.Entity), typeof(XmlAttributeOverrides) });
 
             var xmlAntigo = string.Empty;
             var xmlNovo = string.Empty;
 
-            if (entry.State == (EntityState.Deleted | EntityState.Modified))
+            if ((EntityState.Deleted | EntityState.Modified).HasFlag(entry.State))
             {
-                xmlAntigo = metodoSerializar
-                  .Invoke(serializador, new object[] { entry.OriginalValues }).ToString();
+                var proxyCreation = Configuration.ProxyCreationEnabled;
+                Configuration.ProxyCreationEnabled = false;
+                var entity = entry.OriginalValues.ToObject();
+                Configuration.ProxyCreationEnabled = proxyCreation;
+
+                var atributesOverride = IgnoreCollections(entity);
+                xmlAntigo = metodoSerializar.Invoke(serializador, new object[] { entity, atributesOverride }).ToString();
             }
 
-            if (entry.State == (EntityState.Added | EntityState.Modified))
+            if ((EntityState.Added | EntityState.Modified).HasFlag(entry.State))
             {
-                xmlNovo = metodoSerializar
-                  .Invoke(serializador, new object[] { entry.CurrentValues }).ToString();
+                var proxyCreation = Configuration.ProxyCreationEnabled;
+                Configuration.ProxyCreationEnabled = false;
+                var entity = entry.CurrentValues.ToObject();
+                Configuration.ProxyCreationEnabled = proxyCreation;
+                var atributesOverride = IgnoreCollections(entity);
+                xmlNovo = metodoSerializar.Invoke(serializador, new object[] { entity, atributesOverride }).ToString();
             }
 
             if (!string.IsNullOrWhiteSpace(xmlAntigo) || !string.IsNullOrWhiteSpace(xmlNovo))
@@ -127,9 +148,24 @@ namespace SmartLMS.DAL
                     DataHora = DateTime.Now,
                     Usuario = usuarioLogado,
                     IdEntitdade = ((Entidade)entry.Entity).Id,
-                    Tipo = entry.Entity.GetType().ToString()
+                    Tipo = GetType(entry.Entity).ToString()
                 }).State = EntityState.Added;
             }
+        }
+
+        private XmlAttributeOverrides IgnoreCollections(object entity)
+        {
+
+            var type = GetType(entity);
+            var overrides = new XmlAttributeOverrides();
+            var ignore = new XmlAttributes { XmlIgnore = true };
+
+            foreach (var property in type.GetProperties().Where(m => m.PropertyType.IsGenericType && m.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>)))
+            {
+                overrides.Add(type, property.Name, ignore);
+            }
+
+            return overrides;
         }
 
         private Usuario ObterVisitante()
@@ -147,6 +183,7 @@ namespace SmartLMS.DAL
             Configuration.LazyLoadingEnabled = false;
             Configuration.ProxyCreationEnabled = false;
         }
+
 
         public T UnProxy<T>(T proxyObject) where T : class
         {

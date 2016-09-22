@@ -52,7 +52,7 @@ namespace SmartLMS.Dominio.Repositorios
             areaConhecimento.Ativo = true;
             areaConhecimento.DataCriacao = DateTime.Now;
             _contexto.ObterLista<AreaConhecimento>().Add(areaConhecimento);
-            _contexto.Salvar();
+            
         }
 
         public void Alterar(AreaConhecimento areaConhecimento)
