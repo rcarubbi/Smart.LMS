@@ -54,7 +54,7 @@ namespace SmartLMS.Dominio.Repositorios
         internal void Salvar(Usuario usuario)
         {
             _contexto.ObterLista<Usuario>().Add(usuario);
-            _contexto.Salvar();
+            
         }
 
         public PagedListResult<Professor> ListarProfessores(string termo, string campoBusca, int pagina)
@@ -73,7 +73,7 @@ namespace SmartLMS.Dominio.Repositorios
             return repo.Search(query);
         }
 
-        public void ExcluirProfessor(Guid id)
+        public void ExcluirProfessor(Guid id, Usuario usuarioLogado)
         {
             Professor professor = _contexto.ObterLista<Professor>().Find(id);
             var usuarioAvisos = _contexto.ObterLista<UsuarioAviso>();
@@ -86,7 +86,7 @@ namespace SmartLMS.Dominio.Repositorios
 
             try
             {
-                _contexto.Salvar();
+                _contexto.Salvar(usuarioLogado);
             }
             catch (DbUpdateException ex)
             {
@@ -153,7 +153,7 @@ namespace SmartLMS.Dominio.Repositorios
             planejamentos.ToList().ForEach(x => x.Alunos.Remove(aluno));
             
             _contexto.ObterLista<Aluno>().Remove(aluno);
-            _contexto.Salvar();
+        
         }
 
         public List<Aluno> ListarAlunosAtivos()

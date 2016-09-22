@@ -33,6 +33,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
             usuarioRepo.ExcluirAluno(new Guid(id));
+            _contexto.Salvar(_usuarioLogado);
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
@@ -69,7 +70,7 @@ namespace SmartLMS.WebUI.Controllers
 
                         var sender = new SmtpSender();
                         ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto, sender);
-                        var novoAluno = servicoAuth.CriarUsuario(aluno.Nome, aluno.Login, aluno.Email, aluno.Senha, Perfil.Aluno, Url.Action("Login", "Autenticacao"));
+                        var novoAluno = servicoAuth.CriarUsuario(aluno.Nome, aluno.Login, aluno.Email, aluno.Senha, Perfil.Aluno, Url.Action("Login", "Autenticacao"), _usuarioLogado);
 
                         var turma = repo.ObterPorId(aluno.Turma);
 
@@ -98,7 +99,7 @@ namespace SmartLMS.WebUI.Controllers
                         // força a liberação de aulas pendentes para o dia
                         planejamento.LiberarAcessosPendentes(_contexto, new SmtpSender());
 
-                        _contexto.Salvar();
+                        _contexto.Salvar(_usuarioLogado);
                         tx.Complete();
                     }
                     TempData["TipoMensagem"] = "success";
@@ -147,7 +148,7 @@ namespace SmartLMS.WebUI.Controllers
                 try
                 {
                     ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto, new SmtpSender());
-                    servicoAuth.AlterarUsuario(aluno.Id, aluno.Nome, aluno.Email, aluno.Login, aluno.Senha, aluno.Ativo, Perfil.Aluno);
+                    servicoAuth.AlterarUsuario(aluno.Id, aluno.Nome, aluno.Email, aluno.Login, aluno.Senha, aluno.Ativo, Perfil.Aluno, _usuarioLogado);
 
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de alunos";
@@ -180,24 +181,5 @@ namespace SmartLMS.WebUI.Controllers
             }
             return View(aluno);
         }
-
-        // POST: Aluno/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
-        {
-
-
-            var usuarioRepo = new RepositorioUsuario(_contexto);
-            usuarioRepo.ExcluirAluno(id);
-
-            TempData["TipoMensagem"] = "error";
-            TempData["TituloMensagem"] = "Administração de alunos";
-            TempData["Mensagem"] = "Aluno excluído com sucesso";
-
-            return RedirectToAction("IndexAdmin");
-        }
-
-
     }
 }

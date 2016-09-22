@@ -1,5 +1,6 @@
 ﻿using Carubbi.GenericRepository;
 using Carubbi.Utils.Persistence;
+using Carubbi.Utils.Data;
 using SmartLMS.DAL.Mapeamento;
 using SmartLMS.Dominio;
 using SmartLMS.Dominio.Entidades;
@@ -104,6 +105,11 @@ namespace SmartLMS.DAL
 
         private void GerarLog(DbEntityEntry entry, Usuario usuarioLogado)
         {
+            if (!(entry.Entity is Entidade))
+            {
+                return;
+            }
+
             var serializador = this
                       .GetType()
                       .GetMethod("ObterSerializador", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
@@ -124,9 +130,8 @@ namespace SmartLMS.DAL
                 Configuration.ProxyCreationEnabled = false;
                 var entity = entry.OriginalValues.ToObject();
                 Configuration.ProxyCreationEnabled = proxyCreation;
-
-                var atributesOverride = IgnoreCollections(entity);
-                xmlAntigo = metodoSerializar.Invoke(serializador, new object[] { entity, atributesOverride }).ToString();
+                var overrides = IgnoreNavigationProperties(entity);
+                xmlAntigo = metodoSerializar.Invoke(serializador, new object[] { entity, overrides }).ToString();
             }
 
             if ((EntityState.Added | EntityState.Modified).HasFlag(entry.State))
@@ -135,8 +140,8 @@ namespace SmartLMS.DAL
                 Configuration.ProxyCreationEnabled = false;
                 var entity = entry.CurrentValues.ToObject();
                 Configuration.ProxyCreationEnabled = proxyCreation;
-                var atributesOverride = IgnoreCollections(entity);
-                xmlNovo = metodoSerializar.Invoke(serializador, new object[] { entity, atributesOverride }).ToString();
+                var overrides = IgnoreNavigationProperties(entity);
+                xmlNovo = metodoSerializar.Invoke(serializador, new object[] { entity, overrides }).ToString();
             }
 
             if (!string.IsNullOrWhiteSpace(xmlAntigo) || !string.IsNullOrWhiteSpace(xmlNovo))
@@ -153,25 +158,29 @@ namespace SmartLMS.DAL
             }
         }
 
-        private XmlAttributeOverrides IgnoreCollections(object entity)
+        private XmlAttributeOverrides IgnoreNavigationProperties(object entity)
         {
+       
 
+            XmlAttributeOverrides overrides = new XmlAttributeOverrides();
             var type = GetType(entity);
-            var overrides = new XmlAttributeOverrides();
             var ignore = new XmlAttributes { XmlIgnore = true };
 
-            foreach (var property in type.GetProperties().Where(m => m.PropertyType.IsGenericType && m.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>)))
+            foreach (var property in type.GetProperties().Where(m => m.PropertyType.IsInterface || (m.PropertyType.IsClass && m.PropertyType.FullName != "System.String")))
             {
-                overrides.Add(type, property.Name, ignore);
+                Type overridesType = type;
+                while (overridesType.BaseType != typeof(object) && overridesType.BaseType != typeof(Entidade))
+                {
+                    overrides.Add(overridesType, property.Name, ignore);
+                    overridesType = overridesType.BaseType;
+                }
+                overrides.Add(overridesType, property.Name, ignore);
             }
 
             return overrides;
         }
 
-        private Usuario ObterVisitante()
-        {
-            return Set<Usuario>().SingleOrDefault(u => u.Login == Usuario.AGENTE_INTERNO);
-        }
+
 
         IDbSet<T> IDbContext.Set<T>()
         {

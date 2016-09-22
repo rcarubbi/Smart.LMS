@@ -146,6 +146,7 @@ namespace SmartLMS.WebUI.Controllers
                 var aula = aulaRepo.ObterAula(comentario.IdAula, _usuarioLogado.Id);
                 comentario.DataHora = DateTime.Now;
                 aulaRepo.Comentar(comentario.ToEntity(_usuarioLogado, aula.Aula));
+                _contexto.Salvar(_usuarioLogado);
                 return new HttpStatusCodeResult(HttpStatusCode.OK);
             }
             else
@@ -159,6 +160,7 @@ namespace SmartLMS.WebUI.Controllers
             var aulaRepo = new RepositorioAula(_contexto);
 
             aulaRepo.ExcluirComentario(idComentario);
+            _contexto.Salvar(_usuarioLogado);
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
@@ -238,7 +240,7 @@ namespace SmartLMS.WebUI.Controllers
 
                     RepositorioAula repo = new RepositorioAula(_contexto);
                     repo.Incluir(AulaViewModel.ToEntity(aula, curso, professor));
-
+                    _contexto.Salvar(_usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de conteúdo";
                     TempData["Mensagem"] = "Aula criada com sucesso";
@@ -271,6 +273,7 @@ namespace SmartLMS.WebUI.Controllers
                 RepositorioAula repo = new RepositorioAula(_contexto);
                 var uploadResult = uploader.Upload(Request.Files[0]);
                 var aula = repo.ObterPorId(new Guid(id));
+
                 aula.Arquivos.Add(new Arquivo
                 {
                     ArquivoFisico = uploadResult.Message,
@@ -279,7 +282,9 @@ namespace SmartLMS.WebUI.Controllers
                     Nome = Request.Files[0].FileName,
                     Aula = aula
                 });
-                _contexto.Salvar();
+
+                _contexto.Salvar(_usuarioLogado);
+
                 tx.Complete();
                 return Json(uploadResult);
             }
@@ -296,6 +301,7 @@ namespace SmartLMS.WebUI.Controllers
                 var arquivo = aula.Arquivos.Single(x => x.ArquivoFisico == nomeArquivo);
                 aula.Arquivos.Remove(arquivo);
                 repo.Atualizar(aula);
+                _contexto.Salvar(_usuarioLogado);
                 uploader.DeleteFile(nomeArquivo);
                 tx.Complete();
             }
@@ -354,6 +360,7 @@ namespace SmartLMS.WebUI.Controllers
                     var professor = (Professor)usuarioRepo.ObterPorId(viewModel.IdProfessor);
                     var repo = new RepositorioAula(_contexto);
                     repo.Alterar(AulaViewModel.ToEntity(viewModel, curso, professor));
+                    _contexto.Salvar(_usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de conteúdo";
                     TempData["Mensagem"] = "Aula alterada com sucesso";
@@ -397,6 +404,7 @@ namespace SmartLMS.WebUI.Controllers
                 }
                     
                 repo.Excluir(aula.Id);
+                _contexto.Salvar(_usuarioLogado);
                 tx.Complete();
             }
             return new HttpStatusCodeResult(HttpStatusCode.OK);

@@ -34,12 +34,10 @@ namespace SmartLMS.WebUI.Controllers
         [HttpPost]
         public ActionResult Excluir(string id)
         {
-
             RepositorioAreaConhecimento repo = new RepositorioAreaConhecimento(_contexto);
             repo.ExcluirAreaConhecimento(new Guid(id));
+            _contexto.Salvar(_usuarioLogado);
             return new HttpStatusCodeResult(HttpStatusCode.OK);
-
-
         }
 
         public ActionResult Create()
@@ -97,6 +95,7 @@ namespace SmartLMS.WebUI.Controllers
                 try
                 {
                     repo.Alterar(AreaConhecimentoViewModel.ToEntity(viewModel));
+                    _contexto.Salvar(_usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de conteúdo";
                     TempData["Mensagem"] = "Área de conhecimento alterada com sucesso";

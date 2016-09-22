@@ -2,7 +2,6 @@
 using SmartLMS.Dominio.Entidades.Conteudo;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 
 namespace SmartLMS.Dominio.Repositorios
@@ -44,7 +43,7 @@ namespace SmartLMS.Dominio.Repositorios
         {
             var area = _contexto.ObterLista<AreaConhecimento>().Find(id);
             _contexto.ObterLista<AreaConhecimento>().Remove(area);
-            _contexto.Salvar();
+          
         }
 
         public void Incluir(AreaConhecimento areaConhecimento)
@@ -72,7 +71,7 @@ namespace SmartLMS.Dominio.Repositorios
                 }
             }
 
-            _contexto.Salvar();
+           
         }
     }
 }

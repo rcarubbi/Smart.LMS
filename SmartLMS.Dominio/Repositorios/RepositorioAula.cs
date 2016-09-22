@@ -80,14 +80,14 @@ namespace SmartLMS.Dominio.Repositorios
         public void Comentar(Comentario comentario)
         {
             _contexto.ObterLista<Comentario>().Add(comentario);
-            _contexto.Salvar();
+          
         }
 
         public void ExcluirComentario(long idComentario)
         {
             var comentario = _contexto.ObterLista<Comentario>().Find(idComentario);
             _contexto.ObterLista<Comentario>().Remove(comentario);
-            _contexto.Salvar();
+             
         }
 
         public Arquivo ObterArquivo(Guid id)
@@ -101,7 +101,7 @@ namespace SmartLMS.Dominio.Repositorios
             var arquivos = aula.Arquivos.ToList();
             arquivos.ForEach(x => _contexto.ObterLista<Arquivo>().Remove(x));
              _contexto.ObterLista<Aula>().Remove(aula);
-            _contexto.Salvar();
+          
         }
 
         public void GravarAcesso(Arquivo arquivo, Usuario usuario)
@@ -141,7 +141,7 @@ namespace SmartLMS.Dominio.Repositorios
             aula.Ativo = true;
             aula.DataCriacao = DateTime.Now;
             _contexto.ObterLista<Aula>().Add(aula);
-            _contexto.Salvar();
+          
         }
 
         public void Atualizar(Aula aula)
@@ -154,7 +154,7 @@ namespace SmartLMS.Dominio.Repositorios
             aula.Arquivos = aulaCorrente.Arquivos;
 
             _contexto.Atualizar(aulaCorrente, aula);
-            _contexto.Salvar();
+          
         }
 
    
@@ -172,7 +172,7 @@ namespace SmartLMS.Dominio.Repositorios
             aula.Comentarios = aulaAtual.Comentarios;
             aula.PlanejamentosLiberados = aulaAtual.PlanejamentosLiberados;
             _contexto.Atualizar(aulaAtual, aula);
-            _contexto.Salvar();
+          
         }
     }
 }

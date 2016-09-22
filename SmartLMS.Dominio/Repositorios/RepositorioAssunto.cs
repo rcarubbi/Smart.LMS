@@ -40,7 +40,7 @@ namespace SmartLMS.Dominio.Repositorios
         {
             var assunto = ObterPorId(id);
             _contexto.ObterLista<Assunto>().Remove(assunto);
-            _contexto.Salvar();
+          
         }
 
         public void Incluir(Assunto assunto)
@@ -48,7 +48,7 @@ namespace SmartLMS.Dominio.Repositorios
             assunto.Ativo = true;
             assunto.DataCriacao = DateTime.Now;
             _contexto.ObterLista<Assunto>().Add(assunto);
-            _contexto.Salvar();
+           
         }
 
         public void Alterar(Assunto assunto)
@@ -68,8 +68,6 @@ namespace SmartLMS.Dominio.Repositorios
                     repoCurso.Alterar(curso);
                 }
             }
-
-            _contexto.Salvar();
         }
 
         public List<Assunto> ListarAssuntosAtivos()

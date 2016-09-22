@@ -21,9 +21,7 @@ namespace SmartLMS.Dominio.Entidades.Pessoa
 
         public string Email { get; set; }
 
-
         public virtual ICollection<UsuarioAviso> AvisosVistos { get; set; }
-
 
         public virtual ICollection<AcessoAula> AcessosAula { get; set; }
 

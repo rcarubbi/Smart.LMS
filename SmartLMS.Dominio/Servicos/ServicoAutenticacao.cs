@@ -34,7 +34,7 @@ namespace SmartLMS.Dominio.Servicos
             return _contexto.ObterLista<Usuario>().Any(u => u.Login == login && u.Senha == senhaCriptografada && u.Ativo);
         }
 
-        public void AlterarUsuario(Guid id, string nome, string email, string login, string senha, bool ativo, Perfil perfil)
+        public void AlterarUsuario(Guid id, string nome, string email, string login, string senha, bool ativo, Perfil perfil, Usuario usuarioLogado)
         {
             RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
             var entidade = usuarioRepo.ObterPorId(id);
@@ -104,11 +104,11 @@ namespace SmartLMS.Dominio.Servicos
 
             _contexto.ObterLista<Aviso>().Add(avisoAlteracao);
             _contexto.Atualizar(entidade, usuarioAlterado);
-            _contexto.Salvar();
+            _contexto.Salvar(usuarioLogado);
  
         }
 
-        public Usuario CriarUsuario(string nome, string login, string email, string senha, Perfil perfil, string link)
+        public Usuario CriarUsuario(string nome, string login, string email, string senha, Perfil perfil, string link, Usuario usuarioLogado)
         {
             RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
 
@@ -150,8 +150,8 @@ namespace SmartLMS.Dominio.Servicos
             }
 
             usuarioRepo.Salvar(usuario);
+            _contexto.Salvar(usuarioLogado);
 
- 
             _servicoNotificacao.NotificarCriacaoUsuario(usuario, senha, link);
             return usuario;
         }

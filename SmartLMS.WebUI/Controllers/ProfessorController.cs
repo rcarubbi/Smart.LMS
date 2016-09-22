@@ -32,7 +32,7 @@ namespace SmartLMS.WebUI.Controllers
         {
 
             RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
-            usuarioRepo.ExcluirProfessor(new Guid(id));
+            usuarioRepo.ExcluirProfessor(new Guid(id), _usuarioLogado);
             return new HttpStatusCodeResult(HttpStatusCode.OK);
 
 
@@ -66,8 +66,7 @@ namespace SmartLMS.WebUI.Controllers
                 try
                 {
                     ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto, new SmtpSender());
-                    servicoAuth.CriarUsuario(professor.Nome, professor.Login, professor.Email, professor.Senha, Perfil.Professor, Url.Action("Login", "Autentitcacao"));
-
+                    servicoAuth.CriarUsuario(professor.Nome, professor.Login, professor.Email, professor.Senha, Perfil.Professor, Url.Action("Login", "Autentitcacao"), _usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de professores";
                     TempData["Mensagem"] = "Professor criado com sucesso";
@@ -114,7 +113,7 @@ namespace SmartLMS.WebUI.Controllers
                 try
                 {
                     ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto, new SmtpSender());
-                    servicoAuth.AlterarUsuario(professor.Id, professor.Nome, professor.Email, professor.Login, professor.Senha, professor.Ativo, Perfil.Professor);
+                    servicoAuth.AlterarUsuario(professor.Id, professor.Nome, professor.Email, professor.Login, professor.Senha, professor.Ativo, Perfil.Professor, _usuarioLogado);
 
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de professores";
@@ -148,22 +147,7 @@ namespace SmartLMS.WebUI.Controllers
             return View(professor);
         }
 
-        // POST: professor/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
-        {
-
-
-            var usuarioRepo = new RepositorioUsuario(_contexto);
-            usuarioRepo.ExcluirProfessor(id);
-
-            TempData["TipoMensagem"] = "error";
-            TempData["TituloMensagem"] = "Administração de professores";
-            TempData["Mensagem"] = "Professor excluído com sucesso";
-
-            return RedirectToAction("IndexAdmin");
-        }
+       
 
 
     }

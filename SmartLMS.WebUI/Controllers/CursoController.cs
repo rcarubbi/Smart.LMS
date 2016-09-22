@@ -79,6 +79,7 @@ namespace SmartLMS.WebUI.Controllers
                     uploader.DeleteFile(curso.Imagem);
                 }
                 repo.Excluir(curso.Id);
+                _contexto.Salvar(_usuarioLogado);
                 tx.Complete();
             }
             return new HttpStatusCodeResult(HttpStatusCode.OK);
@@ -119,7 +120,7 @@ namespace SmartLMS.WebUI.Controllers
 
                     RepositorioCurso repo = new RepositorioCurso(_contexto);
                     repo.Incluir(CursoViewModel.ToEntity(curso, assunto, professor));
-
+                    _contexto.Salvar(_usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de conteúdo";
                     TempData["Mensagem"] = "Curso criado com sucesso";
@@ -143,16 +144,10 @@ namespace SmartLMS.WebUI.Controllers
         [Authorize(Roles = "Administrador")]
         public ActionResult SalvarImagem()
         {
-
             ImagemUploader uploader = new ImagemUploader();
             RepositorioCurso repo = new RepositorioCurso(_contexto);
-
-
-
             var uploadResult = uploader.Upload(Request.Files[0]);
-
             return Json(uploadResult);
-
         }
 
 
@@ -168,6 +163,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 curso.Imagem = null;
                 repo.Atualizar(curso);
+                _contexto.Salvar(_usuarioLogado);
             }
             uploader.DeleteFile(nomeImagem);
 
@@ -244,6 +240,7 @@ namespace SmartLMS.WebUI.Controllers
                     var professor = (Professor)usuarioRepo.ObterPorId(viewModel.IdProfessorResponsavel);
                     var repo = new RepositorioCurso(_contexto);
                     repo.Alterar(CursoViewModel.ToEntity(viewModel, assunto, professor));
+                    _contexto.Salvar(_usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de conteúdo";
                     TempData["Mensagem"] = "Curso alterado com sucesso";

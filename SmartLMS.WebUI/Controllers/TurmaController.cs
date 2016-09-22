@@ -73,6 +73,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             RepositorioTurma turmaRepo = new RepositorioTurma(_contexto);
             turmaRepo.Excluir(new Guid(id));
+            _contexto.Salvar(_usuarioLogado);
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
@@ -93,6 +94,7 @@ namespace SmartLMS.WebUI.Controllers
                 {
                     RepositorioTurma repo = new RepositorioTurma(_contexto);
                     repo.CriarTurma(viewModel.Nome, viewModel.IdsCursos);
+                    _contexto.Salvar(_usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de turmas";
                     TempData["Mensagem"] = "Turma criada com sucesso";
@@ -151,7 +153,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 try
                 {
-                    await repo.AlterarTurma(new SmtpSender(), turma, viewModel.Nome, viewModel.Ativo, viewModel.IdsCursos, viewModel.IdsAlunos);
+                    await repo.AlterarTurma(new SmtpSender(), turma, viewModel.Nome, viewModel.Ativo, viewModel.IdsCursos, viewModel.IdsAlunos, _usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de turmas";
                     TempData["Mensagem"] = "Turma alterada com sucesso";

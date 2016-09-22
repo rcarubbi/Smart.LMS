@@ -74,7 +74,7 @@ namespace SmartLMS.Dominio.Repositorios
             turma.Planejamentos.ToList().ForEach(a => planejamentos.Remove(a));
 
             _contexto.ObterLista<Turma>().Remove(turma);
-            _contexto.Salvar();
+          
         }
 
         public void CriarTurma(string nome, List<Guid> idsCursos)
@@ -96,10 +96,10 @@ namespace SmartLMS.Dominio.Repositorios
                 novaTurma.Cursos.Add(tc);
             }
             _contexto.ObterLista<Turma>().Add(novaTurma);
-            _contexto.Salvar();
+          
         }
 
-        public async Task AlterarTurma(IMailSender sender, Turma turma, string nome, bool ativo, List<Guid> idsCursos, List<Guid> idsAlunos)
+        public async Task AlterarTurma(IMailSender sender, Turma turma, string nome, bool ativo, List<Guid> idsCursos, List<Guid> idsAlunos, Usuario usuarioLogado)
         {
             using (TransactionScope tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -117,16 +117,16 @@ namespace SmartLMS.Dominio.Repositorios
                 RemoverCursos(turma, idsCursos);
                 AtualizarCursos(turma, idsCursos);
                 RemoverAlunos(turma, idsAlunos);
-                AdicionarNovosAlunos(sender, turma, idsAlunos);
-                _contexto.Salvar();
+                AdicionarNovosAlunos(sender, turma, idsAlunos, usuarioLogado);
+                _contexto.Salvar(usuarioLogado);
 
                 await turma.SincronizarAcessosAync(_contexto, sender);
-                _contexto.Salvar();
+                _contexto.Salvar(usuarioLogado);
                 tx.Complete();
             }
         }
 
-        private void AdicionarNovosAlunos(IMailSender sender, Turma turma, List<Guid> idsAlunos)
+        private void AdicionarNovosAlunos(IMailSender sender, Turma turma, List<Guid> idsAlunos, Usuario usuarioLogado)
         {
             if (idsAlunos == null)
                 return;
@@ -141,7 +141,7 @@ namespace SmartLMS.Dominio.Repositorios
 
                 };
                 _contexto.ObterLista<Planejamento>().Add(planejamentoDoDia);
-                _contexto.Salvar();
+                _contexto.Salvar(usuarioLogado);
             }
             var idsAlunosExistentes = turma.Planejamentos.SelectMany(x => x.Alunos).Select(x => x.Id);
 

@@ -68,6 +68,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             RepositorioAssunto repo = new RepositorioAssunto(_contexto);
             repo.Excluir(new Guid(id));
+            _contexto.Salvar(_usuarioLogado);
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
@@ -99,6 +100,7 @@ namespace SmartLMS.WebUI.Controllers
                     var area =  repoArea.ObterPorId(assunto.IdArea);
                     RepositorioAssunto repo = new RepositorioAssunto(_contexto);
                     repo.Incluir(AssuntoViewModel.ToEntity(assunto, area));
+                    _contexto.Salvar(_usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de conteúdo";
                     TempData["Mensagem"] = "Assunto criado com sucesso";
@@ -112,6 +114,9 @@ namespace SmartLMS.WebUI.Controllers
                 }
             }
 
+            var areaRepo = new RepositorioAreaConhecimento(_contexto);
+            var areas = areaRepo.ListarAreasConhecimento();
+            ViewBag.Areas = new SelectList(areas, "Id", "Nome");
             return View(assunto);
         }
 
@@ -143,6 +148,7 @@ namespace SmartLMS.WebUI.Controllers
                   
                     var area = repoArea.ObterPorId(id);
                     repo.Alterar(AssuntoViewModel.ToEntity(viewModel, area));
+                    _contexto.Salvar(_usuarioLogado);
                     TempData["TipoMensagem"] = "success";
                     TempData["TituloMensagem"] = "Administração de conteúdo";
                     TempData["Mensagem"] = "Assunto alterado com sucesso";

@@ -61,7 +61,7 @@ namespace SmartLMS.Dominio.Repositorios
         {
             var curso = ObterPorId(id);
             _contexto.ObterLista<Curso>().Remove(curso);
-            _contexto.Salvar();
+           
         }
 
         public Curso ObterPorId(Guid id)
@@ -74,14 +74,14 @@ namespace SmartLMS.Dominio.Repositorios
             curso.DataCriacao = DateTime.Now;
             curso.Ativo = true;
             _contexto.ObterLista<Curso>().Add(curso);
-            _contexto.Salvar();
+         
         }
 
         public void Atualizar(Curso curso)
         {
             var cursoAtual = ObterPorId(curso.Id);
             _contexto.Atualizar(cursoAtual, curso);
-            _contexto.Salvar();
+          
         }
 
         public Curso ObterPorNomeImagem(string nomeImagem)
@@ -110,8 +110,7 @@ namespace SmartLMS.Dominio.Repositorios
                     aulaRepo.Alterar(aula);
                 }
             }
-
-            _contexto.Salvar();
+              
         }
 
         public List<Curso> ListarCursosAtivos()
