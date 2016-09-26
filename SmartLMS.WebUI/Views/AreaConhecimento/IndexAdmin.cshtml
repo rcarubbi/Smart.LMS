@@ -133,7 +133,8 @@
 </div>
 
 @section scripts {
-    <script type="text/x-handlebars-template" id="resultado-areasConhecimento-template">
+    <script src="~/Scripts/paginacao.js"></script>
+    <script type="text/x-handlebars-template" id="resultado-template">
         {{#each Entities}}
         <tr>
             <td>
@@ -199,15 +200,14 @@
             return $public;
         }());
 
-        (function (areaConhecimentoProxy) {
+        (function (proxy) {
             var $private = {}, $public = {};
 
             $(function () {
+                SmartLMS.Paginacao.init({
+                    onPageChanged: $private.Listar,
+                });
                 $private.CampoBusca = "Nome";
-                $private.UltimaQuantidade = @Model.Count
-                $("#paginacao-container").on("click", ".paginacao-pagina", $private.IrParaPagina);
-                $("#paginacao-container").on("click", ".paginacao-proxima", $private.ProximaPagina);
-                $("#paginacao-container").on("click", ".paginacao-anterior", $private.PaginaAnterior);
 
                 $("#CampoBusca").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
@@ -215,24 +215,26 @@
                 });
 
                 $("#btnFiltrar").on("click", $private.PesquisarAreasConhecimento);
-                $private.PaginacaoTemplate = Handlebars.compile($("#paginacao-template").html());
-                $private.ResultadoAreasConhecimentoTemplate = Handlebars.compile($("#resultado-areasConhecimento-template").html());
                 $("#confirmacaoExclusao").on("click", ".btn-delete-agree", $private.excluir);
                 $(document).on("click", "#resultado-container .btn-delete", $private.confirmarExclusao);
             });
 
-            $private.TituloMensagem = "";
-            $private.Mensagem = "";
-            $private.TipoMensagem = "";
-
             $private.excluir = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
-                areaConhecimentoProxy.excluir(id).done($private.PesquisarAreasConhecimento);
-                $private.TituloMensagem = 'Administração de conteúdo';
-                $private.Mensagem = 'Área de conhecimento excluída com sucesso!';
-                $private.TipoMensagem = 'error';
+                SmartLMS.App.AdicionarNotificacao({
+                    TituloMensagem: 'Administração de conteúdo',
+                    Mensagem: 'Área de conhecimento excluída com sucesso!',
+                    TipoMensagem: 'error'
+                });
+
+                proxy.excluir(id).done($private.PesquisarAreasConhecimento);
             };
 
+
+            $private.Listar = function (pagina) {
+                var termo = $("#termo").val();
+                return proxy.Listar(termo, $private.CampoBusca, pagina);
+            };
 
             $private.confirmarExclusao = function (e) {
                 e.preventDefault();
@@ -245,105 +247,17 @@
                 $("#confirmacaoExclusao").find(".modal-body").html("<p>Deseja realmente excluir a área de conhecimento " + area.nome + "?</p>");
                 $("#confirmacaoExclusao").modal();
             };
-
-            $private.Pagina = 1;
-
-            $private.IrParaPagina = function () {
-                $private.Pagina = $(this).text();
-                var termo = $("#termo").val();
-
-                areaConhecimentoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
-            };
-            $private.ProximaPagina = function () {
-                $private.Pagina++;
-                var termo = $("#termo").val();
-
-                areaConhecimentoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
-
-            };
-            $private.PaginaAnterior = function () {
-                $private.Pagina--;
-                var termo = $("#termo").val();
-
-                areaConhecimentoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
-            };
+ 
 
             $private.PesquisarAreasConhecimento = function () {
-                $private.Pagina = 1;
+                SmartLMS.Paginacao.Pagina = 1;
                 var termo = $("#termo").val();
-
-                areaConhecimentoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+                $.when(proxy.Listar(termo, $private.CampoBusca, SmartLMS.Paginacao.Pagina))
+                    .then(SmartLMS.Paginacao.AtualizarResultados)
+                    .then(SmartLMS.App.InicializarControles);
             };
 
-
-            $private.CalcularPaginaMinima = function (quantidade, pagina) {
-                pagina = parseInt(pagina);
-                if (pagina < 4) {
-                    return 1;
-                }
-                else if (pagina > quantidade - 3) {
-                    return quantidade - 4;
-                }
-                else {
-                    return pagina - 2;
-                }
-            };
-
-            $private.CalcularPaginaMaxima = function (quantidade, pagina) {
-                pagina = parseInt(pagina);
-                if (pagina < 4) {
-                    if (quantidade < 6) {
-                        return quantidade + 1;
-                    }
-                    else {
-                        return 6;
-                    }
-                }
-                else if (pagina > quantidade - 3) {
-                    return quantidade + 1;
-                }
-                else {
-                    return pagina + 3;
-                }
-            };
-
-            $private.AtualizarResultados = function (data) {
-                $("#resultado-container").html($private.ResultadoAreasConhecimentoTemplate(data));
-                if (data.HasNext) {
-                    $(".paginacao-proxima").show();
-                }
-                else {
-                    $(".paginacao-proxima").hide();
-                }
-
-                if (data.HasPrevious) {
-                    $(".paginacao-anterior").show();
-                }
-                else {
-                    $(".paginacao-anterior").hide();
-                }
-
-
-                $("#paginacao-container").html($private.PaginacaoTemplate({
-                    paginas: Math.ceil(data.Count / 8),
-                    possuiAnterior: data.HasPrevious,
-                    possuiProxima: data.HasNext,
-                    paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.Count / 8), $private.Pagina),
-                    paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.Count / 8), $private.Pagina),
-                    paginaCorrente: $private.Pagina
-                }));
-                $.material.checkbox();
-
-                if ($private.Mensagem) {
-                    SmartLMS.App.toastr[$private.TipoMensagem]($private.Mensagem, $private.TituloMensagem);
-                    $private.TipoMensagem = "";
-                    $private.TituloMensagem = "";
-                    $private.Mensagem = "";
-                }
-            };
+           
 
         }(SmartLMS.AreaConhecimentoProxy));
     </script>

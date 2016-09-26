@@ -96,6 +96,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Migrations\aulas codigonerd.sql" />
     <Content Include="Resources\config.png" />
     <Content Include="Resources\excel.png" />
     <Content Include="Resources\play.png" />

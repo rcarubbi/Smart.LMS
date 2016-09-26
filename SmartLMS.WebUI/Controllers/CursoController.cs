@@ -34,6 +34,8 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult Index(Guid id)
         {
             var assuntoRepo = new RepositorioAssunto(_contexto);
+
+      
             var assunto = assuntoRepo.ObterPorId(id);
             if (!assunto.Ativo)
             {

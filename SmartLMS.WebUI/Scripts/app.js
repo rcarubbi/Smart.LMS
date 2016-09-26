@@ -175,6 +175,20 @@ SmartLMS.App = (function () {
         }
     };
 
+
+    $public.AdicionarNotificacao = function (notificacao) {
+        $private.Notificacoes.push(notificacao);
+    };
+
+    $public.InicializarControles = function () {
+        $.material.checkbox();
+        for (var x = 0; x < $private.Notificacoes.length; x++)
+        {
+            $public.toastr[$private.Notificacoes[x].TipoMensagem]($private.Notificacoes[x].Mensagem, $private.Notificacoes[x].TituloMensagem);
+        }
+        $private.Notificacoes = [];
+    };
+
     $private.resizeSlimControl = function () {
         
             if ($private.mhResizeTimeout) {
@@ -194,6 +208,7 @@ SmartLMS.App = (function () {
 
 
     $(function () {
+        $private.Notificacoes = [];
         moment.locale('pt-br');
 
         $.each($("input[data-autocomplete]"), $private.createAutoComplete);

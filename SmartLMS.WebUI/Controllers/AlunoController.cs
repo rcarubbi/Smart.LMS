@@ -165,21 +165,6 @@ namespace SmartLMS.WebUI.Controllers
             return View(aluno);
         }
 
-        // GET: Aluno/Delete/5
-        public ActionResult Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Aluno aluno = _contexto.ObterLista<Aluno>().Find(id);
-
-
-            if (aluno == null)
-            {
-                return HttpNotFound();
-            }
-            return View(aluno);
-        }
+    
     }
 }

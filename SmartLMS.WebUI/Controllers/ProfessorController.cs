@@ -129,26 +129,5 @@ namespace SmartLMS.WebUI.Controllers
             }
             return View(professor);
         }
-
-        // GET: professor/Delete/5
-        public ActionResult Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Professor professor = _contexto.ObterLista<Professor>().Find(id);
-
-
-            if (professor == null)
-            {
-                return HttpNotFound();
-            }
-            return View(professor);
-        }
-
-       
-
-
     }
 }

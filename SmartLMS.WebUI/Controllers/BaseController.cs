@@ -2,6 +2,7 @@
 using SmartLMS.Dominio.Entidades;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Repositorios;
+using System;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -10,6 +11,19 @@ namespace SmartLMS.WebUI.Controllers
 {
     public class BaseController : Controller
     {
+
+        protected override void OnException(ExceptionContext filterContext)
+        {
+    
+            if (!Request.IsAjaxRequest())
+            {
+                base.OnException(filterContext);
+                filterContext.ExceptionHandled = true;
+                Exception e = filterContext.Exception;
+                ViewData["Exception"] = e; // pass the exception to the view
+                filterContext.Result = View("Error");
+            }
+        }
 
         public string RenderRazorViewToString(string viewName, object model)
         {

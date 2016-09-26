@@ -202,7 +202,8 @@
 </div>
 
 @section scripts {
-    <script type="text/x-handlebars-template" id="resultado-turmas-template">
+    <script src="~/Scripts/paginacao.js"></script>
+    <script type="text/x-handlebars-template" id="resultado-template">
         {{#each Entities}}
         <tr>
             <td>
@@ -251,8 +252,7 @@
         </tr>
         {{/equals}}
     </script>
-
-    <script type="text/x-handlebars-template" id="cursos-turma-template">
+    <script type="text/x-handlebars-template" id="cursos-template">
         {{#each this}}
         <tr>
             <td>
@@ -268,7 +268,6 @@
         </tr>
         {{/equals}}
     </script>
-
     <script type="text/x-handlebars-template" id="alunos-turma-template">
         {{#each this}}
         <tr>
@@ -288,7 +287,6 @@
         </tr>
         {{/equals}}
     </script>
-
     <script>
         SmartLMS.TurmaProxy = (function () {
             $public = {}, $private = {};
@@ -336,23 +334,21 @@
             return $public;
         }());
 
-        (function (turmaProxy) {
+        (function (proxy) {
             var $private = {}, $public = {};
 
             $(function () {
-                $private.CampoBusca = "Nome";
-                $private.UltimaQuantidade = @Model.Count
-                $("#paginacao-container").on("click", ".paginacao-pagina", $private.IrParaPagina);
-                $("#paginacao-container").on("click", ".paginacao-proxima", $private.ProximaPagina);
-                $("#paginacao-container").on("click", ".paginacao-anterior", $private.PaginaAnterior);
+              
+                SmartLMS.Paginacao.init({
+                    onPageChanged: proxy.Listar,
+                });
+
                 $("#CampoBusca").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
-                    $private.CampoBusca = selectedItem.val();
+                    SmartLMS.Paginacao.CampoBusca = selectedItem.val();
                 });
 
                 $("#btnFiltrar").on("click", $private.PesquisarTurmas);
-                $private.PaginacaoTemplate = Handlebars.compile($("#paginacao-template").html());
-                $private.ResultadoTurmasTemplate = Handlebars.compile($("#resultado-turmas-template").html());
                 $private.AlunosDaTurmaTemplate = Handlebars.compile($("#alunos-turma-template").html());
                 $private.CursosDaTurmaTemplate = Handlebars.compile($("#cursos-turma-template").html());
 
@@ -367,10 +363,7 @@
 
             });
 
-            $private.TituloMensagem = "";
-            $private.Mensagem = "";
-            $private.TipoMensagem = "";
-
+          
             $private.excluir = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
                 turmaProxy.excluir(id).done($private.PesquisarTurmas);
@@ -386,6 +379,7 @@
                     id: $(this).data("id"),
                     nome: $(this).data("nome")
                 };
+
                 $("#confirmacaoExclusao").find(".modal-body").data("id", turma.id);
                 $("#confirmacaoExclusao").find(".modal-body").html("<p>Deseja realmente excluir a turma " + turma.nome + "?</p>");
                 $("#confirmacaoExclusao").modal();
@@ -400,7 +394,7 @@
                 };
                 $("#verAlunos").find(".modal-title").text("Alunos inscritos na turma " + turma.nome);
 
-                turmaProxy.ListarAlunos(turma.id).done($private.exibirAlunos);
+                proxy.ListarAlunos(turma.id).done($private.exibirAlunos);
 
             };
 
@@ -417,7 +411,7 @@
                     nome: $(this).data("nome")
                 };
                 $("#verCursos").find(".modal-title").text("Cursos inclusos na turma " + turma.nome);
-                turmaProxy.ListarCursos(turma.id).done($private.exibirCursos);
+                proxy.ListarCursos(turma.id).done($private.exibirCursos);
             };
 
             $private.exibirCursos = function (data) {
@@ -425,106 +419,14 @@
                 $("#verCursos").modal();
             };
 
-            $private.Pagina = 1;
-
-            $private.IrParaPagina = function () {
-                $private.Pagina = $(this).text();
-                var termo = $("#termo").val();
-
-                turmaProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
-            };
-
-            $private.ProximaPagina = function () {
-                $private.Pagina++;
-                var termo = $("#termo").val();
-
-                turmaProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
-
-            };
-
-            $private.PaginaAnterior = function () {
-                $private.Pagina--;
-                var termo = $("#termo").val();
-
-                turmaProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
-            };
-
             $private.PesquisarTurmas = function () {
-                $private.Pagina = 1;
+                SmartLMS.Paginacao.Pagina = 1;
                 var termo = $("#termo").val();
-
-                turmaProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
+                $.when(proxy.Listar(termo, SmartLMS.Paginacao.CampoBusca, SmartLMS.Paginacao.Pagina))
+                    .then(SmartLMS.Paginacao.AtualizarResultados)
+                    .then(SmartLMS.App.InicializarControles);
             };
-
-            $private.CalcularPaginaMinima = function (quantidade, pagina) {
-                pagina = parseInt(pagina);
-                if (pagina < 4) {
-                    return 1;
-                }
-                else if (pagina > quantidade - 3) {
-                    return quantidade - 4;
-                }
-                else {
-                    return pagina - 2;
-                }
-            };
-
-            $private.CalcularPaginaMaxima = function (quantidade, pagina) {
-                pagina = parseInt(pagina);
-                if (pagina < 4) {
-                    if (quantidade < 6) {
-                        return quantidade + 1;
-                    }
-                    else {
-                        return 6;
-                    }
-                }
-                else if (pagina > quantidade - 3) {
-                    return quantidade + 1;
-                }
-                else {
-                    return pagina + 3;
-                }
-            };
-
-            $private.AtualizarResultados = function (data) {
-                $("#resultado-container").html($private.ResultadoTurmasTemplate(data));
-                if (data.HasNext) {
-                    $(".paginacao-proxima").show();
-                }
-                else {
-                    $(".paginacao-proxima").hide();
-                }
-
-                if (data.HasPrevious) {
-                    $(".paginacao-anterior").show();
-                }
-                else {
-                    $(".paginacao-anterior").hide();
-                }
-
-
-                $("#paginacao-container").html($private.PaginacaoTemplate({
-                    paginas: Math.ceil(data.Count / 8),
-                    possuiAnterior: data.HasPrevious,
-                    possuiProxima: data.HasNext,
-                    paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.Count / 8), $private.Pagina),
-                    paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.Count / 8), $private.Pagina),
-                    paginaCorrente: $private.Pagina
-                }));
-                $.material.checkbox();
-
-                if ($private.Mensagem)
-                {
-                    SmartLMS.App.toastr[$private.TipoMensagem]($private.Mensagem, $private.TituloMensagem);
-                    $private.TipoMensagem = "";
-                    $private.TituloMensagem = "";
-                    $private.Mensagem = "";
-                }
-            };
+ 
 
         }(SmartLMS.TurmaProxy));
     </script>

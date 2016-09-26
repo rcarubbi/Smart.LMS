@@ -139,7 +139,8 @@
 </div>
 
 @section scripts {
-    <script type="text/x-handlebars-template" id="resultado-assuntos-template">
+    <script src="~/Scripts/paginacao.js"></script>
+    <script type="text/x-handlebars-template" id="resultado-template">
         {{#each Entities}}
         <tr>
             <td>
@@ -208,15 +209,15 @@
             return $public;
         }());
 
-        (function (assuntoProxy) {
+        (function (proxy) {
             var $private = {}, $public = {};
 
             $(function () {
+
+                SmartLMS.Paginacao.init({
+                    onPageChanged: $private.Listar,
+                });
                 $private.CampoBusca = "Nome";
-                $private.UltimaQuantidade = @Model.Count
-                $("#paginacao-container").on("click", ".paginacao-pagina", $private.IrParaPagina);
-                $("#paginacao-container").on("click", ".paginacao-proxima", $private.ProximaPagina);
-                $("#paginacao-container").on("click", ".paginacao-anterior", $private.PaginaAnterior);
 
                 $("#CampoBusca").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
@@ -224,22 +225,25 @@
                 });
 
                 $("#btnFiltrar").on("click", $private.PesquisarAssuntos);
-                $private.PaginacaoTemplate = Handlebars.compile($("#paginacao-template").html());
-                $private.ResultadoAssuntosTemplate = Handlebars.compile($("#resultado-assuntos-template").html());
                 $("#confirmacaoExclusao").on("click", ".btn-delete-agree", $private.excluir);
                 $(document).on("click", "#resultado-container .btn-delete", $private.confirmarExclusao);
             });
 
-            $private.TituloMensagem = "";
-            $private.Mensagem = "";
-            $private.TipoMensagem = "";
+
+            $private.Listar = function (pagina) {
+                var termo = $("#termo").val();
+                return proxy.Listar(termo, $private.CampoBusca, pagina);
+            };
 
             $private.excluir = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
-                assuntoProxy.excluir(id).done($private.PesquisarAssuntos);
-                $private.TituloMensagem = 'Administração de conteúdo';
-                $private.Mensagem = 'Assunto excluído com sucesso!';
-                $private.TipoMensagem = 'error';
+                SmartLMS.App.AdicionarNotificacao({
+                    TituloMensagem: 'Administração de conteúdo',
+                    Mensagem: 'Assunto excluído com sucesso!',
+                    TipoMensagem: 'error'
+                });
+                proxy.excluir(id).done($private.PesquisarAssuntos);
+             
             };
 
 
@@ -254,104 +258,13 @@
                 $("#confirmacaoExclusao").find(".modal-body").html("<p>Deseja realmente excluir o assunto " + assunto.nome + "?</p>");
                 $("#confirmacaoExclusao").modal();
             };
-
-            $private.Pagina = 1;
-
-            $private.IrParaPagina = function () {
-                $private.Pagina = $(this).text();
-                var termo = $("#termo").val();
-
-                assuntoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
-            };
-            $private.ProximaPagina = function () {
-                $private.Pagina++;
-                var termo = $("#termo").val();
-
-                assuntoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
-
-            };
-            $private.PaginaAnterior = function () {
-                $private.Pagina--;
-                var termo = $("#termo").val();
-
-                assuntoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-
-            };
-
+ 
             $private.PesquisarAssuntos = function () {
-                $private.Pagina = 1;
+                SmartLMS.Paginacao.Pagina = 1;
                 var termo = $("#termo").val();
-
-                assuntoProxy.Listar(termo, $private.CampoBusca, $private.Pagina).done($private.AtualizarResultados);
-            };
-
-
-            $private.CalcularPaginaMinima = function (quantidade, pagina) {
-                pagina = parseInt(pagina);
-                if (pagina < 4) {
-                    return 1;
-                }
-                else if (pagina > quantidade - 3) {
-                    return quantidade - 4;
-                }
-                else {
-                    return pagina - 2;
-                }
-            };
-
-            $private.CalcularPaginaMaxima = function (quantidade, pagina) {
-                pagina = parseInt(pagina);
-                if (pagina < 4) {
-                    if (quantidade < 6) {
-                        return quantidade + 1;
-                    }
-                    else {
-                        return 6;
-                    }
-                }
-                else if (pagina > quantidade - 3) {
-                    return quantidade + 1;
-                }
-                else {
-                    return pagina + 3;
-                }
-            };
-
-            $private.AtualizarResultados = function (data) {
-                $("#resultado-container").html($private.ResultadoAssuntosTemplate(data));
-                if (data.HasNext) {
-                    $(".paginacao-proxima").show();
-                }
-                else {
-                    $(".paginacao-proxima").hide();
-                }
-
-                if (data.HasPrevious) {
-                    $(".paginacao-anterior").show();
-                }
-                else {
-                    $(".paginacao-anterior").hide();
-                }
-
-
-                $("#paginacao-container").html($private.PaginacaoTemplate({
-                    paginas: Math.ceil(data.Count / 8),
-                    possuiAnterior: data.HasPrevious,
-                    possuiProxima: data.HasNext,
-                    paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.Count / 8), $private.Pagina),
-                    paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.Count / 8), $private.Pagina),
-                    paginaCorrente: $private.Pagina
-                }));
-                $.material.checkbox();
-
-                if ($private.Mensagem) {
-                    SmartLMS.App.toastr[$private.TipoMensagem]($private.Mensagem, $private.TituloMensagem);
-                    $private.TipoMensagem = "";
-                    $private.TituloMensagem = "";
-                    $private.Mensagem = "";
-                }
+                $.when(proxy.Listar(termo, $private.CampoBusca, SmartLMS.Paginacao.Pagina))
+                    .then(SmartLMS.Paginacao.AtualizarResultados)
+                    .then(SmartLMS.App.InicializarControles);
             };
 
         }(SmartLMS.AssuntosProxy));
