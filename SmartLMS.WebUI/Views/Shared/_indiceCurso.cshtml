@@ -4,7 +4,7 @@
         <h3 class="titulo-indice text-primary"><i class="fa fa-graduation-cap text-primary"></i> @ViewBag.Curso @Model.Nome </h3>
         <h4><strong>Professor Responsável:</strong> @Model.NomeProfessorResponsavel</h4>
         @Html.Partial("_listaAulas", Model.Aulas)
-        <a href="@Url.Action("Index", "Curso", new { Id = Model.IdAssunto })" class="btn btn-primary pull-right">
+        <a href="@Url.Action("Index", "Curso", new { Id = Model.IdAssunto })" class="btn btn-primary btn-simple pull-right">
             <i class="material-icons">reply</i> Voltar para o índice
         </a>
     </div>
