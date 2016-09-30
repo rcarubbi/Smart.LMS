@@ -39,7 +39,7 @@
             Histórico de acessos
         </h5>
         <div>
-            <div id="historico-container" class="list-group">
+            <div id="resultado-container" class="list-group">
                 @foreach (var item in Model.Entities)
                 {
 
@@ -88,6 +88,7 @@
 </div>
 
 @section scripts {
+    <script src="~/Scripts/paginacao.js"></script>
     <script type="text/x-handlebars-template" id="resultado-template">
         {{#each Entities}}
         <div class="list-group-item list-group-item-sm">
@@ -148,6 +149,10 @@
             $(function () {
                 $private.TipoAcesso = 0;
 
+                SmartLMS.Paginacao.init({
+                    onPageChanged: $private.Listar,
+                });
+
                 $("#TipoAcesso").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
                     $private.TipoAcesso = selectedItem.val();
@@ -157,6 +162,8 @@
                 $("#btnFiltrar").on("click", $private.ConsultarHistorico);
             });
 
+
+
             $private.Listar = function (pagina) {
                 var dataInicio = $("#dataInicio").val();
                 var dataFim = $("#dataFim").val();
@@ -165,7 +172,8 @@
 
             $private.ConsultarHistorico = function () {
                 SmartLMS.Paginacao.Pagina = 1;
-                var termo = $("#termo").val();
+                var dataInicio = $("#dataInicio").val();
+                var dataFim = $("#dataFim").val();
                 $.when(proxy.Listar(dataInicio, dataFim, $private.TipoAcesso, SmartLMS.Paginacao.Pagina))
                     .then(SmartLMS.Paginacao.AtualizarResultados)
                     .then(SmartLMS.App.InicializarControles);

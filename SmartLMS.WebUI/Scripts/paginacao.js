@@ -23,7 +23,6 @@
 
     $private.ProximaPagina = function () {
         $public.Pagina++;
-        var termo = $("#termo").val();
         $private.config.onPageChanged($public.Pagina).done($public.AtualizarResultados);
     };
 
