@@ -70,7 +70,7 @@ namespace SmartLMS.WebUI.Controllers
 
                         var sender = new SmtpSender();
                         ServicoAutenticacao servicoAuth = new ServicoAutenticacao(_contexto, sender);
-                        var novoAluno = servicoAuth.CriarUsuario(aluno.Nome, aluno.Login, aluno.Email, aluno.Senha, Perfil.Aluno, Url.Action("Login", "Autenticacao"), _usuarioLogado);
+                        var novoAluno = servicoAuth.CriarUsuario(aluno.Nome, aluno.Login, aluno.Email, aluno.Senha, Perfil.Aluno, Url.Action("Login", "Autenticacao", null, Request.Url.Scheme), _usuarioLogado);
 
                         var turma = repo.ObterPorId(aluno.Turma);
 

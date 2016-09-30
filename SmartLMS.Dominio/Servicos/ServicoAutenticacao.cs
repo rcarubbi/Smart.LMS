@@ -28,6 +28,7 @@ namespace SmartLMS.Dominio.Servicos
         private CriptografiaSimetrica _criptografia;
 
         private ServicoNotificacao _servicoNotificacao;
+
         public bool Login(string login, string senha)
         {
             var senhaCriptografada = _criptografia.Encrypt(senha);
@@ -155,8 +156,6 @@ namespace SmartLMS.Dominio.Servicos
             _servicoNotificacao.NotificarCriacaoUsuario(usuario, senha, link);
             return usuario;
         }
-
-       
 
         public string RecuperarSenha(string email)
         {

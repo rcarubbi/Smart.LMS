@@ -36,36 +36,6 @@
     </div>
     <div class="panel panel-success">
         <div class="panel-heading">
-            <h3 class="panel-title">Discussão</h3>
-        </div>
-        <div class="panel-body panel-body-no-margin">
-            @Html.Partial("_formularioComentario", new SmartLMS.WebUI.Models.ComentarioViewModel { IdAula = Model.Id })
-            <div class="bs-component" id="comentarios-container" style="max-height: 655px; overflow-x: auto">
-
-                <div class="list-group" id="lista-comentarios">
-
-                </div>
-                <div id="sem-mais-resultados" class="text-primary text-center" style="display:none;">Não possuem mais comentários para esta aula.</div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="col-md-4">
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            <h3 class="panel-title">Próximas aulas</h3>
-        </div>
-        <div class="panel-body panel-body-no-margin">
-            @Html.Action("ListarAulas", new { Id = Model.IdCurso, IdAulaCorrente = Model.Id })
-            <div class="text-center">
-                <a href="@Url.Action("Index", "Aula", new { Id = Model.IdCurso })" class="btn btn-simple">
-                    <i class="material-icons">reply</i> Voltar para o índice
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="panel panel-success">
-        <div class="panel-heading">
             <h3 class="panel-title">Material de apoio</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
@@ -74,7 +44,7 @@
                     @foreach (var item in Model.Arquivos)
                     {
                         <div class="list-group-item list-group-item-sm">
-                            
+
                             <a href="@Url.Action("Baixar", "Aula", new { Id = item.Id })" class='link-group-item'>
                                 <div class="row-action-primary">
                                     <i class="fa fa-file"></i>
@@ -90,6 +60,38 @@
             </div>
         </div>
     </div>
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Discussão</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+            @Html.Partial("_formularioComentario", new SmartLMS.WebUI.Models.ComentarioViewModel { IdAula = Model.Id })
+            <div class="bs-component" id="comentarios-container" style="max-height: 655px; overflow-x: auto">
+
+                <div class="list-group" id="lista-comentarios">
+
+                </div>
+                <div id="sem-mais-resultados" class="text-primary text-center" style="display:none;">Não possuem mais comentários para esta aula.</div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<div class="col-md-4">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Próximas aulas</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+            @Html.Action("ListarAulas", new { Id = Model.IdCurso, IdAulaCorrente = Model.Id })
+            <div class="text-center">
+                <a href="@Url.Action("Index", "Aula", new { Id = Model.IdCurso })" class="btn btn-simple">
+                    <i class="material-icons">reply</i> Voltar para o índice
+                </a>
+            </div>
+        </div>
+    </div>
+  
 </div>
  
  

@@ -1,14 +1,11 @@
 ﻿using Carubbi.Mailer.Interfaces;
-using Carubbi.Utils.Data;
 using SmartLMS.Dominio.Entidades.Comunicacao;
 using SmartLMS.Dominio.Entidades.Conteudo;
 using SmartLMS.Dominio.Entidades.Pessoa;
 using SmartLMS.Dominio.Servicos;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Net.Mail;
 
 
 namespace SmartLMS.Dominio.Entidades.Liberacao
@@ -77,7 +74,7 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
 
             contexto.ObterLista<Aviso>().Add(new Aviso
             {
-                Texto = $@"Novo <a href='Aula/Ver/{aula.Id}'>{Parametro.AULA} {aula.Nome}</a> disponível! <br />
+                Texto = $@"Nova <a href='Aula/Ver/{aula.Id}'>{Parametro.AULA} {aula.Nome}</a> disponível! <br />
                                <a href='Aula/Index/{aula.Curso.Id}'>{Parametro.CURSO} {aula.Curso.Nome}</a> <br />",
                 DataHora = DateTime.Now,
                 Planejamento = this,
@@ -90,7 +87,7 @@ namespace SmartLMS.Dominio.Entidades.Liberacao
         {
             DateTime? dataUltimaLiberacao = AulasDisponiveis.OrderByDescending(x => x.DataLiberacao).Select(x => x.DataLiberacao).FirstOrDefault();
 
-            if ((dataUltimaLiberacao ?? DataInicio).AddDays(aula.DiasLiberacao) <= DateTime.Now)
+            if ((dataUltimaLiberacao ?? DataInicio).AddDays(aula.DiasLiberacao).Date <= DateTime.Today)
             {
                 DisponibilizarAula(contexto, sender, aula);
              
