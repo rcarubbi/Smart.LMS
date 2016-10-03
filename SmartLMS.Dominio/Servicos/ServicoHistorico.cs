@@ -1,7 +1,6 @@
 ﻿using Carubbi.GenericRepository;
 using Carubbi.Utils.DataTypes;
 using Humanizer.DateTimeHumanizeStrategy;
-using SmartLMS.Domain.Servicos;
 using SmartLMS.Dominio.Entidades.Comunicacao;
 using SmartLMS.Dominio.Entidades.Historico;
 using SmartLMS.Dominio.Entidades.Pessoa;

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using SmartLMS.Dominio.Entidades;
+﻿using Carubbi.GenericRepository;
 using Humanizer.DateTimeHumanizeStrategy;
-using System.Globalization;
-using Carubbi.GenericRepository;
-using SmartLMS.Dominio.Servicos;
-using SmartLMS.Domain.Servicos;
 using SmartLMS.Dominio.Entidades.Comunicacao;
+using SmartLMS.Dominio.Servicos;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace SmartLMS.WebUI.Models
 {

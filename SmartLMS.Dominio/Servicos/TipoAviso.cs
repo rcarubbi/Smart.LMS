@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace SmartLMS.Domain.Servicos
+namespace SmartLMS.Dominio.Servicos
 {
     public enum TipoAviso : int
     {
