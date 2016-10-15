@@ -18,7 +18,8 @@ namespace SmartLMS.WebUI
                         "~/Scripts/jquery-ui-{version}.js",
                         "~/Scripts/jquery.dropdown/jquery.dropdown.js",
                         "~/Scripts/jquery.sortable/jquery.sortable.js",
-                        "~/Scripts/jquery.touchSwipe/jquery.touchSwipe.js"));
+                        "~/Scripts/jquery.touchSwipe/jquery.touchSwipe.js",
+                        "~/Scripts/addtohomescreen/addtohomescreen.js"));
 
             bundles.Add(new ScriptBundle("~/Bundles/data").Include(
                 "~/Scripts/handlebars.js",
@@ -56,7 +57,9 @@ namespace SmartLMS.WebUI
                "~/Content/bootstrap-datepicker/bootstrap-datepicker.css",
                "~/Content/bootstrap-multiselect/bootstrap-multiselect.css",
                "~/Content/themes/notheme/jquery-ui.css",
-               "~/Content/themes/notheme/jquery-ui.structure.css"));
+               "~/Content/themes/notheme/jquery-ui.structure.css",
+               "~/Content/addtohomescreen/addtohomescreen.css"
+               ));
 
             bundles.Add(new StyleBundle("~/Content/csscustom").Include(
            "~/Content/material-kit/material-kit.css",

@@ -15,6 +15,7 @@
     <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
     <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <link rel="apple-touch-icon" sizes="57x57" href="~/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="~/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="~/apple-icon-72x72.png">
@@ -48,6 +49,10 @@
     <script>
         var SmartLMS = {};
         SmartLMS.api = '@Url.Content("~/")';
+
+         
+            
+     
     </script>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/csscustom")
@@ -137,5 +142,13 @@
     @Html.Partial("_Alert")
     @Html.Partial("_sobre")
     @Html.Partial("_faleConosco", new FaleConoscoViewModel())
+    <script>
+        $(function () {
+            addToHomescreen({
+                modal: true
+            });
+        });
+        
+    </script>
 </body>
 </html>
