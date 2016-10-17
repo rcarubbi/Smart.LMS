@@ -204,7 +204,8 @@ _extend(ath, {
 });
 
 // falls back to en_us if language is unsupported
-ath.language = ath.language && ath.language in ath.intl ? ath.language : 'en_us';
+//ath.language = ath.language && ath.language in ath.intl ? ath.language : 'en_us';
+ath.language = 'pt_br';
 
 ath.isMobileSafari = ath.isIDevice && _ua.indexOf('Safari') > -1 && _ua.indexOf('CriOS') < 0;
 ath.OS = ath.isIDevice ? 'ios' : ath.isMobileChrome ? 'android' : ath.isMobileIE ? 'windows' : 'unsupported';
