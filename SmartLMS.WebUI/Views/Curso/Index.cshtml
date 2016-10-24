@@ -50,6 +50,7 @@
                             $("#indice-assunto-container").load(SmartLMS.api + "Curso/ExibirIndiceAssunto/" + id, null,
                                 function () {
                                     $("#indice-assunto-container").fadeIn();
+                                    $.material.init();
                                 });
                         });
                     }

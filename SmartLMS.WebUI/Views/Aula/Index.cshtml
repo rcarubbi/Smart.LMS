@@ -49,6 +49,7 @@
                             $("#indice-curso-container").load(SmartLMS.api + "Aula/ExibirIndiceCurso/" + id, null,
                                 function () {
                                     $("#indice-curso-container").fadeIn();
+                                    $.material.init();
                                 });
                         });
                     }

@@ -320,9 +320,6 @@
     <Content Include="ms-icon-150x150.png" />
     <Content Include="ms-icon-310x310.png" />
     <Content Include="ms-icon-70x70.png" />
-    <Content Include="Resources\config.png" />
-    <Content Include="Resources\excel.png" />
-    <Content Include="Resources\play.png" />
     <Content Include="Scripts\addtohomescreen\addtohomescreen.js" />
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\bootstrap-datepicker\bootstrap-datepicker.js" />
