@@ -106,14 +106,14 @@ namespace SmartLMS.DAL.Migrations
                     {
                         DataCriacao = DateTime.Now,
                         Chave = Parametro.CHAVE_AREA_CONHECIMENTO_PLURAL,
-                        Valor = "햞aes de Conhecimento",
+                        Valor = "햞eas de Conhecimento",
                         Ativo = true
                     },
                     new Parametro
                     {
                         DataCriacao = DateTime.Now,
                         Chave = Parametro.CHAVE_AREA_CONHECIMENTO,
-                        Valor = "햞ae de Conhecimento",
+                        Valor = "햞ea de Conhecimento",
                         Ativo = true
                     },
                     new Parametro
