@@ -1,7 +1,39 @@
-﻿
+﻿@model ICollection<SmartLMS.Dominio.Entidades.Liberacao.TurmaCurso>
+
 @{
-    ViewBag.Title = "Planejamentos";
+    ViewBag.Title = "Planejamentos de entrega";
 }
 
-<h2>Planejamentos</h2>
+<div class="card">
+    <div class="content">
+        <h5 class="titulo-indice">
+            Planejamento de entrega
+        </h5>
+        <div>
+            <div id="resultado-container" class="list-group">
+                @foreach (var item in Model)
+                {
+                    <h4>@item.Ordem - @item.Curso.Nome)</h4>
 
+                    <div class="list-group">
+                        @foreach (var aula in item.Curso.Aulas.OrderBy(x => x.Ordem))
+                        {
+                            <div class="list-group-item list-group-item-sm">
+                                <div class="row-action-primary">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <div class="row-content">
+                                    <h5 class="nome-aula">@aula.Nome</h5>
+                                    <label>Dias para liberar: </label><span> @aula.DiasLiberacao dia(s)</span>
+                                </div>
+                            </div>
+                            <div class="list-group-separator list-group-separator-sm"></div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        @Html.ActionLink("Voltar", "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+
+    </div>
+</div>

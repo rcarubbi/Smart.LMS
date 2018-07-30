@@ -10,9 +10,11 @@
     display: flex;
 }
 
-    .areas-conhecimento-bar .nav-pills > li {
-       float: none;
-    }
+.areas-conhecimento-bar .nav-pills > li {
+    float: none;
+    min-width: 145px;
+    max-height: 145px;
+}
 
  
 
@@ -481,3 +483,8 @@ body.dragging, body.dragging * {
         opacity: 1;
        
     }
+
+.btn-group-sm a {
+    min-height: 29px;
+    max-width: 53px;
+}

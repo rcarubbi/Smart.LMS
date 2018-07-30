@@ -3,9 +3,10 @@
 	background-image:none;
 }
 
-.img-responsive{
-	width:100%;
-	height:auto;
+.img-responsive {
+    width: 100%;
+    height: auto;
+    min-height: 220px;
 }
 
 @media (min-width: 992px ) {

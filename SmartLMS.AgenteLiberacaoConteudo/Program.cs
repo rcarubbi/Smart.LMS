@@ -28,12 +28,14 @@ namespace AgenteLiberacaoConteudo
                             serviceInstance.ConstructUsingStructureMap();
                             serviceInstance.WhenStarted(execute => execute.Iniciar());
                             serviceInstance.WhenStopped(execute => execute.Parar());
-
+                          
                             serviceInstance.UseQuartzStructureMap();
 
                             serviceInstance.ScheduleQuartzJob(q =>
                                 q.WithJob(() =>
                                     JobBuilder.Create<LiberacaoAcessoJob>().Build())
+                                    //.AddTrigger(() =>
+                                    //    TriggerBuilder.Create().StartNow().Build())
                                     .AddTrigger(() =>
                                         TriggerBuilder.Create()
                                             .WithSimpleSchedule(builder => builder

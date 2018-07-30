@@ -180,7 +180,9 @@ namespace SmartLMS.WebUI.Controllers
 
         public ActionResult Planejamentos(Guid idTurma)
         {
-            return View();
+            RepositorioTurma repoTurma = new RepositorioTurma(_contexto);
+            var turma = repoTurma.ObterPorId(idTurma);
+            return View(turma.Cursos.OrderBy(x => x.Ordem).ToList());
         }
 
        

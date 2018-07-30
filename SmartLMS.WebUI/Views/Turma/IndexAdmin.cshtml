@@ -77,8 +77,8 @@
                             @item.DataCriacao.ToShortDateString()
                         </td>
                         <td>
-                            <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
-                                <a href="javascript:void(0);" class="btn btn-success btn-sm btn-ver-cursos" data-id="@item.Id" data-nome="@item.Nome" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Cursos">
+                            <div href="javascript:void(0);" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                                <a class="btn btn-success btn-sm btn-ver-cursos" data-id="@item.Id" data-nome="@item.Nome" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Cursos">
                                     <i class="material-icons">school</i>
                                 </a>
                                 <a href="javascript:void(0);" class="btn btn-warning btn-sm btn-ver-alunos" data-id="@item.Id " data-nome="@item.Nome" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Alunos">
@@ -252,7 +252,7 @@
         </tr>
         {{/equals}}
     </script>
-    <script type="text/x-handlebars-template" id="cursos-template">
+    <script type="text/x-handlebars-template" id="cursos-turma-template">
         {{#each this}}
         <tr>
             <td>
