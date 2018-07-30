@@ -93,7 +93,14 @@ namespace SmartLMS.WebUI.Controllers
                         // notifica as aulas já liberadas no dia
                         foreach (var item in planejamento.AulasDisponiveis)
                         {
-                            servicoNotificacao.EnviarEmailLiberacaoAula(item.Aula, (Aluno)novoAluno);
+                            try
+                            {
+                                servicoNotificacao.EnviarEmailLiberacaoAula(item.Aula, (Aluno)novoAluno);
+                            }
+                            catch (Exception e)
+                            {
+                                 
+                            }
                         }
                         
                         // força a liberação de aulas pendentes para o dia

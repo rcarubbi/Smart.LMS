@@ -48,13 +48,13 @@
                             @switch (item.Tipo)
                             {
 
-                                case SmartLMS.Domain.Servicos.TipoAviso.Geral:
+                                case SmartLMS.Dominio.Servicos.TipoAviso.Geral:
                                     <i class="material-icons">public</i>
                                     break;
-                                case SmartLMS.Domain.Servicos.TipoAviso.Turma:
+                                case SmartLMS.Dominio.Servicos.TipoAviso.Turma:
                                     <i class="material-icons">people</i>
                                     break;
-                                case SmartLMS.Domain.Servicos.TipoAviso.Pessoal:
+                                case SmartLMS.Dominio.Servicos.TipoAviso.Pessoal:
                                     <i class="material-icons">person</i>
                                     break;
                             }
@@ -62,7 +62,7 @@
                         </div>
                         <div class="row-content">
                             <h5 class="list-group-item-heading">@item.Tipo</h5>
-                            @if (item.Tipo == SmartLMS.Domain.Servicos.TipoAviso.Turma)
+                            @if (item.Tipo == SmartLMS.Dominio.Servicos.TipoAviso.Turma)
                             {
                                 <p class="list-group-item-text">@item.NomeTurma</p>
                             }

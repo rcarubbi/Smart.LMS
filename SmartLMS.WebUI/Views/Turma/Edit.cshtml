@@ -64,6 +64,7 @@
 <script>
     $(function () {
         $("#IdsCursos").parent().find("ul.multiselect-container").sortable({
+            delay: 150,
             group: 'cursos',
             onDragStart: function ($item, container, _super) {
                 var offset = $item.offset(),
