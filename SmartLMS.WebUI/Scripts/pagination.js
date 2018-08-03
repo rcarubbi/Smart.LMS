@@ -18,17 +18,17 @@
 
     $private.goToPage = function () {
         $public.CurrentPage = $(this).text();
-        $private.config.onPageChanged($public.CurrentPage).done($public.refreshResults);
+        $private.config.onPageChanged($public.CurrentPage).done($public.refreshResults).then(SmartLMS.App.InitControls);
     };
 
     $private.goToNextPage = function () {
         $public.CurrentPage++;
-        $private.config.onPageChanged($public.CurrentPage).done($public.refreshResults);
+        $private.config.onPageChanged($public.CurrentPage).done($public.refreshResults).then(SmartLMS.App.InitControls);
     };
 
     $private.goToPreviousPage = function () {
         $public.CurrentPage--;
-        $private.config.onPageChanged($public.CurrentPage).done($public.refreshResults);
+        $private.config.onPageChanged($public.CurrentPage).done($public.refreshResults).then(SmartLMS.App.InitControls);
     };
 
     $private.getMinPage = function (pageCount, pageIndex) {

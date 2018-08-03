@@ -112,11 +112,11 @@
             {{else}}
             <a href="@Url.Content("~/")Class/Download/{{ContentId}}" class='link-group-item'>
                 <div class="row-action-primary">
-                    <i class="fa fa-laptop"></i>
+                    <i class="fa fa-file"></i>
                 </div>
                 <div class="row-content">
                     <h5 class="list-group-item-heading">{{Name}}</h5>
-                    <p class="list-group-item-text">{{CourseName}}</p>
+                    <p class="list-group-item-text">{{CourseName}} - {{ClassName}}</p>
                     <div class="footer-content">{{DateTimeDescription}}</div>
                 </div>
             </a>
@@ -126,10 +126,10 @@
         {{/each}}
     </script>
     <script>
-        SmartLMS.AccessHistoryProxy = (function () {
+        SmartLMS.AccessHistoryProxy = (function() {
             $public = {}, $private = {};
 
-            $public.listAccessHistory = function (startDate, endDate, accessType, page) {
+            $public.search = function(startDate, endDate, accessType, page) {
                 return $.ajax({
                     type: "POST",
                     url: SmartLMS.api + "User/ListAccessHistory",
@@ -142,36 +142,37 @@
             return $public;
         }());
 
-        (function (proxy) {
+        (function(proxy) {
             var $private = {}, $public = {};
 
-            $(function () {
+            $(function() {
                 $private.AccessType = 0;
 
                 SmartLMS.Pagination.init({
                     onPageChanged: $private.changePage,
                 });
 
-                $("#AccessType").on("dropdownjs.change", function () {
-                    var selectedItem = $(this).find("option:selected");
-                    $private.AccessType = selectedItem.val();
+                $("#AccessType").on("dropdownjs.change",
+                    function() {
+                        var selectedItem = $(this).find("option:selected");
+                        $private.AccessType = selectedItem.val();
 
-                });
+                    });
 
                 $("#filter-button").on("click", $private.search);
             });
 
-            $private.changePage = function (page) {
+            $private.changePage = function(page) {
                 var startDate = $("#startDate").val();
                 var endDate = $("#endDate").val();
                 return proxy.search(startDate, endDate, $private.AccessType, page);
             };
 
-            $private.search = function () {
+            $private.search = function() {
                 SmartLMS.Pagination.CurrentPage = 1;
                 var startDate = $("#startDate").val();
                 var endDate = $("#endDate").val();
-                $.when(proxy.listAccessHistory(startDate, endDate, $private.AccessType, SmartLMS.Pagination.CurrentPage))
+                $.when(proxy.search(startDate, endDate, $private.AccessType, SmartLMS.Pagination.CurrentPage))
                     .then(SmartLMS.Pagination.refreshResults)
                     .then(SmartLMS.App.InitControls);
             };

@@ -100,7 +100,7 @@
                             @Html.DisplayFor(modelItem => item.Active)
                         </td>
                         <td class="hidden-sm  hidden-xs">
-                            @item.CreationDate.ToShortDateString()
+                            @item.CreatedAt.ToShortDateString()
                         </td>
                         <td>
                             <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
@@ -173,7 +173,7 @@
             <td class="hidden-sm hidden-xs">
                 <div class="checkbox">
                     <label>
-                        <input name="Ativo" type="checkbox" disabled {{#if Ativo}} checked {{/if}}>
+                        <input name="Active" type="checkbox" disabled {{#if Active}} checked {{/if}}>
                     </label>
                 </div>
             </td>
@@ -257,7 +257,7 @@
                 SmartLMS.App.AddNotification({
                     MessageTitle: 'Content management',
                     Message: 'Class deleted!',
-                    MessageTipe: 'error'
+                    MessageType: 'error'
                 });
 
                 proxy.delete(id).done($private.search);

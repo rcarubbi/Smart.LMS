@@ -51,23 +51,23 @@
     {
         <link href="~/content/pace/green-minimal.css" rel="stylesheet" />
     }
-    <script>
-        if (navigator.serviceWorker.controller) {
+        <script>
+        @*if (navigator.serviceWorker.controller) {
             console.log('[smartlms] active service worker found, no need to register');
         } else {
             //Register the ServiceWorker
-            navigator.serviceWorker.register('smartlms-sw.js', {
+            navigator.serviceWorker.register('@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))smartlms-sw.js', {
                 scope: '/'
             }).then(function(reg) {
                 console.log('Service worker has been registered for scope:'+ reg.scope);
             });
-        }
+        }*@
 
         var SmartLMS = {};
         SmartLMS.api = '@Url.Content("~/")';
 
 
-    </script>
+        </script>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/csscustom")
     @Scripts.Render("~/bundles/modernizr")

@@ -23,12 +23,13 @@
                     $private.player.seekTo($private.pendingSeektoTime, true);
                     $private.pendingSeektoTime = 0;
                 }
-                $private.monitor = setInterval($private.updateProgress, 5000);
+                if ($private.monitor === undefined) $private.monitor = setInterval($private.updateProgress, 5000);
                 break;
             case Youtube.PlayerState.ENDED:
             case Youtube.PlayerState.PAUSED:
                 $private.updateProgress();
                 clearInterval($private.monitor);
+                $private.monitor = undefined;
                 break;
              
         }

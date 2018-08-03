@@ -25,7 +25,7 @@
     <script>
         (function () {
             $(function () {
-                var optionAtivo = $('<option>', {
+                var activeOption = $('<option>', {
                     value: '@Model.Id',
                     text: '@Html.Raw(Model.Name)'
                 });
@@ -36,8 +36,8 @@
                     var text = selectedItem.text();
                     if (id !== "")
                     {
-                        $(this).append(optionAtivo);
-                        optionAtivo = $('<option>', {
+                        $(this).append(activeOption);
+                        activeOption = $('<option>', {
                             value: id,
                             text: text
                         });

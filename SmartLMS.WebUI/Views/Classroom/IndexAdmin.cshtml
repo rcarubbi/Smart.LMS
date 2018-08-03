@@ -15,7 +15,7 @@
 }
 <div class="panel panel-primary">
     <div class="panel-heading">
-       Classroom list
+        Classroom list
     </div>
     <div class="panel-body">
         <div class="row">
@@ -74,7 +74,7 @@
                             @Html.DisplayFor(modelItem => item.Active)
                         </td>
                         <td class="hidden-sm  hidden-xs">
-                            @item.CreationDate.ToShortDateString()
+                            @item.CreatedAt.ToShortDateString()
                         </td>
                         <td>
                             <div href="javascript:void(0);" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
@@ -94,7 +94,7 @@
                                 <a href="@Url.Action("Edit", new { Id = item.Id })" class="btn btn-success btn-sm">
                                     <i class="material-icons">edit</i>
                                 </a>
-                                <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="@item.Id" data-name="@item.Name">
+                                <a href="javascript:void(0);" class="btn btn-danger btn-sm delete-button" data-id="@item.Id" data-name="@item.Name">
                                     <i class="material-icons">delete</i>
                                 </a>
                             </div>
@@ -212,7 +212,7 @@
             <td class="hidden-sm hidden-xs">
                 <div class="checkbox">
                     <label>
-                        <input name="Ativo" type="checkbox" disabled {{#if Active}} checked {{/if}}>
+                        <input name="Active" type="checkbox" disabled {{#if Active}} checked {{/if}}>
                     </label>
                 </div>
             </td>
@@ -338,19 +338,20 @@
             var $private = {}, $public = {};
 
             $(function () {
-              
+
                 SmartLMS.Pagination.init({
-                    onPageChanged: proxy.search,
+                    onPageChanged: $private.changePage,
                 });
+                $private.SearchFieldName = "Name";
 
                 $("#SearchField").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
-                    SmartLMS.Pagination.SearchFieldName = selectedItem.val();
+                    $private.SearchFieldName = selectedItem.val();
                 });
 
                 $("#filter-button").on("click", $private.search);
                 $private.ClassroomStudentsTemplate = Handlebars.compile($("#classroom-students-template").html());
-                $private.ClassroomCourseTemplate = Handlebars.compile($("#classroom-course-template").html());
+                $private.ClassroomCourseTemplate = Handlebars.compile($("#classroom-courses-template").html());
 
 
                 $("#deleteConfirmation").on("click", ".btn-delete-agree", $private.delete);
@@ -363,13 +364,15 @@
 
             });
 
-          
+
             $private.delete = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
-                proxy.delete(id).done($private.loadStudents);
-                $private.MessageTitle = 'Classroom management';
-                $private.Mensage = 'Classroom deleted!';
-                $private.MessageType = 'error';
+                SmartLMS.App.AddNotification({
+                    MessageTitle: "Classroom management",
+                    Message: "Classroom deleted!",
+                    MessageType: "error",
+                });
+                proxy.delete(id).done($private.search);
             };
 
             $private.deleteConfirmation = function (e) {
@@ -422,11 +425,15 @@
             $private.search = function () {
                 SmartLMS.Pagination.CurrentPage = 1;
                 var term = $("#term").val();
-                $.when(proxy.search(term, SmartLMS.Pagination.SearchFieldName, SmartLMS.Pagination.CurrentPage))
+                $.when(proxy.search(term, $private.SearchFieldName, SmartLMS.Pagination.CurrentPage))
                     .then(SmartLMS.Pagination.refreshResults)
                     .then(SmartLMS.App.InitControls);
             };
- 
+
+            $private.changePage = function (page) {
+                var term = $("#term").val();
+                return proxy.search(term, SmartLMS.Pagination.SearchFieldName, page);
+            };
 
         }(SmartLMS.ClassroomProxy));
     </script>

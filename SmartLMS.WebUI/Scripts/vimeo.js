@@ -11,7 +11,7 @@
 
         player.on("play", function () {
             if ($private.pendingSeektoTime > 0) {
-                player.seekTo($private.pendingSeektoTime, true);
+                player.setCurrentTime($private.pendingSeektoTime);
                 $private.pendingSeektoTime = 0;
             }
 

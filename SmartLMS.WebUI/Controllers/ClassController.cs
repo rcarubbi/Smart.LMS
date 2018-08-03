@@ -139,7 +139,7 @@ namespace SmartLMS.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Comment(FormCollection formData)
         {
-            if (string.IsNullOrEmpty(formData["Comment"])) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (string.IsNullOrEmpty(formData["CommentText"])) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
 
             var comment = new CommentViewModel

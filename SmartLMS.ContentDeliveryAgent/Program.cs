@@ -26,8 +26,8 @@ namespace SmartLMS.ContentDeliveryAgent
                 serviceConfig.Service<ContentDeliveryService>(serviceInstance =>
                         {
                             serviceInstance.ConstructUsingStructureMap();
-                            serviceInstance.WhenStarted(execute => execute.Iniciar());
-                            serviceInstance.WhenStopped(execute => execute.Parar());
+                            serviceInstance.WhenStarted(execute => execute.Start());
+                            serviceInstance.WhenStopped(execute => execute.Stop());
                           
                             serviceInstance.UseQuartzStructureMap();
 

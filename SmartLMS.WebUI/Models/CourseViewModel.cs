@@ -34,7 +34,7 @@ namespace SmartLMS.WebUI.Models
 
         public string KnowledgeAreaName { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public string Image { get; set; }
 
@@ -64,7 +64,7 @@ namespace SmartLMS.WebUI.Models
             {
 
                 Active = item.Active,
-                CreationDate = item.CreatedAt,
+                CreatedAt = item.CreatedAt,
                 SubjectId = item.Subject.Id,
                 SubjectName = item.Subject.Name,
                 KnowledgeAreaName = item.Subject.KnowledgeArea.Name,
@@ -115,7 +115,7 @@ namespace SmartLMS.WebUI.Models
             {
                 Id = course.Id,
                 Name = course.Name,
-                CreatedAt = course.CreationDate,
+                CreatedAt = course.CreatedAt,
                 Subject = subject,
                 Active = course.Active,
                 Order = course.Order,

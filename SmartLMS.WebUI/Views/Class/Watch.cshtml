@@ -124,7 +124,7 @@
             {{#if AllowEdit}}
             <div class="least-content"><button type="button" class="close" aria-hidden="true">×</button></div>
             {{/if}}
-            <h4 class="list-group-item-heading">{{UserName}}</h4>
+            <h4 class="list-group-item-heading">{{Username}}</h4>
             <p class="list-group-item-text">{{CommentText}}</p>
             <div class="footer-content">{{DateTimeDescription}}</div>
         </div>
@@ -239,7 +239,7 @@
                 proxy.sendComment($(this).serialize()).always(function() {
                     $("#no-results").hide();
 
-                    $("#comment").val("");
+                    $("#CommentText").val("");
                     $private.CurrentPage = 1;
                     proxy.listComments($private.CurrentPage).done($private.showComments);
                 });

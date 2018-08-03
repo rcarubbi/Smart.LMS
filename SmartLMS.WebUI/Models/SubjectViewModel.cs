@@ -12,7 +12,7 @@ namespace SmartLMS.WebUI.Models
         public bool Active { get; set; }
         public string KnowledgeAreaName { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [Display(Name = "Knowledge area")]
         [Required(ErrorMessage = "Select a knowledge area")]
@@ -51,7 +51,7 @@ namespace SmartLMS.WebUI.Models
                 Active = item.Active,
                 KnowledgeAreaName = item.KnowledgeArea.Name,
                 KnowledgeAreaId = item.KnowledgeArea.Id,
-                CreationDate = item.CreatedAt,
+                CreatedAt = item.CreatedAt,
                 Id = item.Id,
                 Order = item.Order,
                 Name = item.Name,
@@ -67,7 +67,7 @@ namespace SmartLMS.WebUI.Models
             {
                 Id = subject.Id,
                 KnowledgeArea = knowledgeArea,
-                CreatedAt = subject.CreationDate,
+                CreatedAt = subject.CreatedAt,
                 Active = subject.Active,
                 Name = subject.Name,
                 Order = subject.Order

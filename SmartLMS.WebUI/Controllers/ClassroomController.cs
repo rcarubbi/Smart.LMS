@@ -32,7 +32,7 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult ListClassrooms(string term, string searchFieldName, int page = 1)
+        public ActionResult Search(string term, string searchFieldName, int page = 1)
         {
             var classroomRepository = new ClassroomRepository(_context);
             return Json(ClassroomViewModel.FromEntityList(classroomRepository.Search(term, searchFieldName, page)));

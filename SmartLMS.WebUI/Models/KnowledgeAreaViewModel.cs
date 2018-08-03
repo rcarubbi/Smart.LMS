@@ -11,7 +11,7 @@ namespace SmartLMS.WebUI.Models
     {
         [Display(Name = "Created at")]
 
-        public DateTime CreationDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [Display(Name = "Active")]
         public bool Active { get; set; }
@@ -43,7 +43,7 @@ namespace SmartLMS.WebUI.Models
                 Order = knowledgeArea.Order,
                 Name = knowledgeArea.Name,
                 Id = knowledgeArea.Id,
-                CreationDate = knowledgeArea.CreatedAt,
+                CreatedAt = knowledgeArea.CreatedAt,
                 Subjects = depth > 0
                 ? SubjectViewModel.FromEntityList(knowledgeArea.Subjects.Where(x =>x.Active).OrderBy(x => x.Order), depth)
                 : new List<SubjectViewModel>()
@@ -66,7 +66,7 @@ namespace SmartLMS.WebUI.Models
             return new KnowledgeArea
             {
                 Active = knowledgeArea.Active,
-                CreatedAt = knowledgeArea.CreationDate,
+                CreatedAt = knowledgeArea.CreatedAt,
                 Name = knowledgeArea.Name,
                 Order = knowledgeArea.Order,
                 Id = knowledgeArea.Id,

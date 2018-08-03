@@ -19,7 +19,7 @@ namespace SmartLMS.ContentDeliveryAgent
             _context = context;
         }
 
-        public bool Iniciar() {
+        public bool Start() {
             var parameterRepository = new ParameterRepository(_context);
 
             Parameter.APP_NAME = parameterRepository.ObterValorPorChave(Parameter.APP_NAME_KEY);
@@ -42,7 +42,7 @@ namespace SmartLMS.ContentDeliveryAgent
             return true;
         }
 
-        public bool Parar() {
+        public bool Stop() {
             Logger.Trace("Service ended");
             return true;
         }

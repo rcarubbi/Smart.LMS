@@ -24,7 +24,7 @@ namespace SmartLMS.WebUI.Models
 
         public Guid Id { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
 
         internal static PagedListResult<ClassroomViewModel> FromEntityList(PagedListResult<Classroom> classrooms)
@@ -42,7 +42,7 @@ namespace SmartLMS.WebUI.Models
         {
             return new ClassroomViewModel
             {
-                CreationDate = item.CreatedAt,
+                CreatedAt = item.CreatedAt,
                 Active = item.Active,
                 Id = item.Id,
                 Name = item.Name,

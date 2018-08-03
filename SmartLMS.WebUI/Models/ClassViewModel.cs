@@ -28,7 +28,7 @@ namespace SmartLMS.WebUI.Models
 
         public bool Available { get; set; }
 
-        public string CreationDateDescription { get; set; }
+        public string CreatedAtDescription { get; set; }
 
 
         public string CourseName { get; set; }
@@ -65,7 +65,7 @@ namespace SmartLMS.WebUI.Models
         public string SubjectName { get; set; }
         public string KnowledgeAreaName { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [Display(Name = "Active")]
         public bool Active { get; set; }
@@ -99,7 +99,7 @@ namespace SmartLMS.WebUI.Models
                 CourseName = item.Course.Name,
                 SubjectName = item.Course.Subject.Name,
                 KnowledgeAreaName = item.Course.Subject.KnowledgeArea.Name,
-                CreationDate = item.CreatedAt,
+                CreatedAt = item.CreatedAt,
                 Active = item.Active,
                 Order = item.Order,
                 DeliveryDays = item.DeliveryDays
@@ -119,9 +119,9 @@ namespace SmartLMS.WebUI.Models
                 Name = item.Name,
                 Content = item.Content,
                 ContentType = item.ContentType,
-                CreationDate = item.CreatedAt,
+                CreatedAt = item.CreatedAt,
                 DeliveryDays = item.DeliveryDays,
-                CreationDateDescription = humanizer != null ? humanizer.Humanize(item.CreatedAt, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
+                CreatedAtDescription = humanizer != null ? humanizer.Humanize(item.CreatedAt, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
                 Active = item.Active,
                 Order = item.Order,
                 Files = depth > 3 ? FileViewModel.FromEntityList(item.Files) : new List<FileViewModel>()
@@ -148,7 +148,7 @@ namespace SmartLMS.WebUI.Models
                 Content = item.Class.Content,
                 ContentType = item.Class.ContentType,
                 TeacherName= item.Class.Teacher.Name,
-                CreationDate = item.Class.CreatedAt,
+                CreatedAt = item.Class.CreatedAt,
                 CourseName = item.Class.Course.Name,
                 Available = item.Available,
                 Percentual = item.Percentual,
@@ -166,7 +166,7 @@ namespace SmartLMS.WebUI.Models
                 Content = item.Class.Content,
                 ContentType = item.Class.ContentType,
                 TeacherName = item.Class.Teacher.Name,
-                CreationDate = item.Class.CreatedAt,
+                CreatedAt = item.Class.CreatedAt,
                 CourseName = item.Class.Course.Name,
                 Available = item.Available,
                 Percentual = item.Percentual,
@@ -190,10 +190,10 @@ namespace SmartLMS.WebUI.Models
                 Content = item.Class.Content,
                 ContentType = item.Class.ContentType,
                 TeacherName = item.Class.Teacher.Name,
-                CreationDate = item.Class.CreatedAt,
+                CreatedAt = item.Class.CreatedAt,
                 DeliveryDate = item.DeliveryDate,
                 CourseName = item.Class.Course.Name,
-                CreationDateDescription = humanizer != null ? humanizer.Humanize(item.Class.CreatedAt, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
+                CreatedAtDescription = humanizer != null ? humanizer.Humanize(item.Class.CreatedAt, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
                 DeliveryDateDescription = humanizer != null ? humanizer.Humanize(item.DeliveryDate, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
                 Available = true,
             };
@@ -204,7 +204,7 @@ namespace SmartLMS.WebUI.Models
             return new Class()
             {
                 Id = klass.Id,
-                CreatedAt = klass.CreationDate,
+                CreatedAt = klass.CreatedAt,
                 Active = klass.Active,
                 DeliveryDays = klass.DeliveryDays,
                 Content = klass.Content,

@@ -27,7 +27,10 @@ namespace SmartLMS.Domain.Repositories
         public void UpdateProgress(ClassAccess access)
         {
             var accesses = _context.GetList<ClassAccess>();
-            var existingAccess = accesses.LastOrDefault(x => x.Class.Id == access.Class.Id && x.User.Id == access.User.Id);
+            var existingAccess = accesses
+                .Where(x => x.Class.Id == access.Class.Id && x.User.Id == access.User.Id)
+                .OrderByDescending(x=> x.AccessDateTime)
+                .FirstOrDefault();
                
             if (existingAccess == null)
             {

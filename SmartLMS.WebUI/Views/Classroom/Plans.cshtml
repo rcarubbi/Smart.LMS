@@ -13,7 +13,7 @@
             <div id="result-container" class="list-group">
                 @foreach (var item in Model)
                 {
-                    <h4>@item.Order - @item.Course.Name)</h4>
+                    <h4>@item.Order - @item.Course.Name</h4>
 
                     <div class="list-group">
                         @foreach (var klass in item.Course.Classes.OrderBy(x => x.Order))

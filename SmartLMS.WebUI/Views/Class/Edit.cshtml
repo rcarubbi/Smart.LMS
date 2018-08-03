@@ -68,6 +68,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    @Html.LabelFor(model => model.ContentType, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.ContentType, ViewBag.ContentTypes as SelectList, "-- Select --", new { @class = "form-control dropdownjs" })
+                        @Html.ValidationMessageFor(model => model.ContentType, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fa fa-save"></i>
