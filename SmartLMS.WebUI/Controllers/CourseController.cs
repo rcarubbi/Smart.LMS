@@ -62,7 +62,7 @@ namespace SmartLMS.WebUI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult ListCourses(string term, string searchFieldName, int page = 1)
+        public ActionResult Search(string term, string searchFieldName, int page = 1)
         {
             var courseRepository = new CourseRepository(_context);
             return Json(CourseViewModel.FromEntityList(courseRepository.Search(term, searchFieldName, page)));

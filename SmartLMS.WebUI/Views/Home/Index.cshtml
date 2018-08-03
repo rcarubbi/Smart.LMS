@@ -140,7 +140,7 @@
                     $private.noticeTemplate = Handlebars.compile($("#notice-template").html());
             });
 
-            $private.pesquisarTermo = function () {
+            $private.searchTerm = function () {
                 contextualSearch.CurrentPage = 1;
                 contextualSearch.Term = $("#q").val();
 
@@ -217,9 +217,9 @@
                         pageCount: Math.ceil(data.results.Count / 8),
                         hasPrevious: data.results.HasPrevious,
                         hasNext: data.results.HasNext,
-                        currentPage: data.currentPage,
-                        minPage: $private.getMinPage(Math.ceil(data.results.Count / 8), data.currentPage),
-                        maxPage: $private.getMaxPage(Math.ceil(data.results.Count / 8), data.currentPage)
+                        currentPage: data.CurrentPage,
+                        minPage: $private.getMinPage(Math.ceil(data.results.Count / 8), data.CurrentPage),
+                        maxPage: $private.getMaxPage(Math.ceil(data.results.Count / 8), data.CurrentPage)
                     }));
                 $("#search-results-container").slideDown();
             };
@@ -232,9 +232,9 @@
                         pageCount: Math.ceil(data.results.Count / 8),
                         hasPrevious: data.results.HasPrevious,
                         hasNext: data.results.HasNext,
-                        currentPage: data.currentPage,
-                        minPage: $private.getMinPage(Math.ceil(data.results.Count / 8), data.currentPage),
-                        maxPage: $private.getMaxPage(Math.ceil(data.results.Count / 8), data.currentPage)
+                        currentPage: data.CurrentPage,
+                        minPage: $private.getMinPage(Math.ceil(data.results.Count / 8), data.CurrentPage),
+                        maxPage: $private.getMaxPage(Math.ceil(data.results.Count / 8), data.CurrentPage)
                     }));
 
             };

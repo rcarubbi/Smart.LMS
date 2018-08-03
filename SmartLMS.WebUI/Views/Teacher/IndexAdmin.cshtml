@@ -208,7 +208,7 @@
 
             $(function () {
                 SmartLMS.Pagination.init({
-                    onPageChanged: $private.search,
+                    onPageChanged: $private.changePage,
                 });
 
                 $("#SearchField").on("dropdownjs.change", function () {
@@ -248,7 +248,7 @@
                 $("#deleteConfirmation").modal();
             };
    
-            $private.search = function (page) {
+            $private.changePage = function (page) {
                 var term = $("#term").val();
                 return proxy.search(term, $private.SearchFieldName, page);
             };

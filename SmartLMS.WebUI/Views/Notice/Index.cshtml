@@ -136,7 +136,7 @@
 
 
                 SmartLMS.Pagination.init({
-                    onPageChanged: $private.listNoticeHistory,
+                    onPageChanged: $private.changePage,
                 });
 
                 $private.NoticeType = 0;
@@ -152,7 +152,7 @@
             });
 
 
-            $private.search = function (page) {
+            $private.changePage = function (page) {
                 var startDate = $("#startDate").val();
                 var endDate = $("#endDate").val();
                 return proxy.listNoticeHistory(startDate,

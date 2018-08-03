@@ -8,16 +8,16 @@
     <ul class="pagination pagination-primary">
 
         <li>
-            <a class="paginacao-anterior" @if (!Model.HasPrevious) { <text> style="display:none" </text>      } href="javascript:void(0);">&lt; previous</a>
+            <a class="pagination-previous" @if (!Model.HasPrevious) { <text> style="display:none" </text>      } href="javascript:void(0);">&lt; previous</a>
         </li>
 
         @for (int i = 1; i <= paginaMax; i++)
         {
             <li class="@(i == 1? "active" : string.Empty)">
-                <a href="javascript:void(0);" class="paginacao-pagina">@i</a>
+                <a href="javascript:void(0);" class="pagination-page">@i</a>
             </li>
         }
-        <li><a class="paginacao-proxima" style="@(!Model.HasNext? "display:none;": string.Empty)" href="javascript:void(0);">next &gt;</a></li>
+        <li><a class="pagination-next" style="@(!Model.HasNext? "display:none;": string.Empty)" href="javascript:void(0);">next &gt;</a></li>
     </ul>
 </div>
 
@@ -25,7 +25,7 @@
 
     <ul class="pagination pagination-primary">
         {{#if hasPrevious}}
-        <li><a class="paginacao-anterior" href="javascript:void(0);">&lt; previous</a></li>
+        <li><a class="pagination-previous" href="javascript:void(0);">&lt; previous</a></li>
         {{/if}}
 
         {{#for minPage maxPage 1}}
@@ -34,13 +34,13 @@
             {{else}}
         <li>
             {{/equals}}
-            <a href="javascript:void(0);" class="paginacao-pagina">{{this}}</a>
+            <a href="javascript:void(0);" class="pagination-page">{{this}}</a>
         </li>
         {{/for}}
 
 
         {{#if hasNext}}
-        <li><a class="paginacao-proxima" href="javascript:void(0);">next &gt;</a></li>
+        <li><a class="pagination-next" href="javascript:void(0);">next &gt;</a></li>
         {{/if}}
     </ul>
 

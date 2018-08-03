@@ -222,7 +222,7 @@
 
             $(function () {
                 SmartLMS.Pagination.init({
-                    onPageChanged: $private.search,
+                    onPageChanged: $private.changePage,
                 });
                 $private.SearchFieldName = "Name";
 
@@ -237,7 +237,7 @@
             });
  
 
-            $private.search = function (page) {
+            $private.changePage = function (page) {
                 var term = $("#term").val();
                 return proxy.search(term, $private.SearchFieldName, page);
             };
@@ -252,7 +252,7 @@
                     MessageType: 'error'
                 });
 
-                proxy.delete(id).done($private.PesquisarSubjects);
+                proxy.delete(id).done($private.search);
             };
 
 

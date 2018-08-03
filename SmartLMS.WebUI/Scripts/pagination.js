@@ -2,7 +2,7 @@
     var $private = {}, $public = {};
 
     $public.init = function (config) {
-        $public.Page = 1;
+        $public.CurrentPage = 1;
         $private.config = config || {};
         $private.config.paginationContainerId = config.paginationContainerId || "pagination-container";
         $private.config.paginationTemplateId = config.paginationTemplateId || "pagination-template";
@@ -17,18 +17,18 @@
     };
 
     $private.goToPage = function () {
-        $public.Page = $(this).text();
-        $private.config.onPageChanged($public.Page).done($public.refreshResults);
+        $public.CurrentPage = $(this).text();
+        $private.config.onPageChanged($public.CurrentPage).done($public.refreshResults);
     };
 
     $private.goToNextPage = function () {
-        $public.Page++;
-        $private.config.onPageChanged($public.Page).done($public.refreshResults);
+        $public.CurrentPage++;
+        $private.config.onPageChanged($public.CurrentPage).done($public.refreshResults);
     };
 
     $private.goToPreviousPage = function () {
-        $public.Page--;
-        $private.config.onPageChanged($public.Page).done($public.refreshResults);
+        $public.CurrentPage--;
+        $private.config.onPageChanged($public.CurrentPage).done($public.refreshResults);
     };
 
     $private.getMinPage = function (pageCount, pageIndex) {
@@ -82,9 +82,9 @@
             pageCount: Math.ceil(data.Count / 8),
             hasPrevious: data.HasPrevious,
             hasNext: data.HasNext,
-            minPage: $private.getMinPage(Math.ceil(data.Count / 8), $public.Page),
-            maxPage: $private.getMaxPage(Math.ceil(data.Count / 8), $public.Page),
-            currentPage: $public.Page
+            minPage: $private.getMinPage(Math.ceil(data.Count / 8), $public.CurrentPage),
+            maxPage: $private.getMaxPage(Math.ceil(data.Count / 8), $public.CurrentPage),
+            currentPage: $public.CurrentPage
         }));
     };
 

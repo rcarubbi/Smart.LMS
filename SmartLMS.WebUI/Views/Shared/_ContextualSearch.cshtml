@@ -28,51 +28,51 @@
     </div>
 </div>
 <script id="search-results-template" type="text/x-handlebars-template">
-    {{#equals pages 0}}
-        <h4>Your search did not return any results for the term <strong>"{{term}}"</strong> </h4>
+    {{#equals pageCount 0}}
+    <h4>Your search did not return any results for the term <strong>"{{term}}"</strong> </h4>
     {{else}}
-        {{#equals pages 1}}
-            <h4>Has been found <strong>one</strong> page for the term <strong>"{{term}}"</strong> </h4>
-        {{else}}
-            <h4>Have been found <strong>{{pages}}</strong> pages for the term <strong>"{{term}}"</strong></h4>
-        {{/equals}}
+    {{#equals pageCount 1}}
+    <h4>Has been found <strong>one</strong> page for the term <strong>"{{term}}"</strong> </h4>
+    {{else}}
+    <h4>Have been found <strong>{{pageCount}}</strong> pages for the term <strong>"{{term}}"</strong></h4>
+    {{/equals}}
     {{/equals}}
     <div class="bs-component">
         <div class="list-group">
-            {{#each SearchResult}}
-                <div class="list-group-item list-group-item-sm">
-                    <a href="@Url.Content("~/"){{Link}}" class='link-group-item'>
-                        <div class="row-action-primary">
-                            <i class="fa {{Icon}}"></i>
-                        </div>
-                        <div class="row-content">
-                            <div class="action-secondary"><i class="material-icons">{{Status}}</i></div>
-                            <h4 class="list-group-item-heading">{{Description}}</h4>
-                            <p class="list-group-item-text">{{DescriptionType}}</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="list-group-separator list-group-separator-sm"></div>
+            {{#each searchResults}}
+            <div class="list-group-item list-group-item-sm">
+                <a href="@Url.Content("~/"){{Link}}" class='link-group-item'>
+                    <div class="row-action-primary">
+                        <i class="fa {{Icon}}"></i>
+                    </div>
+                    <div class="row-content">
+                        <div class="action-secondary"><i class="material-icons">{{Status}}</i></div>
+                        <h4 class="list-group-item-heading">{{Description}}</h4>
+                        <p class="list-group-item-text">{{DescriptionType}}</p>
+                    </div>
+                </a>
+            </div>
+            <div class="list-group-separator list-group-separator-sm"></div>
             {{/each}}
         </div>
     </div>
     <div class="text-center">
         <ul class="pagination pagination-primary">
             {{#if hasPrevious}}
-                <li><a class="contextual-search-pagination-previous" href="javascript:void(0);">&lt; previous</a></li>
+            <li><a class="contextual-search-pagination-previous" href="javascript:void(0);">&lt; previous</a></li>
             {{/if}}
 
             {{#for minPage maxPage 1}}
-                {{#equals this @@root.currentPage}}
+            {{#equals this @@root.currentPage}}
                     <li class="active">
                 {{else}}
                     <li>
                 {{/equals}}
-                        <a href="javascript:void(0);" class="contextual-search-pagination-pagenumber">{{this}}</a>
-                    </li>
+                    <a href="javascript:void(0);" class="contextual-search-pagination-pagenumber">{{this}}</a>
+                </li>
             {{/for}}
             {{#if hasNext}}
-                <li><a class="contextual-search-pagination-next" href="javascript:void(0);">next &gt;</a></li>
+            <li><a class="contextual-search-pagination-next" href="javascript:void(0);">next &gt;</a></li>
             {{/if}}
         </ul>
     </div>

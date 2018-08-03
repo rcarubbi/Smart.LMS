@@ -149,7 +149,7 @@
                 $private.AccessType = 0;
 
                 SmartLMS.Pagination.init({
-                    onPageChanged: $private.search,
+                    onPageChanged: $private.changePage,
                 });
 
                 $("#AccessType").on("dropdownjs.change", function () {
@@ -161,7 +161,7 @@
                 $("#filter-button").on("click", $private.search);
             });
 
-            $private.search = function (page) {
+            $private.changePage = function (page) {
                 var startDate = $("#startDate").val();
                 var endDate = $("#endDate").val();
                 return proxy.search(startDate, endDate, $private.AccessType, page);

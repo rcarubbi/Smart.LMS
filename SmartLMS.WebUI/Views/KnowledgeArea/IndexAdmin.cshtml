@@ -205,7 +205,7 @@
 
             $(function () {
                 SmartLMS.Pagination.init({
-                    onPageChanged: $private.search,
+                    onPageChanged: $private.changePage,
                 });
                 $private.SearchFieldName = "Name";
 
@@ -231,7 +231,7 @@
             };
 
 
-            $private.search = function (page) {
+            $private.changePage = function (page) {
                 var term = $("#term").val();
                 return proxy.search(term, $private.SearchFieldName, page);
             };

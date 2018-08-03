@@ -215,7 +215,7 @@
             $(function () {
 
                 SmartLMS.Pagination.init({
-                    onPageChanged: $private.search,
+                    onPageChanged: $private.changePage,
                 });
                 $private.SearchFieldName = "Name";
 
@@ -224,13 +224,13 @@
                     $private.SearchFieldName = selectedItem.val();
                 });
 
-                $("#filter-button").on("click", $private.PesquisarSubjects);
+                $("#filter-button").on("click", $private.search);
                 $("#deleteConfirmation").on("click", ".btn-delete-agree", $private.delete);
                 $(document).on("click", "#result-container .btn-delete", $private.deleteConfirmation);
             });
 
 
-            $private.search = function (page) {
+            $private.changePage = function (page) {
                 var term = $("#term").val();
                 return proxy.search(term, $private.SearchFieldName, page);
             };

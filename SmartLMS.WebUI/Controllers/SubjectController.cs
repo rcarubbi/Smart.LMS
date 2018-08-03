@@ -64,7 +64,7 @@ namespace SmartLMS.WebUI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult Excluir(string id)
+        public ActionResult Delete(string id)
         {
             var subjectRepository = new SubjectRepository(_context);
             subjectRepository.Delete(new Guid(id));
