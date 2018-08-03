@@ -2,6 +2,10 @@
 using SmartLMS.Domain.Entities.UserAccess;
 using System;
 using System.Data.Entity.Core.Objects;
+using System.Linq;
+using SmartLMS.Domain.Entities.History;
+using SmartLMS.Domain.Repositories;
+
 namespace SmartLMS.Domain.Services
 {
     public class SearchResult
@@ -90,22 +94,21 @@ namespace SmartLMS.Domain.Services
                 ResultType = (ResultType)(Enum.Parse(typeof(ResultType), ObjectContext.GetObjectType(item.GetType()).Name))
             };
 
-            // descomentar se quiser exibir barra de progresso da aula e icone de arquivo baixado no resultado da busca contextual
-            /*if (resultado.Tipo == TipoResultado.Arquivo && contexto.ObterLista<AcessoArquivo>().Any(x => x.Arquivo.Id == resultado.Id))
+           
+            if (result.ResultType == ResultType.File && context.GetList<FileAccess>().Any(x => x.File.Id == result.Id))
             {
-                resultado.Percentual = 100;
+                result.Percentual = 100;
             }
- 
-            if (resultado.Tipo == TipoResultado.Aula)
+            else if (result.ResultType == ResultType.Class)
             {
-                var acessoRepo = new RepositorioAcessoAula(contexto, _usuarioLogado.Id);
-                var acessoMaisLongo = acessoRepo.ObterMaiorPercentual(resultado.Id);
-                if (acessoMaisLongo != null)
+                var classAccessRepository = new ClassAccessRepository(context);
+                var longestAccess = classAccessRepository.GetLongestAccess(result.Id, loggedUser.Id);
+                if (longestAccess != null)
                 {
-                    resultado.Percentual = acessoMaisLongo.Percentual;
+                    result.Percentual = longestAccess.Percentual;
                 }
-            }*/
- 
+            }
+
             return result;
         }
 
