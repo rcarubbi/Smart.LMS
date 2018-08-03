@@ -1,9 +1,9 @@
 ﻿using Carubbi.Mailer.Implementation;
 using Carubbi.Utils.Data;
-using SmartLMS.Dominio;
-using SmartLMS.Dominio.Entidades;
-using SmartLMS.Dominio.Repositorios;
-using SmartLMS.Dominio.Servicos;
+using SmartLMS.Domain;
+using SmartLMS.Domain.Entities;
+using SmartLMS.Domain.Repositories;
+using SmartLMS.Domain.Services;
 using SmartLMS.WebUI.Models;
 using System.Linq;
 using System.Web.Mvc;
@@ -14,65 +14,58 @@ namespace SmartLMS.WebUI.Controllers
 
     public class HomeController : BaseController
     {
-        ServicoBuscaContextual servicoBusca;
+        private ContextualSearchService _contextualSearchService;
 
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            servicoBusca = new ServicoBuscaContextual(_contexto, _usuarioLogado);
+            _contextualSearchService = new ContextualSearchService(_context, _loggedUser);
         }
 
-        public HomeController(IContexto contexto)
-            : base(contexto)
+        public HomeController(IContext context)
+            : base(context)
         {
 
         }
 
         public ActionResult Index()
         {
-            var areaRepo = new RepositorioAreaConhecimento(_contexto);
-            var viewModel = AreaConhecimentoViewModel.FromEntityList(areaRepo.ListarAreasConhecimento(), 2);
+            var knowledgeAreaRepository = new KnowledgeAreaRepository(_context);
+            var viewModel = KnowledgeAreaViewModel.FromEntityList(knowledgeAreaRepository.ListActiveKnowledgeAreas(), 2);
 
-            TempData["TituloAulasAssistidas"] = Parametro.TITULO_AULAS_ASSISTIDAS;
-            TempData["TituloUltimasAulas"] = Parametro.TITULO_ULTIMAS_AULAS;
+            TempData["WatchedClassesTitle"] = Parameter.WATCHED_CLASSES_TITLE;
+            TempData["LastClassesTitle"] = Parameter.LAST_CLASSES_TITLE;
             return View(viewModel);
         }
 
 
-        public ActionResult BuscaContextual(string term)
+        public ActionResult ContextualSearch(string term)
         {
-
-            var resultados = servicoBusca.Pesquisar(term).Entities.Select(r => new { label = r.Descricao }).ToList();
-            return Json(resultados, JsonRequestBehavior.AllowGet);
+            var results = _contextualSearchService.Search(term).Entities.Select(r => new { label = r.Description }).ToList();
+            return Json(results, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult BuscaContextualPaginada(string termo, int pagina)
+        public ActionResult PagedContextualSearch(string term, int page)
         {
-            var resultados = servicoBusca.Pesquisar(termo, pagina);
-            return Json(new { paginaCorrente = pagina, resultados = resultados }, JsonRequestBehavior.AllowGet);
+            var results = _contextualSearchService.Search(term, page);
+            return Json(new { CurrentPage = page, results }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult FaleConosco(FaleConoscoViewModel viewModel)
+        public ActionResult TalkToUs(TalkToUsViewModel viewModel)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    ServicoNotificacao servico = new ServicoNotificacao(_contexto, new SmtpSender());
-                    servico.EnviarFaleConosco(viewModel.Nome, viewModel.Email, viewModel.Mensagem);
+                if (!ModelState.IsValid) return Json(new {Success = false});
+
+                var notificationService = new NotificationService(_context, new SmtpSender());
+                notificationService.SendTalkToUsMessage(viewModel.Name, viewModel.Email, viewModel.Message);
                   
-                    return Json(new { Success = true });
-                }
-                else
-                {
-                    return Json(new { Success = false });
-                }
+                return Json(new { Success = true });
             }
             catch
             {
-
                 return Json(new { Success = false });
             }
         }

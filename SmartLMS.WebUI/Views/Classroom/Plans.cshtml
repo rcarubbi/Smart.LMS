@@ -1,0 +1,39 @@
+﻿@model ICollection<SmartLMS.Domain.Entities.Delivery.ClassroomCourse>
+
+@{
+    ViewBag.Title = "Deliver plan";
+}
+
+<div class="card">
+    <div class="content">
+        <h5 class="index-title">
+            Delivery Plan
+        </h5>
+        <div>
+            <div id="result-container" class="list-group">
+                @foreach (var item in Model)
+                {
+                    <h4>@item.Order - @item.Course.Name)</h4>
+
+                    <div class="list-group">
+                        @foreach (var klass in item.Course.Classes.OrderBy(x => x.Order))
+                        {
+                            <div class="list-group-item list-group-item-sm">
+                                <div class="row-action-primary">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <div class="row-content">
+                                    <h5 class="class-name">@klass.Name</h5>
+                                    <label>Days to deliver: </label><span> @klass.DeliveryDays day(s)</span>
+                                </div>
+                            </div>
+                            <div class="list-group-separator list-group-separator-sm"></div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        @Html.ActionLink("Back", "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+
+    </div>
+</div>

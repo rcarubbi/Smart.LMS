@@ -1,0 +1,114 @@
+﻿using SmartLMS.Domain.Entities;
+using SmartLMS.Domain.Entities.UserAccess;
+using System;
+using System.Data.Entity.Core.Objects;
+namespace SmartLMS.Domain.Services
+{
+    public class SearchResult
+    {
+        public string Icon
+        {
+            get
+            {
+                switch (ResultType)
+                {
+                    case ResultType.KnowledgeArea:
+                        return "fa-map-signs";
+                    case ResultType.Subject:
+                        return "fa-map";
+                    case ResultType.Course:
+                        return "fa-graduation-cap";
+                    case ResultType.Class:
+                        return "fa-laptop";
+                    case ResultType.File:
+                        return "fa-file-text-o";
+                    default:
+                        return "fa-file-o";
+                }
+            }
+        }
+        public string Link
+        {
+            get
+            {
+                switch (ResultType)
+                {
+                    case ResultType.KnowledgeArea:
+                        return $"Subject/Index/{Id}";
+                    case ResultType.Subject:
+                        return $"Course/Index/{Id}";
+                    case ResultType.Course:
+                        return $"Class/Index/{Id}";
+                    case ResultType.Class:
+                        return $"Class/Watch/{Id}";
+                    case ResultType.File:
+                        return $"Class/Download/{Id}";
+                    default:
+                        return string.Empty;
+                }
+            }
+        }
+
+        public string TypeDescription
+        {
+            get
+            {
+                switch (ResultType)
+                {
+                    case ResultType.KnowledgeArea:
+                        return Parameter.KNOWLEDGE_AREA;
+                    case ResultType.Subject:
+                        return Parameter.SUBJECT;
+                    case ResultType.Course:
+                        return Parameter.COURSE;
+                    case ResultType.Class:
+                        return Parameter.CLASS;
+                    case ResultType.File:
+                        return Parameter.FILE;
+                    default:
+                        return string.Empty;
+                }
+            }
+        }
+        public Guid Id { get; set; }
+
+        public int Percentual { get; set; }
+
+        public ResultType ResultType { get; set; }
+
+        public string Description { get; set; }
+
+     
+
+        public static SearchResult Parse<T>(T item, User loggedUser, IContext context)
+            where T: ISearchResult
+        {
+            var result = new SearchResult
+            {
+                Id = item.Id,
+                Description = item.Name,
+                ResultType = (ResultType)(Enum.Parse(typeof(ResultType), ObjectContext.GetObjectType(item.GetType()).Name))
+            };
+
+            // descomentar se quiser exibir barra de progresso da aula e icone de arquivo baixado no resultado da busca contextual
+            /*if (resultado.Tipo == TipoResultado.Arquivo && contexto.ObterLista<AcessoArquivo>().Any(x => x.Arquivo.Id == resultado.Id))
+            {
+                resultado.Percentual = 100;
+            }
+ 
+            if (resultado.Tipo == TipoResultado.Aula)
+            {
+                var acessoRepo = new RepositorioAcessoAula(contexto, _usuarioLogado.Id);
+                var acessoMaisLongo = acessoRepo.ObterMaiorPercentual(resultado.Id);
+                if (acessoMaisLongo != null)
+                {
+                    resultado.Percentual = acessoMaisLongo.Percentual;
+                }
+            }*/
+ 
+            return result;
+        }
+
+     
+    }
+}

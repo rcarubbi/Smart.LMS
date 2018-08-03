@@ -1,10 +1,10 @@
-﻿using SmartLMS.DAL;
-using SmartLMS.Dominio.Entidades;
-using SmartLMS.Dominio.Repositorios;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using SmartLMS.DAL;
+using SmartLMS.Domain.Entities;
+using SmartLMS.Domain.Repositories;
 
 namespace SmartLMS.WebUI
 {
@@ -18,27 +18,27 @@ namespace SmartLMS.WebUI
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             
-            using (var contexto = new Contexto())
+            using (var context = new Context())
             {
-                RepositorioParametro parametroRepo = new RepositorioParametro(contexto);
-                Parametro.PROJETO = parametroRepo.ObterValorPorChave(Parametro.NOME_PROJETO);
+                var parameterRepository = new ParameterRepository(context);
+                Parameter.APP_NAME = parameterRepository.ObterValorPorChave(Parameter.APP_NAME_KEY);
 
-                Parametro.AREA_CONHECIMENTO_PLURAL = parametroRepo.ObterValorPorChave(Parametro.CHAVE_AREA_CONHECIMENTO_PLURAL);
-                Parametro.AREA_CONHECIMENTO = parametroRepo.ObterValorPorChave(Parametro.CHAVE_AREA_CONHECIMENTO);
-
-                Parametro.CURSO_PLURAL = parametroRepo.ObterValorPorChave(Parametro.CHAVE_CURSO_PLURAL);
-                Parametro.CURSO = parametroRepo.ObterValorPorChave(Parametro.CHAVE_CURSO);
-
-                Parametro.ASSUNTO_PLURAL = parametroRepo.ObterValorPorChave(Parametro.CHAVE_ASSUNTO_PLURAL);
-                Parametro.ASSUNTO= parametroRepo.ObterValorPorChave(Parametro.CHAVE_ASSUNTO);
-
-                Parametro.AULA= parametroRepo.ObterValorPorChave(Parametro.CHAVE_AULA);
-                Parametro.AULA_PLURAL = parametroRepo.ObterValorPorChave(Parametro.CHAVE_AULA_PLURAL);
-                Parametro.ARQUIVO= parametroRepo.ObterValorPorChave(Parametro.CHAVE_ARQUIVO);
-                Parametro.TITULO_AULAS_ASSISTIDAS = parametroRepo.ObterValorPorChave(Parametro.CHAVE_TITULO_AULAS_ASSISTIDAS);
-                Parametro.STORAGE_ARQUIVOS = parametroRepo.ObterValorPorChave(Parametro.CHAVE_STORAGE_ARQUIVOS);
-                Parametro.TITULO_ULTIMAS_AULAS = parametroRepo.ObterValorPorChave(Parametro.CHAVE_TITULO_ULTIMAS_AULAS);
-                Parametro.CORPO_NOTIFICACAO_AULA_LIBERADA = parametroRepo.ObterValorPorChave(Parametro.CHAVE_CORPO_NOTIFICACAO_AULA_LIBERADA);
+                Parameter.KNOWLEDGE_AREA_PLURAL = parameterRepository.ObterValorPorChave(Parameter.KNOWLEDGE_AREA_PLURAL_KEY);
+                Parameter.KNOWLEDGE_AREA = parameterRepository.ObterValorPorChave(Parameter.KNOWLEDGE_AREA_KEY);
+                
+                Parameter.COURSE_PLURAL = parameterRepository.ObterValorPorChave(Parameter.COURSE_PLURAL_KEY);
+                Parameter.COURSE= parameterRepository.ObterValorPorChave(Parameter.COURSE_KEY);
+                
+                Parameter.SUBJECT_PLURAL= parameterRepository.ObterValorPorChave(Parameter.SUBJECT_PLURAL_KEY);
+                Parameter.SUBJECT= parameterRepository.ObterValorPorChave(Parameter.SUBJECT_KEY);
+                
+                Parameter.CLASS= parameterRepository.ObterValorPorChave(Parameter.CLASS_KEY);
+                Parameter.CLASS_PLURAL = parameterRepository.ObterValorPorChave(Parameter.CLASS_PLURAL_KEY);
+                Parameter.FILE= parameterRepository.ObterValorPorChave(Parameter.FILE_KEY);
+                Parameter.WATCHED_CLASSES_TITLE= parameterRepository.ObterValorPorChave(Parameter.WATCHED_CLASSES_TITLE_KEY);
+                Parameter.FILE_STORAGE = parameterRepository.ObterValorPorChave(Parameter.FILE_STORAGE_KEY);
+                Parameter.LAST_CLASSES_TITLE= parameterRepository.ObterValorPorChave(Parameter.LAST_CLASSES_TITLE_KEY);
+                Parameter.DELIVERED_CLASS_NOTICE_BODY= parameterRepository.ObterValorPorChave(Parameter.DELIVERED_CLASS_NOTICE_BODY_KEY);
             }
                 
 

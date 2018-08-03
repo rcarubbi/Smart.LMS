@@ -37,12 +37,12 @@
 }
 .dropzone .dz-preview,
 .dropzone-previews .dz-preview {
-  background: darkgreen;
+  background: #7F3F98;
   position: relative;
   display: inline-block;
   margin: -32px 10px -32px 10px;
   vertical-align: top;
-  border: 1px solid darkgreen;
+  border: 1px solid #7F3F98;
   padding: 6px 6px 6px 6px;
 }
 .dropzone .dz-preview.dz-file-preview [data-dz-thumbnail],

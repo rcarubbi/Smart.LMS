@@ -65,7 +65,7 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 {
 }
 
 a, a:hover, a:focus {
-    color: darkgreen;
+    color: #7f1887;
 }
 
     a .material-icons, a:hover .material-icons, a:focus .material-icons {
@@ -236,7 +236,7 @@ a, a:hover, a:focus {
 
             .btn.btn-primary,
             .navbar .navbar-nav > li > a.btn.btn-primary {
-                box-shadow: 0 2px 2px 0 rgba(0, 100, 0, 0.14), 0 3px 1px -2px rgba(0, 150, 0, 0.2), 0 1px 5px 0 rgba(0, 200, 0, 0.12);
+                box-shadow: 0 2px 2px 0 rgba(112, 56, 134, 0.14), 0 3px 1px -2px rgba(127, 63, 152, 0.2), 0 1px 5px 0 rgba(142, 70, 170, 0.12);
             }
 
                 .btn.btn-primary, .btn.btn-primary:hover, .btn.btn-primary:focus, .btn.btn-primary:active, .btn.btn-primary.active, .btn.btn-primary:active:focus, .btn.btn-primary:active:hover, .btn.btn-primary.active:focus, .btn.btn-primary.active:hover, .open > .btn.btn-primary.dropdown-toggle, .open > .btn.btn-primary.dropdown-toggle:focus, .open > .btn.btn-primary.dropdown-toggle:hover,
@@ -249,7 +249,7 @@ a, a:hover, a:focus {
                 .navbar .navbar-nav > li > a.btn.btn-primary:active:hover,
                 .navbar .navbar-nav > li > a.btn.btn-primary.active:focus,
                 .navbar .navbar-nav > li > a.btn.btn-primary.active:hover, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle:hover {
-                    background-color: darkgreen;
+                    background-color: #7f1887;
                     color: #FFFFFF;
                 }
 
@@ -257,7 +257,8 @@ a, a:hover, a:focus {
                     .navbar .navbar-nav > li > a.btn.btn-primary:focus,
                     .navbar .navbar-nav > li > a.btn.btn-primary:active,
                     .navbar .navbar-nav > li > a.btn.btn-primary:hover {
-                        box-shadow: 0 14px 26px -12px rgba(0, 100, 0, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 200, 0, 0.2);
+                        box-shadow: 0 14px 26px -12px rgba(112, 56, 134, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(142, 70, 170, 0.2);
+                
                     }
 
                     .btn.btn-primary.disabled, .btn.btn-primary.disabled:hover, .btn.btn-primary.disabled:focus, .btn.btn-primary.disabled.focus, .btn.btn-primary.disabled:active, .btn.btn-primary.disabled.active, .btn.btn-primary:disabled, .btn.btn-primary:disabled:hover, .btn.btn-primary:disabled:focus, .btn.btn-primary:disabled.focus, .btn.btn-primary:disabled:active, .btn.btn-primary:disabled.active, .btn.btn-primary[disabled], .btn.btn-primary[disabled]:hover, .btn.btn-primary[disabled]:focus, .btn.btn-primary[disabled].focus, .btn.btn-primary[disabled]:active, .btn.btn-primary[disabled].active, fieldset[disabled] .btn.btn-primary, fieldset[disabled] .btn.btn-primary:hover, fieldset[disabled] .btn.btn-primary:focus, fieldset[disabled] .btn.btn-primary.focus, fieldset[disabled] .btn.btn-primary:active, fieldset[disabled] .btn.btn-primary.active,
@@ -285,7 +286,7 @@ a, a:hover, a:focus {
                     .btn.btn-primary.btn-simple,
                     .navbar .navbar-nav > li > a.btn.btn-primary.btn-simple {
                         background-color: transparent;
-                        color: darkgreen;
+                        color: #7f1887;
                         box-shadow: none;
                     }
 
@@ -294,7 +295,7 @@ a, a:hover, a:focus {
                         .navbar .navbar-nav > li > a.btn.btn-primary.btn-simple:focus,
                         .navbar .navbar-nav > li > a.btn.btn-primary.btn-simple:active {
                             background-color: transparent;
-                            color: darkgreen;
+                            color: #7f1887;
                         }
 
             .btn.btn-info,
@@ -781,7 +782,7 @@ a, a:hover, a:focus {
 
         .btn-group.open > .dropdown-toggle.btn.btn-primary,
         .btn-group-vertical.open > .dropdown-toggle.btn.btn-primary {
-            background-color: darkgreen;
+            background-color: #7f1887;
         }
 
         .btn-group.open > .dropdown-toggle.btn.btn-success,
@@ -933,7 +934,7 @@ fieldset[disabled] .form-group.is-focused .checkbox label {
 }
 
 .checkbox input[type=checkbox]:checked + .checkbox-material .check {
-    background: darkgreen;
+    background: #7f1887;
 }
 
     .checkbox input[type=checkbox]:checked + .checkbox-material .check:before {
@@ -1113,15 +1114,16 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
 }
 
 .togglebutton label input[type=checkbox]:checked + .toggle {
-    background-color: rgba(0, 100, 0, 0.7);
+    background-color: rgba(127, 63, 152, 0.7);
+
 }
 
     .togglebutton label input[type=checkbox]:checked + .toggle:after {
-        border-color: darkgreen;
+        border-color: #7f1887;
     }
 
     .togglebutton label input[type=checkbox]:checked + .toggle:active:after {
-        box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 100, 0, 0.1);
+        box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(127, 63, 152, 0.1);
     }
 
 .radio label {
@@ -1162,7 +1164,7 @@ fieldset[disabled] .form-group.is-focused .radio label {
     height: 15px;
     width: 15px;
     border-radius: 100%;
-    background-color: darkgreen;
+    background-color: #7f1887;
     -webkit-transform: scale3d(0,0,0);
     -moz-transform: scale3d(0,0,0);
     -o-transform: scale3d(0,0,0);
@@ -1218,11 +1220,11 @@ fieldset[disabled] .form-group.is-focused .radio label {
     }
 
     .radio input[type=radio]:checked ~ .check {
-        background-color: darkgreen;
+        background-color: #7f1887;
     }
 
     .radio input[type=radio]:checked ~ .circle {
-        border-color: darkgreen;
+        border-color: #7f1887;
     }
 
     .radio input[type=radio]:checked ~ .check {
@@ -1456,7 +1458,7 @@ output {
         }
 
         .label.label-primary {
-            background-color: darkgreen;
+            background-color: #7f1887;
         }
 
         .label.label-success {
@@ -1478,7 +1480,7 @@ output {
 .form-control,
 .form-group .form-control {
     border: 0;
-    background-image: linear-gradient(darkgreen, darkgreen), linear-gradient(#D2D2D2, #D2D2D2);
+    background-image: linear-gradient(#7f1887, #7f1887), linear-gradient(#D2D2D2, #D2D2D2);
     background-size: 0 2px, 100% 1px;
     background-repeat: no-repeat;
     background-position: center bottom, center calc(100% - 1px);
@@ -1545,19 +1547,19 @@ output {
 
     .form-group.is-focused .form-control {
         outline: none;
-        background-image: linear-gradient(darkgreen, darkgreen), linear-gradient(#D2D2D2, #D2D2D2);
+        background-image: linear-gradient(#7f1887, #7f1887), linear-gradient(#D2D2D2, #D2D2D2);
         background-size: 100% 2px, 100% 1px;
         box-shadow: none;
         transition-duration: 0.3s;
     }
 
         .form-group.is-focused .form-control .material-input:after {
-            background-color: darkgreen;
+            background-color: #7f1887;
         }
 
     .form-group.is-focused label,
     .form-group.is-focused label.control-label {
-        color: darkgreen;
+        color: #7f1887;
     }
 
     .form-group.is-focused.label-placeholder label,
@@ -1995,43 +1997,44 @@ select.form-control {
     .pagination > .active > span,
     .pagination > .active > span:focus,
     .pagination > .active > span:hover {
-        background-color: darkgreen;
-        border-color: darkgreen;
+        background-color: #7f1887;
+        border-color: #7f1887;
         color: #FFFFFF;
-        box-shadow: 0 4px 5px 0 rgba(0, 100, 0, 0.14), 0 1px 10px 0 rgba(0, 150, 0, 0.12), 0 2px 4px -1px rgba(0, 200, 0, 0.2);
+        box-shadow: 0 4px 5px 0 rgba(112, 56, 134, 0.14), 0 1px 10px 0 rgba(127, 63, 152, 0.12), 0 2px 4px -1px rgba(142, 70, 170, 0.2);
+       
     }
 
-.pagination.pagination-info > .active > a, .pagination.pagination-info > .active > a:focus, .pagination.pagination-info > .active > a:hover,
-.pagination.pagination-info > .active > span,
-.pagination.pagination-info > .active > span:focus,
-.pagination.pagination-info > .active > span:hover {
+.Pagination.CurrentPagetion-info > .active > a, .Pagination.CurrentPagetion-info > .active > a:focus, .Pagination.CurrentPagetion-info > .active > a:hover,
+.Pagination.CurrentPagetion-info > .active > span,
+.Pagination.CurrentPagetion-info > .active > span:focus,
+.Pagination.CurrentPagetion-info > .active > span:hover {
     background-color: #03a9f4;
     border-color: #03a9f4;
     box-shadow: 0 4px 5px 0 rgba(3, 169, 244, 0.14), 0 1px 10px 0 rgba(3, 169, 244, 0.12), 0 2px 4px -1px rgba(3, 169, 244, 0.2);
 }
 
-.pagination.pagination-success > .active > a, .pagination.pagination-success > .active > a:focus, .pagination.pagination-success > .active > a:hover,
-.pagination.pagination-success > .active > span,
-.pagination.pagination-success > .active > span:focus,
-.pagination.pagination-success > .active > span:hover {
+.Pagination.CurrentPagetion-success > .active > a, .Pagination.CurrentPagetion-success > .active > a:focus, .Pagination.CurrentPagetion-success > .active > a:hover,
+.Pagination.CurrentPagetion-success > .active > span,
+.Pagination.CurrentPagetion-success > .active > span:focus,
+.Pagination.CurrentPagetion-success > .active > span:hover {
     background-color: #4caf50;
     border-color: #4caf50;
     box-shadow: 0 4px 5px 0 rgba(76, 175, 80, 0.14), 0 1px 10px 0 rgba(76, 175, 80, 0.12), 0 2px 4px -1px rgba(76, 175, 80, 0.2);
 }
 
-.pagination.pagination-warning > .active > a, .pagination.pagination-warning > .active > a:focus, .pagination.pagination-warning > .active > a:hover,
-.pagination.pagination-warning > .active > span,
-.pagination.pagination-warning > .active > span:focus,
-.pagination.pagination-warning > .active > span:hover {
+.Pagination.CurrentPagetion-warning > .active > a, .Pagination.CurrentPagetion-warning > .active > a:focus, .Pagination.CurrentPagetion-warning > .active > a:hover,
+.Pagination.CurrentPagetion-warning > .active > span,
+.Pagination.CurrentPagetion-warning > .active > span:focus,
+.Pagination.CurrentPagetion-warning > .active > span:hover {
     background-color: #fbc02d;
     border-color: #fbc02d;
     box-shadow: 0 4px 5px 0 rgba(251, 192, 45, 0.14), 0 1px 10px 0 rgba(251, 192, 45, 0.12), 0 2px 4px -1px rgba(251, 192, 45, 0.2);
 }
 
-.pagination.pagination-danger > .active > a, .pagination.pagination-danger > .active > a:focus, .pagination.pagination-danger > .active > a:hover,
-.pagination.pagination-danger > .active > span,
-.pagination.pagination-danger > .active > span:focus,
-.pagination.pagination-danger > .active > span:hover {
+.Pagination.CurrentPagetion-danger > .active > a, .Pagination.CurrentPagetion-danger > .active > a:focus, .Pagination.CurrentPagetion-danger > .active > a:hover,
+.Pagination.CurrentPagetion-danger > .active > span,
+.Pagination.CurrentPagetion-danger > .active > span:focus,
+.Pagination.CurrentPagetion-danger > .active > span:hover {
     background-color: #f44336;
     border-color: #f44336;
     box-shadow: 0 4px 5px 0 rgba(244, 67, 54, 0.14), 0 1px 10px 0 rgba(244, 67, 54, 0.12), 0 2px 4px -1px rgba(244, 67, 54, 0.2);
@@ -2070,9 +2073,10 @@ select.form-control {
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
-    background-color: darkgreen;
+    background-color: #7f1887;
     color: #FFFFFF;
-    box-shadow: 0 16px 26px -10px rgba(0, 100, 0, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 50, 0, 0.2);
+    box-shadow: 0 16px 26px -10px rgba(127, 63, 152, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(112, 56, 134, 0.2);
+ 
 }
 
 .nav-pills.nav-pills-info > li.active > a, .nav-pills.nav-pills-info > li.active > a:focus, .nav-pills.nav-pills-info > li.active > a:hover {
@@ -2336,7 +2340,7 @@ legend {
         }
 
 .navbar, .navbar.navbar-default {
-    background-color: darkgreen;
+    background-color: #7f1887;
     color: #ffffff;
 }
 
@@ -2364,11 +2368,11 @@ legend {
 
         .navbar .dropdown-menu li > a:hover, .navbar .dropdown-menu li > a:focus, .navbar.navbar-default .dropdown-menu li > a:hover, .navbar.navbar-default .dropdown-menu li > a:focus {
             color: #FFFFFF;
-            background-color: darkgreen;
+            background-color: #7f1887;
         }
 
         .navbar .dropdown-menu .active > a, .navbar.navbar-default .dropdown-menu .active > a {
-            background-color: darkgreen;
+            background-color: #7f1887;
             color: #ffffff;
         }
 
@@ -2415,7 +2419,7 @@ legend {
                 }
 
     .navbar.navbar-primary {
-        background-color: darkgreen;
+        background-color: #7f1887;
         color: #ffffff;
     }
 
@@ -2440,11 +2444,11 @@ legend {
 
             .navbar.navbar-primary .dropdown-menu li > a:hover, .navbar.navbar-primary .dropdown-menu li > a:focus {
                 color: #FFFFFF;
-                background-color: darkgreen;
+                background-color: #7f1887;
             }
 
             .navbar.navbar-primary .dropdown-menu .active > a {
-                background-color: darkgreen;
+                background-color: #7f1887;
                 color: #ffffff;
             }
 
@@ -2686,7 +2690,7 @@ legend {
         .dropdown-menu li a:hover,
         .dropdown-menu li a:focus,
         .dropdown-menu li a:active {
-            background-color: darkgreen;
+            background-color: #7f1887;
             color: #FFFFFF;
         }
 
@@ -2738,7 +2742,7 @@ legend {
     }
 
 .icon.icon-primary {
-    color: darkgreen;
+    color: #7f1887;
 }
 
 .icon.icon-info {
@@ -2865,7 +2869,7 @@ legend {
     }
 
         .progress .progress-bar, .progress .progress-bar.progress-bar-default {
-            background-color: darkgreen;
+            background-color: #7f1887;
         }
 
             .progress .progress-bar.progress-bar-inverse {
@@ -2873,7 +2877,7 @@ legend {
             }
 
             .progress .progress-bar.progress-bar-primary {
-                background-color: darkgreen;
+                background-color: #7f1887;
             }
 
             .progress .progress-bar.progress-bar-success {
@@ -2986,7 +2990,7 @@ h2.title {
 }
 
 .text-primary {
-    color: darkgreen;
+    color: #7f1887;
 }
 
 .text-danger {
@@ -3002,7 +3006,7 @@ h2.title {
 }
 
 .nav-tabs {
-    background: darkgreen;
+    background: #7f1887;
     border: 0;
     border-radius: 3px;
     padding: 0 15px;
@@ -3247,7 +3251,7 @@ h2.title {
     }
 
     .card .header-primary {
-        background: linear-gradient(60deg,green,rgb(0, 80, 0));
+        background: linear-gradient(60deg, #a820b2, #56105c);
     }
 
     .card .header-info {
@@ -3422,7 +3426,7 @@ h2.title {
     }
 
     .panel.panel-primary > .panel-heading {
-        background-color: darkgreen;
+        background-color: #7f1887;
     }
 
     .panel.panel-success > .panel-heading {
@@ -3673,11 +3677,11 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 
     .slider.noUi-connect {
-        background-color: darkgreen;
+        background-color: #7f1887;
     }
 
     .slider .noUi-handle {
-        border-color: darkgreen;
+        border-color: #7f1887;
     }
 
     .slider.slider-info .noUi-connect, .slider.slider-info.noUi-connect {
@@ -3817,12 +3821,12 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
     .datepicker td.active:hover p {
         box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
         color: #ffffff;
-        background-color: darkgreen;
+        background-color: #7f1887;
     }
 
     .datepicker td.primary p,
     .datepicker td.primary:hover p {
-        background-color: darkgreen;
+        background-color: #7f1887;
     }
 
     .datepicker td.info p,
@@ -3863,7 +3867,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
         }
 
         .datepicker span.active, .datepicker span.active:focus, .datepicker span.active:hover, .datepicker span.active:active {
-            background-color: darkgreen;
+            background-color: #7f1887;
             box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
         }
 
@@ -3877,7 +3881,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 
         .datepicker span.primary,
         .datepicker span.primary:hover {
-            background-color: darkgreen;
+            background-color: #7f1887;
         }
 
         .datepicker span.info,

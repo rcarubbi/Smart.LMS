@@ -2,7 +2,7 @@
     margin-bottom: 90px;
 }
 
-.areas-conhecimento-bar .nav-pills {
+.knowledge-areas-bar .nav-pills {
     overflow-x: auto;
     overflow-y: hidden;
     display: -webkit-box;
@@ -10,11 +10,11 @@
     display: flex;
 }
 
-.areas-conhecimento-bar .nav-pills > li {
-    float: none;
-    min-width: 145px;
-    max-height: 145px;
-}
+    .knowledge-areas-bar .nav-pills > li {
+        float: none;
+        min-width: 145px;
+        max-height: 145px;
+    }
 
  
 
@@ -23,7 +23,7 @@ body {
 }
 
 #logo {
-    background-color: black;
+    background-color: white;
     width: 55px;
     height: 55px;
     margin-right: 10px;
@@ -84,7 +84,7 @@ h2 {
 }
 
 
-.nome-aula {
+.class-name {
     margin-bottom: 3px;
 }
 
@@ -95,19 +95,19 @@ h2 {
 
 .popover, .tooltip-inner {
     color: white;
-    background-color: rgba(0, 100, 0, 0.9);
+    background-color: rgba(127, 63, 152, 0.9);
 }
 
 .tooltip.right .tooltip-arrow {
-    border-right-color: rgb(0, 100, 0);
+    border-right-color: rgb(127, 63, 152);
 }
 
 
 .tooltip.top .tooltip-arrow {
-    border-top-color: rgb(0, 100, 0);
+    border-top-color: rgb(127, 63, 152);
 }
 
-.tipo-aviso {
+.notice-type {
     margin-bottom: 10px;
 }
 
@@ -135,8 +135,8 @@ body {
     color: white;
 }
 
-.titulo-indice {
-    border-bottom: 3px solid darkgreen;
+.index-title {
+    border-bottom: 3px solid #7F3F98;
 }
 
 .panel {
@@ -161,7 +161,7 @@ body {
 }
 
 .progress.progress-line-primary {
-    background: rgba(0, 100, 0, 0.2);
+    background: rgba(127, 63, 152, 0.2);
 }
 
 @media (min-width: 992px ) {
@@ -222,7 +222,7 @@ body {
 }
 
 .ui-menu {
-    background-color: rgba(0, 100, 0, 0.9);
+    background-color: rgba(127, 63, 152, 0.9);
     color: white;
 }
 
@@ -275,11 +275,11 @@ body {
         display: none;
     }
 
-.tipo-conteudo-Vimeo {
+.content-type-Vimeo {
     cursor: pointer;
 }
 
-.curso {
+.course {
     background: #fff;
     box-shadow: 0 1px 1px rgba(0,0,0,0.3);
     border-radius: 5px;
@@ -290,7 +290,7 @@ body {
     height: 110px;
 }
 
-    .curso div {
+    .course div {
         margin-top: 5px;
     }
 
@@ -358,7 +358,7 @@ body {
 
 
 
-.horario-aviso {
+.notice-datetime {
     color: rgba(0, 0, 0, 0.54);
     font-size: 12px;
     width: 124px;
@@ -368,18 +368,18 @@ body {
     margin-top: -5px;
 }
 
-.texto-aviso {
+.notice-text {
     font-size: 13px;
     color: #777;
 }
 
-    .texto-aviso a {
+    .notice-text a {
         color: #777 !important;
         font-weight: 500;
         text-decoration: none;
     }
 
-.btn-planejamento {
+.delivery-plan-button {
     font-size: 15px !important;
     margin-top: 1px !important;
     top: 0px !important;
@@ -463,7 +463,7 @@ body.dragging, body.dragging * {
 
 .jumbotron-upload {
     background-color: #f0f0f0;
-    color: darkgreen !important;
+    color: #7F3F98 !important;
     margin: 0px;
     padding: 10px 0px 10px 0px !important;
 }

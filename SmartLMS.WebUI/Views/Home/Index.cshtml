@@ -1,16 +1,16 @@
-﻿@model IEnumerable<SmartLMS.WebUI.Models.AreaConhecimentoViewModel>
+﻿@model IEnumerable<SmartLMS.WebUI.Models.KnowledgeAreaViewModel>
 @{
     ViewBag.Title = "Home";
     var areasBootstrapClass = "col-md-12";
 }
-@Html.Partial("_BuscaContextual")
+@Html.Partial("_ContextualSearch")
 
 <div class="row">
     @if (HttpContext.Current.User.Identity.IsAuthenticated)
     {
         areasBootstrapClass = "col-md-7 col-md-pull-5";
     <div class="col-md-5 col-md-push-7">
-        @Html.Action("ExibirAvisos", "Aviso")
+        @Html.Action("NoticePanel", "Notice")
     </div>
     }
 
@@ -18,32 +18,32 @@
         <div class="card" style="min-height: 295px;">
             <div class="content">
                 <h6 class="panel-title text-primary">
-                    <strong>Selecione uma das áreas de conhecimento dísponíveis</strong>
+                    <strong>Select a knowledge area</strong>
                 </h6>
-                <div class="card-body areas-conhecimento-bar">
+                <div class="card-body knowledge-areas-bar">
                     <ul class="nav nav-pills" role="tablist">
                         @{
-                            var primeiraLinha = true;
+                            var firstLine = true;
                         }
 
                         @foreach (var item in Model)
                         {
-                        <li class="@(primeiraLinha ? "active" : "")">
-                            <a href="#areaConhecimento-@item.Ordem" role="tab" data-toggle="tab" aria-expanded="@(primeiraLinha ? "true" : "false")">
+                        <li class="@(firstLine ? "active" : "")">
+                            <a href="#knowledge-area-@item.Order" role="tab" data-toggle="tab" aria-expanded="@(firstLine ? "true" : "false")">
                                 <i class="fa fa-map-signs text-primary"></i>
-                                <p class="text-primary">@item.Nome</p>
+                                <p class="text-primary">@item.Name</p>
                             </a>
                         </li>
-                            if (primeiraLinha)
+                            if (firstLine)
                             {
-                                primeiraLinha = false;
+                                firstLine = false;
                             }
                         }
 
                     </ul>
                 </div>
                 <div class="card-footer">
-                    <h6 class="text-primary"><strong>e veja abaixo os cursos por assunto</strong></h6>
+                    <h6 class="text-primary"><strong>and check below the courses by subject</strong></h6>
                 </div>
             </div>
         </div>
@@ -54,18 +54,18 @@
     <div class="col-md-12">
         <div class="tab-content">
             @{
-                primeiraLinha = true;
+                firstLine = true;
             }
             @foreach (var item in Model)
             {
 
-            <div id="areaConhecimento-@item.Ordem" class="tab-pane fade @(primeiraLinha? "in active" : "")">
-                @Html.Partial("_AreaConhecimentoPanel", item)
+            <div id="knowledge-area-@item.Order" class="tab-pane fade @(firstLine? "in active" : "")">
+                @Html.Partial("_KnowledgeAreaPanel", item)
             </div>
 
-                if (primeiraLinha)
+                if (firstLine)
                 {
-                    primeiraLinha = false;
+                    firstLine = false;
                 }
             }
         </div>
@@ -79,17 +79,17 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="content">
-                    <h4 class="text-primary"><i class="fa fa-exclamation-circle"></i> Fique por dentro das novidades através dos paineis de acessos rápidos</h4>
+                    <h4 class="text-primary"><i class="fa fa-exclamation-circle"></i> Stay on top of the news through the quick access panels</h4>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            @Html.Action("ExibirPainelNovasAulas", "Aula")
+            @Html.Action("NewClassesPanel", "Class")
         </div>
         <div class="col-md-6">
-            @Html.Action("ExibirUltimasAulas", "Aula")
+            @Html.Action("LastClassesPanel", "Class")
 
         </div>
 
@@ -102,24 +102,24 @@
         SmartLMS.HomeControllerProxy = (function () {
             var $private = {}, $public = {};
 
-            $public.BuscaContextual = function (termo, pagina) {
+            $public.contextualSearch = function (term, page) {
                 return $.ajax({
                     type: "POST",
-                    url: SmartLMS.api + "Home/BuscaContextualPaginada",
+                    url: SmartLMS.api + "Home/PagedContextualSearch",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    data: JSON.stringify({ termo: termo, pagina: pagina })
+                    data: JSON.stringify({ term, page })
                 });
             };
 
 
-            $public.VisualizarAviso = function (idAviso, idUsuario) {
+            $public.visualizeNotice = function (noticeId, userId) {
                 return $.ajax({
                     type: "POST",
-                    url: SmartLMS.api + "Aviso/Visualizar",
+                    url: SmartLMS.api + "Notice/Visualize",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    data: JSON.stringify({ idAviso: idAviso, idUsuario: idUsuario })
+                    data: JSON.stringify({ noticeId, userId })
                 });
             };
 
@@ -127,130 +127,130 @@
         }());
 
         (function (proxy) {
-            var $private = {}, buscaContextual = {};
+            var $private = {}, contextualSearch = {};
 
             $(function () {
-                $("#busca-contextual-button").on("click", $private.pesquisarTermo);
-                $("#resultado-busca-container").on("click", ".busca-contextual-paginacao-proxima", $private.proximaPagina);
-                $("#resultado-busca-container").on("click", ".busca-contextual-paginacao-pagina", $private.irParaPagina);
-                $("#resultado-busca-container").on("click", ".busca-contextual-paginacao-anterior", $private.paginaAnterior);
-                $("#corpo-painel-avisos").on("click", ".aviso .alert button[aria-hidden]", $private.visualizarAviso);
-                $private.ResultadoBuscaTemplate = Handlebars.compile($("#resultado-busca-template").html());
-                if ($("#aviso-template").html())
-                    $private.AvisoTemplate = Handlebars.compile($("#aviso-template").html());
+                $("#contextual-search-button").on("click", $private.searchTerm);
+                $("#search-results-container").on("click", ".contextual-search-pagination-next", $private.goToNextPage);
+                $("#search-results-container").on("click", ".contextual-search-pagination-pagenumber", $private.goToPage);
+                $("#search-results-container").on("click", ".contextual-search-pagination-previous", $private.goToPreviousPage);
+                $("#notice-panel-body").on("click", ".notice .alert button[aria-hidden]", $private.visualizeNotice);
+                $private.searchResultsTemplate = Handlebars.compile($("#search-results-template").html());
+                if ($("#notice-template").html())
+                    $private.noticeTemplate = Handlebars.compile($("#notice-template").html());
             });
 
             $private.pesquisarTermo = function () {
-                buscaContextual.PaginaCorrente = 1;
-                buscaContextual.Termo = $("#q").val();
+                contextualSearch.CurrentPage = 1;
+                contextualSearch.Term = $("#q").val();
 
-                $private.efetuarBusca();
+                $private.search();
             };
 
-            $private.efetuarBusca = function () {
-                $("#resultado-busca-container").slideUp();
-                proxy.BuscaContextual(buscaContextual.Termo, buscaContextual.PaginaCorrente)
-                    .done($private.exibirResultados)
+            $private.search = function () {
+                $("#search-results-container").slideUp();
+                proxy.contextualSearch(contextualSearch.Term, contextualSearch.CurrentPage)
+                    .done($private.showResults)
                     .fail(function () { console.log("Erro"); });
             };
 
 
-            $private.atualizarPagina = function () {
+            $private.refreshPage = function () {
 
-                proxy.BuscaContextual(buscaContextual.Termo, buscaContextual.PaginaCorrente)
-                    .done($private.atualizarResultados)
-                    .fail(function () { console.log("Erro"); });
+                proxy.contextualSearch(contextualSearch.Term, contextualSearch.CurrentPage)
+                    .done($private.refreshResults)
+                    .fail(function () { console.log("Error"); });
             };
 
-            $private.proximaPagina = function () {
-                buscaContextual.PaginaCorrente++;
-                $private.atualizarPagina();
+            $private.goToNextPage = function () {
+                contextualSearch.CurrentPage++;
+                $private.refreshPage();
             };
 
-            $private.irParaPagina = function () {
+            $private.goToPage = function () {
                 var pagina = $(this).text();
-                buscaContextual.PaginaCorrente = pagina;
-                $private.atualizarPagina();
+                contextualSearch.CurrentPage = pagina;
+                $private.refreshPage();
             };
 
-            $private.paginaAnterior = function () {
-                buscaContextual.PaginaCorrente--;
-                $private.atualizarPagina();
+            $private.goToPreviousPage = function () {
+                contextualSearch.CurrentPage--;
+                $private.refreshPage();
             };
 
-            $private.CalcularPaginaMinima = function (quantidade, pagina) {
-                pagina = parseInt(pagina);
-                if (pagina < 4) {
+            $private.getMinPage = function (pageCount, pageIndex) {
+                pageIndex = parseInt(pageIndex);
+                if (pageIndex < 4) {
                     return 1;
                 }
-                else if (pagina > quantidade - 3) {
-                    return quantidade - 4;
+                else if (pageIndex > pageCount - 3) {
+                    return pageCount - 4;
                 }
                 else {
-                    return pagina - 2;
+                    return pageIndex - 2;
                 }
             };
 
-            $private.CalcularPaginaMaxima = function (quantidade, pagina) {
-                pagina = parseInt(pagina);
-                if (pagina < 4) {
-                    if (quantidade < 6) {
-                        return quantidade + 1;
+            $private.getMaxPage = function (pageCount, pageIndex) {
+                pageIndex = parseInt(pageIndex);
+                if (pageIndex < 4) {
+                    if (pageCount < 6) {
+                        return pageCount + 1;
                     }
                     else {
                         return 6;
                     }
                 }
-                else if (pagina > quantidade - 3) {
-                    return quantidade + 1;
+                else if (pageIndex > pageCount - 3) {
+                    return pageCount + 1;
                 }
                 else {
-                    return pagina + 3;
+                    return pageIndex + 3;
                 }
             };
 
-            $private.exibirResultados = function (data) {
-                $("#resultado-busca-container").html($private.ResultadoBuscaTemplate(
+            $private.showResults = function (data) {
+                $("#search-results-container").html($private.searchResultsTemplate(
                     {
-                        ResultadoBusca: data.resultados.Entities,
-                        termo: buscaContextual.Termo,
-                        paginas: Math.ceil(data.resultados.Count / 8),
-                        possuiAnterior: data.resultados.HasPrevious,
-                        possuiProxima: data.resultados.HasNext,
-                        paginaCorrente: data.paginaCorrente,
-                        paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.resultados.Count / 8), data.paginaCorrente),
-                        paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.resultados.Count / 8), data.paginaCorrente)
+                        searchResults: data.results.Entities,
+                        term: contextualSearch.Term,
+                        pageCount: Math.ceil(data.results.Count / 8),
+                        hasPrevious: data.results.HasPrevious,
+                        hasNext: data.results.HasNext,
+                        currentPage: data.currentPage,
+                        minPage: $private.getMinPage(Math.ceil(data.results.Count / 8), data.currentPage),
+                        maxPage: $private.getMaxPage(Math.ceil(data.results.Count / 8), data.currentPage)
                     }));
-                $("#resultado-busca-container").slideDown();
+                $("#search-results-container").slideDown();
             };
 
-            $private.atualizarResultados = function (data) {
-                $("#resultado-busca-container").html($private.ResultadoBuscaTemplate(
+            $private.refreshResults = function (data) {
+                $("#search-results-container").html($private.searchResultsTemplate(
                     {
-                        ResultadoBusca: data.resultados.Entities,
-                        termo: buscaContextual.Termo,
-                        paginas: Math.ceil(data.resultados.Count / 8),
-                        possuiAnterior: data.resultados.HasPrevious,
-                        possuiProxima: data.resultados.HasNext,
-                        paginaCorrente: data.paginaCorrente,
-                        paginaMin: $private.CalcularPaginaMinima(Math.ceil(data.resultados.Count / 8), data.paginaCorrente),
-                        paginaMax: $private.CalcularPaginaMaxima(Math.ceil(data.resultados.Count / 8), data.paginaCorrente)
+                        searchResults: data.results.Entities,
+                        term: contextualSearch.Term,
+                        pageCount: Math.ceil(data.results.Count / 8),
+                        hasPrevious: data.results.HasPrevious,
+                        hasNext: data.results.HasNext,
+                        currentPage: data.currentPage,
+                        minPage: $private.getMinPage(Math.ceil(data.results.Count / 8), data.currentPage),
+                        maxPage: $private.getMaxPage(Math.ceil(data.results.Count / 8), data.currentPage)
                     }));
 
             };
 
-            $private.visualizarAviso = function (e) {
+            $private.visualizeNotice = function (e) {
 
-                var aviso = $(e.target).closest(".aviso");
-                var idAviso = aviso.data("id");
-                aviso.fadeOut("slow", null, function () {
-                    proxy.VisualizarAviso(idAviso, SmartLMS.IdUsuarioLogado).done($private.atualizarAvisos);
+                var notice = $(e.target).closest(".notice");
+                var noticeId = notice.data("id");
+                notice.fadeOut("slow", null, function () {
+                    proxy.visualizeNotice(noticeId, SmartLMS.LoggedUserId).done($private.refreshNotices);
                 });
             };
 
-            $private.atualizarAvisos = function (data) {
-                var aviso = $private.AvisoTemplate(data);
-                $(aviso).hide().appendTo($("#corpo-painel-avisos")).fadeIn("slow");
+            $private.refreshNotices = function (data) {
+                var notice = $private.noticeTemplate(data);
+                $(notice).hide().appendTo($("#notice-panel-body")).fadeIn("slow");
 
             };
         }(SmartLMS.HomeControllerProxy));

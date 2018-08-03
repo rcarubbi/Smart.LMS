@@ -1,0 +1,219 @@
+﻿using Carubbi.GenericRepository;
+using Humanizer.DateTimeHumanizeStrategy;
+using SmartLMS.Domain.Entities.Content;
+using SmartLMS.Domain.Entities.Delivery;
+using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Repositories;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Linq;
+
+namespace SmartLMS.WebUI.Models
+{
+    public class ClassViewModel
+    {
+        [Required(ErrorMessage = "Select a teacher")]
+        [Display(Name = "Teacher")]
+        public Guid TeacherId { get; set; }
+
+        [Required]
+        public int Order { get; set; }
+
+        [Display(Name = "Delivery days")]
+        [Required]
+        public int DeliveryDays { get; set; }
+
+
+        public bool Available { get; set; }
+
+        public string CreationDateDescription { get; set; }
+
+
+        public string CourseName { get; set; }
+
+
+        public decimal Percentual { get; set; }
+
+        public decimal WatchedSeconds { get; set; }
+
+        [Display(Name = "Course")]
+        [Required(ErrorMessage = "Select a course")]
+        public Guid CourseId { get; set; }
+
+        public Guid Id { get; set; }
+
+        [Display(Name = "Support material")]
+        public IEnumerable<FileViewModel> Files { get; set; }
+
+        [Required]
+        public string Content { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+        public string TeacherName { get; set; }
+
+        [Required(ErrorMessage = "Select a class type")]
+        [Display(Name = "Class type")]
+        public ContentType ContentType { get; set; }
+
+        public DateTime DeliveryDate { get; set; }
+
+        public string DeliveryDateDescription { get; set; }
+
+        public string SubjectName { get; set; }
+        public string KnowledgeAreaName { get; set; }
+
+        public DateTime CreationDate { get; set; }
+
+        [Display(Name = "Active")]
+        public bool Active { get; set; }
+
+        internal static IEnumerable<ClassViewModel> FromEntityList(IEnumerable<Class> classes, int depth, DefaultDateTimeHumanizeStrategy humanizer)
+        {
+            return classes.Select(item => FromEntity(item, depth, humanizer));
+        }
+
+        internal static PagedListResult<ClassViewModel> FromEntityList(PagedListResult<Class> classes)
+        {
+            return new PagedListResult<ClassViewModel>
+            {
+                HasNext = classes.HasNext,
+                HasPrevious = classes.HasPrevious,
+                Count = classes.Count,
+                Entities = classes.Entities.Select(FromEntity).ToList()
+            };
+        }
+
+        private static ClassViewModel FromEntity(Class item)
+        {
+            return new ClassViewModel
+            {
+                Id = item.Id,
+                CourseId = item.Course.Id,
+                Name = item.Name,
+                Content = item.Content,
+                ContentType = item.ContentType,
+                TeacherName = item.Teacher.Name,
+                CourseName = item.Course.Name,
+                SubjectName = item.Course.Subject.Name,
+                KnowledgeAreaName = item.Course.Subject.KnowledgeArea.Name,
+                CreationDate = item.CreatedAt,
+                Active = item.Active,
+                Order = item.Order,
+                DeliveryDays = item.DeliveryDays
+            };
+        }
+
+        public static ClassViewModel FromEntity(Class item, int depth, DefaultDateTimeHumanizeStrategy humanizer)
+        {
+
+            return new ClassViewModel
+            {
+                Id = item.Id,
+                TeacherId = item.Teacher.Id,
+                TeacherName = item.Teacher.Name,
+                CourseId = item.Course.Id,
+                CourseName = item.Course.Name,
+                Name = item.Name,
+                Content = item.Content,
+                ContentType = item.ContentType,
+                CreationDate = item.CreatedAt,
+                DeliveryDays = item.DeliveryDays,
+                CreationDateDescription = humanizer != null ? humanizer.Humanize(item.CreatedAt, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
+                Active = item.Active,
+                Order = item.Order,
+                Files = depth > 3 ? FileViewModel.FromEntityList(item.Files) : new List<FileViewModel>()
+            };
+        }
+
+        internal static IEnumerable<ClassViewModel> FromEntityList(IOrderedEnumerable<Class> classes, int depth)
+        {
+            return FromEntityList(classes, depth, null);
+        }
+
+        internal static IEnumerable<ClassViewModel> FromEntityList(IEnumerable<ClassInfo> classInfos)
+        {
+            return classInfos.Select(FromEntity);
+        }
+
+        public static ClassViewModel FromEntity(ClassInfo item)
+        {
+            return new ClassViewModel
+            {
+                Id = item.Class.Id,
+                CourseId = item.Class.Course.Id,
+                Name = item.Class.Name,
+                Content = item.Class.Content,
+                ContentType = item.Class.ContentType,
+                TeacherName= item.Class.Teacher.Name,
+                CreationDate = item.Class.CreatedAt,
+                CourseName = item.Class.Course.Name,
+                Available = item.Available,
+                Percentual = item.Percentual,
+                WatchedSeconds = item.WatchedSeconds
+            };
+        }
+
+        public static ClassViewModel FromEntityWithFiles(ClassInfo item)
+        {
+            return new ClassViewModel
+            {
+                Id = item.Class.Id,
+                CourseId = item.Class.Course.Id,
+                Name = item.Class.Name,
+                Content = item.Class.Content,
+                ContentType = item.Class.ContentType,
+                TeacherName = item.Class.Teacher.Name,
+                CreationDate = item.Class.CreatedAt,
+                CourseName = item.Class.Course.Name,
+                Available = item.Available,
+                Percentual = item.Percentual,
+                WatchedSeconds = item.WatchedSeconds,
+                Files = FileViewModel.FromEntityList(item.Class.Files.Where(x => x.Active))
+            };
+        }
+
+        internal static IEnumerable<ClassViewModel> FromEntityList(IEnumerable<ClassDeliveryPlan> classes, DefaultDateTimeHumanizeStrategy humanizer)
+        {
+            return classes.Select(item => FromEntity(item, humanizer));
+        }
+
+        private static ClassViewModel FromEntity(ClassDeliveryPlan item, IDateTimeHumanizeStrategy humanizer)
+        {
+            return new ClassViewModel
+            {
+                Id = item.Class.Id,
+                CourseId = item.Class.Course.Id,
+                Name = item.Class.Name,
+                Content = item.Class.Content,
+                ContentType = item.Class.ContentType,
+                TeacherName = item.Class.Teacher.Name,
+                CreationDate = item.Class.CreatedAt,
+                DeliveryDate = item.DeliveryDate,
+                CourseName = item.Class.Course.Name,
+                CreationDateDescription = humanizer != null ? humanizer.Humanize(item.Class.CreatedAt, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
+                DeliveryDateDescription = humanizer != null ? humanizer.Humanize(item.DeliveryDate, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
+                Available = true,
+            };
+        }
+
+        internal static Class ToEntity(ClassViewModel klass, Course course, Teacher teacher)
+        {
+            return new Class()
+            {
+                Id = klass.Id,
+                CreatedAt = klass.CreationDate,
+                Active = klass.Active,
+                DeliveryDays = klass.DeliveryDays,
+                Content = klass.Content,
+                Name = klass.Name,
+                Order = klass.Order,
+                ContentType = klass.ContentType,
+                Teacher = teacher,
+                Course = course
+            };
+        }
+    }
+}

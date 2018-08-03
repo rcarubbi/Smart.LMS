@@ -1,0 +1,103 @@
+﻿@model SmartLMS.WebUI.Models.ClassroomViewModel
+
+@{
+    ViewBag.Title = "Classroom update";
+}
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        Classroom update
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.Active)
+                            @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CourseIds, htmlAttributes: new { @class = "control-label col-md-2", id= "CourseIds" })
+                    <div class="col-md-10">
+                        @Html.ListBoxFor(model => model.CourseIds, ViewBag.Courses as SelectList, new { @class = "multiselect", multiple = "multiple", data_multiselect_filter = false, data_multiselect_group = false })
+                        @Html.ValidationMessageFor(model => model.CourseIds, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StudentIds, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.ListBoxFor(model => model.StudentIds, ViewBag.Students as SelectList, new { @class = "multiselect", multiple = "multiple", data_multiselect_filter = true, data_multiselect_group = false })
+                        @Html.ValidationMessageFor(model => model.StudentIds, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="fa fa-save"></i>
+                        </button>
+                        @Html.ActionLink("Back", "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(function () {
+        $("#CourseIds").parent().find("ul.multiselect-container").sortable({
+            delay: 150,
+            group: 'courses',
+            onDragStart: function ($item, container, _super) {
+                var offset = $item.offset(),
+                    pointer = container.rootGroup.pointer;
+
+                adjustment = {
+                    left: pointer.left - offset.left,
+                    top: pointer.top - offset.top + $item[0].offsetTop - $(".multiselect-container").scrollTop()
+                };
+
+                _super($item, container);
+            },
+            onDrag: function ($item, position) {
+                $item.css({
+                    left: position.left - adjustment.left,
+                    top: position.top - adjustment.top
+                });
+            },
+            onDrop: function ($item, container, _super) {
+                var options = $("#CourseIds").parent().find("select.multiselect").find("option");
+                var option = $("#CourseIds").parent().find("select.multiselect").find("option[value='" + $item.find("input").val() + "']");
+                var newIndex = $item.index();
+                var oldIndex = option.index();
+                if (oldIndex > newIndex) {
+                    $(options[oldIndex]).insertBefore($(options[newIndex]));
+                }
+                else {
+                    $(options[oldIndex]).insertAfter($(options[newIndex]));
+                }
+                _super($item, container);
+            }
+        });
+    });
+
+</script>
+}

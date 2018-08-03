@@ -18,7 +18,7 @@
 namespace SmartLMS.WebUI.DependencyResolution
 {
     using DAL;
-    using Dominio;
+    using Domain;
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
 
@@ -32,7 +32,7 @@ namespace SmartLMS.WebUI.DependencyResolution
                     scan.WithDefaultConventions();
 					scan.With(new ControllerConvention());
                 });
-            For<IContexto>().Use<Contexto>();
+            For<IContext>().Use<Context>();
         }
 
         #endregion

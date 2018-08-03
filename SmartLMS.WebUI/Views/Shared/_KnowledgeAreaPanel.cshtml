@@ -1,0 +1,12 @@
+﻿@model SmartLMS.WebUI.Models.KnowledgeAreaViewModel
+<div class="row">
+    @foreach (var subject in Model.Subjects)
+    {
+        @Html.Partial("_SubjectPanel", subject)
+    }
+</div>
+
+
+
+
+

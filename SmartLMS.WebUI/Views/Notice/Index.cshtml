@@ -1,0 +1,181 @@
+﻿@using Carubbi.Utils.Data
+@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.NoticeViewModel>
+@{
+    ViewBag.Title = "Notice History";
+
+}
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Query filters</h3>
+    </div>
+    <div class="panel-body panel-body-no-margin">
+        <div class="form-horizontal">
+            <div class="col-md-4">
+                <div class="form-group label-static is-empty">
+                    <label class="control-label">Start date</label>
+                    <input class="datepicker form-control" type="text" id="startDate" value="@DateTime.Now.AddMonths(-1).ToShortDateString()" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group label-static is-empty">
+                    <label class="control-label">End date</label>
+                    <input class="datepicker form-control" type="text" id="endDAte" value="@DateTime.Now.ToShortDateString()" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group label-static is-empty">
+                    <label for="NoticeType" class="control-label">Notice type</label>
+                    @Html.DropDownList("NoticeType", ViewBag.NoticeTypes as SelectList, new { @class = "form-control dropdownjs" })
+                </div>
+            </div>
+            <div class="text-right">
+                <button id="filter-button" class="btn btn-primary btn-sm">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="content">
+        <h5 class="index-title">
+            Notice History
+        </h5>
+        <div>
+            <div id="result-container" class="list-group">
+                @foreach (var item in Model.Entities)
+                {
+
+                    <div class="list-group-item list-group-item-sm">
+                        <div class="row-action-primary">
+                            @switch (item.NoticeType)
+                            {
+
+                                case SmartLMS.Domain.Services.NoticeType.Public:
+                            <i class="material-icons">public</i>
+                                    break;
+                                case SmartLMS.Domain.Services.NoticeType.Classroom:
+                                    <i class="material-icons">people</i>
+                                    break;
+                                case SmartLMS.Domain.Services.NoticeType.Personal:
+                                    <i class="material-icons">person</i>
+                                    break;
+                            }
+
+                        </div>
+                        <div class="row-content">
+                            <h5 class="list-group-item-heading">@item.NoticeTypeDescription</h5>
+                            @if (item.NoticeType == SmartLMS.Domain.Services.NoticeType.Classroom)
+                            {
+                                <p class="list-group-item-text">@item.ClassroomName</p>
+                            }
+                            <p class="list-group-item-text">@Html.Raw(item.Text)</p>
+                            <div class="footer-content">@item.DateTimeDescription</div>
+                        </div>
+                    </div>
+                    <div class="list-group-separator list-group-separator-sm"></div>
+                }
+
+
+            </div>
+
+            @Html.Partial("_Pagination")
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/pagination.js"></script>
+    <script type="text/x-handlebars-template" id="result-template">
+        {{#each Entities}}
+        <div class="list-group-item list-group-item-sm">
+            <div class="row-action-primary">
+                {{#equals NoticeType 1}}
+                <i class="material-icons">public</i>
+                {{else}}
+                {{#equals NoticeType 2}}
+                <i class="material-icons">people</i>
+                {{else}}
+                <i class="material-icons">person</i>
+                {{/equals}}
+                {{/equals}}
+            </div>
+            <div class="row-content">
+                <h5 class="list-group-item-heading">{{NoticeTypeDescription}}</h5>
+                {{#equals NoticeType 2}}
+                <p class="list-group-item-text">{{ClassroomName}}</p>
+                {{/equals}}
+                <p class="list-group-item-text">{{{Text}}}</p>
+                <div class="footer-content">{{DateTimeDescription}}</div>
+            </div>
+        </div>
+        <div class="list-group-separator list-group-separator-sm"></div>
+        {{/each}}
+    </script>
+
+    <script>
+        SmartLMS.NoticeHistoryProxy = (function () {
+            $public = {}, $private = {};
+
+
+            $public.listNoticeHistory = function (startDate, endDate, noticeType, page) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Notice/ListNoticeHistory",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ startDate, endDate, noticeType, page })
+                });
+            };
+
+            return $public;
+        }());
+
+        (function (proxy) {
+            var $private = {}, $public = {};
+
+            $(function () {
+
+
+                SmartLMS.Pagination.init({
+                    onPageChanged: $private.listNoticeHistory,
+                });
+
+                $private.NoticeType = 0;
+  
+                $("#NoticeType").on("dropdownjs.change", function () {
+                    var selectedItem = $(this).find("option:selected");
+                    $private.NoticeType = selectedItem.val();
+
+                });
+                $("#filter-button").on("click", $private.search);
+             
+
+            });
+
+
+            $private.search = function (page) {
+                var startDate = $("#startDate").val();
+                var endDate = $("#endDate").val();
+                return proxy.listNoticeHistory(startDate,
+                    endDate,
+                    $private.NoticeType,
+                    page);
+               
+            };
+
+ 
+            $private.search = function () {
+                SmartLMS.Pagination.CurrentPage = 1;
+                var startDate = $("#startDate").val();
+                var endDate = $("#endDate").val();
+                proxy.listNoticeHistory(startDate,
+                    endDate,
+                    $private.NoticeType,
+                    SmartLMS.Pagination.CurrentPage)
+                .done(SmartLMS.Pagination.refreshResults);
+            };
+
+   
+
+        }(SmartLMS.NoticeHistoryProxy));
+    </script>
+}

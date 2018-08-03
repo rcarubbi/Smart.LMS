@@ -1,7 +1,7 @@
-﻿using SmartLMS.Dominio;
-using SmartLMS.Dominio.Entidades;
-using SmartLMS.Dominio.Entidades.Pessoa;
-using SmartLMS.Dominio.Repositorios;
+﻿using SmartLMS.Domain;
+using SmartLMS.Domain.Entities;
+using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Repositories;
 using System;
 using System.IO;
 using System.Web.Mvc;
@@ -40,32 +40,32 @@ namespace SmartLMS.WebUI.Controllers
             }
         }
 
-        protected Usuario _usuarioLogado;
-        protected IContexto _contexto;
-        public BaseController(IContexto contexto)
+        protected User _loggedUser;
+        protected IContext _context;
+        public BaseController(IContext contexto)
         {
-            _contexto = contexto;
+            _context = contexto;
         }
 
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
 
-            ViewBag.AreaConhecimento = Parametro.AREA_CONHECIMENTO;
-            ViewBag.Assunto = Parametro.ASSUNTO;
-            ViewBag.Curso = Parametro.CURSO;
-            ViewBag.Aula = Parametro.AULA;
-            ViewBag.AreaConhecimentoPlural = Parametro.AREA_CONHECIMENTO_PLURAL;
-            ViewBag.AssuntoPlural = Parametro.ASSUNTO_PLURAL;
-            ViewBag.CursoPlural = Parametro.CURSO_PLURAL;
-            ViewBag.AulaPlural = Parametro.AULA_PLURAL;
+            ViewBag.KnowledgeArea = Parameter.KNOWLEDGE_AREA;
+            ViewBag.Subject = Parameter.SUBJECT;
+            ViewBag.Course = Parameter.COURSE;
+            ViewBag.Class = Parameter.CLASS;
+            ViewBag.KnowledgeAreaPlural = Parameter.KNOWLEDGE_AREA_PLURAL;
+            ViewBag.SubjectPlural = Parameter.SUBJECT_PLURAL;
+            ViewBag.CoursePlural = Parameter.COURSE_PLURAL;
+            ViewBag.ClassPlural = Parameter.CLASS_PLURAL;
 
-            RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
-            if (HttpContext.User.Identity.IsAuthenticated)
-            {
-                _usuarioLogado = usuarioRepo.ObterPorLogin(HttpContext.User.Identity.Name);
-                ViewBag.IdUsuarioLogado = _usuarioLogado != null? _usuarioLogado.Id.ToString() : string.Empty;
-            }
+            var userRepository = new UserRepository(_context);
+
+            if (!HttpContext.User.Identity.IsAuthenticated) return;
+
+            _loggedUser = userRepository.GetByLogin(HttpContext.User.Identity.Name);
+            ViewBag.LoggedUserId = _loggedUser != null? _loggedUser.Id.ToString() : string.Empty;
         }
     }
 }

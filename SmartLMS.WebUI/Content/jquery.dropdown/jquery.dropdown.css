@@ -73,7 +73,7 @@ select[data-dropdownjs][disabled] + .dropdownjs > input[readonly] {
 }
 .dropdownjs > ul > li.selected,
 .dropdownjs > ul > li:active {
-  background-color: rgb(0, 100, 0);
+  background-color: RGB(127, 63, 152);
   color: white;
 }
 .dropdownjs > ul > li:focus {

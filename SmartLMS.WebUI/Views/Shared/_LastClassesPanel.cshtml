@@ -1,0 +1,37 @@
+﻿@model IEnumerable<SmartLMS.WebUI.Models.ClassAccessViewModel>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">@TempData["WatchedClassesTitle"]</h3>
+    </div>
+    <div class="panel-body">
+        <div class="bs-component">
+            <div class="list-group">
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                    <div class="list-group-item list-group-item-sm">
+                        <a href="@Url.Action("Watch", "Class", new { Id = item.ClassId })" class='link-group-item'>
+                            <div class="row-action-primary">
+                                <i class="fa fa-laptop"></i>
+                            </div>
+                            <div class="row-content">
+                                <h5 class="list-group-item-heading">@item.ClassName</h5>
+                                <p class="list-group-item-text">@item.CourseName</p>
+                                <div class="footer-content">@item.DateTimeDescription</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="list-group-separator list-group-separator-sm"></div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center">No classes added</div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

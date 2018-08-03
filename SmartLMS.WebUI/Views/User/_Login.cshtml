@@ -1,0 +1,41 @@
+﻿ @using SmartLMS.Domain.Entities;
+@model SmartLMS.WebUI.Models.HeaderViewModel
+<nav class="navbar navbar-primary navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <div id="logo" class="img-circle img-raised navbar-brand">
+                <img src="~/content/img/logo.png" width="40" height="40" alt="@Parameter.APP_NAME logo" rel="tooltip">
+            </div>
+            @Html.ActionLink(Parameter.APP_NAME, "Index", "Home", null, new { @class = "navbar-brand" })
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        @ViewBag.KnowledgeAreaPlural
+                        <b class="caret"></b>
+                        <div class="ripple-container"></div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        @foreach (var item in Model.KnowledgeAreas)
+                        {
+                            <li><a href="@Url.Action("Index", "Subject", new { Id = item.Id })">@item.Name</a></li>
+                        }
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" data-toggle="modal" data-target="#sobre">About</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#faleConosco">Talk to us</a></li>
+                <li><a href="@Url.Action("Login", "Authentication")"><i class="fa fa-sign-in"></i> Login</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>

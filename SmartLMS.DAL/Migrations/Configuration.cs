@@ -1,217 +1,217 @@
+using SmartLMS.Domain.Entities;
+using SmartLMS.Domain.Entities.UserAccess;
+
 namespace SmartLMS.DAL.Migrations
 {
     using Carubbi.Utils.Security;
-    using Dominio.Entidades;
-    using Dominio.Entidades.Pessoa;
     using System;
     using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<SmartLMS.DAL.Contexto>
+    internal sealed class Configuration : DbMigrationsConfiguration<SmartLMS.DAL.Context>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(SmartLMS.DAL.Contexto context)
+        protected override void Seed(SmartLMS.DAL.Context context)
         {
-            var criptografia = new CriptografiaSimetrica(SymmetricCryptProvider.TripleDES);
-            criptografia.Key = "IT_Newest_49387_In";
+            var criptografia = new CriptografiaSimetrica(SymmetricCryptProvider.TripleDES) {Key = "Gnatta123"};
 
             #region Usuario
-            context.Set<Usuario>().AddOrUpdate(u => u.Nome,
-                new Administrador
+            context.Set<User>().AddOrUpdate(u => u.Name,
+                new Admin()
                 {
-                    Nome = "Administrador",
-                    Ativo = true,
-                    Login = "administrador@itanio.com.br",
-                    Email = "raphael@itanio.com.br",
-                    Senha = criptografia.Encrypt("Administrador"),
-                    DataCriacao = DateTime.Now
+                    Name = "Admin",
+                    Active = true,
+                    Login = "raphael.carubbi@gnatta.com",
+                    Email = "raphael.carubbi@gnatta.com",
+                    Password = criptografia.Encrypt("gnatta123"),
+                    CreatedAt = DateTime.Now
                 });
  
       
-            context.Salvar();
+            context.Save();
 
 
             #endregion
 
             #region Parametro
-            context.Set<Parametro>()
-                .AddOrUpdate(p => p.Chave,
-                    new Parametro
+            context.Set<Parameter>()
+                .AddOrUpdate(p => p.Key,
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_CRIPTOGRAFIA,
-                        Valor = "IT_Newest_49387_In",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.CRYPTO_KEY,
+                        Value = "Gnatta123",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.REMETENTE_EMAIL,
-                        Valor = "raphael@itanio.com.br",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.EMAIL_FROM_KEY,
+                        Value = "noreply@gnatta.com",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_PORTA,
-                        Valor = "587",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_PORT_KEY,
+                        Value = "25",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_SENHA,
-                        Valor = "raphakf061208",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_PASSWORD_KEY,
+                        Value = "",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_SERVIDOR,
-                        Valor = "mail.exchange.locaweb.com.br",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_SERVER_KEY,
+                        Value = "localhost",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_USA_SSL,
-                        Valor = "true",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_USE_SSL_KEY,
+                        Value = "false",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_USUARIO,
-                        Valor = "raphael@itanio.com.br",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_USERNAME_KEY,
+                        Value = "user@gnatta.com",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.NOME_PROJETO,
-                        Valor = "Código Nerd",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.APP_NAME_KEY,
+                        Value = "Gnatta Training Tool",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_USAR_CREDENCIAIS_PADRAO,
-                        Valor = "false",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_USE_DEFAULT_CREDENTIALS_KEY,
+                        Value = "true",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_AREA_CONHECIMENTO_PLURAL,
-                        Valor = "Áreas de Conhecimento",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.KNOWLEDGE_AREA_PLURAL_KEY,
+                        Value = "Knowledge Areas",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_AREA_CONHECIMENTO,
-                        Valor = "Área de Conhecimento",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.KNOWLEDGE_AREA_KEY,
+                        Value = "Knowledge Area",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_ASSUNTO_PLURAL,
-                        Valor = "Assuntos",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SUBJECT_PLURAL_KEY,
+                        Value = "Subjects",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_ASSUNTO,
-                        Valor = "Assunto",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SUBJECT_KEY,
+                        Value = "Subject",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_CURSO_PLURAL,
-                        Valor = "Cursos",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.COURSE_PLURAL_KEY,
+                        Value = "Courses",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_CURSO,
-                        Valor = "Curso",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.COURSE_KEY,
+                        Value = "Course",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_AULA,
-                        Valor = "Aula",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.CLASS_KEY,
+                        Value = "Class",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_AULA_PLURAL,
-                        Valor = "Aulas",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.CLASS_PLURAL_KEY,
+                        Value = "Classes",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_ARQUIVO,
-                        Valor = "Material de apoio",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.FILE_KEY,
+                        Value = "Support Material",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_TITULO_AULAS_ASSISTIDAS,
-                        Valor = "Últimas aulas assistidas",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.WATCHED_CLASSES_TITLE_KEY,
+                        Value = "Last watched classes",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_TITULO_ULTIMAS_AULAS,
-                        Valor = "Novas aulas",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.LAST_CLASSES_TITLE_KEY,
+                        Value = "New classes",
+                        Active = true
                     },
 
-                     new Parametro
+                     new Parameter
                      {
-                         DataCriacao = DateTime.Now,
-                         Chave = Parametro.CHAVE_STORAGE_ARQUIVOS,
-                         Valor = "Content/Apoio",
-                         Ativo = true
+                         CreatedAt = DateTime.Now,
+                         Key = Parameter.FILE_STORAGE_KEY,
+                         Value = "Content/Support",
+                         Active = true
                      },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_NOME_DESTINATARIO_FALE_CONOSCO,
-                        Valor = "Raphael Carubbi Neto",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.TALK_TO_US_RECEIVER_NAME_KEY,
+                        Value = "Jon Ratcliffe",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_EMAIL_DESTINATARIO_FALE_CONOSCO,
-                        Valor = "rcarubbi@gmail.com",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.TALK_TO_US_RECEIVER_EMAIL_KEY,
+                        Value = "jon.ratcliffe@gnatta.com",
+                        Active = true
                     },
-                      new Parametro
+                      new Parameter
                       {
-                          DataCriacao = DateTime.Now,
-                          Chave = Parametro.CHAVE_CORPO_NOTIFICACAO_AULA_LIBERADA,
-                          Valor = "Olá {Nome}, Tudo bem com você? <br /> Foi disponibilizado uma nova aula <a href='www.codigonerd.net/SmartLMS/Aula/Ver/{IdAula}'>{Aula}</a> no curso <a href='www.codigonerd.net/SmartLMS/Aula/Index/{IdCurso}'>{Curso}</a> <br />Bons estudos! <br /><br /> Código Nerd",
-                          Ativo = true
+                          CreatedAt = DateTime.Now,
+                          Key = Parameter.DELIVERED_CLASS_NOTICE_BODY_KEY,
+                          Value = $"Hi {{Name}}, how are you? <br /> The class <a href='www.codigonerd.net/SmartLMS/Class/Watch/{{ClassId}}'>{{Class}}</a> is now avaialble on the course <a href='www.codigonerd.net/SmartLMS/Class/Index/{{CourseId}}'>{{Course}}</a> <br />Have a productive study! <br /><br /> {Parameter.APP_NAME}",
+                          Active = true
                       });
 
 
 
-            context.Salvar();
+            context.Save();
 
             #endregion
         }

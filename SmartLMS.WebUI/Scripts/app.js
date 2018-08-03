@@ -102,10 +102,10 @@ SmartLMS.App = (function () {
                 enableClickableOptGroups: $(item).data("multiselect-group") == "True",
                 enableCollapsibleOptGroups: $(item).data("multiselect-group") == "True",
                 enableCaseInsensitiveFiltering:  $(item).data("multiselect-filter") == "True",
-                filterPlaceholder: 'Pesquisar',
-                nonSelectedText: 'Nenhum item selecionado',
-                nSelectedText: 'selecionado(s)',
-                allSelectedText: 'Todos',
+                filterPlaceholder: 'Search',
+                nonSelectedText: 'No items selected',
+                nSelectedText: 'selected(s)',
+                allSelectedText: 'All',
                 buttonClass: 'btn btn-default',
                 maxHeight: '400',
                 templates: {
@@ -176,17 +176,17 @@ SmartLMS.App = (function () {
     };
 
 
-    $public.AdicionarNotificacao = function (notificacao) {
-        $private.Notificacoes.push(notificacao);
+    $public.AddNotification = function (notification) {
+        $private.Notifications.push(notification);
     };
 
-    $public.InicializarControles = function () {
+    $public.InitControls = function () {
         $.material.checkbox();
-        for (var x = 0; x < $private.Notificacoes.length; x++)
+        for (var x = 0; x < $private.Notifications.length; x++)
         {
-            $public.toastr[$private.Notificacoes[x].TipoMensagem]($private.Notificacoes[x].Mensagem, $private.Notificacoes[x].TituloMensagem);
+            $public.toastr[$private.Notifications[x].MessageType]($private.Notifications[x].Message, $private.Notifications[x].MessageTitle);
         }
-        $private.Notificacoes = [];
+        $private.Notifications = [];
     };
 
     $private.resizeSlimControl = function () {
@@ -208,8 +208,8 @@ SmartLMS.App = (function () {
 
 
     $(function () {
-        $private.Notificacoes = [];
-        moment.locale('pt-br');
+        $private.Notifications = [];
+        moment.locale('en-gb');
 
         $.each($("input[data-autocomplete]"), $private.createAutoComplete);
         $private.initializeDropdownJs();
@@ -221,8 +221,9 @@ SmartLMS.App = (function () {
         
         $(document).ajaxError(function (event, xhr, options, thrownError) {
             var erro = $(xhr.responseText).filter("span").find("h2 > i").text();
-            if (erro != "")
-                $public.toastr["error"](erro, "Erro")
+            if (erro !== "") {
+                $public.toastr["error"](erro, "Erro");
+            }
         });
     });
 

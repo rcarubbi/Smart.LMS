@@ -1,0 +1,62 @@
+﻿@model SmartLMS.WebUI.Models.KnowledgeAreaViewModel
+@{
+    ViewBag.Title = ViewBag.KnowledgeArea + " index - " + Model.Name;
+}
+
+<div class="col-md-9">
+    <div id="indice-area-container">
+        @Html.Partial("_KnowledgeAreaPanel", Model)
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">See also other @(ViewBag.KnowledgeAreaPlural.ToLower())</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+            @{
+                string label = string.Concat("Select a ", ViewBag.KnowledgeArea.ToString());
+            }
+            @Html.DropDownList("otherKnowledgeAreas", ViewBag.OtherKnowledgeAreas as SelectList, label, new { @class= "form-control dropdownjs" })
+        </div>
+    </div>
+ </div>
+@section scripts {
+    <script>
+        (function () {
+            $(function () {
+                var optionAtivo = $('<option>', {
+                    value: '@Model.Id',
+                    text: '@Html.Raw(Model.Name)'
+                });
+
+                $("#otherKnowledgeAreas").on("dropdownjs.change", function () {
+                    var selectedItem = $(this).find("option:selected");
+                    var id = selectedItem.val();
+                    var text = selectedItem.text();
+                    if (id !== "")
+                    {
+                        $(this).append(optionAtivo);
+                        optionAtivo = $('<option>', {
+                            value: id,
+                            text: text
+                        });
+
+                        selectedItem.remove();
+                        $(this).dropdownjs();
+
+                        $("#indice-area-container").fadeOut("fast", null, function () {
+                            $("#indice-area-container").load(SmartLMS.api + "Subject/KnowledgeAreaPanel/" + id, null,
+                                function () {
+                                    SmartLMS.App.initializeCarouselMulti();
+                                    $("#indice-area-container").fadeIn();
+                                    $.material.init();
+                                });
+                        });
+                    }
+                });
+            });
+        }());
+
+    </script>
+}

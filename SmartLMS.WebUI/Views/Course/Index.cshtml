@@ -1,0 +1,62 @@
+﻿@model SmartLMS.WebUI.Models.SubjectViewModel
+@{
+    ViewBag.Title = "Index of " + ViewBag.Subject + " - " + Model.Name;
+}
+
+<div class="col-md-8">
+    <div id="subject-index-container">
+        @Html.Partial("_SubjectIndex", Model)
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">See also other @(ViewBag.SubjectPlural.ToLower()) for this @ViewBag.KnowledgeArea.ToLower()</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+            @{
+                string label = string.Concat("Select a ", ViewBag.Subject.ToString());
+            }
+            @Html.DropDownList("otherSubjects", ViewBag.OtherSubjects as SelectList, label, new { @class= "form-control dropdownjs" })
+        </div>
+    </div>
+ </div>
+@section scripts {
+    <script>
+        (function () {
+            $(function () {
+                var optionAtivo = $('<option>', {
+                    value: '@Model.Id',
+                    text: '@Html.Raw(Model.Name)'
+                });
+
+                $("#otherSubjects").on("dropdownjs.change", function () {
+                    var selectedItem = $(this).find("option:selected");
+                    var id = selectedItem.val();
+                    var text = selectedItem.text();
+                    if (id !== "")
+                    {
+                        $(this).append(optionAtivo);
+                        optionAtivo = $('<option>', {
+                            value: id,
+                            text: text
+                        });
+
+                        selectedItem.remove();
+                        $(this).dropdownjs();
+
+                        $("#subject-index-container").fadeOut("fast", null, function () {
+
+                            $("#subject-index-container").load(SmartLMS.api + "Course/SubjectIndex/" + id, null,
+                                function () {
+                                    $("#subject-index-container").fadeIn();
+                                    $.material.init();
+                                });
+                        });
+                    }
+                });
+            });
+        }());
+
+    </script>    
+}

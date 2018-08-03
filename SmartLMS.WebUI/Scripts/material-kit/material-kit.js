@@ -46,14 +46,14 @@ $(document).ready(function(){
     $('[data-toggle="tooltip"], [rel="tooltip"]').tooltip();
 
     // Activate Datepicker
-    if ($('.datepicker').length != 0) {
+    if ($(".datepicker").length !== 0) {
 
       
 
-        $('.datepicker').datepicker({
+        $(".datepicker").datepicker({
             weekStart: 1,
-            format: 'dd/mm/yyyy',
-            language: "pt-BR"
+            format: "dd/mm/yyyy",
+            language: "en-GB"
         });
 
        

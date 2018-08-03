@@ -30,14 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Carubbi.GenericRepository, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.GenericRepository.1.4.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Carubbi.Utils, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.Utils.1.4.3.0\lib\net45\Carubbi.Utils.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -61,24 +53,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contexto.cs" />
-    <Compile Include="Mapeamento\AcessoAulaConfiguration.cs" />
-    <Compile Include="Mapeamento\AcessoCursoConfiguration.cs" />
-    <Compile Include="Mapeamento\AlunoConfiguration.cs" />
-    <Compile Include="Mapeamento\AreaConhecimentoConfiguration.cs" />
-    <Compile Include="Mapeamento\ArquivoConfiguration.cs" />
-    <Compile Include="Mapeamento\AssuntoConfiguration.cs" />
-    <Compile Include="Mapeamento\AulaConfiguration.cs" />
-    <Compile Include="Mapeamento\AulaPlanejamentoConfiguration.cs" />
-    <Compile Include="Mapeamento\AvisoConfiguration.cs" />
-    <Compile Include="Mapeamento\CursoConfiguration.cs" />
-    <Compile Include="Mapeamento\TurmaConfiguration.cs" />
-    <Compile Include="Mapeamento\TurmaCursoConfiguration.cs" />
-    <Compile Include="Mapeamento\UsuarioAvisoConfiguration.cs" />
-    <Compile Include="Mapeamento\UsuarioConfiguration.cs" />
-    <Compile Include="Migrations\201609221919350_ModeloInicial.cs" />
-    <Compile Include="Migrations\201609221919350_ModeloInicial.Designer.cs">
-      <DependentUpon>201609221919350_ModeloInicial.cs</DependentUpon>
+    <Compile Include="Context.cs" />
+    <Compile Include="Mapping\ClassAccessConfiguration.cs" />
+    <Compile Include="Mapping\FileAccessConfiguration.cs" />
+    <Compile Include="Mapping\StudentConfiguration.cs" />
+    <Compile Include="Mapping\KnowledgeAreaConfiguration.cs" />
+    <Compile Include="Mapping\FileConfiguration.cs" />
+    <Compile Include="Mapping\SubjectConfiguration.cs" />
+    <Compile Include="Mapping\ClassConfiguration.cs" />
+    <Compile Include="Mapping\ClassDeliveryPlanConfiguration.cs" />
+    <Compile Include="Mapping\NoticeConfiguration.cs" />
+    <Compile Include="Mapping\CourseConfiguration.cs" />
+    <Compile Include="Mapping\ClassroomConfiguration.cs" />
+    <Compile Include="Mapping\ClassroomCourseConfiguration.cs" />
+    <Compile Include="Mapping\UserNoticeConfiguration.cs" />
+    <Compile Include="Mapping\UserConfiguration.cs" />
+    <Compile Include="Migrations\201808021401436_InitialModel.cs" />
+    <Compile Include="Migrations\201808021401436_InitialModel.Designer.cs">
+      <DependentUpon>201808021401436_InitialModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,20 +82,27 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SmartLMS.Dominio\SmartLMS.Dominio.csproj">
-      <Project>{8AA461EA-0DB0-4DC3-84E8-63A286E73A95}</Project>
-      <Name>SmartLMS.Dominio</Name>
+    <ProjectReference Include="..\..\Carubbi.Components\Carubbi.GenericRepository\Carubbi.GenericRepository.csproj">
+      <Project>{232785de-bb1d-41b5-8690-e650b4120452}</Project>
+      <Name>Carubbi.GenericRepository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Carubbi.Components\Carubbi.Utils\Carubbi.Utils.csproj">
+      <Project>{b24443c4-5f13-4747-863a-146dc7040561}</Project>
+      <Name>Carubbi.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartLMS.Domain\SmartLMS.Domain.csproj">
+      <Project>{8aa461ea-0db0-4dc3-84e8-63a286e73a95}</Project>
+      <Name>SmartLMS.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Migrations\aulas codigonerd.sql" />
     <Content Include="Resources\config.png" />
     <Content Include="Resources\excel.png" />
     <Content Include="Resources\play.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609221919350_ModeloInicial.resx">
-      <DependentUpon>201609221919350_ModeloInicial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808021401436_InitialModel.resx">
+      <DependentUpon>201808021401436_InitialModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

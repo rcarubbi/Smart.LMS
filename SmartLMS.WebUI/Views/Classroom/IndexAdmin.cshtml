@@ -1,0 +1,433 @@
+﻿@model Carubbi.GenericRepository.PagedListResult<ClassroomViewModel>
+@{
+    ViewBag.Title = "Classroom management";
+}
+@section styles {
+    <style type="text/css">
+        .checkbox {
+            margin: 0px;
+        }
+
+        .form-group {
+            margin-top: 10px !important;
+        }
+    </style>
+}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+       Classroom list
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <a href="@Url.Action("Create")" class="btn btn-sm btn-info"><i class="material-icons">group_add</i></a>
+            </div>
+            <div class="col-md-6 pull-right">
+                <div class="col-md-3">
+                    <div class="form-group label-static is-empty">
+                        <label for="SearchField" class="control-label">Search by</label>
+                        @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new { @class = "form-control dropdownjs" })
+                    </div>
+                </div>
+                <div class="form-group label-floating is-empty col-md-9">
+                    <label class="control-label" for="q">type the term you want to find</label>
+                    <div class="input-group" style="display:block">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input type="search" name="term" id="term" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-sm" id="filter-button">
+                                    <i class="material-icons">search</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Name")
+                    </th>
+                    <th class="hidden-sm  hidden-xs">
+                        @Html.DisplayName("Active")
+                    </th>
+                    <th class="hidden-sm  hidden-xs">
+                        @Html.DisplayName("Created at")
+                    </th>
+                    <th>@Html.DisplayName("Details")</th>
+                    <th>@Html.DisplayName("Edit/Delete")</th>
+                </tr>
+            </thead>
+            <tbody id="result-container">
+                @foreach (var item in Model.Entities)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="hidden-sm  hidden-xs">
+                            @Html.DisplayFor(modelItem => item.Active)
+                        </td>
+                        <td class="hidden-sm  hidden-xs">
+                            @item.CreationDate.ToShortDateString()
+                        </td>
+                        <td>
+                            <div href="javascript:void(0);" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                                <a class="btn btn-success btn-sm show-courses-button" data-id="@item.Id" data-name="@item.Name" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Courses">
+                                    <i class="material-icons">school</i>
+                                </a>
+                                <a href="javascript:void(0);" class="btn btn-warning btn-sm show-students-button" data-id="@item.Id " data-name="@item.Name" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Students">
+                                    <i class="material-icons">group</i>
+                                </a>
+                                <a href="@Url.Action("Plans", new { ClassroomId = item.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Delivery plan">
+                                    <i class="fa fa-calendar delivery-plan-button"></i>
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                                <a href="@Url.Action("Edit", new { Id = item.Id })" class="btn btn-success btn-sm">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                                <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="@item.Id" data-name="@item.Name">
+                                    <i class="material-icons">delete</i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            @if (!Model.Entities.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No classroom found
+                    </td>
+                </tr>
+            }
+
+        </table>
+        @Html.Partial("_Pagination")
+    </div>
+</div>
+
+
+<div class="modal fade" id="deleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="Delete confirmation" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Delete Classroom</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-delete-agree" data-dismiss="modal"><i class="fa fa-thumbs-up"></i></button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-thumbs-down"></i></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="students-list" tabindex="-1" role="dialog" aria-labelledby="Classroom's students" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Classroom's students</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayName("Name")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Subscribed at")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-container"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-simple" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="courses-list" tabindex="-1" role="dialog" aria-labelledby="Included courses" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Included courses</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayName("Name")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="courses-container"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-simple" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/pagination.js"></script>
+    <script type="text/x-handlebars-template" id="result-template">
+        {{#each Entities}}
+        <tr>
+            <td>
+                {{Name}}
+            </td>
+            <td class="hidden-sm hidden-xs">
+                <div class="checkbox">
+                    <label>
+                        <input name="Ativo" type="checkbox" disabled {{#if Active}} checked {{/if}}>
+                    </label>
+                </div>
+            </td>
+            <td class="hidden-sm  hidden-xs">
+                {{toShortDateString CreatedAt}}
+            </td>
+            <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                    <a href="javascript:void(0);" class="btn btn-success btn-sm show-courses-button" data-id="{{Id}}" data-name="{{Name}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Courses" rel=tooltip>
+                        <i class="material-icons">school</i>
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-warning btn-sm show-students-button" data-id="{{Id}}" data-name="{{Name}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Students" rel=tooltip>
+                        <i class="material-icons">group</i>
+                    </a>
+                    <a href="@Url.Content("~/Classroom/Plans/"){{Id}}" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Delivery Plan" rel=tooltip>
+                        <i class="fa fa-calendar btn-planejamento"></i>
+                    </a>
+                </div>
+            </td>
+            <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                    <a href="@Url.Content("~/Classroom/Edit/"){{Id}}" class="btn btn-success btn-sm">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-sm delete-button" data-id="{{Id}}" data-name="{{Name}}">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+        {{#equals Count 0}}
+        <tr>
+            <td colspan="5" class="text-center">
+                No classroom found
+            </td>
+        </tr>
+        {{/equals}}
+    </script>
+    <script type="text/x-handlebars-template" id="classroom-courses-template">
+        {{#each this}}
+        <tr>
+            <td>
+                {{Name}}
+            </td>
+        </tr>
+        {{/each}}
+        {{#equals Count 0}}
+        <tr>
+            <td class="text-center">
+                No course found
+            </td>
+        </tr>
+        {{/equals}}
+    </script>
+    <script type="text/x-handlebars-template" id="classroom-students-template">
+        {{#each this}}
+        <tr>
+            <td>
+                {{Name}}
+            </td>
+            <td>
+                {{toShortDateString SubscriptionDate}}
+            </td>
+        </tr>
+        {{/each}}
+        {{#equals Count 0}}
+        <tr>
+            <td colspan="2" class="text-center">
+                No student found
+            </td>
+        </tr>
+        {{/equals}}
+    </script>
+    <script>
+        SmartLMS.ClassroomProxy = (function () {
+            $public = {}, $private = {};
+
+
+            $public.search = function (term, searchFieldname, page) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Classroom/Search",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ term, searchFieldname, page })
+                });
+            };
+
+            $public.listStudents = function (id) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Classroom/ListStudents",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ id })
+                });
+            };
+
+            $public.listCourses = function (id) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Classroom/ListCourses",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ id })
+                });
+            };
+
+            $public.delete = function (id) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Classroom/Delete",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ id })
+                });
+            };
+
+            return $public;
+        }());
+
+        (function (proxy) {
+            var $private = {}, $public = {};
+
+            $(function () {
+              
+                SmartLMS.Pagination.init({
+                    onPageChanged: proxy.search,
+                });
+
+                $("#SearchField").on("dropdownjs.change", function () {
+                    var selectedItem = $(this).find("option:selected");
+                    SmartLMS.Pagination.SearchFieldName = selectedItem.val();
+                });
+
+                $("#filter-button").on("click", $private.search);
+                $private.ClassroomStudentsTemplate = Handlebars.compile($("#classroom-students-template").html());
+                $private.ClassroomCourseTemplate = Handlebars.compile($("#classroom-course-template").html());
+
+
+                $("#deleteConfirmation").on("click", ".btn-delete-agree", $private.delete);
+                $(document).on("click", "#result-container .delete-button", $private.deleteConfirmation);
+                $(document).on("click", "#result-container .show-courses-button", $private.loadCourses);
+                $(document).on("click", "#result-container .show-students-button", $private.loadStudents);
+                $('body').tooltip({
+                    selector: '[rel=tooltip]'
+                });
+
+            });
+
+          
+            $private.delete = function () {
+                var id = $(this).parent().parent().find(".modal-body").data("id");
+                proxy.delete(id).done($private.loadStudents);
+                $private.MessageTitle = 'Classroom management';
+                $private.Mensage = 'Classroom deleted!';
+                $private.MessageType = 'error';
+            };
+
+            $private.deleteConfirmation = function (e) {
+                e.preventDefault();
+
+                var classroom = {
+                    id: $(this).data("id"),
+                    name: $(this).data("name")
+                };
+
+                $("#deleteConfirmation").find(".modal-body").data("id", classroom.id);
+                $("#deleteConfirmation").find(".modal-body").html("<p>Do you really want to delete the classroom " + classroom.name + "?</p>");
+                $("#deleteConfirmation").modal();
+            };
+
+            $private.loadStudents = function (e) {
+                e.preventDefault();
+
+                var classroom = {
+                    id: $(this).data("id"),
+                    name: $(this).data("name")
+                };
+                $("#students-list").find(".modal-title").text("Students subscribed in the classroom " + classroom.name);
+
+                proxy.listStudents(classroom.id).done($private.showStudents);
+
+            };
+
+            $private.showStudents = function (data) {
+                $("#students-container").html($private.ClassroomStudentsTemplate(data));
+                $("#students-list").modal();
+            };
+
+            $private.loadCourses = function (e) {
+                e.preventDefault();
+
+                var classroom = {
+                    id: $(this).data("id"),
+                    name: $(this).data("name")
+                };
+                $("#courses-list").find(".modal-title").text("Included courses in the classroom " + classroom.name);
+                proxy.listCourses(classroom.id).done($private.showCourses);
+            };
+
+            $private.showCourses = function (data) {
+                $("#courses-container").html($private.ClassroomCourseTemplate(data));
+                $("#courses-list").modal();
+            };
+
+            $private.search = function () {
+                SmartLMS.Pagination.CurrentPage = 1;
+                var term = $("#term").val();
+                $.when(proxy.search(term, SmartLMS.Pagination.SearchFieldName, SmartLMS.Pagination.CurrentPage))
+                    .then(SmartLMS.Pagination.refreshResults)
+                    .then(SmartLMS.App.InitControls);
+            };
+ 
+
+        }(SmartLMS.ClassroomProxy));
+    </script>
+}
