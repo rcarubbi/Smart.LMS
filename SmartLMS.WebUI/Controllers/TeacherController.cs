@@ -7,6 +7,7 @@ using SmartLMS.WebUI.Models;
 using System;
 using System.Net;
 using System.Web.Mvc;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -70,14 +71,14 @@ namespace SmartLMS.WebUI.Controllers
                     _loggedUser);
 
                 TempData["MessageType"] = "success";
-                TempData["MessageTitle"] = "Teacher management";
-                TempData["Message"] = "Teacher added";
+                TempData["MessageTitle"] = Resource.TeacherManagementToasterTitle;
+                TempData["Message"] = Resource.TeacherAddedToastrMessage;
                 return RedirectToAction("IndexAdmin");
             }
             catch (Exception ex)
             {
                 TempData["MessageType"] = "error";
-                TempData["MessageTitle"] = "Teacher management";
+                TempData["MessageTitle"] = Resource.TeacherManagementToasterTitle;
                 TempData["Message"] = ex.Message;
             }
 
@@ -123,14 +124,14 @@ namespace SmartLMS.WebUI.Controllers
                     _loggedUser);
 
                 TempData["MessageType"] = "success";
-                TempData["MessageTitle"] = "Teacher management";
-                TempData["Message"] = "Teacher updated";
+                TempData["MessageTitle"] = Resource.TeacherManagementToasterTitle;
+                TempData["Message"] = Resource.TeacherUpdatedToastrMessage;
                 return RedirectToAction("IndexAdmin");
             }
             catch (Exception ex)
             {
                 TempData["MessageType"] = "error";
-                TempData["MessageTitle"] = "Teacher management";
+                TempData["MessageTitle"] = Resource.TeacherManagementToasterTitle;
                 TempData["Message"] = ex.Message;
             }
             return View(teacher);

@@ -60,15 +60,15 @@ namespace SmartLMS.Domain.Services
                 switch (ResultType)
                 {
                     case ResultType.KnowledgeArea:
-                        return Parameter.KNOWLEDGE_AREA;
+                        return Resources.Resource.KnowledgeAreaName;
                     case ResultType.Subject:
-                        return Parameter.SUBJECT;
+                        return Resources.Resource.SubjectName;
                     case ResultType.Course:
-                        return Parameter.COURSE;
+                        return Resources.Resource.CourseName;
                     case ResultType.Class:
-                        return Parameter.CLASS;
+                        return Resources.Resource.ClassName;
                     case ResultType.File:
-                        return Parameter.FILE;
+                        return Resources.Resource.FileName;
                     default:
                         return string.Empty;
                 }

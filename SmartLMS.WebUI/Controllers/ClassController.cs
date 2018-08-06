@@ -14,6 +14,7 @@ using System.Transactions;
 using System.Web.Mvc;
 using System.Web.Security;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -61,8 +62,8 @@ namespace SmartLMS.WebUI.Controllers
             }
 
             TempData["MessageType"] = "warning";
-            TempData["MessageTitle"] = "Warning";
-            TempData["Message"] = "You are not allowed to watch this class";
+            TempData["MessageTitle"] = Resource.WarningToastrTitle;
+            TempData["Message"] = Resource.NotAllowedWatchClassToastrMessage;
             return RedirectToAction("Index", "Home");
 
         }
@@ -76,8 +77,8 @@ namespace SmartLMS.WebUI.Controllers
             if (!courseIndex.Course.Active)
             {
                 TempData["MessageType"] = "warning";
-                TempData["MessageTitle"] = "Warning";
-                TempData["Message"] = "This course is not available at this moment";
+                TempData["MessageTitle"] = Resource.WarningToastrTitle;
+                TempData["Message"] = Resource.CourseNotAvailableToastrMessage;
                 return RedirectToAction("Index", "Home");
             }
 
@@ -109,6 +110,8 @@ namespace SmartLMS.WebUI.Controllers
             return PartialView("_ClassListSmall", viewModel.Classes);
         }
 
+
+      
 
         [ChildActionOnly]
         public ActionResult NewClassesPanel()
@@ -188,8 +191,8 @@ namespace SmartLMS.WebUI.Controllers
             else
             {
                 TempData["MessageType"] = "error";
-                TempData["MessageTitle"] = "Support material download";
-                TempData["Message"] = "You don't have permission to download this material";
+                TempData["MessageTitle"] = Resource.SupportMaterialDownloadToastrTitle;
+                TempData["Message"] = Resource.WithoutPermissionDownloadToastrMessage;
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -248,14 +251,14 @@ namespace SmartLMS.WebUI.Controllers
                     classRepository.Create(ClassViewModel.ToEntity(viewModel, course, teacher));
                     _context.Save(_loggedUser);
                     TempData["MessageType"] = "success";
-                    TempData["MessageTitle"] = "Content management";
-                    TempData["Message"] = "Class created";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
+                    TempData["Message"] = Resource.ClassCreatedToastrMessage;
                     return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
                     TempData["MessageType"] = "error";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
             }
@@ -394,7 +397,7 @@ namespace SmartLMS.WebUI.Controllers
                     classRepository.Update(ClassViewModel.ToEntity(viewModel, course, teacher));
                     _context.Save(_loggedUser);
                     TempData["MessageType"] = "success";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = "Class updated";
                  
                     return Redirect(ViewBag.BackURL);
@@ -402,7 +405,7 @@ namespace SmartLMS.WebUI.Controllers
                 catch (Exception ex)
                 {
                     TempData["MessageType"] = "error";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
             }

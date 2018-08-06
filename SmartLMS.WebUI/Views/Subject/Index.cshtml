@@ -1,7 +1,7 @@
-﻿@using SmartLMS.Domain.Entities
-@model SmartLMS.WebUI.Models.KnowledgeAreaViewModel
+﻿@using SmartLMS.Domain.Resources
+@model KnowledgeAreaViewModel
 @{
-    ViewBag.Title = Parameter.KNOWLEDGE_AREA + " index - " + Model.Name;
+    ViewBag.Title = Resource.KnowledgeAreaIndex + " - " + Model.Name;
 }
 
 <div class="col-md-9">
@@ -12,13 +12,11 @@
 <div class="col-md-3">
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h3 class="panel-title">See also other @(Parameter.KNOWLEDGE_AREA_PLURAL.ToLower())</h3>
+            <h3 class="panel-title">@Resource.SeeOtherKnowledgeAreas</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
-            @{
-                string label = string.Concat("Select a ", Parameter.KNOWLEDGE_AREA.ToString());
-            }
-            @Html.DropDownList("otherKnowledgeAreas", ViewBag.OtherKnowledgeAreas as SelectList, label, new { @class= "form-control dropdownjs" })
+           
+            @Html.DropDownList("otherKnowledgeAreas", ViewBag.OtherKnowledgeAreas as SelectList, Resource.SelectKnowledgeArea, new { @class= "form-control dropdownjs" })
         </div>
     </div>
  </div>

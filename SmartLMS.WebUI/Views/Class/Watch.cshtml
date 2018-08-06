@@ -1,8 +1,9 @@
 ﻿@using SmartLMS.Domain.Entities
 @using SmartLMS.Domain.Entities.Content
+@using SmartLMS.Domain.Resources
 @model SmartLMS.WebUI.Models.ClassViewModel
 @{
-    ViewBag.Title = Parameter.CLASS + " " + Model.Name;
+    ViewBag.Title = Resource.ClassName + " " + Model.Name;
 }
 @section styles {
     <style type="text/css">
@@ -112,7 +113,7 @@
             @Html.Action("ClassListSmall", new { Id = Model.CourseId, CurrentClassId = Model.Id })
             <div class="text-center">
                 <a href="@Url.Action("Index", "Class", new { Id = Model.CourseId })" class="btn btn-simple">
-                    <i class="material-icons">reply</i> Back to index
+                    <i class="material-icons">reply</i>  @Resource.BackToIndex
                 </a>
             </div>
         </div>

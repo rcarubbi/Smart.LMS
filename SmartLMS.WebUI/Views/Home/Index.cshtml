@@ -1,20 +1,23 @@
 ﻿@model IEnumerable<SmartLMS.WebUI.Models.KnowledgeAreaViewModel>
 @{
     ViewBag.Title = "Home";
-    var areasBootstrapClass = "col-md-12";
+    
 }
 @Html.Partial("_ContextualSearch")
 
 <div class="row">
     @if (HttpContext.Current.User.Identity.IsAuthenticated)
     {
-        areasBootstrapClass = "col-md-7 col-md-pull-5";
-    <div class="col-md-5 col-md-push-7">
-        @Html.Action("NoticePanel", "Notice")
-    </div>
+        <div class="col-md-6">
+            @Html.Action("MyCoursesPanel", "Course")
+        </div>
+        <div class="col-md-6">
+            @Html.Action("NoticePanel", "Notice")
+        </div>
     }
-
-    <div class="@areasBootstrapClass">
+</div>
+<div class="row"> 
+    <div class="col-md-12">
         <div class="card" style="min-height: 295px;">
             <div class="content">
                 <h6 class="panel-title text-primary">
@@ -135,6 +138,12 @@
                 $("#search-results-container").on("click", ".contextual-search-pagination-pagenumber", $private.goToPage);
                 $("#search-results-container").on("click", ".contextual-search-pagination-previous", $private.goToPreviousPage);
                 $("#notice-panel-body").on("click", ".notice .alert button[aria-hidden]", $private.visualizeNotice);
+
+                $(".scroll-panel").slimScroll({
+                    'size': '8px',
+                    'height': '253px'
+                });
+
                 $private.searchResultsTemplate = Handlebars.compile($("#search-results-template").html());
                 if ($("#notice-template").html())
                     $private.noticeTemplate = Handlebars.compile($("#notice-template").html());

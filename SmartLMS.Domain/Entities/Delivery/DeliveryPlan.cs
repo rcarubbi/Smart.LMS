@@ -68,8 +68,8 @@ namespace SmartLMS.Domain.Entities.Delivery
 
             context.GetList<Notice>().Add(new Notice
             {
-                Text = $@"New <a href='Class/Watch/{klass.Id}'>{Parameter.CLASS} {klass.Name}</a> available! <br />
-                               <a href='Class/Index/{klass.Course.Id}'>{Parameter.COURSE} {klass.Course.Name}</a> <br />",
+                Text = $@"New <a href='Class/Watch/{klass.Id}'>{SmartLMS.Domain.Resources.Resource.ClassName} {klass.Name}</a> available! <br />
+                               <a href='Class/Index/{klass.Course.Id}'>{SmartLMS.Domain.Resources.Resource.CourseName} {klass.Course.Name}</a> <br />",
                 DateTime = DateTime.Now,
                 DeliveryPlan = this,
             });

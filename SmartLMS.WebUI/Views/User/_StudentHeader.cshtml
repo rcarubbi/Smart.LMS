@@ -1,4 +1,5 @@
 ﻿@using SmartLMS.Domain.Entities;
+@using SmartLMS.Domain.Resources
 @model SmartLMS.WebUI.Models.HeaderViewModel
 <nav class="navbar navbar-primary navbar-static-top">
     <div class="container">
@@ -21,7 +22,7 @@
               
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        @Parameter.KNOWLEDGE_AREA_PLURAL
+                        @Resource.KnowledgeAreaPlural
                         <b class="caret"></b>
                         <div class="ripple-container"></div>
                     </a>

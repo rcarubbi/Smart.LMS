@@ -9,6 +9,7 @@ using System.Net;
 using System.Transactions;
 using System.Web.Mvc;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -20,6 +21,15 @@ namespace SmartLMS.WebUI.Controllers
         {
 
         }
+
+        [ChildActionOnly]
+        public ActionResult MyCoursesPanel()
+        {
+            var courseRepository = new CourseRepository(_context);
+            var courses = courseRepository.ListMyCourses(_loggedUser.Id, GetUserRole(_loggedUser));
+            return PartialView("_MyCoursesPanel", CourseViewModel.FromEntityList(courses, 0));
+        }
+
 
         [AllowAnonymous]
         public ActionResult SubjectIndex(Guid id)
@@ -134,14 +144,14 @@ namespace SmartLMS.WebUI.Controllers
                     _context.Save(_loggedUser);
 
                     TempData["MessageType"] = "success";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = "Course created";
                     return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
                     TempData["MessageType"] = "error";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
             }
@@ -252,14 +262,14 @@ namespace SmartLMS.WebUI.Controllers
                     _context.Save(_loggedUser);
 
                     TempData["MessageType"] = "success";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = "Course updated";
                     return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
                     TempData["MessageType"] = "error";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
             }

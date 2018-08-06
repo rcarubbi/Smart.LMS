@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -109,14 +110,14 @@ namespace SmartLMS.WebUI.Controllers
                     classroomRepository.Create(viewModel.Name, viewModel.CourseIds);
                     _context.Save(_loggedUser);
                     TempData["MessageType"] = "success";
-                    TempData["MessageTitle"] = "Classroom management";
+                    TempData["MessageTitle"] = Resource.ClassroomManagementToastrTitle;
                     TempData["Message"] = "Classroom added";
                     return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
                     TempData["MessageType"] = "error";
-                    TempData["MessageTitle"] = "Classroom management";
+                    TempData["MessageTitle"] = Resource.ClassroomManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
             }
@@ -175,14 +176,14 @@ namespace SmartLMS.WebUI.Controllers
                         _loggedUser);
 
                     TempData["MessageType"] = "success";
-                    TempData["MessageTitle"] = "Classroom management";
-                    TempData["Message"] = "Classroom updated";
+                    TempData["MessageTitle"] = Resource.ClassroomManagementToastrTitle;
+                    TempData["Message"] = Resource.ClassroomUpdatedToastrMessage;
                     return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
                     TempData["MessageType"] = "error";
-                    TempData["MessageTitle"] = "Classroom management";
+                    TempData["MessageTitle"] = Resource.ClassroomManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
             }

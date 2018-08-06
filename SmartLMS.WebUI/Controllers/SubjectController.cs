@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Repositories;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -104,14 +105,14 @@ namespace SmartLMS.WebUI.Controllers
                     _context.Save(_loggedUser);
 
                     TempData["MessageType"] = "success";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = "Subject created";
                     return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
                     TempData["MessageType"] = "error";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
             }
@@ -154,14 +155,14 @@ namespace SmartLMS.WebUI.Controllers
                     _context.Save(_loggedUser);
 
                     TempData["MessageType"] = "success";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = "Subject updated";
                     return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
                     TempData["MessageType"] = "error";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
             }

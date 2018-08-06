@@ -12,19 +12,8 @@ namespace SmartLMS.Domain.Entities
         public const string SMTP_USERNAME_KEY = "SmtpUsername";
         public const string SMTP_PASSWORD_KEY = "SmtpPassword";
         public const string SMTP_USE_DEFAULT_CREDENTIALS_KEY = "SmtpUseDefaultCredentials";
-        public const string KNOWLEDGE_AREA_PLURAL_KEY = "KnowledgeAreaPlural";
-        public const string KNOWLEDGE_AREA_KEY = "KnowledgeAreaName";
-        public const string SUBJECT_PLURAL_KEY = "SubjectPlural";
-        public const string SUBJECT_KEY = "SubjectName";
-        public const string COURSE_PLURAL_KEY = "CoursePlural";
-        public const string COURSE_KEY = "CourseName";
-        public const string CLASS_PLURAL_KEY = "ClassPlural";
-        public const string CLASS_KEY = "ClassName";
-        public const string FILE_KEY = "FileName";
         public const string APP_NAME_KEY = "AppName";
         public const string FILE_STORAGE_KEY = "FileStorage";
-        public const string WATCHED_CLASSES_TITLE_KEY = "WatchedClassesTitle";
-        public const string LAST_CLASSES_TITLE_KEY = "LastClassesTitle";
         public const string TALK_TO_US_RECEIVER_NAME_KEY = "TalkToUsReceiverName";
         public const string TALK_TO_US_RECEIVER_EMAIL_KEY = "TalkToUsReceiverEmail";
         public const string DELIVERED_CLASS_NOTICE_BODY_KEY = "DeliveredClassNoticeBody";
@@ -37,23 +26,6 @@ namespace SmartLMS.Domain.Entities
 
         public string Value { get; set; }
 
-        public static string KNOWLEDGE_AREA_PLURAL { get; set; }
-        public static string KNOWLEDGE_AREA { get; set; }
-
-        public static string SUBJECT_PLURAL { get; set; }
-        public static string SUBJECT { get; set; }
-
-        public static string COURSE_PLURAL { get; set; }
-        public static string COURSE { get; set; }
-
-        public static string CLASS_PLURAL { get; set; }
-        public static string CLASS { get; set; }
-
-        public static string FILE { get; set; }
-
-        public static string WATCHED_CLASSES_TITLE { get; set; }
-
-        public static string LAST_CLASSES_TITLE { get; set; }
 
         public static string FILE_STORAGE { get; set; }
         public static string DELIVERED_CLASS_NOTICE_BODY { get; set; }
@@ -63,21 +35,10 @@ namespace SmartLMS.Domain.Entities
         public static void LoadParameters(IContext context)
         {
             var parameterRepository = new ParameterRepository(context);
-            APP_NAME = parameterRepository.GetValueByKey(Parameter.APP_NAME_KEY);
-            KNOWLEDGE_AREA_PLURAL = parameterRepository.GetValueByKey(Parameter.KNOWLEDGE_AREA_PLURAL_KEY);
-            KNOWLEDGE_AREA = parameterRepository.GetValueByKey(Parameter.KNOWLEDGE_AREA_KEY);
-            COURSE_PLURAL = parameterRepository.GetValueByKey(Parameter.COURSE_PLURAL_KEY);
-            COURSE = parameterRepository.GetValueByKey(Parameter.COURSE_KEY);
-            SUBJECT_PLURAL = parameterRepository.GetValueByKey(Parameter.SUBJECT_PLURAL_KEY);
-            SUBJECT = parameterRepository.GetValueByKey(Parameter.SUBJECT_KEY);
-            CLASS = parameterRepository.GetValueByKey(Parameter.CLASS_KEY);
-            CLASS_PLURAL = parameterRepository.GetValueByKey(Parameter.CLASS_PLURAL_KEY);
-            FILE = parameterRepository.GetValueByKey(Parameter.FILE_KEY);
-            WATCHED_CLASSES_TITLE = parameterRepository.GetValueByKey(Parameter.WATCHED_CLASSES_TITLE_KEY);
-            FILE_STORAGE = parameterRepository.GetValueByKey(Parameter.FILE_STORAGE_KEY);
-            LAST_CLASSES_TITLE = parameterRepository.GetValueByKey(Parameter.LAST_CLASSES_TITLE_KEY);
-            DELIVERED_CLASS_NOTICE_BODY = parameterRepository.GetValueByKey(Parameter.DELIVERED_CLASS_NOTICE_BODY_KEY);
-            DAEMON_USER = parameterRepository.GetValueByKey(Parameter.DAEMON_USER_KEY);
+            APP_NAME = parameterRepository.GetValueByKey(APP_NAME_KEY);
+            FILE_STORAGE = parameterRepository.GetValueByKey(FILE_STORAGE_KEY);
+            DELIVERED_CLASS_NOTICE_BODY = parameterRepository.GetValueByKey(DELIVERED_CLASS_NOTICE_BODY_KEY);
+            DAEMON_USER = parameterRepository.GetValueByKey(DAEMON_USER_KEY);
         }
     }
 }

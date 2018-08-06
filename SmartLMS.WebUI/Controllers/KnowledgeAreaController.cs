@@ -4,6 +4,7 @@ using SmartLMS.WebUI.Models;
 using System;
 using System.Net;
 using System.Web.Mvc;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -61,14 +62,14 @@ namespace SmartLMS.WebUI.Controllers
                 knowledgeAreaRepository.Create(KnowledgeAreaViewModel.ToEntity(viewModel));
                 _context.Save(_loggedUser);
                 TempData["MessageType"] = "success";
-                TempData["MessageTitle"] = "Content management";
+                TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                 TempData["Message"] = "Knowledge Area created";
                 return RedirectToAction("IndexAdmin");
             }
             catch (Exception ex)
             {
                 TempData["MessageType"] = "error";
-                TempData["MessageTitle"] = "Content management";
+                TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                 TempData["Message"] = ex.Message;
             }
 
@@ -94,14 +95,14 @@ namespace SmartLMS.WebUI.Controllers
                     knowledgeAreaRepository.Update(KnowledgeAreaViewModel.ToEntity(viewModel));
                     _context.Save(_loggedUser);
                     TempData["MessageType"] = "success";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = "Knowledge Area updated";
                     return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
                 {
                     TempData["MessageType"] = "error";
-                    TempData["MessageTitle"] = "Content management";
+                    TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
             }

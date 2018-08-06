@@ -33,8 +33,7 @@ namespace SmartLMS.WebUI.Controllers
             var knowledgeAreaRepository = new KnowledgeAreaRepository(_context);
             var viewModel = KnowledgeAreaViewModel.FromEntityList(knowledgeAreaRepository.ListActiveKnowledgeAreas(), 2);
 
-            TempData["WatchedClassesTitle"] = Parameter.WATCHED_CLASSES_TITLE;
-            TempData["LastClassesTitle"] = Parameter.LAST_CLASSES_TITLE;
+          
             return View(viewModel);
         }
 

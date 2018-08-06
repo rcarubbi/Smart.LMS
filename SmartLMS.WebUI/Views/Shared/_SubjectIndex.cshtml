@@ -1,10 +1,11 @@
 ﻿@using SmartLMS.Domain.Entities
+@using SmartLMS.Domain.Resources
 @model SmartLMS.WebUI.Models.SubjectViewModel
 <div class="card">
     <div class="content">
-        <h3 class="text-primary index-title"><i class="fa fa-map text-primary"></i> @Parameter.SUBJECT @Model.Name</h3>
+        <h3 class="text-primary index-title"><i class="fa fa-map text-primary"></i> @Resource.SubjectName @Model.Name</h3>
         <p>
-            Select below one of the @(Parameter.CLASS_PLURAL.ToLower()) available in this @Parameter.SUBJECT.ToLower()
+            @Resource.SelectOneSubjectIndexMessage
         </p>
         <div class="list-group">
             @foreach (var course in Model.Courses)
@@ -17,7 +18,7 @@
                         </div>
                         <div class="row-content">
                             <h4 class="list-group-item-heading">@course.Name</h4>
-                            <p class="list-group-item-text">@course.Classes.Count() @(course.Classes.Count() > 1? Parameter.CLASS_PLURAL : Parameter.CLASS)</p>
+                            <p class="list-group-item-text">@course.Classes.Count() @(course.Classes.Count() > 1? Resource.ClassPlural : Resource.ClassName)</p>
                             <p><label>Teacher: </label> @course.TeacherInChargeName</p>
                         </div>
                     </div>
@@ -26,7 +27,7 @@
             }
         </div>
         <a href="@Url.Action("Index", "Subject", new { Id = Model.KnowledgeAreaId })" class="btn btn-primary btn-simple pull-right">
-            <i class="material-icons">reply</i> Back to index
+            <i class="material-icons">reply</i> @Resource.BackToIndex
         </a>
     </div>
 </div>

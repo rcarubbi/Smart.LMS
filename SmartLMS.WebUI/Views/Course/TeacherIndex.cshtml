@@ -1,5 +1,6 @@
 ﻿@using SmartLMS.Domain.Entities
 @using SmartLMS.Domain.Entities.Content
+@using SmartLMS.Domain.Resources
 @model IEnumerable<Course>
 @{
     ViewBag.Title = "My Courses";
@@ -20,7 +21,8 @@
                             </div>
                             <div class="row-content">
                                 <h4 class="list-group-item-heading">@course.Name</h4>
-                                <p class="list-group-item-text">@course.Classes.Count() @(course.Classes.Count() > 1 ? Parameter.CLASS_PLURAL: Parameter.CLASS)</p>
+                                <p class="list-group-item-text">@course.Classes.Count() @(course.Classes.Count() > 1 ? Resource.ClassPlural: Resource.ClassName)</p>
+                             
                             </div>
                         </div>
                     </a>

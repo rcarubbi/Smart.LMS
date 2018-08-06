@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -119,8 +120,8 @@ namespace SmartLMS.WebUI.Controllers
                 _loggedUser);
 
             TempData["MessageType"] = "success";
-            TempData["MessageTitle"] = "Notification";
-            TempData["Message"] = "Password updated!";
+            TempData["MessageTitle"] = Resource.NotificationToastrTitle;
+            TempData["Message"] = Resource.PasswordUpdatedToastrMessage;
 
             return RedirectToAction("Index", "Home");
         }

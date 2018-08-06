@@ -1,5 +1,6 @@
 ﻿@using SmartLMS.Domain.Entities
 @using System.Linq
+@using SmartLMS.Domain.Resources
 @model IEnumerable<SmartLMS.Domain.Entities.Delivery.Classroom>
 
 @{
@@ -24,7 +25,7 @@
                                 <h4 class="list-group-item-heading">@classroom.Name</h4>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <p class="list-group-item-text">@classroom.Courses.Count() @(classroom.Courses.Count() > 1 ? Parameter.COURSE_PLURAL : Parameter.COURSE)</p>
+                                        <p class="list-group-item-text">@classroom.Courses.Count() @(classroom.Courses.Count() > 1 ? Resource.CoursePlural : Resource.CourseName)</p>
                                         <p class="list-group-item-text">@classroom.DeliveryPlans.Count() Delivery Plan(s)</p>
                                         <p class="list-group-item-text">@classroom.DeliveryPlans.SelectMany(dp => dp.Students).Count() Student(s)</p>
                                     </div>

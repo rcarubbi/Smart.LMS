@@ -45,6 +45,24 @@ namespace SmartLMS.Domain.Repositories
             
         }
 
+        public List<Course> ListMyCourses(Guid userId, Role userRole)
+        {
+            switch (userRole)
+            {
+                case Role.Student:
+                    return _context.GetList<Course>().Where(x =>
+                        x.Classrooms.SelectMany(y => y.Classroom.DeliveryPlans)
+                            .Any(dp => dp.Students.Any(s => s.Id == userId))).ToList();
+                case Role.Teacher:
+                    return _context.GetList<Course>().Where(c =>
+                        c.TeacherInCharge.Id == userId || c.Classes.Any(cl => cl.Teacher.Id == userId)).ToList();
+                case Role.Admin:
+                    return _context.GetList<Course>().ToList();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(userRole), userRole, null);
+            }
+        }
+
         public PagedListResult<Course> Search(string term, string searchFieldName, int page)
         {
             var repo = new GenericRepository<Course>(_context);
