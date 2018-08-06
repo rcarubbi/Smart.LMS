@@ -174,6 +174,7 @@ namespace SmartLMS.WebUI.Models
                 Available = item.Available,
                 Percentual = item.Percentual,
                 WatchedSeconds = item.WatchedSeconds,
+                Editable = item.Editable,
                 Files = FileViewModel.FromEntityList(item.Class.Files.Where(x => x.Active))
             };
         }

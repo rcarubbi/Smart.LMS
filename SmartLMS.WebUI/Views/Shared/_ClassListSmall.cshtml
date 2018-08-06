@@ -18,28 +18,22 @@
                     }
                     <h5 class="class-name">
                         @klass.Name
-                    @if (klass.Editable)
+                    </h5>
+                    @if (klass.Available)
                     {
-                        <a href="@Url.Action("Edit", "Class", new { Id = klass.Id })">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                    }
-                </h5>
-                @if (klass.Available)
-                {
-                    <div class="progress progress-line-primary">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="@klass.Percentual" aria-valuemin="0" aria-valuemax="100" style="width: @klass.Percentual%;">
-                            <span class="sr-only">">@(klass.Percentual)% Concluded</span>
+                        <div class="progress progress-line-primary">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="@klass.Percentual" aria-valuemin="0" aria-valuemax="100" style="width: @klass.Percentual%;">
+                                <span class="sr-only">">@(klass.Percentual)% Concluded</span>
+                            </div>
                         </div>
-                    </div>
-                }
-                <label>Teacher: </label><span> @klass.TeacherName</span>
+                    }
+                    <label>Teacher: </label><span> @klass.TeacherName</span>
+                </div>
             </div>
-        </div>
-        if (klass.Available)
-        {
-        @:</a>
+            if (klass.Available)
+            {
+            @:</a>
+        }
+        <div class="list-group-separator list-group-separator-sm"></div>
     }
-    <div class="list-group-separator list-group-separator-sm"></div>
-}
 </div>

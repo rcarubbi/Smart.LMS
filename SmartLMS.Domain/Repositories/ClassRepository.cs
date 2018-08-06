@@ -7,6 +7,7 @@ using SmartLMS.Domain.Entities.UserAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Carubbi.Utils.Data;
 
 namespace SmartLMS.Domain.Repositories
 {
@@ -61,7 +62,7 @@ namespace SmartLMS.Domain.Repositories
         }
 
 
-        public ClassInfo GetClass(Guid classId, Guid userId)
+        public ClassInfo GetClass(Guid classId, Guid userId, Role userRole)
         {
             var klass = _context.GetList<Class>().Find(classId);
             var lastAccess = klass.Accesses.LastOrDefault(x => x.User.Id == userId);
@@ -72,6 +73,7 @@ namespace SmartLMS.Domain.Repositories
                 Available = CheckClassAvailability(classId, userId),
                 Percentual = lastAccess?.Percentual ?? 0,
                 WatchedSeconds = lastAccess?.WatchedSeconds ?? 0,
+                Editable =  CheckClassEditable(klass, userId, userRole)
             };
         }
 
@@ -172,6 +174,10 @@ namespace SmartLMS.Domain.Repositories
             return _context.GetList<Class>().Find(id);
         }
 
-      
+
+        public bool CheckClassEditable(Class klass, Guid? userId, Role loggedUserRole)
+        {
+            return userId.HasValue && (klass.Teacher.Id == userId || klass.Course.TeacherInCharge.Id == userId || loggedUserRole == Role.Admin);
+        }
     }
 }

@@ -26,73 +26,81 @@
 <div class="col-md-8">
     <div class="card">
         <div class="content">
-            <h2 class="index-title">@Model.Name</h2>
-            @{
-                var url = string.Empty;
-            }
-            @switch (@Model.ContentType)
+            <h2 class="index-title">
+                @Model.Name
+            @if (Model.Editable)
             {
-                case ContentType.Vimeo:
-                    url = "http://player.vimeo.com/video/" + Model.Content;
-
-                    break;
-                case ContentType.YouTube:
-                    url = "http://www.youtube.com/embed/" + Model.Content + "?enablejsapi=1&rel=0&showinfo=controls=0&showinfo=0";
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                <a href="@Url.Action("Edit", "Class", new { Id = Model.Id })">
+                    <i class="fa fa-pencil"></i>
+                </a>
             }
-            <div class="videoWrapper">
-                <iframe id="videoFrame"
-                        src="@url"
-                        frameborder="0"
-                        webkitAllowFullScreen
-                        mozallowfullscreen
-                        allowfullscreen></iframe>
+        </h2>
+        @{
+            var url = string.Empty;
+        }
+        @switch (@Model.ContentType)
+        {
+            case ContentType.Vimeo:
+                url = "http://player.vimeo.com/video/" + Model.Content;
+
+                break;
+            case ContentType.YouTube:
+                url = "http://www.youtube.com/embed/" + Model.Content + "?enablejsapi=1&rel=0&showinfo=controls=0&showinfo=0";
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        <div class="videoWrapper">
+            <iframe id="videoFrame"
+                    src="@url"
+                    frameborder="0"
+                    webkitAllowFullScreen
+                    mozallowfullscreen
+                    allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Support material</h3>
+    </div>
+    <div class="panel-body panel-body-no-margin">
+        <div class="bs-component">
+            <div class="list-group">
+                @foreach (var item in Model.Files)
+                {
+                    <div class="list-group-item list-group-item-sm">
+
+                        <a href="@Url.Action("Download", "Class", new { Id = item.Id })" class='link-group-item'>
+                            <div class="row-action-primary">
+                                <i class="fa fa-file"></i>
+                            </div>
+                            <div class="row-content">
+                                <h5 class="list-group-item-heading">@item.Name</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="list-group-separator list-group-separator-sm"></div>
+                }
             </div>
         </div>
     </div>
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h3 class="panel-title">Support material</h3>
-        </div>
-        <div class="panel-body panel-body-no-margin">
-            <div class="bs-component">
-                <div class="list-group">
-                    @foreach (var item in Model.Files)
-                    {
-                        <div class="list-group-item list-group-item-sm">
+</div>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Discussion</h3>
+    </div>
+    <div class="panel-body panel-body-no-margin">
+        @Html.Partial("_CommentForm", new SmartLMS.WebUI.Models.CommentViewModel() { ClassId = Model.Id })
+        <div class="bs-component" id="comments-container" style="max-height: 655px; overflow-x: auto">
 
-                            <a href="@Url.Action("Download", "Class", new { Id = item.Id })" class='link-group-item'>
-                                <div class="row-action-primary">
-                                    <i class="fa fa-file"></i>
-                                </div>
-                                <div class="row-content">
-                                    <h5 class="list-group-item-heading">@item.Name</h5>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="list-group-separator list-group-separator-sm"></div>
-                    }
-                </div>
+            <div class="list-group" id="comments-list">
+
             </div>
+            <div id="no-results" class="text-primary text-center" style="display:none;">No more comments to this class.</div>
         </div>
     </div>
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h3 class="panel-title">Discussion</h3>
-        </div>
-        <div class="panel-body panel-body-no-margin">
-            @Html.Partial("_CommentForm", new SmartLMS.WebUI.Models.CommentViewModel() { ClassId = Model.Id })
-            <div class="bs-component" id="comments-container" style="max-height: 655px; overflow-x: auto">
-
-                <div class="list-group" id="comments-list">
-
-                </div>
-                <div id="no-results" class="text-primary text-center" style="display:none;">No more comments to this class.</div>
-            </div>
-        </div>
-    </div>
+</div>
 
 </div>
 <div class="col-md-4">
@@ -143,7 +151,7 @@
         <script src="~/Scripts/vimeo.js"></script>
         <script>
             $(function () {
-               
+
                 var vimeoPlayer = SmartLMS.Vimeo(Vimeo);
                 vimeoPlayer.initialize('@Model.Id', '@Url.Action("UpdateProgress", "Class")', '@Model.WatchedSeconds');
             })
@@ -207,7 +215,7 @@
 
             $(function() {
 
-               
+
                 if (!SmartLMS.isMobile) {
                     SmartLMS.App.initializeSlimControl(true);
                     $("#comments-container").slimScroll({
@@ -221,7 +229,7 @@
                     });
                 }
 
-              
+
 
 
                 $private.CommentTemplate = Handlebars.compile($("#comment-template").html());

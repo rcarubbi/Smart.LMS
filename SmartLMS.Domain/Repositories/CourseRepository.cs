@@ -38,7 +38,7 @@ namespace SmartLMS.Domain.Repositories
                     Class = a,
                     Available = userId.HasValue && classRepository.CheckClassAvailability(a.Id, userId.Value),
                     Percentual = userId.HasValue ? a.Accesses.LastOrDefault(x => x.User.Id == userId)?.Percentual ?? 0 : 0,
-                    Editable =  userId.HasValue && (a.Teacher.Id == userId || loggedUserRole == Role.Admin)
+                    Editable =  classRepository.CheckClassEditable(a, userId, loggedUserRole)
             });
 
             return courseIndex;

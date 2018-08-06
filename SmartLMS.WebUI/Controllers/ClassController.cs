@@ -31,7 +31,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             var classAccessRepository = new ClassAccessRepository(_context);
             var classRepository = new ClassRepository(_context);
-            var classInfo = classRepository.GetClass(viewModel.ClassId, _loggedUser.Id);
+            var classInfo = classRepository.GetClass(viewModel.ClassId, _loggedUser.Id, GetUserRole(_loggedUser));
             classAccessRepository.UpdateProgress(viewModel.ToEntity(_loggedUser, classInfo.Class));
 
             return new HttpStatusCodeResult(HttpStatusCode.OK, "Updated");
@@ -41,18 +41,21 @@ namespace SmartLMS.WebUI.Controllers
         {
             var classRepository = new ClassRepository(_context);
             var classAccessRepository = new ClassAccessRepository(_context);
-            var classInfo = classRepository.GetClass(id, _loggedUser.Id);
-
+            var classInfo = classRepository.GetClass(id, _loggedUser.Id, GetUserRole(_loggedUser));
+            
             if (classInfo.Available && classInfo.Class.Active)
             {
-                classAccessRepository.CreateAccess(new ClassAccess()
+                if (GetUserRole(_loggedUser) == Role.Student)
                 {
-                    Class = classInfo.Class,
-                    User = _loggedUser,
-                    AccessDateTime = DateTime.Now,
-                    Percentual = classInfo.Percentual,
-                    WatchedSeconds = classInfo.WatchedSeconds
-                });
+                    classAccessRepository.CreateAccess(new ClassAccess()
+                    {
+                        Class = classInfo.Class,
+                        User = _loggedUser,
+                        AccessDateTime = DateTime.Now,
+                        Percentual = classInfo.Percentual,
+                        WatchedSeconds = classInfo.WatchedSeconds
+                    });
+                }
 
                 return View(ClassViewModel.FromEntityWithFiles(classInfo));
             }
@@ -125,7 +128,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult ListComments(Guid classId, int page = 1)
         {
             var classRepository = new ClassRepository(_context);
-            var classInfo = classRepository.GetClass(classId, _loggedUser.Id);
+            var classInfo = classRepository.GetClass(classId, _loggedUser.Id, GetUserRole(_loggedUser));
             var humanizer = new DefaultDateTimeHumanizeStrategy();
             var comments = classInfo.Class.Comments
                 .OrderByDescending(x => x.DateTime)
@@ -150,7 +153,7 @@ namespace SmartLMS.WebUI.Controllers
             };
 
             var classRepository = new ClassRepository(_context);
-            var classInfo = classRepository.GetClass(comment.ClassId, _loggedUser.Id);
+            var classInfo = classRepository.GetClass(comment.ClassId, _loggedUser.Id, GetUserRole(_loggedUser));
             comment.DateTime = DateTime.Now;
             classRepository.SendComment(comment.ToEntity(_loggedUser, classInfo.Class));
             _context.Save(_loggedUser);
