@@ -7,8 +7,7 @@ namespace SmartLMS.Domain.Entities.UserAccess
     public abstract class User : Entity
     {
         
-        public static string DeamonAccount { get; set; }
-
+     
         public string Name { get; set; }
 
         public string Login { get; set; }

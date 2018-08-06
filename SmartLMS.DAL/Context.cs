@@ -13,6 +13,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Xml.Serialization;
+using SmartLMS.Domain.Repositories;
 
 namespace SmartLMS.DAL
 {
@@ -80,7 +81,10 @@ namespace SmartLMS.DAL
         public void Save(User loggedUser)
         {
 
-            if (loggedUser != null && ChangeTracker != null)
+            if (loggedUser == null)
+                loggedUser = GetDaemonUser();
+            
+            if (ChangeTracker != null)
             {
                 foreach (var entry in ChangeTracker?.Entries())
                 {
@@ -89,9 +93,26 @@ namespace SmartLMS.DAL
                         GerarLog(entry, loggedUser);
                     }
                 }
-
             }
             SaveChanges();
+        }
+
+
+        private static User _daemonUser;
+        private static readonly object SyncRoot = new object();
+        private User GetDaemonUser()
+        {
+            if (_daemonUser != null) return _daemonUser;
+
+            lock (SyncRoot)
+            {
+                if (_daemonUser == null)
+                {
+                    _daemonUser = new UserRepository(this).GetByLogin(Parameter.DAEMON_USER);
+                }
+            }
+
+            return _daemonUser;
         }
 
 

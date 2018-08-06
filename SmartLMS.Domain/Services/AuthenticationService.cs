@@ -23,7 +23,7 @@ namespace SmartLMS.Domain.Services
             _notificationService = new NotificationService(_context, sender);
             _crypt = new CriptografiaSimetrica(SymmetricCryptProvider.TripleDES);
             var parameterRepository = new ParameterRepository(_context);
-            _crypt.Key = parameterRepository.ObterValorPorChave(Parameter.CRYPTO_KEY);
+            _crypt.Key = parameterRepository.GetValueByKey(Parameter.CRYPTO_KEY);
         }
 
 

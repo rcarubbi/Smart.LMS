@@ -16,9 +16,10 @@ namespace SmartLMS.DAL.Migrations
 
         protected override void Seed(SmartLMS.DAL.Context context)
         {
-            var criptografia = new CriptografiaSimetrica(SymmetricCryptProvider.TripleDES) {Key = "Gnatta123"};
+            var crypto = new CriptografiaSimetrica(SymmetricCryptProvider.TripleDES) { Key = "Gnatta123" };
 
             #region Usuario
+
             context.Set<User>().AddOrUpdate(u => u.Name,
                 new Admin()
                 {
@@ -26,11 +27,22 @@ namespace SmartLMS.DAL.Migrations
                     Active = true,
                     Login = "raphael.carubbi@gnatta.com",
                     Email = "raphael.carubbi@gnatta.com",
-                    Password = criptografia.Encrypt("gnatta123"),
+                    Password = crypto.Encrypt("gnatta123"),
                     CreatedAt = DateTime.Now
                 });
- 
-      
+
+
+            context.Set<User>().AddOrUpdate(u => u.Name,
+                new Admin()
+                {
+                    Name = "Daemon User",
+                    Active = true,
+                    Login = "delivery.agent@gnatta.com",
+                    Email = "raphael.carubbi@gnatta.com",
+                    Password = crypto.Encrypt("gnatta123"),
+                    CreatedAt = DateTime.Now
+                });
+
             context.Save();
 
 
@@ -207,7 +219,14 @@ namespace SmartLMS.DAL.Migrations
                           Key = Parameter.DELIVERED_CLASS_NOTICE_BODY_KEY,
                           Value = $"Hi {{Name}}, how are you? <br /> The class <a href='www.codigonerd.net/SmartLMS/Class/Watch/{{ClassId}}'>{{Class}}</a> is now avaialble on the course <a href='www.codigonerd.net/SmartLMS/Class/Index/{{CourseId}}'>{{Course}}</a> <br />Have a productive study! <br /><br /> {Parameter.APP_NAME}",
                           Active = true
-                      });
+                      },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.DAEMON_USER_KEY,
+                        Value = "delivery.agent@gnatta.com",
+                        Active = true
+                    });
 
 
 

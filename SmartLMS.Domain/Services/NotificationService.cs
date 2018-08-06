@@ -52,7 +52,7 @@ namespace SmartLMS.Domain.Services
 
             var message = new MailMessage();
             message.To.Add(email);
-            message.From = new MailAddress(parametroRepo.ObterValorPorChave(Parameter.EMAIL_FROM_KEY), Parameter.APP_NAME);
+            message.From = new MailAddress(parametroRepo.GetValueByKey(Parameter.EMAIL_FROM_KEY), Parameter.APP_NAME);
             message.Subject = $"{Parameter.APP_NAME} - Password recovery";
             message.IsBodyHtml = true;
             message.Body = corpo;
@@ -143,7 +143,7 @@ namespace SmartLMS.Domain.Services
 
             var message = new MailMessage();
             message.To.Add(user.Email);
-            message.From = new MailAddress(parametroRepo.ObterValorPorChave(Parameter.EMAIL_FROM_KEY), Parameter.APP_NAME);
+            message.From = new MailAddress(parametroRepo.GetValueByKey(Parameter.EMAIL_FROM_KEY), Parameter.APP_NAME);
             message.Subject = $"Welcome to {Parameter.APP_NAME}";
             message.IsBodyHtml = true;
             message.Body = corpo;
