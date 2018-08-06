@@ -3,6 +3,7 @@ using SmartLMS.Domain.Entities.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartLMS.Domain.Entities.UserAccess;
 
 namespace SmartLMS.Domain.Repositories
 {
@@ -24,7 +25,7 @@ namespace SmartLMS.Domain.Repositories
         }
 
 
-        public CourseIndex GetCourseIndex(Guid id, Guid? userId)
+        public CourseIndex GetCourseIndex(Guid id, Guid? userId, Role loggedUserRole)
         {
             var courseIndex = new CourseIndex();
             var classRepository = new ClassRepository(_context);
@@ -36,7 +37,8 @@ namespace SmartLMS.Domain.Repositories
                 .Select(a => new ClassInfo {
                     Class = a,
                     Available = userId.HasValue && classRepository.CheckClassAvailability(a.Id, userId.Value),
-                    Percentual = userId.HasValue ? a.Accesses.LastOrDefault(x => x.User.Id == userId)?.Percentual ?? 0 : 0
+                    Percentual = userId.HasValue ? a.Accesses.LastOrDefault(x => x.User.Id == userId)?.Percentual ?? 0 : 0,
+                    Editable =  userId.HasValue && (a.Teacher.Id == userId || loggedUserRole == Role.Admin)
             });
 
             return courseIndex;

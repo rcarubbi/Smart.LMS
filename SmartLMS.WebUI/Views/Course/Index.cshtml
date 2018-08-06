@@ -1,6 +1,7 @@
-﻿@model SmartLMS.WebUI.Models.SubjectViewModel
+﻿@using SmartLMS.Domain.Entities
+@model SmartLMS.WebUI.Models.SubjectViewModel
 @{
-    ViewBag.Title = "Index of " + ViewBag.Subject + " - " + Model.Name;
+    ViewBag.Title = "Index of " + Parameter.SUBJECT + " - " + Model.Name;
 }
 
 <div class="col-md-8">
@@ -11,11 +12,11 @@
 <div class="col-md-4">
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h3 class="panel-title">See also other @(ViewBag.SubjectPlural.ToLower()) for this @ViewBag.KnowledgeArea.ToLower()</h3>
+            <h3 class="panel-title">See also other @(Parameter.SUBJECT_PLURAL.ToLower()) for this @Parameter.KNOWLEDGE_AREA.ToLower()</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
             @{
-                string label = string.Concat("Select a ", ViewBag.Subject.ToString());
+                string label = string.Concat("Select a ", Parameter.SUBJECT.ToString());
             }
             @Html.DropDownList("otherSubjects", ViewBag.OtherSubjects as SelectList, label, new { @class= "form-control dropdownjs" })
         </div>

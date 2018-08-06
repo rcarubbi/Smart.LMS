@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Transactions;
 using System.Web.Mvc;
+using System.Web.Security;
 using SmartLMS.Domain.Entities.UserAccess;
 
 namespace SmartLMS.WebUI.Controllers
@@ -67,7 +68,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult Index(Guid id)
         {
             var courseRepository = new CourseRepository(_context);
-            var courseIndex = courseRepository.GetCourseIndex(id, _loggedUser?.Id);
+            var courseIndex = courseRepository.GetCourseIndex(id, _loggedUser?.Id, GetUserRole(_loggedUser));
 
             if (!courseIndex.Course.Active)
             {
@@ -90,7 +91,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult CoursePanel(Guid id)
         {
             var courseRepository = new CourseRepository(_context);
-            var courseIndex = courseRepository.GetCourseIndex(id, _loggedUser?.Id);
+            var courseIndex = courseRepository.GetCourseIndex(id, _loggedUser?.Id, GetUserRole(_loggedUser));
             var viewModel = CourseViewModel.FromEntity(courseIndex);
             return PartialView("_CoursePanel", viewModel);
         }
@@ -99,7 +100,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult ClassListSmall(Guid id, Guid currentClassId)
         {
             var courseRepository = new CourseRepository(_context);
-            var courseIndex = courseRepository.GetCourseIndex(id, _loggedUser.Id);
+            var courseIndex = courseRepository.GetCourseIndex(id, _loggedUser.Id, GetUserRole(_loggedUser));
             var viewModel = CourseViewModel.FromEntity(courseIndex);
             ViewBag.CurrentClassId = currentClassId;
             return PartialView("_ClassListSmall", viewModel.Classes);
@@ -266,7 +267,7 @@ namespace SmartLMS.WebUI.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         public ActionResult SaveSupportMaterial(string id)
         {
             using (var tx = new TransactionScope())
@@ -293,7 +294,7 @@ namespace SmartLMS.WebUI.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         public ActionResult DeleteSupportMaterial(string id, string fileName)
         {
             using (var tx = new TransactionScope())
@@ -334,9 +335,22 @@ namespace SmartLMS.WebUI.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         public ActionResult Edit(Guid id)
         {
+            ViewBag.BackURL = Request.UrlReferrer.ToString();
+            var classRepository = new ClassRepository(_context);
+            var klass = classRepository.GetById(id);
+            var userRole = GetUserRole(_loggedUser);
+
+            if ((Role.Teacher != userRole ||
+                 (klass.Teacher.Id != _loggedUser.Id && klass.Course.TeacherInCharge.Id != _loggedUser.Id)) &&
+                userRole != Role.Admin)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
             var courseRepository = new CourseRepository(_context);
             var activeCourses = courseRepository.ListActiveCourses();
             ViewBag.Courses = new SelectList(activeCourses, "Id", "Name");
@@ -348,24 +362,30 @@ namespace SmartLMS.WebUI.Controllers
 
             ViewBag.ContentTypes = new SelectList(contentType.ToDataSource<ContentType>(), "Key", "Value");
 
-
-            var classRepository = new ClassRepository(_context);
-            var klass = classRepository.GetById(id);
             return View(ClassViewModel.FromEntity(klass, 0, new DefaultDateTimeHumanizeStrategy()));
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpPost]
         public ActionResult Edit(Guid id, ClassViewModel viewModel)
         {
+            ViewBag.BackURL = Request.Form["BackURL"];
+            var userRole = GetUserRole(_loggedUser);
             var courseRepository = new CourseRepository(_context);
+            var course = courseRepository.GetById(viewModel.CourseId);
+            if ((Role.Teacher != userRole ||
+                 (viewModel.TeacherId != _loggedUser.Id && course.TeacherInCharge.Id != _loggedUser.Id)) &&
+                userRole != Role.Admin)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             var userRepository = new UserRepository(_context);
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var course = courseRepository.GetById(viewModel.CourseId);
                     var teacher = (Teacher)userRepository.GetById(viewModel.TeacherId);
                     var classRepository = new ClassRepository(_context);
                     classRepository.Update(ClassViewModel.ToEntity(viewModel, course, teacher));
@@ -373,7 +393,8 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = "Content management";
                     TempData["Message"] = "Class updated";
-                    return RedirectToAction("IndexAdmin");
+                 
+                    return Redirect(ViewBag.BackURL);
                 }
                 catch (Exception ex)
                 {

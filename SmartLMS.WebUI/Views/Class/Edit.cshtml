@@ -13,7 +13,7 @@
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.Id)
-         
+            @Html.Hidden("BackURL", (string)ViewBag.BackURL)
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
@@ -79,7 +79,7 @@
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fa fa-save"></i>
                         </button>
-                        @Html.ActionLink("Back", "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                        <a href="@ViewBag.BackURL" class="btn btn-simple btn-sm btn-default">Back</a>
                     </div>
                 </div>
             </div>

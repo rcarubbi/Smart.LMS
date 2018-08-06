@@ -7,6 +7,8 @@ namespace SmartLMS.Domain.Repositories
         public Class Class { get; set; }
 
         public bool Available { get; set; }
+
+        public bool Editable { get; set; }
         public int Percentual { get; set; }
         public decimal WatchedSeconds { get; set; }
     }

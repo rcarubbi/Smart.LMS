@@ -1,6 +1,7 @@
-﻿@model SmartLMS.WebUI.Models.CourseViewModel
+﻿@using SmartLMS.Domain.Entities
+@model SmartLMS.WebUI.Models.CourseViewModel
 @{
-    ViewBag.Title = ViewBag.Course  + " index - " + Model.Name;
+    ViewBag.Title = Parameter.COURSE  + " index - " + Model.Name;
 }
 <div class="col-md-8">
    <div id="course-index-container">
@@ -10,11 +11,11 @@
 <div class="col-md-4">
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h3 class="panel-title">See also other @(ViewBag.CoursePlural.ToLower()) for this @ViewBag.Subject.ToLower()</h3>
+            <h3 class="panel-title">See also other @(Parameter.COURSE_PLURAL.ToLower()) for this @Parameter.SUBJECT.ToLower()</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
             @{ 
-                string label = string.Concat("Select a ", ViewBag.Course.ToString());
+                string label = string.Concat("Select a ", Parameter.COURSE.ToString());
             }
             @Html.DropDownList("otherCourses", ViewBag.OtherCourses as SelectList, label, new { @class = "form-control dropdownjs" })
         </div>

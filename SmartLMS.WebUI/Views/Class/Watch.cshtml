@@ -1,7 +1,8 @@
-﻿@using SmartLMS.Domain.Entities.Content
+﻿@using SmartLMS.Domain.Entities
+@using SmartLMS.Domain.Entities.Content
 @model SmartLMS.WebUI.Models.ClassViewModel
 @{
-    ViewBag.Title = ViewBag.Class + " " + Model.Name;
+    ViewBag.Title = Parameter.CLASS + " " + Model.Name;
 }
 @section styles {
     <style type="text/css">

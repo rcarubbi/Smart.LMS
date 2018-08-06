@@ -1,7 +1,8 @@
-﻿@model SmartLMS.WebUI.Models.CourseViewModel
+﻿@using SmartLMS.Domain.Entities
+@model SmartLMS.WebUI.Models.CourseViewModel
 <div class="card">
     <div class="content">
-        <h3 class="index-title text-primary"><i class="fa fa-graduation-cap text-primary"></i> @ViewBag.Course @Model.Name </h3>
+        <h3 class="index-title text-primary"><i class="fa fa-graduation-cap text-primary"></i> @Parameter.COURSE @Model.Name </h3>
         <h4><strong>Teacher in charge:</strong> @Model.TeacherInChargeName</h4>
         @Html.Partial("_ClassList", Model.Classes)
         <a href="@Url.Action("Index", "Course", new { Id = Model.SubjectId })" class="btn btn-primary btn-simple pull-right">

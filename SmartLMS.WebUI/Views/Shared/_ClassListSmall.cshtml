@@ -1,22 +1,30 @@
-﻿ @model IEnumerable<SmartLMS.WebUI.Models.ClassViewModel>
+﻿@model IEnumerable<SmartLMS.WebUI.Models.ClassViewModel>
 <div class="list-group">
     @foreach (var klass in Model)
-            {
-                if (klass.Available)
-                {
+    {
+        if (klass.Available)
+        {
             @:<a href="@Url.Action("Watch", "Class", new { Id = klass.Id })" class="link-group-item">
-                }
-        <div class="list-group-item list-group-item-sm">
-            <div class="row-action-primary" @if (!klass.Available) { <text> data-toggle="tooltip" data-placement="right" data-container="body" data-original-title="You don't have access to this class" </text>  }>
-                <i class="fa fa-laptop @if (ViewBag.CurrentClassId == klass.Id) { <text>active</text> }"></i>
-            </div>
-            <div class="row-content">
+            }
+            <div class="list-group-item list-group-item-sm">
+                <div class="row-action-primary" @if (!klass.Available) { <text> data-toggle="tooltip" data-placement="right" data-container="body" data-original-title="You don't have access to this class" </text> }>
+                    <i class="fa fa-laptop @if (ViewBag.CurrentClassId == klass.Id) { <text>active</text> }"></i>
+                </div>
+                <div class="row-content">
 
-                @if (!klass.Available)
-                {
-                    <label class="pull-right label label-default"><i class="fa fa-lock"></i></label>
-                }
-                <h5 class="class-name">@klass.Name</h5>
+                    @if (!klass.Available)
+                    {
+                        <label class="pull-right label label-default"><i class="fa fa-lock"></i></label>
+                    }
+                    <h5 class="class-name">
+                        @klass.Name
+                    @if (klass.Editable)
+                    {
+                        <a href="@Url.Action("Edit", "Class", new { Id = klass.Id })">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    }
+                </h5>
                 @if (klass.Available)
                 {
                     <div class="progress progress-line-primary">
@@ -30,8 +38,8 @@
         </div>
         if (klass.Available)
         {
-            @:</a>
-        }
-        <div class="list-group-separator list-group-separator-sm"></div>
+        @:</a>
     }
+    <div class="list-group-separator list-group-separator-sm"></div>
+}
 </div>

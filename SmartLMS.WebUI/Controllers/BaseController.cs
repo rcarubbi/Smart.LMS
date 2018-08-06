@@ -14,15 +14,12 @@ namespace SmartLMS.WebUI.Controllers
 
         protected override void OnException(ExceptionContext filterContext)
         {
-    
-            if (!Request.IsAjaxRequest())
-            {
-                base.OnException(filterContext);
-                filterContext.ExceptionHandled = true;
-                Exception e = filterContext.Exception;
-                ViewData["Exception"] = e; // pass the exception to the view
-                filterContext.Result = View("Error");
-            }
+            if (Request.IsAjaxRequest()) return;
+            base.OnException(filterContext);
+            filterContext.ExceptionHandled = true;
+            var exception = filterContext.Exception;
+            ViewData["Exception"] = exception; // pass the exception to the view
+            filterContext.Result = View("Error");
         }
 
         public string RenderRazorViewToString(string viewName, object model)
@@ -47,18 +44,22 @@ namespace SmartLMS.WebUI.Controllers
             _context = contexto;
         }
 
+        protected Role GetUserRole(User user)
+        {
+            switch (user)
+            {
+                case Admin _:
+                    return Role.Admin;
+                case Teacher _:
+                    return Role.Teacher;
+                default:
+                    return Role.Student;
+            }
+        }
+
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-
-            ViewBag.KnowledgeArea = Parameter.KNOWLEDGE_AREA;
-            ViewBag.Subject = Parameter.SUBJECT;
-            ViewBag.Course = Parameter.COURSE;
-            ViewBag.Class = Parameter.CLASS;
-            ViewBag.KnowledgeAreaPlural = Parameter.KNOWLEDGE_AREA_PLURAL;
-            ViewBag.SubjectPlural = Parameter.SUBJECT_PLURAL;
-            ViewBag.CoursePlural = Parameter.COURSE_PLURAL;
-            ViewBag.ClassPlural = Parameter.CLASS_PLURAL;
 
             var userRepository = new UserRepository(_context);
 

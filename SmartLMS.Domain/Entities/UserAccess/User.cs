@@ -1,6 +1,5 @@
 ﻿using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.History;
-using SmartLMS.Domain.Entities.Delivery;
 using System.Collections.Generic;
 
 namespace SmartLMS.Domain.Entities.UserAccess

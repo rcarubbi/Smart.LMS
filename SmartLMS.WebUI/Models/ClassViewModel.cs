@@ -70,6 +70,8 @@ namespace SmartLMS.WebUI.Models
         [Display(Name = "Active")]
         public bool Active { get; set; }
 
+        public bool Editable { get; set; }
+
         internal static IEnumerable<ClassViewModel> FromEntityList(IEnumerable<Class> classes, int depth, DefaultDateTimeHumanizeStrategy humanizer)
         {
             return classes.Select(item => FromEntity(item, depth, humanizer));
@@ -147,12 +149,13 @@ namespace SmartLMS.WebUI.Models
                 Name = item.Class.Name,
                 Content = item.Class.Content,
                 ContentType = item.Class.ContentType,
-                TeacherName= item.Class.Teacher.Name,
+                TeacherName = item.Class.Teacher.Name,
                 CreatedAt = item.Class.CreatedAt,
                 CourseName = item.Class.Course.Name,
                 Available = item.Available,
                 Percentual = item.Percentual,
-                WatchedSeconds = item.WatchedSeconds
+                WatchedSeconds = item.WatchedSeconds,
+                Editable = item.Editable
             };
         }
 
