@@ -28,7 +28,7 @@ namespace SmartLMS.Domain.Repositories
                 .ToList();
         }
 
-        public IEnumerable ListActiveClassrooms()
+        public List<Classroom> ListActiveClassrooms()
         {
             return _context.GetList<Classroom>()
                 .Where(a => a.Active)

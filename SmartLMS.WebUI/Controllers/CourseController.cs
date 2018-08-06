@@ -51,6 +51,14 @@ namespace SmartLMS.WebUI.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "Teacher")]
+        public ActionResult TeacherIndex()
+        {
+            var courseRepository = new CourseRepository(_context);
+            var courses = courseRepository.ListActiveCourses().Where(c => c.TeacherInCharge.Id == _loggedUser.Id);
+ 
+            return View(courses);
+        }
 
         [Authorize(Roles = "Admin")]
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)

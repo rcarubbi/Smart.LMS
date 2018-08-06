@@ -38,6 +38,14 @@ namespace SmartLMS.WebUI.Models
             };
         }
 
+        internal static IEnumerable<ClassroomViewModel> FromEntityList(List<Classroom> classrooms)
+        {
+            foreach (var classroom in classrooms)
+            {
+                yield return FromEntity(classroom);
+            }  
+        }
+
         public static ClassroomViewModel FromEntity(Classroom item)
         {
             return new ClassroomViewModel

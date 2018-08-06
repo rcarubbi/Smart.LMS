@@ -33,7 +33,6 @@
                 }
             </div>
         </div>
-        @Html.ActionLink("Back", "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
-
+        <a href="@Request.UrlReferrer" class="btn btn-simple btn-sm btn-default">Back</a>
     </div>
 </div>

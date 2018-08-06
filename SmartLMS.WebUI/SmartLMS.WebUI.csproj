@@ -309,6 +309,7 @@
     <None Include="Properties\PublishProfiles\Homologacao.pubxml" />
     <None Include="Properties\PublishProfiles\Produção.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\classroomProxy.js" />
     <Content Include="Scripts\dropzone\dropzone.js" />
     <Content Include="Scripts\handlebars.amd.js" />
     <Content Include="Scripts\handlebars.amd.min.js" />
@@ -422,6 +423,10 @@
     <Content Include="Views\Course\Edit.cshtml" />
     <Content Include="Views\Class\Create.cshtml" />
     <Content Include="Views\Class\Edit.cshtml" />
+    <Content Include="Views\Classroom\Index.cshtml" />
+    <Content Include="Views\Classroom\_StudentsListModal.cshtml" />
+    <Content Include="Views\Classroom\_CoursesListModal.cshtml" />
+    <Content Include="Views\Course\TeacherIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

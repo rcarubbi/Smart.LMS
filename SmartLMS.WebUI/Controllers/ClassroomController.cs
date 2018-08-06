@@ -13,14 +13,24 @@ using System.Web.Mvc;
 
 namespace SmartLMS.WebUI.Controllers
 {
+
     [Authorize(Roles = "Admin")]
     public class ClassroomController : BaseController
     {
 
-        public ClassroomController(IContext contexto)
-            : base(contexto)
+        public ClassroomController(IContext context)
+            : base(context)
         {
 
+        }
+
+        [OverrideAuthorization]
+        [Authorize(Roles = "Teacher")]
+        public ActionResult Index()
+        {
+            var classroomRepository = new ClassroomRepository(_context);
+            var classrooms = classroomRepository.ListActiveClassrooms().Where(cr => cr.Courses.Any(c => c.Course.TeacherInCharge.Id == _loggedUser.Id));
+            return View(classrooms);
         }
 
         // GET: Turma
@@ -39,6 +49,8 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         [HttpPost]
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Teacher")]
         public ActionResult ListCourses(Guid id)
         {
             var classroomRepository = new ClassroomRepository(_context);
@@ -49,6 +61,8 @@ namespace SmartLMS.WebUI.Controllers
 
 
         [HttpPost]
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Teacher")]
         public ActionResult ListStudents(Guid id)
         {
             var classroomRepository = new ClassroomRepository(_context);
@@ -60,8 +74,8 @@ namespace SmartLMS.WebUI.Controllers
                         select new
                         {
                             SubscriptionDate = p.StartDate,
-                            Name = s.Name,
-                            Id = s.Id,
+                            s.Name,
+                            s.Id,
                         };
 
             return Json(query.ToList());
@@ -117,13 +131,13 @@ namespace SmartLMS.WebUI.Controllers
             var courseRepository = new CourseRepository(_context);
 
             var courses = courseRepository.ListActiveCourses();
-            var selectedCourses = classroom.Courses.Select(c => c.Course);
-            var notSelectedCourses = courses.Except(selectedCourses);
-            selectedCourses.ToList().ForEach(c =>
+            var selectedCourses = classroom.Courses.Select(c => c.Course).ToList();
+            var notSelectedCourses = courses.Except(selectedCourses).ToList();
+            selectedCourses.ForEach(c =>
                 c.Order = classroom.Courses.Single(ct => ct.CourseId == c.Id).Order
             );
             var notSelectedCoursesOrder = selectedCourses.Count() + 1;
-            notSelectedCourses.ToList().ForEach(c => c.Order = notSelectedCoursesOrder++);
+            notSelectedCourses.ForEach(c => c.Order = notSelectedCoursesOrder++);
             return selectedCourses.Union(notSelectedCourses).OrderBy(x => x.Order).ToList();
         }
 
@@ -183,7 +197,8 @@ namespace SmartLMS.WebUI.Controllers
 
         }
 
-
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Teacher")]
         public ActionResult Plans(Guid classroomId)
         {
             var classroomRepository = new ClassroomRepository(_context);
