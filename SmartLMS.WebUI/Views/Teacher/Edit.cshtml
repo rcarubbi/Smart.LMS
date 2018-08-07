@@ -1,13 +1,14 @@
-﻿@model SmartLMS.WebUI.Models.UserViewModel
+﻿@using SmartLMS.Domain.Resources
+@model SmartLMS.WebUI.Models.UserViewModel
 
 @{
-    ViewBag.Title = "Teacher Update";
+    ViewBag.Title = Resource.TeacherUpdatePageTitle;
 }
 
 
 <div class="panel panel-success">
     <div class="panel-heading">
-        Teacher Update
+        @Resource.TeacherUpdatePageTitle
     </div>
     <div class="panel-body">
         @using (Html.BeginForm())
@@ -74,7 +75,7 @@
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fa fa-save"></i>
                         </button>
-                        @Html.ActionLink("Back", "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                        @Html.ActionLink(Resource.BackButton, "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
                     </div>
                 </div>
             </div>

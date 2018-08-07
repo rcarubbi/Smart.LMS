@@ -7,12 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Repositories
 {
     public class UserRepository
     {
-        private IContext _context;
+        private readonly IContext _context;
 
         public UserRepository(IContext context)
         {
@@ -28,15 +29,14 @@ namespace SmartLMS.Domain.Repositories
         {
             var user = GetById(userId);
             var classRooms = new List<Classroom>();
-            if (user is Student student)
+            switch (user)
             {
-                student.DeliveryPlans.Select(x => x.Classroom).ToList().ForEach(x => classRooms.Add(_context.UnProxy(x)));
-
-            }
-            else if (user is Teacher)
-            {
-                _context.GetList<Classroom>()
-                    .Where(t =>
+                case Student student:
+                    student.DeliveryPlans.Select(x => x.Classroom).ToList().ForEach(x => classRooms.Add(_context.UnProxy(x)));
+                    break;
+                case Teacher _:
+                    _context.GetList<Classroom>()
+                        .Where(t =>
                             t.Courses
                                 .Select(x => x.Course.TeacherInCharge)
                                 .Any(p => p.Id == userId)
@@ -44,10 +44,10 @@ namespace SmartLMS.Domain.Repositories
                                 .SelectMany(x => x.Course.Classes)
                                 .Select(x => x.Teacher)
                                 .Any(x => x.Id == userId)
-                    )
-                    .ToList()
-                    .ForEach(x => classRooms.Add(_context.UnProxy(x)));
-
+                        )
+                        .ToList()
+                        .ForEach(x => classRooms.Add(_context.UnProxy(x)));
+                    break;
             }
 
             return classRooms;
@@ -68,8 +68,8 @@ namespace SmartLMS.Domain.Repositories
         {
             var repo = new GenericRepository<Teacher>(_context);
             var query = new SearchQuery<Teacher>();
-            query.AddFilter(a => (searchFieldName == "Name" && a.Name.Contains(term)) ||
-                                             (searchFieldName == "Email" && a.Email.Contains(term)) ||
+            query.AddFilter(a => (searchFieldName == Resource.TeacherNameFieldName && a.Name.Contains(term)) ||
+                                             (searchFieldName == Resource.TeacherEmailFieldName && a.Email.Contains(term)) ||
                                              (searchFieldName == "Id" && a.Id.ToString().Contains(term)) ||
                                              string.IsNullOrEmpty(searchFieldName));
 
@@ -102,11 +102,11 @@ namespace SmartLMS.Domain.Repositories
             {
                 if (ex.InnerException.InnerException.Message.Contains("FK_dbo.Class_dbo.User_Teacher_Id"))
                 {
-                    throw new ApplicationException("This teacher has classes associated to him");
+                    throw new ApplicationException(Resource.TeacherClassesAssociationException);
                 }
                 else if (ex.InnerException.InnerException.Message.Contains("FK_dbo.Course_dbo.User_TeacherInCharge_Id"))
                 {
-                    throw new ApplicationException("This teacher is in charge of some courses");
+                    throw new ApplicationException(Resource.TeacherInChargeException);
                 }
             }
         }
@@ -125,8 +125,8 @@ namespace SmartLMS.Domain.Repositories
         {
             var repo = new GenericRepository<Student>(_context);
             var query = new SearchQuery<Student>();
-            query.AddFilter(a => (searchFieldName == "Name" && a.Name.Contains(term)) ||
-                                             (searchFieldName == "Email" && a.Email.Contains(term)) ||
+            query.AddFilter(a => (searchFieldName == Resource.StudentNameFieldName && a.Name.Contains(term)) ||
+                                             (searchFieldName == Resource.StudentEmailFieldName && a.Email.Contains(term)) ||
                                              (searchFieldName == "Id" && a.Id.ToString().Contains(term)) ||
                                              string.IsNullOrEmpty(searchFieldName));
 

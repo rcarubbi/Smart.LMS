@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers

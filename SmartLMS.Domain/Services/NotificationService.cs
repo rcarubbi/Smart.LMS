@@ -4,149 +4,124 @@ using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
+using SmartLMS.Domain.Resources;
 using System.Linq;
 using System.Net.Mail;
-using System;
 
 namespace SmartLMS.Domain.Services
 {
     public class NotificationService
     {
-        
-        private readonly IContext _contexto;
+
+        private readonly IContext _context;
         private readonly IMailSender _sender;
-        public NotificationService(IContext contexto, IMailSender sender)
+        public NotificationService(IContext context, IMailSender sender)
         {
             _sender = sender;
-            _contexto = contexto;
-            ConfigurarSender();
-            
+            _context = context;
+            ConfigureSender();
+
         }
 
-        public string HttpContextMapPath { get; private set; }
 
-
-        public void SendRecoverPasswordNotification(string email, string recoveredPassword, string link)
+        public void SendRecoverPasswordNotification(string email, string recoveredPassword)
         {
-            var userRepository = new UserRepository(_contexto);
+            var userRepository = new UserRepository(_context);
             var user = userRepository.GetByEmail(email);
 
-            var parametroRepo = new ParameterRepository(_contexto);
+            var parameterRepository = new ParameterRepository(_context);
 
-            var corpo = $@"<div>
-                                    Hi {user.Name}, your {Parameter.APP_NAME} credendials are:
-                                </div>
-                                <div>
-                                    Login: {email}.
-                                </div>
-                                <div>
-                                    Password: {recoveredPassword}.
-                                </div>
-                                <div>
-                                    Access the platform by the following link <a href='{link}'>{link}</a>.
-                                </div>
-                                <div>
-                                    Regards, {Parameter.APP_NAME}
-                                </div>";
+            var body = Resource.PasswordRecoveryEmailBody
+                .Replace("{username}", user.Name)
+                .Replace("{login}", email)
+                .Replace("{password}", recoveredPassword)
+                .Replace("{link}", Parameter.BASE_URL);
 
 
             var message = new MailMessage();
             message.To.Add(email);
-            message.From = new MailAddress(parametroRepo.GetValueByKey(Parameter.EMAIL_FROM_KEY), Parameter.APP_NAME);
-            message.Subject = $"{Parameter.APP_NAME} - Password recovery";
+            message.From = new MailAddress(parameterRepository.GetValueByKey(Parameter.EMAIL_FROM_KEY), Parameter.APP_NAME);
+            message.Subject = Resource.PasswordRecoveryEmailSubject;
             message.IsBodyHtml = true;
-            message.Body = corpo;
-            
+            message.Body = body;
+
             _sender.Send(message);
         }
 
 
-        private void ConfigurarSender()
+        private void ConfigureSender()
         {
-            _sender.PortNumber = _contexto.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_PORT_KEY).Value.To(0);
-            _sender.Host = _contexto.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_SERVER_KEY).Value;
-            _sender.UseDefaultCredentials = _contexto.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_USE_DEFAULT_CREDENTIALS_KEY).Value.To(false);
-            _sender.UseSSL = _contexto.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_USE_SSL_KEY).Value.To(false);
-            if (!_sender.UseDefaultCredentials)
-            {
-                _sender.Username = _contexto.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_USERNAME_KEY).Value;
-                _sender.Password = _contexto.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_PASSWORD_KEY).Value;
-            }
+            _sender.PortNumber = _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_PORT_KEY).Value.To(0);
+            _sender.Host = _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_SERVER_KEY).Value;
+            _sender.UseDefaultCredentials = _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_USE_DEFAULT_CREDENTIALS_KEY).Value.To(false);
+            _sender.UseSSL = _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_USE_SSL_KEY).Value.To(false);
+            if (_sender.UseDefaultCredentials) return;
+
+
+            _sender.Username = _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_USERNAME_KEY).Value;
+            _sender.Password = _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_PASSWORD_KEY).Value;
+
         }
 
-        public void SendTalkToUsMessage(string nome, string email, string mensagem)
+        public void SendTalkToUsMessage(string name, string email, string message)
         {
-            var emailDestinatarioFaleConosco = _contexto.GetList<Parameter>().Single(x => x.Key == Parameter.TALK_TO_US_RECEIVER_EMAIL_KEY).Value;
-            var nomeDestinatarioFaleConosco = _contexto.GetList<Parameter>().Single(x => x.Key == Parameter.TALK_TO_US_RECEIVER_NAME_KEY).Value;
-            var emailRemetente = _contexto.GetList<Parameter>().Single(x => x.Key == Parameter.EMAIL_FROM_KEY).Value;
+            var talkToUsReceiverEmail = _context.GetList<Parameter>().Single(x => x.Key == Parameter.TALK_TO_US_RECEIVER_EMAIL_KEY).Value;
+            var talkToUsReceiverName = _context.GetList<Parameter>().Single(x => x.Key == Parameter.TALK_TO_US_RECEIVER_NAME_KEY).Value;
+            var senderMail = _context.GetList<Parameter>().Single(x => x.Key == Parameter.EMAIL_FROM_KEY).Value;
 
-            MailMessage mailMessage = new MailMessage();
-            MailAddress destinatario = new MailAddress(emailDestinatarioFaleConosco, nomeDestinatarioFaleConosco);
-            mailMessage.To.Add(destinatario);
-            mailMessage.From = new MailAddress(emailRemetente, Parameter.APP_NAME);
+            var mailMessage = new MailMessage();
+            var receiverMailAddress = new MailAddress(talkToUsReceiverEmail, talkToUsReceiverName);
+            mailMessage.To.Add(receiverMailAddress);
+            mailMessage.From = new MailAddress(senderMail, Parameter.APP_NAME);
             mailMessage.IsBodyHtml = true;
-            mailMessage.Body = $@"<div><h1>Talk to us - {Parameter.APP_NAME}</h1>
-                                    <dl>
-                                        <dt>Name:</dt>
-                                        <dd>{nome}</dd>
-                                        <dt>Email:</dt>
-                                        <dd>{email}</dd>
-                                        <dt>Message:</dt>
-                                        <dd>{mensagem}</dd>
-                                    </dl>
-                                    </div>";
-            mailMessage.Subject = $"Talk to us - {Parameter.APP_NAME}";
+            mailMessage.Body = Resource.TalkToUsEmailBody
+                .Replace("{name}", name)
+                .Replace("{email}", email)
+                .Replace("{message}", message); 
+
+            mailMessage.Subject = Resource.TalkToUsEmailSubject;
             _sender.Send(mailMessage);
         }
 
         public void SendDeliveryClassEmail(Class klass, Student student)
         {
-            var emailRemetente = _contexto.GetList<Parameter>().Single(x => x.Key == Parameter.EMAIL_FROM_KEY).Value;
+            var senderEmail = _context.GetList<Parameter>().Single(x => x.Key == Parameter.EMAIL_FROM_KEY).Value;
 
             var email = new MailMessage();
-            var destinatario = new MailAddress(student.Email, student.Name);
-            email.To.Add(destinatario);
-            email.From = new MailAddress(emailRemetente, Parameter.APP_NAME);
+            var receievrMailAddress = new MailAddress(student.Email, student.Name);
+            email.To.Add(receievrMailAddress);
+            email.From = new MailAddress(senderEmail, Parameter.APP_NAME);
             email.IsBodyHtml = true;
-            email.Body = Parameter.DELIVERED_CLASS_NOTICE_BODY
-                .Replace("{Name}", student.Name)
-                .Replace("{Class}", klass.Name)
-                .Replace("{ClassId}", klass.Id.ToString())
-                .Replace("{Course}", klass.Course.Name)
-                .Replace("{CourseId}", klass.Course.Id.ToString());
+            email.Body = Resource.DeliveredClassNotificationEmailBody
+                .Replace("{username}", student.Name)
+                .Replace("{classname}", klass.Name)
+                .Replace("{classId}", klass.Id.ToString())
+                .Replace("{coursename}", klass.Course.Name)
+                .Replace("{courseId}", klass.Course.Id.ToString())
+                .Replace("{link}", Parameter.BASE_URL);
 
-            email.Subject = $"{Parameter.APP_NAME} - New available class";
+            email.Subject = Resource.DeliveredClassNotificationEmailSubject;
             _sender.Send(email);
         }
 
-        internal void SendCreatingUserNotiication(User user, string password, string link)
+        internal void SendCreatingUserNotiication(User user, string password)
         {
-            
-            var parametroRepo = new ParameterRepository(_contexto);
 
-            var corpo = $@"<div>
-                                    Hi {user.Name}, your {Parameter.APP_NAME} credendials are:
-                                </div>
-                                <div>
-                                    Login: {user.Login}.
-                                </div>
-                                <div>
-                                    Password: {password}.
-                                </div>
-                                <div>
-                                    Access the platform by the following link <a href='{link}'>{link}</a>.
-                                </div>
-                                <div>
-                                    Regards, {Parameter.APP_NAME}
-                                </div>";
+            var parameterRepository = new ParameterRepository(_context);
+
+            var body = Resource.CreatingUserNotificationEmailBody
+                .Replace("{username}", user.Name)
+                .Replace("{login}", user.Login)
+                .Replace("{password}", password)
+                .Replace("{link}", Parameter.BASE_URL);
 
 
             var message = new MailMessage();
             message.To.Add(user.Email);
-            message.From = new MailAddress(parametroRepo.GetValueByKey(Parameter.EMAIL_FROM_KEY), Parameter.APP_NAME);
-            message.Subject = $"Welcome to {Parameter.APP_NAME}";
+            message.From = new MailAddress(parameterRepository.GetValueByKey(Parameter.EMAIL_FROM_KEY), Parameter.APP_NAME);
+            message.Subject = Resource.CreatingUserNotificationEmailSubject;
             message.IsBodyHtml = true;
-            message.Body = corpo;
+            message.Body = body;
 
             _sender.Send(message);
         }

@@ -13,10 +13,7 @@ namespace SmartLMS.Domain.Entities
                     _guid = Guid.NewGuid();
                 return _guid;
             }
-            set
-            {
-                _guid = value;
-            }
+            set => _guid = value;
         }
 
         public bool Active { get; set; }

@@ -4,6 +4,7 @@ using Quartz;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Repositories;
 using System;
+using SmartLMS.Domain.Entities;
 
 namespace SmartLMS.ContentDeliveryAgent
 {

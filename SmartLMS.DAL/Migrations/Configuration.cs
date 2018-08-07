@@ -137,21 +137,20 @@ namespace SmartLMS.DAL.Migrations
                         Value = "jon.ratcliffe@gnatta.com",
                         Active = true
                     },
-                      new Parameter
-                      {
-                          CreatedAt = DateTime.Now,
-                          Key = Parameter.DELIVERED_CLASS_NOTICE_BODY_KEY,
-                          Value = $"Hi {{Name}}, how are you? <br /> The class <a href='www.codigonerd.net/SmartLMS/Class/Watch/{{ClassId}}'>{{Class}}</a> is now avaialble on the course <a href='www.codigonerd.net/SmartLMS/Class/Index/{{CourseId}}'>{{Course}}</a> <br />Have a productive study! <br /><br /> {Parameter.APP_NAME}",
-                          Active = true
-                      },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.DAEMON_USER_KEY,
                         Value = "delivery.agent@gnatta.com",
                         Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.BASE_URL_KEY,
+                        Value = "http://localhost:21114",
+                        Active = true
                     });
-
 
 
             context.Save();

@@ -97,11 +97,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\config.png" />
-    <Content Include="Resources\excel.png" />
-    <Content Include="Resources\play.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Migrations\201808021401436_InitialModel.resx">
       <DependentUpon>201808021401436_InitialModel.cs</DependentUpon>
     </EmbeddedResource>

@@ -8,6 +8,7 @@ using SmartLMS.Domain.Repositories;
 using System;
 using System.Linq;
 using System.Text;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Services
 {
@@ -41,7 +42,7 @@ namespace SmartLMS.Domain.Services
 
             if (userByAccount != null && userByAccount.Id != id)
             {
-                throw new ApplicationException("There is another user to this login");
+                throw new ApplicationException(Resource.AnotherUserToThisLoginException);
             }
 
             User updatedUser = null;
@@ -77,12 +78,12 @@ namespace SmartLMS.Domain.Services
             var differences = analyzer.Compare(_context.UnProxy(user), updatedUser, a => a.State == DiffState.Modified);
 
             
-            var diffText = new StringBuilder($"Personal info updated:{Environment.NewLine}<br />");
+            var diffText = new StringBuilder($"{Resource.PersonalInfoUpdatedTitle}:{Environment.NewLine}<br />");
             foreach (var item in differences)
             {
                 diffText.AppendLine(item.PropertyName == "Password"
-                    ? "- Your password was updated <br />"
-                    : $"- {item.PropertyName} from {item.OldValue} to {item.NewValue}<br />");
+                    ? $"- {Resource.PasswordUpdatedNoticeMessage} <br />"
+                    : $"- {item.PropertyName} {Resource.PersonalInfoUpdatedFrom} {item.OldValue} {Resource.PersonalInfoUpdatedTo} {item.NewValue}<br />");
             }
 
             var updatingNotice = new Notice {
@@ -97,12 +98,12 @@ namespace SmartLMS.Domain.Services
  
         }
 
-        public User CreateUser(string name, string login, string email, string password, Role role, string link, User loggedUser)
+        public User CreateUser(string name, string login, string email, string password, Role role, User loggedUser)
         {
             var userRepository = new UserRepository(_context);
 
             if (userRepository.GetByLogin(login) != null)
-                throw new ApplicationException("There is another user to this login");
+                throw new ApplicationException(Resource.AnotherUserToThisLoginException);
 
             var encryptedPassword = _crypt.Encrypt(password);
             User user = null;
@@ -134,7 +135,7 @@ namespace SmartLMS.Domain.Services
                 var notice = new Notice
                 {
                     User = user,
-                    Text = $"Welcome to {Parameter.APP_NAME}! Have a productive study!",
+                    Text = Resource.WelcomeNoticeMessage,
                     DateTime = DateTime.Now,
                 };
                 _context.GetList<Notice>().Add(notice);
@@ -143,7 +144,7 @@ namespace SmartLMS.Domain.Services
             userRepository.Save(user);
             _context.Save(loggedUser);
 
-            _notificationService.SendCreatingUserNotiication(user, password, link);
+            _notificationService.SendCreatingUserNotiication(user, password);
             return user;
         }
 

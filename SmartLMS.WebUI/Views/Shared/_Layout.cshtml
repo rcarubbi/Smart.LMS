@@ -56,7 +56,7 @@
             console.log('[smartlms] active service worker found, no need to register');
         } else {
             //Register the ServiceWorker
-            navigator.serviceWorker.register('@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))smartlms-sw.js', {
+            navigator.serviceWorker.register('@Parameter.BASE_URL/smartlms-sw.js', {
                 scope: '/'
             }).then(function(reg) {
                 console.log('Service worker has been registered for scope:'+ reg.scope);
@@ -64,7 +64,7 @@
         }
 
         var SmartLMS = {};
-        SmartLMS.api = '@Url.Content("~/")';
+        SmartLMS.api = '@Parameter.BASE_URL';
 
 
         </script>

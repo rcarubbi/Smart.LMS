@@ -75,7 +75,7 @@ namespace SmartLMS.WebUI.Controllers
                 {
 
                     var notificationService = new NotificationService(_context, sender);
-                    await Task.Run(() => notificationService.SendRecoverPasswordNotification(viewModel.Email, password, this.Url.Action("Login", "Authentication"))).ConfigureAwait(false);
+                    await Task.Run(() => notificationService.SendRecoverPasswordNotification(viewModel.Email, password)).ConfigureAwait(false);
                     ViewBag.Message = "We sent an e-mail to you with your password.";
                 }
                 else

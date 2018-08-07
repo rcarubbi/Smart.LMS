@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Repositories
 {
@@ -40,8 +41,8 @@ namespace SmartLMS.Domain.Repositories
         {
             var repo = new GenericRepository<Classroom>(_context);
             var query = new SearchQuery<Classroom>();
-            query.AddFilter(a => (searchFieldName == "Name" && a.Name.Contains(term)) ||
-                                 (searchFieldName == "Course" && a.Courses.Any(c => c.Course.Name.Contains(term))) ||
+            query.AddFilter(a => (searchFieldName == Resource.ClassroomNameFieldName && a.Name.Contains(term)) ||
+                                 (searchFieldName == Resource.CourseName && a.Courses.Any(c => c.Course.Name.Contains(term))) ||
                                     string.IsNullOrEmpty(searchFieldName));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Classroom>("Name"));

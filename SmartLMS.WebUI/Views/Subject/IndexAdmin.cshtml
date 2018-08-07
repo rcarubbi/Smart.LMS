@@ -1,7 +1,8 @@
-﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.SubjectViewModel>
+﻿@using SmartLMS.Domain.Resources
+@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.SubjectViewModel>
 
 @{
-    ViewBag.Title = "Subject management";
+    ViewBag.Title = Resource.SubjectManagementPageTitle;
 }
 @section styles {
     <style type="text/css">
@@ -18,7 +19,7 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Subject list
+        @Resource.SubjectManagementPageTitle
     </div>
     <div class="panel-body">
         <div class="row">
@@ -28,12 +29,12 @@
             <div class="col-md-7 pull-right">
                 <div class="col-md-4">
                     <div class="form-group label-static is-empty">
-                        <label for="SearchField" class="control-label">Search by</label>
+                        <label for="SearchField" class="control-label">@Resource.SearchByLabel</label>
                         @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new { @class = "form-control dropdownjs" })
                     </div>
                 </div>
                 <div class="form-group label-floating is-empty col-md-7">
-                    <label class="control-label" for="q">type the term you want to find</label>
+                    <label class="control-label" for="q">@Resource.AdminSearchText</label>
                     <div class="input-group" style="display:block">
                         <div class="row">
                             <div class="col-md-10">
@@ -53,19 +54,19 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayName("Order")
+                        @Html.DisplayName(Resource.OrderFieldName)
                     </th>
                     <th>
-                        @Html.DisplayName("Name")
+                        @Html.DisplayName(Resource.SubjectNameFieldName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Knowledge Area")
+                        @Html.DisplayName(Resource.KnowledgeAreaName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Active")
+                        @Html.DisplayName(Resource.ActiveFieldName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Created at")
+                        @Html.DisplayName(Resource.CreatedAtFieldName)
                     </th>
                     <th></th>
                 </tr>
@@ -107,7 +108,7 @@
             {
                 <tr>
                     <td colspan="5" class="text-center">
-                        No subject found
+                        @Resource.NoSubjects
                     </td>
                 </tr>
             }
@@ -177,7 +178,7 @@
         {{#equals Count 0}}
         <tr>
             <td colspan="5" class="text-center">
-                No subject found
+                @Resource.NoSubjects
             </td>
         </tr>
         {{/equals}}
@@ -217,7 +218,7 @@
                 SmartLMS.Pagination.init({
                     onPageChanged: $private.changePage,
                 });
-                $private.SearchFieldName = "Name";
+                $private.SearchFieldName = "@Resource.SubjectNameFieldName";
 
                 $("#SearchField").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
@@ -238,8 +239,8 @@
             $private.delete = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
                 SmartLMS.App.AddNotification({
-                    MessageTitle: 'Content management',
-                    Message: 'Subject deleted!',
+                    MessageTitle: '@Resource.ContentManagementToastrTitle',
+                    Message: '@Resource.SubjectDeletedToastrMessage',
                     MessageType: 'error'
                 });
                 proxy.delete(id).done($private.search);
@@ -253,7 +254,7 @@
                     name: $(this).data("name")
                 };
                 $("#deleteConfirmation").find(".modal-body").data("id", subject.id);
-                $("#deleteConfirmation").find(".modal-body").html("<p>Do you really want to delete the subject " + subject.name + "?</p>");
+                $("#deleteConfirmation").find(".modal-body").html("<p>@Resource.DeleteSubjectConfirmationText " + subject.name + "?</p>");
                 $("#deleteConfirmation").modal();
             };
  

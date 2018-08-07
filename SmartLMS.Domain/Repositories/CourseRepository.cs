@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Repositories
 {
@@ -67,10 +68,10 @@ namespace SmartLMS.Domain.Repositories
         {
             var repo = new GenericRepository<Course>(_context);
             var query = new SearchQuery<Course>();
-            query.AddFilter(a => (searchFieldName == "Name" && a.Name.Contains(term)) ||
+            query.AddFilter(a => (searchFieldName == Resource.CourseNameFieldName && a.Name.Contains(term)) ||
                                  (searchFieldName == "Id" && a.Id.ToString().Contains(term)) ||
-                                  (searchFieldName == "Knowledge Area" && a.Subject.KnowledgeArea.Name.Contains(term)) ||
-                                  (searchFieldName == "Subject" && a.Subject.Name.Contains(term)) ||
+                                  (searchFieldName == Resource.KnowledgeAreaName && a.Subject.KnowledgeArea.Name.Contains(term)) ||
+                                  (searchFieldName == Resource.SubjectName && a.Subject.Name.Contains(term)) ||
                                     string.IsNullOrEmpty(searchFieldName));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Course>("Subject.KnowledgeArea.Order, Subject.Order, Order"));

@@ -1,34 +1,35 @@
-﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.AccessViewModel>
+﻿@using SmartLMS.Domain.Resources
+@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.AccessViewModel>
 @{
     ViewBag.Title = "Access history";
    
 }
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title">Query filters</h3>
+        <h3 class="panel-title">@Resource.QueryFiltersTitle</h3>
     </div>
     <div class="panel-body panel-body-no-margin">
         <div class="form-horizontal">
             <div class="col-md-4">
                 <div class="form-group label-static is-empty">
-                    <label class="control-label">Start date</label>
+                    <label class="control-label">@Resource.StartDateLabel</label>
                     <input class="datepicker form-control" type="text" id="startDate" value="@DateTime.Now.AddMonths(-1).ToShortDateString()" />
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group label-static is-empty">
-                    <label class="control-label">End date</label>
+                    <label class="control-label">@Resource.EndDateLabel</label>
                     <input class="datepicker form-control" type="text" id="endDate" value="@DateTime.Now.ToShortDateString()" />
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group label-static is-empty">
-                    <label for="AccessType" class="control-label">Access type</label>
+                    <label for="AccessType" class="control-label">@Resource.AccessTypeLabel</label>
                     @Html.DropDownList("AccessType", ViewBag.AccessTypes as SelectList, new { @class = "form-control dropdownjs" })
                 </div>
             </div>
             <div class="text-right">
-                <button id="filter-button" class="btn btn-primary btn-sm">Filtrar</button>
+                <button id="filter-button" class="btn btn-primary btn-sm">@Resource.FilterButton</button>
             </div>
         </div>
     </div>
@@ -55,7 +56,7 @@
                                     <h5 class="list-group-item-heading">@item.Name</h5>
                                     <div class="progress progress-line-primary">
                                         <div class="progress-bar" role="progressbar" aria-valuenow="@item.Percentual" aria-valuemin="0" aria-valuemax="100" style="width: @item.Percentual%;">
-                                            <span class="sr-only">@(item.Percentual)% Concluída</span>
+                                            <span class="sr-only">@(item.Percentual)% @Resource.ConcludedLabel</span>
                                         </div>
                                     </div>
                                     <p class="list-group-item-text">@item.CourseName</p>
@@ -102,7 +103,7 @@
                     <h5 class="list-group-item-heading">{{Name}}</h5>
                     <div class="progress progress-line-primary">
                         <div class="progress-bar" role="progressbar" aria-valuenow="{{Percentual}}" aria-valuemin="0" aria-valuemax="100" style="width: {{Percentual}}%;">
-                            <span class="sr-only">{{Percentual}}% Concluída</span>
+                            <span class="sr-only">{{Percentual}}% @Resource.ConcludedLabel</span>
                         </div>
                     </div>
                     <p class="list-group-item-text">{{CourseName}}</p>

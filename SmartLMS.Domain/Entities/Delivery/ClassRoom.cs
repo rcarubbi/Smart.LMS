@@ -22,7 +22,7 @@ namespace SmartLMS.Domain.Entities.Delivery
                 {
                     foreach (var deliveryPlan in DeliveryPlans)
                     {
-                        ClassDeliveryPlan lastDeliveredClass = deliveryPlan.AvailableClasses.OrderByDescending(x => x.DeliveryDate).FirstOrDefault();
+                        var lastDeliveredClass = deliveryPlan.AvailableClasses.OrderByDescending(x => x.DeliveryDate).FirstOrDefault();
                         if (lastDeliveredClass != null)
                         {
                             var courseOrder = Courses.Single(c => c.CourseId == lastDeliveredClass.Class.Course.Id).Order;

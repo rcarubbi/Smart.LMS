@@ -16,11 +16,12 @@ namespace SmartLMS.Domain.Entities
         public const string FILE_STORAGE_KEY = "FileStorage";
         public const string TALK_TO_US_RECEIVER_NAME_KEY = "TalkToUsReceiverName";
         public const string TALK_TO_US_RECEIVER_EMAIL_KEY = "TalkToUsReceiverEmail";
-        public const string DELIVERED_CLASS_NOTICE_BODY_KEY = "DeliveredClassNoticeBody";
+        public const string BASE_URL_KEY = "BaseUrlKey";
         public const string DAEMON_USER_KEY = "DaemonUser";
 
         public static string APP_NAME { get; set; }
 
+        public static string BASE_URL { get; set; }
 
         public string Key { get; set; }
 
@@ -28,7 +29,7 @@ namespace SmartLMS.Domain.Entities
 
 
         public static string FILE_STORAGE { get; set; }
-        public static string DELIVERED_CLASS_NOTICE_BODY { get; set; }
+ 
 
         public static string DAEMON_USER { get; set; }
 
@@ -37,8 +38,8 @@ namespace SmartLMS.Domain.Entities
             var parameterRepository = new ParameterRepository(context);
             APP_NAME = parameterRepository.GetValueByKey(APP_NAME_KEY);
             FILE_STORAGE = parameterRepository.GetValueByKey(FILE_STORAGE_KEY);
-            DELIVERED_CLASS_NOTICE_BODY = parameterRepository.GetValueByKey(DELIVERED_CLASS_NOTICE_BODY_KEY);
             DAEMON_USER = parameterRepository.GetValueByKey(DAEMON_USER_KEY);
+            BASE_URL = parameterRepository.GetValueByKey(BASE_URL_KEY);
         }
     }
 }

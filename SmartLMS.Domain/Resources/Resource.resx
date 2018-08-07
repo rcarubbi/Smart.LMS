@@ -117,8 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutMenuItem" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>About Gnatta Trainning Tool...</value>
+  </data>
+  <data name="AboutTitle" xml:space="preserve">
+    <value>About Gnatta Trainning Tool</value>
+  </data>
+  <data name="AccessHistoryMenuItem" xml:space="preserve">
+    <value>Access History</value>
+  </data>
+  <data name="AccessTypeAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="AccessTypeClass" xml:space="preserve">
+    <value>Class</value>
+  </data>
+  <data name="AccessTypeSupportMaterial" xml:space="preserve">
+    <value>Support Material</value>
+  </data>
+  <data name="AnotherUserToThisLoginException" xml:space="preserve">
+    <value>There is another user to this login</value>
+  </data>
   <data name="BackToIndex" xml:space="preserve">
     <value>Back to index</value>
+  </data>
+  <data name="ChangePasswordMenuItem" xml:space="preserve">
+    <value>Change password</value>
   </data>
   <data name="ClassCreatedToastrMessage" xml:space="preserve">
     <value>Class created</value>
@@ -129,11 +156,23 @@
   <data name="ClassName" xml:space="preserve">
     <value>Class</value>
   </data>
+  <data name="ClassNameFieldName" xml:space="preserve">
+    <value>Name</value>
+  </data>
   <data name="ClassPlural" xml:space="preserve">
     <value>Classes</value>
   </data>
+  <data name="ClassroomAdminMenuItem" xml:space="preserve">
+    <value>Classrooms</value>
+  </data>
   <data name="ClassroomManagementToastrTitle" xml:space="preserve">
     <value>Classroom management</value>
+  </data>
+  <data name="ClassroomNameFieldName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ClassroomsMenuItem" xml:space="preserve">
+    <value>Classroom</value>
   </data>
   <data name="ClassroomUpdatedToastrMessage" xml:space="preserve">
     <value>Classroom updated</value>
@@ -141,17 +180,43 @@
   <data name="ContentManagementToastrTitle" xml:space="preserve">
     <value>Content management</value>
   </data>
+  <data name="CourseCreatedToastrMessage" xml:space="preserve">
+    <value>Course created</value>
+  </data>
   <data name="CourseIndex" xml:space="preserve">
     <value>Course Index</value>
   </data>
   <data name="CourseName" xml:space="preserve">
     <value>Course</value>
   </data>
+  <data name="CourseNameFieldName" xml:space="preserve">
+    <value>Name</value>
+  </data>
   <data name="CourseNotAvailableToastrMessage" xml:space="preserve">
     <value>This course is not available at this moment</value>
   </data>
   <data name="CoursePlural" xml:space="preserve">
     <value>Courses</value>
+  </data>
+  <data name="CourseUpdatedToastrMessage" xml:space="preserve">
+    <value>Course updated</value>
+  </data>
+  <data name="CreatingUserNotificationEmailBody" xml:space="preserve">
+    <value>&lt;div&gt;
+Hi {username}, your Gnatta Training Tool credendials are:
+&lt;/div&gt;
+&lt;div&gt;Login: {login}&lt;/div&gt;&lt;div&gt;Password: {password}.&lt;/div&gt;
+&lt;div&gt;Access the platform by the following link &lt;a href='{link}'&gt;here&lt;/a&gt;.&lt;/div&gt;
+&lt;div&gt;Regards, Gnatta Training Tool Team&lt;/div&gt;</value>
+  </data>
+  <data name="CreatingUserNotificationEmailSubject" xml:space="preserve">
+    <value>Welcome to Gnatta Training Tool</value>
+  </data>
+  <data name="DeliveredClassNotificationEmailBody" xml:space="preserve">
+    <value>Hi {username}, how are you? &lt;br /&gt; The class &lt;a href='{link}/Class/Watch/{classId}'&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href='{link}/Class/Index/{courseId}'&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Gnatta Training Tool Team</value>
+  </data>
+  <data name="DeliveredClassNotificationEmailSubject" xml:space="preserve">
+    <value>Gnatta Training Tool - New available class</value>
   </data>
   <data name="FileName" xml:space="preserve">
     <value>Support Material</value>
@@ -162,11 +227,20 @@
   <data name="KnowledgeAreaName" xml:space="preserve">
     <value>Knowledge Area</value>
   </data>
+  <data name="KnowledgeAreaNameFieldName" xml:space="preserve">
+    <value>Name</value>
+  </data>
   <data name="KnowledgeAreaPlural" xml:space="preserve">
     <value>Knowledge Areas</value>
   </data>
   <data name="LastClassesTitle" xml:space="preserve">
     <value>New classes</value>
+  </data>
+  <data name="LogoutMenuItem" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="MonitoringMenuSectionMenuDivider" xml:space="preserve">
+    <value>Monitoring</value>
   </data>
   <data name="MyCoursesTitle" xml:space="preserve">
     <value>My Courses</value>
@@ -177,11 +251,56 @@
   <data name="NotAllowedWatchClassToastrMessage" xml:space="preserve">
     <value>You are not allowed to watch this class</value>
   </data>
+  <data name="NoticeMenuItem" xml:space="preserve">
+    <value>Notices</value>
+  </data>
+  <data name="NoticeTypeAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="NoticeTypeClassroom" xml:space="preserve">
+    <value>Classroom</value>
+  </data>
+  <data name="NoticeTypePersonal" xml:space="preserve">
+    <value>Personal</value>
+  </data>
+  <data name="NoticeTypePublic" xml:space="preserve">
+    <value>Public</value>
+  </data>
   <data name="NotificationToastrTitle" xml:space="preserve">
     <value>Notification</value>
   </data>
+  <data name="PasswordRecoveryEmailBody" xml:space="preserve">
+    <value>&lt;div&gt;Hi {username}, your Gnatta Training Tool credendials are:&lt;/div&gt;
+&lt;div&gt;
+Login: {login}.
+&lt;/div&gt;
+&lt;div&gt;
+Password: {password}
+&lt;/div&gt;
+&lt;div&gt;
+Access the platform by the following link &lt;a href='{link}'&gt;here&lt;/a&gt;.
+&lt;/div&gt;
+&lt;div&gt;
+Regards, Gnatta Training Tool Team
+&lt;/div&gt;</value>
+  </data>
+  <data name="PasswordRecoveryEmailSubject" xml:space="preserve">
+    <value>Gnatta Training Tool - Password Recovery</value>
+  </data>
+  <data name="PasswordUpdatedNoticeMessage" xml:space="preserve">
+    <value>Your password was updated</value>
+  </data>
   <data name="PasswordUpdatedToastrMessage" xml:space="preserve">
     <value>Password updated!</value>
+  </data>
+  <data name="PersonalInfoUpdatedFrom" xml:space="preserve">
+    <value>from</value>
+  </data>
+  <data name="PersonalInfoUpdatedTitle" xml:space="preserve">
+    <value>Personal info updated</value>
+  </data>
+  <data name="PersonalInfoUpdatedTo" xml:space="preserve">
+    <value>to</value>
   </data>
   <data name="SeeOtherClasses" xml:space="preserve">
     <value>See also other classes for this course</value>
@@ -213,11 +332,26 @@
   <data name="SelectSubject" xml:space="preserve">
     <value>Select a subject</value>
   </data>
+  <data name="StudentAdminMenuItem" xml:space="preserve">
+    <value>Students</value>
+  </data>
+  <data name="StudentEmailFieldName" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="StudentNameFieldName" xml:space="preserve">
+    <value>Name</value>
+  </data>
   <data name="SubjectIndex" xml:space="preserve">
     <value>Subject Index</value>
   </data>
   <data name="SubjectName" xml:space="preserve">
     <value>Subject</value>
+  </data>
+  <data name="SubjectNameFieldName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="SubjectNotAvailableToastrMessage" xml:space="preserve">
+    <value>This subject is not available at this moment</value>
   </data>
   <data name="SubjectPlural" xml:space="preserve">
     <value>Subjects</value>
@@ -225,11 +359,41 @@
   <data name="SupportMaterialDownloadToastrTitle" xml:space="preserve">
     <value>Support material download</value>
   </data>
+  <data name="TalkToUsEmailBody" xml:space="preserve">
+    <value>&lt;div&gt;&lt;h1&gt;Talk to us - Gnatta Trainning Tool&lt;/h1&gt;
+&lt;dl&gt;
+&lt;dt&gt;Name:&lt;/dt&gt;
+ &lt;dd&gt;{name}&lt;/dd&gt;
+&lt;dt&gt;Email:&lt;/dt&gt;
+&lt;dd&gt;{email}&lt;/dd&gt;
+&lt;dt&gt;Message:&lt;/dt&gt;
+&lt;dd&gt;{message}&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="TalkToUsEmailSubject" xml:space="preserve">
+    <value>Gnatta Training Tool - Talk to Us</value>
+  </data>
   <data name="TeacherAddedToastrMessage" xml:space="preserve">
     <value>Teacher added</value>
   </data>
+  <data name="TeacherAdminMenuItem" xml:space="preserve">
+    <value>Teachers</value>
+  </data>
+  <data name="TeacherClassesAssociationException" xml:space="preserve">
+    <value>This teacher has classes associated to him</value>
+  </data>
+  <data name="TeacherEmailFieldName" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="TeacherInChargeException" xml:space="preserve">
+    <value>This teacher is in charge of some courses</value>
+  </data>
   <data name="TeacherManagementToasterTitle" xml:space="preserve">
     <value>Teacher management</value>
+  </data>
+  <data name="TeacherNameFieldName" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="TeacherUpdatedToastrMessage" xml:space="preserve">
     <value>Teacher updated</value>
@@ -240,7 +404,100 @@
   <data name="WatchedClassesTitle" xml:space="preserve">
     <value>Last watched classes</value>
   </data>
+  <data name="WelcomeNoticeMessage" xml:space="preserve">
+    <value>Welcome to Gnatta Traning Tool! Have a productive study!</value>
+  </data>
   <data name="WithoutPermissionDownloadToastrMessage" xml:space="preserve">
     <value>You don't have permission to download this material</value>
+  </data>
+  <data name="CloseButton" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="TalkToUsTitle" xml:space="preserve">
+    <value>Talk to us</value>
+  </data>
+  <data name="TalkToUsMenuItem" xml:space="preserve">
+    <value>Talk to us</value>
+  </data>
+  <data name="ContentManagementSection" xml:space="preserve">
+    <value>Content management</value>
+  </data>
+  <data name="PeopleManagementSection" xml:space="preserve">
+    <value>People management</value>
+  </data>
+  <data name="QueryFiltersTitle" xml:space="preserve">
+    <value>Query filters</value>
+  </data>
+  <data name="StartDateLabel" xml:space="preserve">
+    <value>Start date</value>
+  </data>
+  <data name="AccessTypeLabel" xml:space="preserve">
+    <value>Access Type</value>
+  </data>
+  <data name="ActiveFieldName" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="AdminSearchText" xml:space="preserve">
+    <value>type the term you want to find</value>
+  </data>
+  <data name="BackButton" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="ConcludedLabel" xml:space="preserve">
+    <value>Concluded</value>
+  </data>
+  <data name="CreatedAtFieldName" xml:space="preserve">
+    <value>Created at</value>
+  </data>
+  <data name="CreateTeacherPageTitle" xml:space="preserve">
+    <value>Create a new teacher</value>
+  </data>
+  <data name="DeleteTeacherConfirmationText" xml:space="preserve">
+    <value>Do you really want to delete the teacher</value>
+  </data>
+  <data name="DeleteTeacherConfirmationTitle" xml:space="preserve">
+    <value>Delete Teacher</value>
+  </data>
+  <data name="EndDateLabel" xml:space="preserve">
+    <value>End date</value>
+  </data>
+  <data name="FilterButton" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="ManagementAdminMenuItem" xml:space="preserve">
+    <value>Management</value>
+  </data>
+  <data name="NoTeachers" xml:space="preserve">
+    <value>No teachers found</value>
+  </data>
+  <data name="SearchByLabel" xml:space="preserve">
+    <value>Search by</value>
+  </data>
+  <data name="StudentAccessMenuItem" xml:space="preserve">
+    <value>Student access</value>
+  </data>
+  <data name="SubjectManagementPageTitle" xml:space="preserve">
+    <value>Subject management</value>
+  </data>
+  <data name="TeacherDeletedToasterMessage" xml:space="preserve">
+    <value>Teacher deleted!</value>
+  </data>
+  <data name="TeacherManagementPageTitle" xml:space="preserve">
+    <value>Teacher management</value>
+  </data>
+  <data name="TeacherUpdatePageTitle" xml:space="preserve">
+    <value>Update Teacher</value>
+  </data>
+  <data name="DeleteSubjectConfirmationText" xml:space="preserve">
+    <value>Do you really want to delete the subject</value>
+  </data>
+  <data name="NoSubjects" xml:space="preserve">
+    <value>No subjects found</value>
+  </data>
+  <data name="OrderFieldName" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="SubjectDeletedToastrMessage" xml:space="preserve">
+    <value>Subject deleted!</value>
   </data>
 </root>

@@ -7,6 +7,7 @@ using SmartLMS.WebUI.Models;
 using System;
 using System.Net;
 using System.Web.Mvc;
+using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers
@@ -67,7 +68,6 @@ namespace SmartLMS.WebUI.Controllers
                     teacher.Email,
                     teacher.Password,
                     Role.Teacher,
-                    Url.Action("Login", "Authentication", null, Request.Url.Scheme),
                     _loggedUser);
 
                 TempData["MessageType"] = "success";

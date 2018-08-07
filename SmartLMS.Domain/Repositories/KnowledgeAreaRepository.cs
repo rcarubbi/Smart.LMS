@@ -3,6 +3,7 @@ using SmartLMS.Domain.Entities.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Repositories
 {
@@ -31,7 +32,7 @@ namespace SmartLMS.Domain.Repositories
         {
             var repo = new GenericRepository<KnowledgeArea>(_context);
             var query = new SearchQuery<KnowledgeArea>();
-            query.AddFilter(a => (searchFieldName == "Name" && a.Name.Contains(term)) ||
+            query.AddFilter(a => (searchFieldName == Resource.KnowledgeAreaNameFieldName && a.Name.Contains(term)) ||
                                  (searchFieldName == "Id" && a.Id.ToString().Contains(term)) ||
                                     string.IsNullOrEmpty(searchFieldName));
 

@@ -6,6 +6,7 @@ using System.Net;
 using System.Transactions;
 using System.Web.Mvc;
 using SmartLMS.Domain;
+using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
@@ -77,7 +78,6 @@ namespace SmartLMS.WebUI.Controllers
                             viewModel.Email,
                             viewModel.Password,
                             Role.Student, 
-                            Url.Action("Login", "Authentication", null, Request.Url.Scheme), 
                             _loggedUser);
 
                         var classroom = classroomRepository.GetById(viewModel.ClassroomId);

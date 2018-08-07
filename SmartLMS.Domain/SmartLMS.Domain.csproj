@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\LocalizedDescriptionAttribute.cs" />
     <Compile Include="Entities\Delivery\Classroom.cs" />
     <Compile Include="Entities\History\FileAccess.cs" />
     <Compile Include="Entities\Delivery\DeliveryPlan.cs" />

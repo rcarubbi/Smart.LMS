@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Resources;
 using System.Transactions;
 using System.Web.Mvc;
 using SmartLMS.Domain.Entities.UserAccess;
@@ -50,8 +51,8 @@ namespace SmartLMS.WebUI.Controllers
             if (!subject.Active)
             {
                 TempData["MessageType"] = "warning";
-                TempData["MessageTitle"] = "Warning";
-                TempData["Message"] = "This subjects is not available at this moment";
+                TempData["MessageTitle"] = Resource.WarningToastrTitle;
+                TempData["Message"] = Resource.SubjectNotAvailableToastrMessage;
                 return RedirectToAction("Index", "Home");
             }
 
@@ -73,7 +74,7 @@ namespace SmartLMS.WebUI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
-            ViewBag.SearchFields = new SelectList(new[] { "Name", "Subject", "Knowledge Area", "Id" });
+            ViewBag.SearchFields = new SelectList(new[] { Resource.CourseNameFieldName, Resource.SubjectName, Resource.KnowledgeAreaName, "Id" });
             var courseRepository= new CourseRepository(_context);
             return View(CourseViewModel.FromEntityList(courseRepository.Search(term, searchFieldName, page)));
         }
@@ -145,7 +146,7 @@ namespace SmartLMS.WebUI.Controllers
 
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
-                    TempData["Message"] = "Course created";
+                    TempData["Message"] = Resource.CourseCreatedToastrMessage;
                     return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)
@@ -168,7 +169,6 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult SaveImage()
         {
             var uploader = new ImageUploader();
-            var courseRepository = new CourseRepository(_context);
             var uploadResult = uploader.Upload(Request.Files[0]);
             return Json(uploadResult);
         }
@@ -263,7 +263,7 @@ namespace SmartLMS.WebUI.Controllers
 
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
-                    TempData["Message"] = "Course updated";
+                    TempData["Message"] = Resource.CourseUpdatedToastrMessage;
                     return RedirectToAction("IndexAdmin");
                 }
                 catch (Exception ex)

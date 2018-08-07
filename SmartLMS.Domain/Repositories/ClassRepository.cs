@@ -1,13 +1,14 @@
 ﻿using Carubbi.GenericRepository;
+using Carubbi.Utils.Data;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.History;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Carubbi.Utils.Data;
 
 namespace SmartLMS.Domain.Repositories
 {
@@ -123,11 +124,11 @@ namespace SmartLMS.Domain.Repositories
         {
             var repo = new GenericRepository<Class>(_context);
             var query = new SearchQuery<Class>();
-            query.AddFilter(c => (searchFieldName == "Name" && c.Name.Contains(term)) ||
+            query.AddFilter(c => (searchFieldName == Resource.ClassNameFieldName && c.Name.Contains(term)) ||
                                  (searchFieldName == "Id" && c.Id.ToString().Contains(term)) ||
-                                 (searchFieldName == "Knowledge Area" && c.Course.Subject.KnowledgeArea.Name.Contains(term)) ||
-                                 (searchFieldName == "Subject" && c.Course.Subject.Name.Contains(term)) ||
-                                 (searchFieldName == "Course" && c.Course.Name.Contains(term)) ||
+                                 (searchFieldName == Resource.KnowledgeAreaName && c.Course.Subject.KnowledgeArea.Name.Contains(term)) ||
+                                 (searchFieldName == Resource.SubjectName && c.Course.Subject.Name.Contains(term)) ||
+                                 (searchFieldName == Resource.CourseName && c.Course.Name.Contains(term)) ||
                                     string.IsNullOrEmpty(searchFieldName));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Class>("Course.Subject.KnowledgeArea.Order, Course.Subject.Order, Course.Order , Order"));

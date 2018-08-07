@@ -61,11 +61,128 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        public static string AboutMenuItem {
+            get {
+                return ResourceManager.GetString("AboutMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About Gnatta Trainning Tool....
+        /// </summary>
+        public static string AboutText {
+            get {
+                return ResourceManager.GetString("AboutText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About Gnatta Trainning Tool.
+        /// </summary>
+        public static string AboutTitle {
+            get {
+                return ResourceManager.GetString("AboutTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access History.
+        /// </summary>
+        public static string AccessHistoryMenuItem {
+            get {
+                return ResourceManager.GetString("AccessHistoryMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string AccessTypeAll {
+            get {
+                return ResourceManager.GetString("AccessTypeAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class.
+        /// </summary>
+        public static string AccessTypeClass {
+            get {
+                return ResourceManager.GetString("AccessTypeClass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access Type.
+        /// </summary>
+        public static string AccessTypeLabel {
+            get {
+                return ResourceManager.GetString("AccessTypeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Support Material.
+        /// </summary>
+        public static string AccessTypeSupportMaterial {
+            get {
+                return ResourceManager.GetString("AccessTypeSupportMaterial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        public static string ActiveFieldName {
+            get {
+                return ResourceManager.GetString("ActiveFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to type the term you want to find.
+        /// </summary>
+        public static string AdminSearchText {
+            get {
+                return ResourceManager.GetString("AdminSearchText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is another user to this login.
+        /// </summary>
+        public static string AnotherUserToThisLoginException {
+            get {
+                return ResourceManager.GetString("AnotherUserToThisLoginException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back.
+        /// </summary>
+        public static string BackButton {
+            get {
+                return ResourceManager.GetString("BackButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back to index.
         /// </summary>
         public static string BackToIndex {
             get {
                 return ResourceManager.GetString("BackToIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change password.
+        /// </summary>
+        public static string ChangePasswordMenuItem {
+            get {
+                return ResourceManager.GetString("ChangePasswordMenuItem", resourceCulture);
             }
         }
         
@@ -97,11 +214,29 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string ClassNameFieldName {
+            get {
+                return ResourceManager.GetString("ClassNameFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Classes.
         /// </summary>
         public static string ClassPlural {
             get {
                 return ResourceManager.GetString("ClassPlural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Classrooms.
+        /// </summary>
+        public static string ClassroomAdminMenuItem {
+            get {
+                return ResourceManager.GetString("ClassroomAdminMenuItem", resourceCulture);
             }
         }
         
@@ -115,6 +250,24 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string ClassroomNameFieldName {
+            get {
+                return ResourceManager.GetString("ClassroomNameFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Classroom.
+        /// </summary>
+        public static string ClassroomsMenuItem {
+            get {
+                return ResourceManager.GetString("ClassroomsMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Classroom updated.
         /// </summary>
         public static string ClassroomUpdatedToastrMessage {
@@ -124,11 +277,47 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string CloseButton {
+            get {
+                return ResourceManager.GetString("CloseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Concluded.
+        /// </summary>
+        public static string ConcludedLabel {
+            get {
+                return ResourceManager.GetString("ConcludedLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Content management.
+        /// </summary>
+        public static string ContentManagementSection {
+            get {
+                return ResourceManager.GetString("ContentManagementSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Content management.
         /// </summary>
         public static string ContentManagementToastrTitle {
             get {
                 return ResourceManager.GetString("ContentManagementToastrTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Course created.
+        /// </summary>
+        public static string CourseCreatedToastrMessage {
+            get {
+                return ResourceManager.GetString("CourseCreatedToastrMessage", resourceCulture);
             }
         }
         
@@ -151,6 +340,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string CourseNameFieldName {
+            get {
+                return ResourceManager.GetString("CourseNameFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This course is not available at this moment.
         /// </summary>
         public static string CourseNotAvailableToastrMessage {
@@ -169,11 +367,124 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Course updated.
+        /// </summary>
+        public static string CourseUpdatedToastrMessage {
+            get {
+                return ResourceManager.GetString("CourseUpdatedToastrMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created at.
+        /// </summary>
+        public static string CreatedAtFieldName {
+            get {
+                return ResourceManager.GetString("CreatedAtFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a new teacher.
+        /// </summary>
+        public static string CreateTeacherPageTitle {
+            get {
+                return ResourceManager.GetString("CreateTeacherPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div&gt;
+        ///Hi {username}, your Gnatta Training Tool credendials are:
+        ///&lt;/div&gt;
+        ///&lt;div&gt;Login: {login}&lt;/div&gt;&lt;div&gt;Password: {password}.&lt;/div&gt;
+        ///&lt;div&gt;Access the platform by the following link &lt;a href=&apos;{link}&apos;&gt;here&lt;/a&gt;.&lt;/div&gt;
+        ///&lt;div&gt;Regards, Gnatta Training Tool Team&lt;/div&gt;.
+        /// </summary>
+        public static string CreatingUserNotificationEmailBody {
+            get {
+                return ResourceManager.GetString("CreatingUserNotificationEmailBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to Gnatta Training Tool.
+        /// </summary>
+        public static string CreatingUserNotificationEmailSubject {
+            get {
+                return ResourceManager.GetString("CreatingUserNotificationEmailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete the subject.
+        /// </summary>
+        public static string DeleteSubjectConfirmationText {
+            get {
+                return ResourceManager.GetString("DeleteSubjectConfirmationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete the teacher.
+        /// </summary>
+        public static string DeleteTeacherConfirmationText {
+            get {
+                return ResourceManager.GetString("DeleteTeacherConfirmationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Teacher.
+        /// </summary>
+        public static string DeleteTeacherConfirmationTitle {
+            get {
+                return ResourceManager.GetString("DeleteTeacherConfirmationTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hi {username}, how are you? &lt;br /&gt; The class &lt;a href=&apos;{link}/Class/Watch/{classId}&apos;&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href=&apos;{link}/Class/Index/{courseId}&apos;&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Gnatta Training Tool Team.
+        /// </summary>
+        public static string DeliveredClassNotificationEmailBody {
+            get {
+                return ResourceManager.GetString("DeliveredClassNotificationEmailBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gnatta Training Tool - New available class.
+        /// </summary>
+        public static string DeliveredClassNotificationEmailSubject {
+            get {
+                return ResourceManager.GetString("DeliveredClassNotificationEmailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End date.
+        /// </summary>
+        public static string EndDateLabel {
+            get {
+                return ResourceManager.GetString("EndDateLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Support Material.
         /// </summary>
         public static string FileName {
             get {
                 return ResourceManager.GetString("FileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string FilterButton {
+            get {
+                return ResourceManager.GetString("FilterButton", resourceCulture);
             }
         }
         
@@ -196,6 +507,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string KnowledgeAreaNameFieldName {
+            get {
+                return ResourceManager.GetString("KnowledgeAreaNameFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Knowledge Areas.
         /// </summary>
         public static string KnowledgeAreaPlural {
@@ -210,6 +530,33 @@ namespace SmartLMS.Domain.Resources {
         public static string LastClassesTitle {
             get {
                 return ResourceManager.GetString("LastClassesTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out.
+        /// </summary>
+        public static string LogoutMenuItem {
+            get {
+                return ResourceManager.GetString("LogoutMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Management.
+        /// </summary>
+        public static string ManagementAdminMenuItem {
+            get {
+                return ResourceManager.GetString("ManagementAdminMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monitoring.
+        /// </summary>
+        public static string MonitoringMenuSectionMenuDivider {
+            get {
+                return ResourceManager.GetString("MonitoringMenuSectionMenuDivider", resourceCulture);
             }
         }
         
@@ -232,11 +579,74 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No subjects found.
+        /// </summary>
+        public static string NoSubjects {
+            get {
+                return ResourceManager.GetString("NoSubjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You are not allowed to watch this class.
         /// </summary>
         public static string NotAllowedWatchClassToastrMessage {
             get {
                 return ResourceManager.GetString("NotAllowedWatchClassToastrMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No teachers found.
+        /// </summary>
+        public static string NoTeachers {
+            get {
+                return ResourceManager.GetString("NoTeachers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notices.
+        /// </summary>
+        public static string NoticeMenuItem {
+            get {
+                return ResourceManager.GetString("NoticeMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string NoticeTypeAll {
+            get {
+                return ResourceManager.GetString("NoticeTypeAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Classroom.
+        /// </summary>
+        public static string NoticeTypeClassroom {
+            get {
+                return ResourceManager.GetString("NoticeTypeClassroom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Personal.
+        /// </summary>
+        public static string NoticeTypePersonal {
+            get {
+                return ResourceManager.GetString("NoticeTypePersonal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Public.
+        /// </summary>
+        public static string NoticeTypePublic {
+            get {
+                return ResourceManager.GetString("NoticeTypePublic", resourceCulture);
             }
         }
         
@@ -250,11 +660,113 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Order.
+        /// </summary>
+        public static string OrderFieldName {
+            get {
+                return ResourceManager.GetString("OrderFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div&gt;Hi {username}, your Gnatta Training Tool credendials are:&lt;/div&gt;
+        ///&lt;div&gt;
+        ///Login: {login}.
+        ///&lt;/div&gt;
+        ///&lt;div&gt;
+        ///Password: {password}
+        ///&lt;/div&gt;
+        ///&lt;div&gt;
+        ///Access the platform by the following link &lt;a href=&apos;{link}&apos;&gt;here&lt;/a&gt;.
+        ///&lt;/div&gt;
+        ///&lt;div&gt;
+        ///Regards, Gnatta Training Tool Team
+        ///&lt;/div&gt;.
+        /// </summary>
+        public static string PasswordRecoveryEmailBody {
+            get {
+                return ResourceManager.GetString("PasswordRecoveryEmailBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gnatta Training Tool - Password Recovery.
+        /// </summary>
+        public static string PasswordRecoveryEmailSubject {
+            get {
+                return ResourceManager.GetString("PasswordRecoveryEmailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your password was updated.
+        /// </summary>
+        public static string PasswordUpdatedNoticeMessage {
+            get {
+                return ResourceManager.GetString("PasswordUpdatedNoticeMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password updated!.
         /// </summary>
         public static string PasswordUpdatedToastrMessage {
             get {
                 return ResourceManager.GetString("PasswordUpdatedToastrMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to People management.
+        /// </summary>
+        public static string PeopleManagementSection {
+            get {
+                return ResourceManager.GetString("PeopleManagementSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to from.
+        /// </summary>
+        public static string PersonalInfoUpdatedFrom {
+            get {
+                return ResourceManager.GetString("PersonalInfoUpdatedFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Personal info updated.
+        /// </summary>
+        public static string PersonalInfoUpdatedTitle {
+            get {
+                return ResourceManager.GetString("PersonalInfoUpdatedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to to.
+        /// </summary>
+        public static string PersonalInfoUpdatedTo {
+            get {
+                return ResourceManager.GetString("PersonalInfoUpdatedTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query filters.
+        /// </summary>
+        public static string QueryFiltersTitle {
+            get {
+                return ResourceManager.GetString("QueryFiltersTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search by.
+        /// </summary>
+        public static string SearchByLabel {
+            get {
+                return ResourceManager.GetString("SearchByLabel", resourceCulture);
             }
         }
         
@@ -349,6 +861,60 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start date.
+        /// </summary>
+        public static string StartDateLabel {
+            get {
+                return ResourceManager.GetString("StartDateLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Student access.
+        /// </summary>
+        public static string StudentAccessMenuItem {
+            get {
+                return ResourceManager.GetString("StudentAccessMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Students.
+        /// </summary>
+        public static string StudentAdminMenuItem {
+            get {
+                return ResourceManager.GetString("StudentAdminMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string StudentEmailFieldName {
+            get {
+                return ResourceManager.GetString("StudentEmailFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string StudentNameFieldName {
+            get {
+                return ResourceManager.GetString("StudentNameFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subject deleted!.
+        /// </summary>
+        public static string SubjectDeletedToastrMessage {
+            get {
+                return ResourceManager.GetString("SubjectDeletedToastrMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subject Index.
         /// </summary>
         public static string SubjectIndex {
@@ -358,11 +924,38 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Subject management.
+        /// </summary>
+        public static string SubjectManagementPageTitle {
+            get {
+                return ResourceManager.GetString("SubjectManagementPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subject.
         /// </summary>
         public static string SubjectName {
             get {
                 return ResourceManager.GetString("SubjectName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string SubjectNameFieldName {
+            get {
+                return ResourceManager.GetString("SubjectNameFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This subject is not available at this moment.
+        /// </summary>
+        public static string SubjectNotAvailableToastrMessage {
+            get {
+                return ResourceManager.GetString("SubjectNotAvailableToastrMessage", resourceCulture);
             }
         }
         
@@ -385,11 +978,110 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;div&gt;&lt;h1&gt;Talk to us - Gnatta Trainning Tool&lt;/h1&gt;
+        ///&lt;dl&gt;
+        ///&lt;dt&gt;Name:&lt;/dt&gt;
+        /// &lt;dd&gt;{name}&lt;/dd&gt;
+        ///&lt;dt&gt;Email:&lt;/dt&gt;
+        ///&lt;dd&gt;{email}&lt;/dd&gt;
+        ///&lt;dt&gt;Message:&lt;/dt&gt;
+        ///&lt;dd&gt;{message}&lt;/dd&gt;
+        ///&lt;/dl&gt;
+        ///&lt;/div&gt;.
+        /// </summary>
+        public static string TalkToUsEmailBody {
+            get {
+                return ResourceManager.GetString("TalkToUsEmailBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gnatta Training Tool - Talk to Us.
+        /// </summary>
+        public static string TalkToUsEmailSubject {
+            get {
+                return ResourceManager.GetString("TalkToUsEmailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Talk to us.
+        /// </summary>
+        public static string TalkToUsMenuItem {
+            get {
+                return ResourceManager.GetString("TalkToUsMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Talk to us.
+        /// </summary>
+        public static string TalkToUsTitle {
+            get {
+                return ResourceManager.GetString("TalkToUsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Teacher added.
         /// </summary>
         public static string TeacherAddedToastrMessage {
             get {
                 return ResourceManager.GetString("TeacherAddedToastrMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teachers.
+        /// </summary>
+        public static string TeacherAdminMenuItem {
+            get {
+                return ResourceManager.GetString("TeacherAdminMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This teacher has classes associated to him.
+        /// </summary>
+        public static string TeacherClassesAssociationException {
+            get {
+                return ResourceManager.GetString("TeacherClassesAssociationException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teacher deleted!.
+        /// </summary>
+        public static string TeacherDeletedToasterMessage {
+            get {
+                return ResourceManager.GetString("TeacherDeletedToasterMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string TeacherEmailFieldName {
+            get {
+                return ResourceManager.GetString("TeacherEmailFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This teacher is in charge of some courses.
+        /// </summary>
+        public static string TeacherInChargeException {
+            get {
+                return ResourceManager.GetString("TeacherInChargeException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teacher management.
+        /// </summary>
+        public static string TeacherManagementPageTitle {
+            get {
+                return ResourceManager.GetString("TeacherManagementPageTitle", resourceCulture);
             }
         }
         
@@ -403,11 +1095,29 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string TeacherNameFieldName {
+            get {
+                return ResourceManager.GetString("TeacherNameFieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Teacher updated.
         /// </summary>
         public static string TeacherUpdatedToastrMessage {
             get {
                 return ResourceManager.GetString("TeacherUpdatedToastrMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Teacher.
+        /// </summary>
+        public static string TeacherUpdatePageTitle {
+            get {
+                return ResourceManager.GetString("TeacherUpdatePageTitle", resourceCulture);
             }
         }
         
@@ -426,6 +1136,15 @@ namespace SmartLMS.Domain.Resources {
         public static string WatchedClassesTitle {
             get {
                 return ResourceManager.GetString("WatchedClassesTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to Gnatta Traning Tool! Have a productive study!.
+        /// </summary>
+        public static string WelcomeNoticeMessage {
+            get {
+                return ResourceManager.GetString("WelcomeNoticeMessage", resourceCulture);
             }
         }
         

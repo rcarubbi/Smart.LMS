@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel;
+using SmartLMS.Domain.Attributes;
 
 namespace SmartLMS.Domain.Services
 {
     public enum AccessType
     {
-        [Description("All")]
+        [LocalizedDescription("AccessTypeAll")]
         All,
-        [Description("Class")]
+        [LocalizedDescription("AccessTypeClass")]
         Class,
-        [Description("Support material")]
+        [LocalizedDescription("AccessTypeSupportMaterial")]
         File
             
     }

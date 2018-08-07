@@ -1,16 +1,17 @@
 ﻿using System.ComponentModel;
+using SmartLMS.Domain.Attributes;
 
 namespace SmartLMS.Domain.Services
 {
     public enum NoticeType : int
     {
-        [Description("All")]
+        [LocalizedDescription("NoticeTypeAll")]
         All,
-        [Description("Public")]
+        [LocalizedDescription("NoticeTypePublic")]
         Public,
-        [Description("Classroom")]
+        [LocalizedDescription("NoticeTypeClassroom")]
         Classroom,
-        [Description("Personal")]
+        [LocalizedDescription("NoticeTypePersonal")]
         Personal
     }
 }

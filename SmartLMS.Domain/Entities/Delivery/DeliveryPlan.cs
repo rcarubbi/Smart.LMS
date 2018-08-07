@@ -79,9 +79,9 @@ namespace SmartLMS.Domain.Entities.Delivery
 
         private bool CheckDeliveryStatus(IContext contexto, IMailSender sender, Class klass)
         {
-            DateTime? dataUltimaLiberacao = AvailableClasses.OrderByDescending(x => x.DeliveryDate).Select(x => x.DeliveryDate).FirstOrDefault();
+            DateTime? lastDeliveryDate = AvailableClasses.OrderByDescending(x => x.DeliveryDate).Select(x => x.DeliveryDate).FirstOrDefault();
 
-            if ((dataUltimaLiberacao ?? StartDate).AddDays(klass.DeliveryDays).Date > DateTime.Today) return false;
+            if ((lastDeliveryDate.Value).AddDays(klass.DeliveryDays).Date > DateTime.Today) return false;
             DeliverClass(contexto, sender, klass);
              
             return true;
