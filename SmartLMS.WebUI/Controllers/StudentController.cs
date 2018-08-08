@@ -10,6 +10,7 @@ using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
+using SmartLMS.Domain.Resources;
 using SmartLMS.Domain.Services;
 
 namespace SmartLMS.WebUI.Controllers
@@ -43,7 +44,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
             var userRepository = new UserRepository(_context);
-            ViewBag.SearchFields = new SelectList(new[] { "Name", "Email", "Id" });
+            ViewBag.SearchFields = new SelectList(new[] {Resource.StudentNameFieldName, Resource.StudentEmailFieldName, "Id" });
             return View(UserViewModel.FromEntityList(userRepository.ListStudents(term, searchFieldName, page)));
         }
 
@@ -117,7 +118,7 @@ namespace SmartLMS.WebUI.Controllers
                         tx.Complete();
                     }
                     TempData["MessageType"] = "success";
-                    TempData["MessageTitle"] = "Students management";
+                    TempData["MessageTitle"] = Resource.StudentManagementToastrTitle;
                     TempData["Message"] = "Student added";
 
                     return RedirectToAction("IndexAdmin");
@@ -125,7 +126,7 @@ namespace SmartLMS.WebUI.Controllers
                 catch (Exception ex)
                 {
                     TempData["MessageType"] = "error";
-                    TempData["MessageTitle"] = "Students management";
+                    TempData["MessageTitle"] = Resource.StudentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
             }
@@ -173,14 +174,14 @@ namespace SmartLMS.WebUI.Controllers
                     _loggedUser);
 
                 TempData["MessageType"] = "success";
-                TempData["MessageTitle"] = "Students management";
+                TempData["MessageTitle"] = Resource.StudentManagementToastrTitle;
                 TempData["Message"] = "Student updated";
                 return RedirectToAction("IndexAdmin");
             }
             catch (Exception ex)
             {
                 TempData["MessageType"] = "error";
-                TempData["MessageTitle"] = "Students management";
+                TempData["MessageTitle"] = Resource.StudentManagementToastrTitle;
                 TempData["Message"] = ex.Message;
             }
             return View(student);

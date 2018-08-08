@@ -1,12 +1,13 @@
-﻿@model SmartLMS.WebUI.Models.ClassroomViewModel
+﻿@using SmartLMS.Domain.Resources
+@model SmartLMS.WebUI.Models.ClassroomViewModel
 
 @{
-    ViewBag.Title = "Classroom update";
+    ViewBag.Title = Resource.ClassroomUpdatePageTitle;
 }
 
 <div class="panel panel-success">
     <div class="panel-heading">
-        Classroom update
+        @Resource.ClassroomUpdatePageTitle
     </div>
     <div class="panel-body">
         @using (Html.BeginForm())
@@ -15,14 +16,14 @@
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Active, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         <div class="checkbox">
                             @Html.EditorFor(model => model.Active)
@@ -31,14 +32,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.CourseIds, htmlAttributes: new { @class = "control-label col-md-2", id= "CourseIds" })
+                    @Html.LabelFor(model => model.CourseIds,  new { @class = "control-label col-md-2", id= "CourseIds" })
                     <div class="col-md-10">
                         @Html.ListBoxFor(model => model.CourseIds, ViewBag.Courses as SelectList, new { @class = "multiselect", multiple = "multiple", data_multiselect_filter = false, data_multiselect_group = false })
                         @Html.ValidationMessageFor(model => model.CourseIds, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.StudentIds, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.StudentIds,  new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.ListBoxFor(model => model.StudentIds, ViewBag.Students as SelectList, new { @class = "multiselect", multiple = "multiple", data_multiselect_filter = true, data_multiselect_group = false })
                         @Html.ValidationMessageFor(model => model.StudentIds, "", new { @class = "text-danger" })
@@ -49,7 +50,7 @@
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fa fa-save"></i>
                         </button>
-                        @Html.ActionLink("Back", "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                        @Html.ActionLink(Resource.BackButton, "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
                     </div>
                 </div>
             </div>

@@ -63,7 +63,7 @@
 </div>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title">Support material</h3>
+        <h3 class="panel-title">@Resource.FilePlural</h3>
     </div>
     <div class="panel-body panel-body-no-margin">
         <div class="bs-component">
@@ -89,7 +89,7 @@
 </div>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title">Discussion</h3>
+        <h3 class="panel-title">@Resource.CommentsTitle</h3>
     </div>
     <div class="panel-body panel-body-no-margin">
         @Html.Partial("_CommentForm", new SmartLMS.WebUI.Models.CommentViewModel() { ClassId = Model.Id })
@@ -98,7 +98,7 @@
             <div class="list-group" id="comments-list">
 
             </div>
-            <div id="no-results" class="text-primary text-center" style="display:none;">No more comments to this class.</div>
+            <div id="no-results" class="text-primary text-center" style="display:none;">@Resource.NoMoreComments</div>
         </div>
     </div>
 </div>
@@ -107,7 +107,7 @@
 <div class="col-md-4">
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h3 class="panel-title">Next classes</h3>
+            <h3 class="panel-title">@Resource.NextClasses</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
             @Html.Action("ClassListSmall", new { Id = Model.CourseId, CurrentClassId = Model.Id })

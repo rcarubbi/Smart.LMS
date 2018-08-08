@@ -1,4 +1,5 @@
-﻿@model IEnumerable<SmartLMS.WebUI.Models.KnowledgeAreaViewModel>
+﻿@using SmartLMS.Domain.Resources
+@model IEnumerable<SmartLMS.WebUI.Models.KnowledgeAreaViewModel>
 @{
     ViewBag.Title = "Home";
     
@@ -21,7 +22,7 @@
         <div class="card" style="min-height: 295px;">
             <div class="content">
                 <h6 class="panel-title text-primary">
-                    <strong>Select a knowledge area</strong>
+                    <strong>@Resource.SelectKnowledgeArea</strong>
                 </h6>
                 <div class="card-body knowledge-areas-bar">
                     <ul class="nav nav-pills" role="tablist">
@@ -46,7 +47,7 @@
                     </ul>
                 </div>
                 <div class="card-footer">
-                    <h6 class="text-primary"><strong>and check below the courses by subject</strong></h6>
+                    <h6 class="text-primary"><strong>@Resource.CheckCoursesBySubjectMessage</strong></h6>
                 </div>
             </div>
         </div>
@@ -82,7 +83,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="content">
-                    <h4 class="text-primary"><i class="fa fa-exclamation-circle"></i> Stay on top of the news through the quick access panels</h4>
+                    <h4 class="text-primary"><i class="fa fa-exclamation-circle"></i> @Resource.QuickPanelsMessage</h4>
                 </div>
             </div>
         </div>
@@ -160,7 +161,7 @@
                 $("#search-results-container").slideUp();
                 proxy.contextualSearch(contextualSearch.Term, contextualSearch.CurrentPage)
                     .done($private.showResults)
-                    .fail(function () { console.log("Erro"); });
+                    .fail(function () { console.log("Error"); });
             };
 
 

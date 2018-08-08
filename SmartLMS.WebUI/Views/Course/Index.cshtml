@@ -13,7 +13,7 @@
 <div class="col-md-4">
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h3 class="panel-title">See also other @(Resource.SubjectPlural.ToLower()) for this @Resource.KnowledgeAreaName.ToLower()</h3>
+            <h3 class="panel-title">@Resource.SeeOtherSubjects</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
             @Html.DropDownList("otherSubjects", ViewBag.OtherSubjects as SelectList, Resource.SelectSubject, new { @class= "form-control dropdownjs" })

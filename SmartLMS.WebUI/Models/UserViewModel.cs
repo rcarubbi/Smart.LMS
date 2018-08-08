@@ -3,48 +3,52 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
+using SmartLMS.Domain.Attributes;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Models
 {
     public class UserViewModel
     {
-        [Display(Name = "Active")]
+        [LocalizedDisplay("ActiveFieldName")]
         public bool Active { get; set; }
 
-        [Required(ErrorMessage = "Email required")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "EmailRequired")]
         [DataType(DataType.EmailAddress)]
         [EmailAddress(ErrorMessage = "Invalid email")]
         public string Email { get; set; }
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "Login required")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "LoginRequired")]
         [DataType(DataType.EmailAddress)]
-        [EmailAddress(ErrorMessage = "Invalid login")]
+        [EmailAddress(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidLogin")]
         public string Login { get; set; }
 
-        [Required(ErrorMessage = "Select a classroom")]
-        [Display(Name = "Classroom")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "ClassroomRequired")]
 
+        [LocalizedDisplay("ClassroomName")]
         public Guid ClassroomId { get; set; }
 
-        [Required(ErrorMessage = "Name required")]
-        [Display(Name = "Name")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "UserNameRequired")]
+        [LocalizedDisplay("UserNameFieldName")]
         public string Name { get; set; }
 
+       
         public DateTime CreatedAt { get; set; }
 
         public string RoleName { get; set; }
 
-        [Required(ErrorMessage = "Password required")]
-        [Display(Name = "Password")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "UserPasswordRequired")]
+        [LocalizedDisplay("PasswordFieldName")]
+
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Compare("Password", ErrorMessage = "Password doesn't match")]
+        [Compare("Password", ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "PasswordDoenstMatch")]
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Password confirmation required")]
-        [Display(Name = "Password confirmation")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "PasswordConfirmationRequired")]
+        [LocalizedDisplay("PasswordConfirmationFieldName")]
         public string ConfirmPassword { get; set; }
 
         internal static UserViewModel FromEntity(User user)

@@ -1,12 +1,13 @@
-﻿@model ClassViewModel
+﻿@using SmartLMS.Domain.Resources
+@model ClassViewModel
 
 @{
-    ViewBag.Title = "Class Update";
+    ViewBag.Title = Resource.ClassUpdatePageTitle;
 }
 
 <div class="panel panel-success">
     <div class="panel-heading">
-        Class Update
+        @Resource.ClassUpdatePageTitle
     </div>
     <div class="panel-body">
         @using (Html.BeginForm())
@@ -17,35 +18,35 @@
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Order, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Order, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.DeliveryDays, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.DeliveryDays, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.DeliveryDays, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.DeliveryDays, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.CourseId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.CourseId, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.CourseId, ViewBag.Courses as SelectList, "-- Select --", new { @class = "form-control dropdownjs" })
+                        @Html.DropDownListFor(model => model.CourseId, ViewBag.Courses as SelectList, Resource.SelectCourse, new { @class = "form-control dropdownjs" })
                         @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Active, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         <div class="checkbox">
                             @Html.EditorFor(model => model.Active)
@@ -54,21 +55,21 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.TeacherId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.TeacherId, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.TeacherId, ViewBag.Teachers as SelectList, "-- Select --", new { @class = "form-control dropdownjs" })
+                        @Html.DropDownListFor(model => model.TeacherId, ViewBag.Teachers as SelectList, Resource.SelectTeacher, new { @class = "form-control dropdownjs" })
                         @Html.ValidationMessageFor(model => model.TeacherId, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Content, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ContentType, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.ContentType, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.DropDownListFor(model => model.ContentType, ViewBag.ContentTypes as SelectList, "-- Select --", new { @class = "form-control dropdownjs" })
                         @Html.ValidationMessageFor(model => model.ContentType, "", new { @class = "text-danger" })
@@ -79,7 +80,7 @@
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fa fa-save"></i>
                         </button>
-                        <a href="@ViewBag.BackURL" class="btn btn-simple btn-sm btn-default">Back</a>
+                        <a href="@ViewBag.BackURL" class="btn btn-simple btn-sm btn-default">@Resource.BackButton</a>
                     </div>
                 </div>
             </div>
@@ -93,7 +94,7 @@
                              @Html.HiddenFor(x => x.Id)
                              <div class="fallback">
                                 <input name="file" type="file" />
-                                <input type="submit" value="Send Image" />
+                                <input type="submit" value="@Resource.SendButton" />
                             </div>
                         </form>
                     </div>
@@ -151,10 +152,10 @@
                 },
 
                 previewTemplate: $("#dz-template-preview").html(),
-                dictDefaultMessage: "Drag and drop the documents here or just click to select them",
+                dictDefaultMessage: "@Resource.DragAndDropFileMessage",
                 addRemoveLinks: true,
-                dictRemoveFile: "Delete",
-                dictCancelUpload: "Cancel"
+                dictRemoveFile: "@Resource.DeleteFileButton",
+                dictCancelUpload: "@Resource.CancelFileButton"
             };
 
             $private.deleteSupporMaterial = function (id, fileName) {

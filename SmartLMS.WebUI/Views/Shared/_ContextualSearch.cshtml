@@ -1,10 +1,11 @@
-﻿<div class="row">
+﻿@using SmartLMS.Domain.Resources
+<div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="content">
 
                 <div class="form-group label-floating is-empty">
-                    <label class="control-label" for="q">What do you want to learn?</label>
+                    <label class="control-label" for="q">@Resource.SearchBarText</label>
                     <div class="input-group" style="display:block">
                         <div class="row">
                             <div class="col-md-11 col-sm-10 col-xs-9">
@@ -29,12 +30,12 @@
 </div>
 <script id="search-results-template" type="text/x-handlebars-template">
     {{#equals pageCount 0}}
-    <h4>Your search did not return any results for the term <strong>"{{term}}"</strong> </h4>
+    <h4>@Resource.NoSearchResultsMessage  </h4>
     {{else}}
     {{#equals pageCount 1}}
-    <h4>Has been found <strong>one</strong> page for the term <strong>"{{term}}"</strong> </h4>
+    <h4>@Resource.OnePageResultMessage </h4>
     {{else}}
-    <h4>Have been found <strong>{{pageCount}}</strong> pages for the term <strong>"{{term}}"</strong></h4>
+    <h4>@Resource.ManyPagesResultMessage</h4>
     {{/equals}}
     {{/equals}}
     <div class="bs-component">
@@ -59,7 +60,7 @@
     <div class="text-center">
         <ul class="pagination pagination-primary">
             {{#if hasPrevious}}
-            <li><a class="contextual-search-pagination-previous" href="javascript:void(0);">&lt; previous</a></li>
+            <li><a class="contextual-search-pagination-previous" href="javascript:void(0);">@Resource.PreviousPage</a></li>
             {{/if}}
 
             {{#for minPage maxPage 1}}
@@ -72,7 +73,7 @@
                 </li>
             {{/for}}
             {{#if hasNext}}
-            <li><a class="contextual-search-pagination-next" href="javascript:void(0);">next &gt;</a></li>
+            <li><a class="contextual-search-pagination-next" href="javascript:void(0);">@Resource.NextPage</a></li>
             {{/if}}
         </ul>
     </div>

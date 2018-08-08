@@ -1,6 +1,7 @@
-﻿@model Carubbi.GenericRepository.PagedListResult<ClassroomViewModel>
+﻿@using SmartLMS.Domain.Resources
+@model Carubbi.GenericRepository.PagedListResult<ClassroomViewModel>
 @{
-    ViewBag.Title = "Classroom management";
+    ViewBag.Title = Resource.ClassroomManagementPageTitle;
 }
 @section styles {
     <style type="text/css">
@@ -15,7 +16,7 @@
 }
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Classroom list
+        @Resource.ClassroomManagementPageTitle
     </div>
     <div class="panel-body">
         <div class="row">
@@ -25,12 +26,12 @@
             <div class="col-md-6 pull-right">
                 <div class="col-md-3">
                     <div class="form-group label-static is-empty">
-                        <label for="SearchField" class="control-label">Search by</label>
-                        @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new { @class = "form-control dropdownjs" })
+                        <label for="SearchField" class="control-label">@Resource.SearchByLabel</label>
+                        @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new { id= "SearchField", @class = "form-control dropdownjs" })
                     </div>
                 </div>
                 <div class="form-group label-floating is-empty col-md-9">
-                    <label class="control-label" for="q">type the term you want to find</label>
+                    <label class="control-label" for="q">@Resource.AdminSearchText</label>
                     <div class="input-group" style="display:block">
                         <div class="row">
                             <div class="col-md-10">
@@ -50,16 +51,16 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayName("Name")
+                        @Html.DisplayName(Resource.ClassroomNameFieldName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Active")
+                        @Html.DisplayName(Resource.ActiveFieldName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Created at")
+                        @Html.DisplayName(Resource.CreatedAtFieldName)
                     </th>
-                    <th>@Html.DisplayName("Details")</th>
-                    <th>@Html.DisplayName("Edit/Delete")</th>
+                    <th>@Html.DisplayName(Resource.DetailsColumn)</th>
+                    <th>@Html.DisplayName(Resource.EditDeleteColumn)</th>
                 </tr>
             </thead>
             <tbody id="result-container">
@@ -78,13 +79,13 @@
                         </td>
                         <td>
                             <div href="javascript:void(0);" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
-                                <a class="btn btn-success btn-sm show-courses-button" data-id="@item.Id" data-name="@item.Name" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Courses">
+                                <a class="btn btn-success btn-sm show-courses-button" data-id="@item.Id" data-name="@item.Name" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.CoursePlural">
                                     <i class="material-icons">school</i>
                                 </a>
-                                <a href="javascript:void(0);" class="btn btn-warning btn-sm show-students-button" data-id="@item.Id " data-name="@item.Name" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Students">
+                                <a href="javascript:void(0);" class="btn btn-warning btn-sm show-students-button" data-id="@item.Id " data-name="@item.Name" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.StudentPlural">
                                     <i class="material-icons">group</i>
                                 </a>
-                                <a href="@Url.Action("Plans", new { ClassroomId = item.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Delivery plan">
+                                <a href="@Url.Action("Plans", new { ClassroomId = item.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.DeliveryPlanName">
                                     <i class="fa fa-calendar delivery-plan-button"></i>
                                 </a>
                             </div>
@@ -117,14 +118,14 @@
 </div>
 
 
-<div class="modal fade" id="deleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="Delete confirmation" aria-hidden="true">
+<div class="modal fade" id="deleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="@Resource.DeleteClassroomConfirmationTitle" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">Delete Classroom</h4>
+                <h4 class="modal-title">@Resource.DeleteClassroomConfirmationTitle</h4>
             </div>
             <div class="modal-body">
 
@@ -164,14 +165,14 @@
             </td>
             <td>
                 <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
-                    <a href="javascript:void(0);" class="btn btn-success btn-sm show-courses-button" data-id="{{Id}}" data-name="{{Name}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Courses" rel=tooltip>
+                    <a href="javascript:void(0);" class="btn btn-success btn-sm show-courses-button" data-id="{{Id}}" data-name="{{Name}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.CoursePlural" rel=tooltip>
                         <i class="material-icons">school</i>
                     </a>
-                    <a href="javascript:void(0);" class="btn btn-warning btn-sm show-students-button" data-id="{{Id}}" data-name="{{Name}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Students" rel=tooltip>
+                    <a href="javascript:void(0);" class="btn btn-warning btn-sm show-students-button" data-id="{{Id}}" data-name="{{Name}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.StudentPlural" rel=tooltip>
                         <i class="material-icons">group</i>
                     </a>
-                    <a href="@Url.Content("~/Classroom/Plans/"){{Id}}" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Delivery Plan" rel=tooltip>
-                        <i class="fa fa-calendar btn-planejamento"></i>
+                    <a href="@Url.Content("~/Classroom/Plans/"){{Id}}" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.DeliveryPlanName" rel=tooltip>
+                        <i class="fa fa-calendar delivery-plan-button"></i>
                     </a>
                 </div>
             </td>
@@ -190,7 +191,7 @@
         {{#equals Count 0}}
         <tr>
             <td colspan="5" class="text-center">
-                No classroom found
+                @Resource.NoClassroomAdmin
             </td>
         </tr>
         {{/equals}}
@@ -207,7 +208,7 @@
                 SmartLMS.Pagination.init({
                     onPageChanged: $private.changePage,
                 });
-                $private.SearchFieldName = "Name";
+                $private.SearchFieldName = "@Resource.ClassroomNameFieldName";
 
                 $("#SearchField").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
@@ -233,8 +234,8 @@
             $private.delete = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
                 SmartLMS.App.AddNotification({
-                    MessageTitle: "Classroom management",
-                    Message: "Classroom deleted!",
+                    MessageTitle: "@Resource.ClassroomManagementToastrTitle",
+                    Message: "@Resource.ClassroomDeletedToastrMessage",
                     MessageType: "error",
                 });
                 proxy.delete(id).done($private.search);
@@ -249,7 +250,7 @@
                 };
 
                 $("#deleteConfirmation").find(".modal-body").data("id", classroom.id);
-                $("#deleteConfirmation").find(".modal-body").html("<p>Do you really want to delete the classroom " + classroom.name + "?</p>");
+                $("#deleteConfirmation").find(".modal-body").html("<p>@Resource.DeleteClassroomConfirmationText " + classroom.name + "?</p>");
                 $("#deleteConfirmation").modal();
             };
 
@@ -260,7 +261,7 @@
                     id: $(this).data("id"),
                     name: $(this).data("name")
                 };
-                $("#students-list").find(".modal-title").text("Students subscribed in the classroom " + classroom.name);
+                $("#students-list").find(".modal-title").text("@Resource.StudentsInClassroomTitle " + classroom.name);
 
                 proxy.listStudents(classroom.id).done($private.showStudents);
 
@@ -278,7 +279,7 @@
                     id: $(this).data("id"),
                     name: $(this).data("name")
                 };
-                $("#courses-list").find(".modal-title").text("Included courses in the classroom " + classroom.name);
+                $("#courses-list").find(".modal-title").text("@Resource.CoursesInClassroomTitle " + classroom.name);
                 proxy.listCourses(classroom.id).done($private.showCourses);
             };
 

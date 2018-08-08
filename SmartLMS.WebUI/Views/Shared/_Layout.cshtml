@@ -1,4 +1,5 @@
 ﻿@using SmartLMS.Domain.Entities
+@using SmartLMS.Domain.Resources
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,14 +26,14 @@
     <link rel="apple-touch-icon" sizes="192x192" href="~/Content/icons/icon-192x192.png">
     <link rel="apple-touch-icon" sizes="384x384" href="~/Content/icons/icon-384x384.png">
     <link rel="apple-touch-icon" sizes="512x512" href="~/Content/icons/icon-512x512.png">
-    <link rel="icon" type="image/png"  sizes="72x72" href="~/Content/icons/icon-72x72.png">
-    <link rel="icon" type="image/png"  sizes="96x96" href="~/Content/icons/icon-96x96.png">
-    <link rel="icon" type="image/png"  sizes="128x128" href="~/Content/icons/icon-128x128.png">
-    <link rel="icon" type="image/png"  sizes="144x144" href="~/Content/icons/icon-144x144.png">
-    <link rel="icon" type="image/png"  sizes="152x152" href="~/Content/icons/icon-152x152.png">
-    <link rel="icon" type="image/png"  sizes="192x192" href="~/Content/icons/icon-192x192.png">
-    <link rel="icon" type="image/png"  sizes="384x384" href="~/Content/icons/icon-384x384.png">
-    <link rel="icon" type="image/png"  sizes="512x512" href="~/Content/icons/icon-512x512.png">
+    <link rel="icon" type="image/png" sizes="72x72" href="~/Content/icons/icon-72x72.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/Content/icons/icon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="~/Content/icons/icon-128x128.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="~/Content/icons/icon-144x144.png">
+    <link rel="icon" type="image/png" sizes="152x152" href="~/Content/icons/icon-152x152.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/Content/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="384x384" href="~/Content/icons/icon-384x384.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="~/Content/icons/icon-512x512.png">
     <link rel="manifest" href="/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="~/Content/icons/icon-144x144.png">
@@ -51,7 +52,7 @@
     {
         <link href="~/content/pace/green-minimal.css" rel="stylesheet" />
     }
-        <script>
+    <script>
         if (navigator.serviceWorker.controller) {
             console.log('[smartlms] active service worker found, no need to register');
         } else {
@@ -67,7 +68,7 @@
         SmartLMS.api = '@Parameter.BASE_URL';
 
 
-        </script>
+    </script>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/csscustom")
     @Scripts.Render("~/bundles/modernizr")
@@ -97,7 +98,7 @@
             </div>
             <div class="col-sm-9">
                 <div class="copyright pull-right">
-                    © 2016, made with <i class="fa fa-heart heart"></i> by <a href="http://www.github.com/rcarubbi" target="_blank">Raphael Carubbi</a>
+                    © 2016, @Resource.MadeWithLoveMessage <i class="fa fa-heart heart"></i> @Resource.MadeBy <a href="http://www.github.com/rcarubbi" target="_blank">Raphael Carubbi</a>
                 </div>
             </div>
         </div>
@@ -125,19 +126,21 @@
 
                 if ($(this).valid()) {
                     var sendMessageOriginalText = $("#talk-to-us-send-button").text();
-                    var sending = $("<img src='@Url.Content("~/Content/Img/loading-white.gif")'><span> Sending</span>");
+                    var sending = $("<img src='@Url.Content("~/Content/Img/loading-white.gif")'><span> @Resource.Sending</span>");
                     $("#talk-to-us-send-button").html(sending);
                     $("#talk-to-us-send-button").prop('disabled', true);
                     $.ajax({
                         url: this.action,
                         type: this.method,
                         data: $(this).serialize(),
-                        success: function (result) {
-                            if (result.Success)
-                                SmartLMS.App.toastr['success']('Your message has been sent!', 'Talk to us');
-                            else
-                                SmartLMS.App.toastr['error']('An error has been ocurried. Please try again    ', 'Talk to us');
-
+                        success: function(result) {
+                            if (result.Success) {
+                                SmartLMS.App.toastr['success']('@Resource.TalkToUsMessageSent',
+                                    '@Resource.TalkToUsToastrTitle');
+                            } else {
+                                SmartLMS.App.toastr['error']('@Resource.TalkToUsErrorMessage',
+                                '@Resource.TalkToUsToastrTitle');
+                            }
 
                             $("#talk-to-us-name-textbox").val("");
                             $("#talk-to-us-email-textbox").val("");
@@ -156,6 +159,6 @@
     @Html.Partial("_Alert")
     @Html.Partial("_About")
     @Html.Partial("_TalkToUs", new TalkToUsViewModel())
-   
+
 </body>
 </html>

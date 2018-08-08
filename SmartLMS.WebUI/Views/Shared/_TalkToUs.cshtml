@@ -18,7 +18,7 @@
                             <i class="material-icons">email</i>
                         </span>
                         <div class="form-group label-floating">
-                            <label class="control-label">Type your email</label>
+                            <label class="control-label">@Resource.TalkToUsEmailLabel</label>
                             @Html.TextBoxFor(x => x.Email, new { @class = "form-control", id = "talk-to-us-email-textbox", autocomplete = "email" })
                             @Html.ValidationMessageFor(x => x.Email)
                         </div>
@@ -28,7 +28,7 @@
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-group label-floating">
-                            <label class="control-label">Type your name</label>
+                            <label class="control-label">@Resource.TalkToUsNameLabel</label>
                             @Html.TextBoxFor(x => x.Name, new { @class = "form-control", id = "talk-to-us-name-textbox", autocomplete = "name" })
                             @Html.ValidationMessageFor(x => x.Name)
                         </div>
@@ -37,13 +37,13 @@
                         <span class="input-group-addon">
                             <i class="material-icons">message</i>
                         </span>
-                        @Html.TextAreaFor(model => model.Message, new { @class = "form-control", placeholder = "Type your message", rows = "5", id= "talk-to-us-message-textbox" })
+                        @Html.TextAreaFor(model => model.Message, new { @class = "form-control", placeholder = Resource.TalkToUsMessagePlaceholder, rows = "5", id= "talk-to-us-message-textbox" })
                         @Html.ValidationMessageFor(x => x.Message)
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="talk-to-us-send-button" class="btn btn-primary">Send</button>
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
+                    <button type="submit" id="talk-to-us-send-button" class="btn btn-primary">@Resource.SendButton</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">@Resource.CloseButton</button>
                 </div>
             }
         </div>

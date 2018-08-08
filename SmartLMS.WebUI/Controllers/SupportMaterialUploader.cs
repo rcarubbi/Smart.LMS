@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Web;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -36,7 +37,7 @@ namespace SmartLMS.WebUI.Controllers
 
             return isSavedSuccessfully 
                 ? new { Success = true, Message = file?.FileName } 
-                : new { Success = false, Message = "Error saving image" };
+                : new { Success = false, Message = Resource.ErrorSavingImage };
         }
 
         internal void DeleteFile(string filename)

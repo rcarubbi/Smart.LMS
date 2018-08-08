@@ -1,7 +1,8 @@
-﻿@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.UserViewModel>
+﻿@using SmartLMS.Domain.Resources
+@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.UserViewModel>
 
 @{
-    ViewBag.Title = "Student management"; 
+    ViewBag.Title = Resource.StudentManagementPageTitle; 
 }
 @section styles {
     <style type="text/css">
@@ -18,7 +19,7 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Student List
+        @Resource.StudentManagementPageTitle
     </div>
     <div class="panel-body">
         <div class="row">
@@ -28,12 +29,12 @@
             <div class="col-md-6 pull-right">
                 <div class="col-md-3">
                     <div class="form-group label-static is-empty">
-                        <label for="SearchField" class="control-label">Search by</label>
+                        <label for="SearchField" class="control-label">@Resource.SearchByLabel</label>
                         @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new { @class = "form-control dropdownjs" })
                     </div>
                 </div>
                 <div class="form-group label-floating is-empty col-md-9">
-                    <label class="control-label" for="q">type the term you want to find</label>
+                    <label class="control-label" for="q">@Resource.AdminSearchText</label>
                     <div class="input-group" style="display:block">
                         <div class="row">
                             <div class="col-md-10">
@@ -53,17 +54,17 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayName("Name")
+                        @Html.DisplayName(Resource.StudentNameFieldName)
                     </th>
                     <th>
-                        @Html.DisplayName("Email")
+                        @Html.DisplayName(Resource.StudentEmailFieldName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Active")
+                        @Html.DisplayName(Resource.ActiveFieldName)
                     </th>
                   
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Created at")
+                        @Html.DisplayName(Resource.CreatedAtFieldName)
                     </th>
                     <th></th>
                 </tr>
@@ -103,7 +104,7 @@
             {
                 <tr>
                     <td colspan="5" class="text-center">
-                        No students found
+                        @Resource.NoStudents
                     </td>
                 </tr>
             }
@@ -113,14 +114,14 @@
     </div>
 </div>
 
-<div class="modal fade" id="deleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="Confirmação de Exclusão" aria-hidden="true">
+<div class="modal fade" id="deleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="@Resource.DeleteStudentConfirmationTitle" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">Delete Student</h4>
+                <h4 class="modal-title">@Resource.DeleteStudentConfirmationTitle</h4>
             </div>
             <div class="modal-body">
 
@@ -171,7 +172,7 @@
         {{#equals Count 0}}
         <tr>
             <td colspan="5" class="text-center">
-                No students found
+                @Resource.NoStudents
             </td>
         </tr>
         {{/equals}}
@@ -212,7 +213,7 @@
                     onPageChanged: $private.changePage,
                
                 });
-                $private.SearchFieldName = "Name";
+                $private.SearchFieldName = "@Resource.StudentNameFieldName";
 
                 $("#SearchField").on("dropdownjs.change", function () {
                     var selectedItem = $(this).find("option:selected");
@@ -233,8 +234,8 @@
             $private.delete = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
                 SmartLMS.App.AddNotification({
-                    MessageTitle: 'Student management',
-                    Message: 'Student deleted!',
+                    MessageTitle: '@Resource.StudentManagementToastrTitle',
+                    Message: '@Resource.StudentDeletedToastrMessage',
                     MessageType: 'error'
                 });
                 proxy.delete(id).done($private.search);
@@ -251,7 +252,7 @@
                 };
 
                 $("#deleteConfirmation").find(".modal-body").data("id", student.id);
-                $("#deleteConfirmation").find(".modal-body").html("<p>Do you really want to delete the student " + student.name + "?</p>");
+                $("#deleteConfirmation").find(".modal-body").html("<p>@Resource.DeleteStudentConfirmationText " + student.name + "?</p>");
                 $("#deleteConfirmation").modal();
             };
  

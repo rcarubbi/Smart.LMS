@@ -1,13 +1,14 @@
-﻿@model ICollection<SmartLMS.Domain.Entities.Delivery.ClassroomCourse>
+﻿@using SmartLMS.Domain.Resources
+@model ICollection<SmartLMS.Domain.Entities.Delivery.ClassroomCourse>
 
 @{
-    ViewBag.Title = "Deliver plan";
+    ViewBag.Title = Resource.DeliveryPlanPageTitle;
 }
 
 <div class="card">
     <div class="content">
         <h5 class="index-title">
-            Delivery Plan
+            @Resource.DeliveryPlanPageTitle
         </h5>
         <div>
             <div id="result-container" class="list-group">
@@ -24,7 +25,7 @@
                                 </div>
                                 <div class="row-content">
                                     <h5 class="class-name">@klass.Name</h5>
-                                    <label>Days to deliver: </label><span> @klass.DeliveryDays day(s)</span>
+                                    <label>@Resource.DaysToDeliverLabel: </label><span> @klass.DeliveryDays</span>
                                 </div>
                             </div>
                             <div class="list-group-separator list-group-separator-sm"></div>

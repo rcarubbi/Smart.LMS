@@ -1,23 +1,24 @@
-﻿@{ var paginaMax = Math.Ceiling(Model.Count / 8M);
-    if (paginaMax > 5)
+﻿@using SmartLMS.Domain.Resources
+@{ var maxPage = Math.Ceiling(Model.Count / 8M);
+    if (maxPage > 5)
     {
-        paginaMax = 5;
+        maxPage = 5;
     }
 }
 <div class="text-center" id="pagination-container">
     <ul class="pagination pagination-primary">
 
         <li>
-            <a class="pagination-previous" @if (!Model.HasPrevious) { <text> style="display:none" </text>      } href="javascript:void(0);">&lt; previous</a>
+            <a class="pagination-previous" @if (!Model.HasPrevious) { <text> style="display:none" </text>      } href="javascript:void(0);">@Resource.PreviousPage</a>
         </li>
 
-        @for (int i = 1; i <= paginaMax; i++)
+        @for (int i = 1; i <= maxPage; i++)
         {
             <li class="@(i == 1? "active" : string.Empty)">
                 <a href="javascript:void(0);" class="pagination-page">@i</a>
             </li>
         }
-        <li><a class="pagination-next" style="@(!Model.HasNext? "display:none;": string.Empty)" href="javascript:void(0);">next &gt;</a></li>
+        <li><a class="pagination-next" style="@(!Model.HasNext? "display:none;": string.Empty)" href="javascript:void(0);">@Resource.NextPage</a></li>
     </ul>
 </div>
 
@@ -25,9 +26,8 @@
 
     <ul class="pagination pagination-primary">
         {{#if hasPrevious}}
-        <li><a class="pagination-previous" href="javascript:void(0);">&lt; previous</a></li>
+        <li><a class="pagination-previous" href="javascript:void(0);">@Resource.PreviousPage</a></li>
         {{/if}}
-
         {{#for minPage maxPage 1}}
         {{#equals this @@root.currentPage}}
         <li class="active">
@@ -37,10 +37,8 @@
             <a href="javascript:void(0);" class="pagination-page">{{this}}</a>
         </li>
         {{/for}}
-
-
         {{#if hasNext}}
-        <li><a class="pagination-next" href="javascript:void(0);">next &gt;</a></li>
+        <li><a class="pagination-next" href="javascript:void(0);">@Resource.NextPage</a></li>
         {{/if}}
     </ul>
 

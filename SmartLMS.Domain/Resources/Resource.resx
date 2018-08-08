@@ -288,7 +288,7 @@ Regards, Gnatta Training Tool Team
     <value>Gnatta Training Tool - Password Recovery</value>
   </data>
   <data name="PasswordUpdatedNoticeMessage" xml:space="preserve">
-    <value>Your password was updated</value>
+    <value>Your password has been updated</value>
   </data>
   <data name="PasswordUpdatedToastrMessage" xml:space="preserve">
     <value>Password updated!</value>
@@ -357,7 +357,7 @@ Regards, Gnatta Training Tool Team
     <value>Subjects</value>
   </data>
   <data name="SupportMaterialDownloadToastrTitle" xml:space="preserve">
-    <value>Support material download</value>
+    <value>Support Material download</value>
   </data>
   <data name="TalkToUsEmailBody" xml:space="preserve">
     <value>&lt;div&gt;&lt;h1&gt;Talk to us - Gnatta Trainning Tool&lt;/h1&gt;
@@ -389,7 +389,7 @@ Regards, Gnatta Training Tool Team
   <data name="TeacherInChargeException" xml:space="preserve">
     <value>This teacher is in charge of some courses</value>
   </data>
-  <data name="TeacherManagementToasterTitle" xml:space="preserve">
+  <data name="TeacherManagementToastrTitle" xml:space="preserve">
     <value>Teacher management</value>
   </data>
   <data name="TeacherNameFieldName" xml:space="preserve">
@@ -405,7 +405,7 @@ Regards, Gnatta Training Tool Team
     <value>Last watched classes</value>
   </data>
   <data name="WelcomeNoticeMessage" xml:space="preserve">
-    <value>Welcome to Gnatta Traning Tool! Have a productive study!</value>
+    <value>Welcome to Gnatta Training Tool! Have a productive study!</value>
   </data>
   <data name="WithoutPermissionDownloadToastrMessage" xml:space="preserve">
     <value>You don't have permission to download this material</value>
@@ -468,7 +468,7 @@ Regards, Gnatta Training Tool Team
     <value>Management</value>
   </data>
   <data name="NoTeachers" xml:space="preserve">
-    <value>No teachers found</value>
+    <value>No Teachers found</value>
   </data>
   <data name="SearchByLabel" xml:space="preserve">
     <value>Search by</value>
@@ -479,7 +479,7 @@ Regards, Gnatta Training Tool Team
   <data name="SubjectManagementPageTitle" xml:space="preserve">
     <value>Subject management</value>
   </data>
-  <data name="TeacherDeletedToasterMessage" xml:space="preserve">
+  <data name="TeacherDeletedToastrMessage" xml:space="preserve">
     <value>Teacher deleted!</value>
   </data>
   <data name="TeacherManagementPageTitle" xml:space="preserve">
@@ -491,13 +491,367 @@ Regards, Gnatta Training Tool Team
   <data name="DeleteSubjectConfirmationText" xml:space="preserve">
     <value>Do you really want to delete the subject</value>
   </data>
-  <data name="NoSubjects" xml:space="preserve">
-    <value>No subjects found</value>
+  <data name="NoSubjectsAdmin" xml:space="preserve">
+    <value>No Subjects found</value>
   </data>
   <data name="OrderFieldName" xml:space="preserve">
     <value>Order</value>
   </data>
   <data name="SubjectDeletedToastrMessage" xml:space="preserve">
     <value>Subject deleted!</value>
+  </data>
+  <data name="CreateStudentPageTitle" xml:space="preserve">
+    <value>Create a new student</value>
+  </data>
+  <data name="CreateSubjectPageTitle" xml:space="preserve">
+    <value>Create a new subject</value>
+  </data>
+  <data name="DeleteStudentConfirmationText" xml:space="preserve">
+    <value>Do you really want to delete the student</value>
+  </data>
+  <data name="DeleteStudentConfirmationTitle" xml:space="preserve">
+    <value>Delete Student</value>
+  </data>
+  <data name="NoStudentsAdmin" xml:space="preserve">
+    <value>No Students found</value>
+  </data>
+  <data name="StudentDeletedToastrMessage" xml:space="preserve">
+    <value>Student deleted!</value>
+  </data>
+  <data name="StudentManagementPageTitle" xml:space="preserve">
+    <value>Student List</value>
+  </data>
+  <data name="StudentManagementToastrTitle" xml:space="preserve">
+    <value>Student Management</value>
+  </data>
+  <data name="StudentUpdatePageTitle" xml:space="preserve">
+    <value>Student Update</value>
+  </data>
+  <data name="SubjectUpdatePageTitle" xml:space="preserve">
+    <value>Subject Update</value>
+  </data>
+  <data name="BackToHome" xml:space="preserve">
+    <value>Back to Home</value>
+  </data>
+  <data name="CheckCoursesBySubjectMessage" xml:space="preserve">
+    <value>and check below the courses by subject</value>
+  </data>
+  <data name="CourseManagementPageTitle" xml:space="preserve">
+    <value>Course Management</value>
+  </data>
+  <data name="CreateKnowledgeAreaPageTitle" xml:space="preserve">
+    <value>Create a new Knowledge Area</value>
+  </data>
+  <data name="DeleteKnowledgeAreaConfirmationText" xml:space="preserve">
+    <value>Do you really want to delete the knowledge area</value>
+  </data>
+  <data name="DeleteKnowledgeAreaConfirmationTitle" xml:space="preserve">
+    <value>Delete Knowledge Area</value>
+  </data>
+  <data name="ErrorDetailsTitle" xml:space="preserve">
+    <value>Error Details</value>
+  </data>
+  <data name="KnowledgeAreaDeletedToastrMessage" xml:space="preserve">
+    <value>Knowledge area deleted!</value>
+  </data>
+  <data name="KnowledgeAreaManagementPageTitle" xml:space="preserve">
+    <value>Knowledge Area Management</value>
+  </data>
+  <data name="KnowledgeAreaUpdatePageTitle" xml:space="preserve">
+    <value>Knowledge Area Update</value>
+  </data>
+  <data name="MadeBy" xml:space="preserve">
+    <value>by</value>
+  </data>
+  <data name="MadeWithLoveMessage" xml:space="preserve">
+    <value>Made with</value>
+  </data>
+  <data name="ManyPagesResultMessage" xml:space="preserve">
+    <value>Have been found &lt;strong&gt;{{pageCount}}&lt;/strong&gt; pages for the term &lt;strong&gt;"{{term}}"&lt;/strong&gt;</value>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>next &amp;gt;</value>
+  </data>
+  <data name="NoAccessToClassMessage" xml:space="preserve">
+    <value>You don't have access to this class</value>
+  </data>
+  <data name="NoClasses" xml:space="preserve">
+    <value>No classes in this section</value>
+  </data>
+  <data name="NoCoursesAdmin" xml:space="preserve">
+    <value>No Courses found</value>
+  </data>
+  <data name="NoKnowledgeAreasAdmin" xml:space="preserve">
+    <value>No Knowledge Areas found</value>
+  </data>
+  <data name="NoNotices" xml:space="preserve">
+    <value>You don't have notices at this moment</value>
+  </data>
+  <data name="NoSearchResultsMessage" xml:space="preserve">
+    <value>Your search did not return any results for the term &lt;strong&gt;"{{term}}"&lt;/strong&gt;</value>
+  </data>
+  <data name="NoticeHistoryPageTitle" xml:space="preserve">
+    <value>Notice History</value>
+  </data>
+  <data name="NoticesPanelTitle" xml:space="preserve">
+    <value>Notices</value>
+  </data>
+  <data name="NoticeTypeLabel" xml:space="preserve">
+    <value>Notice Type</value>
+  </data>
+  <data name="OnePageResultMessage" xml:space="preserve">
+    <value>Has been found &lt;strong&gt;one&lt;/strong&gt; page for the term &lt;strong&gt;"{{term}}"&lt;/strong&gt;</value>
+  </data>
+  <data name="PreviousPage" xml:space="preserve">
+    <value>&amp;lt; previous</value>
+  </data>
+  <data name="QuickPanelsMessage" xml:space="preserve">
+    <value>Stay on top of the news through the quick access panels</value>
+  </data>
+  <data name="SearchBarText" xml:space="preserve">
+    <value>What do you want to learn?</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SeeFullIndex" xml:space="preserve">
+    <value>See the full index</value>
+  </data>
+  <data name="Sending" xml:space="preserve">
+    <value>Sending</value>
+  </data>
+  <data name="TalkToUsEmailLabel" xml:space="preserve">
+    <value>Type your email</value>
+  </data>
+  <data name="TalkToUsErrorMessage" xml:space="preserve">
+    <value>An error has been ocurried. Please try again</value>
+  </data>
+  <data name="TalkToUsMessagePlaceholder" xml:space="preserve">
+    <value>Type your message here</value>
+  </data>
+  <data name="TalkToUsMessageSent" xml:space="preserve">
+    <value>Your message has been sent!</value>
+  </data>
+  <data name="TalkToUsNameLabel" xml:space="preserve">
+    <value>Type your name</value>
+  </data>
+  <data name="SendButton" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="TalkToUsToastrTitle" xml:space="preserve">
+    <value>Talk to us</value>
+  </data>
+  <data name="TeacherName" xml:space="preserve">
+    <value>Teacher</value>
+  </data>
+  <data name="CourseDeletedToastrMessage" xml:space="preserve">
+    <value>Course deleted!</value>
+  </data>
+  <data name="DeleteCourseConfirmationText" xml:space="preserve">
+    <value>Do you really want to delete the course</value>
+  </data>
+  <data name="DeleteCourseConfirmationTitle" xml:space="preserve">
+    <value>Delete course</value>
+  </data>
+  <data name="CancelImageButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ClassroomDeletedToastrMessage" xml:space="preserve">
+    <value>Classroom deleted!</value>
+  </data>
+  <data name="ClassroomManagementPageTitle" xml:space="preserve">
+    <value>Classroom management</value>
+  </data>
+  <data name="ClassroomPlural" xml:space="preserve">
+    <value>Classrooms</value>
+  </data>
+  <data name="CoursesInClassroomTitle" xml:space="preserve">
+    <value>Included courses in the classroom</value>
+  </data>
+  <data name="CreateCoursePageTitle" xml:space="preserve">
+    <value>Create a new course</value>
+  </data>
+  <data name="DaysToDeliverLabel" xml:space="preserve">
+    <value>Days to deliver</value>
+  </data>
+  <data name="DeleteClassroomConfirmationText" xml:space="preserve">
+    <value>Do you really want to delete the classroom</value>
+  </data>
+  <data name="DeleteClassroomConfirmationTitle" xml:space="preserve">
+    <value>Delete Classroom</value>
+  </data>
+  <data name="DeleteImageButton" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeliveryPlanName" xml:space="preserve">
+    <value>Delivery Plan</value>
+  </data>
+  <data name="DeliveryPlanPageTitle" xml:space="preserve">
+    <value>Delivery Plan</value>
+  </data>
+  <data name="DetailsColumn" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="DragAndDropImageMessage" xml:space="preserve">
+    <value>Drag and drop the course image here or just click to select it</value>
+  </data>
+  <data name="EditDeleteColumn" xml:space="preserve">
+    <value>Edit/Delete</value>
+  </data>
+  <data name="NoClassroomAdmin" xml:space="preserve">
+    <value>No Classrooms found</value>
+  </data>
+  <data name="OnlyOneImageCourseMessage" xml:space="preserve">
+    <value>The course can have only one image</value>
+  </data>
+  <data name="SelectTeacher" xml:space="preserve">
+    <value>Select a teacher</value>
+  </data>
+  <data name="StudentPlural" xml:space="preserve">
+    <value>Students</value>
+  </data>
+  <data name="StudentsInClassroomTitle" xml:space="preserve">
+    <value>Students subscribed in the classroom</value>
+  </data>
+  <data name="Authenticating" xml:space="preserve">
+    <value>Authenticating</value>
+  </data>
+  <data name="BackToLogin" xml:space="preserve">
+    <value>Back to login</value>
+  </data>
+  <data name="CancelFileButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ChangePasswordInformation" xml:space="preserve">
+    <value>Fill in the form below to change your password</value>
+  </data>
+  <data name="ChangePasswordPageTitle" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="ClassDeletedToastrMessage" xml:space="preserve">
+    <value>Class deleted!</value>
+  </data>
+  <data name="ClassManagementPageTitle" xml:space="preserve">
+    <value>Class Management</value>
+  </data>
+  <data name="ClassroomUpdatePageTitle" xml:space="preserve">
+    <value>Classroom Update</value>
+  </data>
+  <data name="ClassUpdatePageTitle" xml:space="preserve">
+    <value>Class Update</value>
+  </data>
+  <data name="CommentPlaceholder" xml:space="preserve">
+    <value>Make your comment about the class here</value>
+  </data>
+  <data name="CommentsTitle" xml:space="preserve">
+    <value>Discussion</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Confirm your password</value>
+  </data>
+  <data name="CreateClassPageTitle" xml:space="preserve">
+    <value>Create a new Class</value>
+  </data>
+  <data name="CreateClassroomPageTitle" xml:space="preserve">
+    <value>Create a new Classroom</value>
+  </data>
+  <data name="DeleteClassConfirmationText" xml:space="preserve">
+    <value>Do you really want to delete the class</value>
+  </data>
+  <data name="DeleteClassConfirmationTitle" xml:space="preserve">
+    <value>Delete Class</value>
+  </data>
+  <data name="DeleteFileButton" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeliveryPlanPlural" xml:space="preserve">
+    <value>Delivery Plans</value>
+  </data>
+  <data name="DragAndDropFileMessage" xml:space="preserve">
+    <value>Drag and drop the documents here or just click to select them</value>
+  </data>
+  <data name="FilePlural" xml:space="preserve">
+    <value>Support materials</value>
+  </data>
+  <data name="ForgotPasswordButton" xml:space="preserve">
+    <value>Forgot your password?</value>
+  </data>
+  <data name="ForgotPasswordLoginLabel" xml:space="preserve">
+    <value>Type your subscribed email</value>
+  </data>
+  <data name="ForgotPasswordTitle" xml:space="preserve">
+    <value>Forgot your password?</value>
+  </data>
+  <data name="LoginEmailLabel" xml:space="preserve">
+    <value>Type your email</value>
+  </data>
+  <data name="LoginPasswordLabel" xml:space="preserve">
+    <value>Type your password</value>
+  </data>
+  <data name="NewPasswordLabel" xml:space="preserve">
+    <value>Type your new password</value>
+  </data>
+  <data name="NextClasses" xml:space="preserve">
+    <value>Next classes</value>
+  </data>
+  <data name="NoClassAdmin" xml:space="preserve">
+    <value>No class found</value>
+  </data>
+  <data name="NoMoreComments" xml:space="preserve">
+    <value>No more comments to this class.</value>
+  </data>
+  <data name="RememberMeLabel" xml:space="preserve">
+    <value>Remember Me</value>
+  </data>
+  <data name="SelectContentType" xml:space="preserve">
+    <value>Select a content type</value>
+  </data>
+  <data name="StudentName" xml:space="preserve">
+    <value>Student</value>
+  </data>
+  <data name="SubscribedAtColumn" xml:space="preserve">
+    <value>Subscribed at</value>
+  </data>
+  <data name="Wallpaper" xml:space="preserve">
+    <value>https://unsplash.imgix.net/photo-1418065460487-3e41a6c84dc5?q=25&amp;amp;fm=jpg&amp;amp;s=127f3a3ccf4356b7f79594e05f6c840e</value>
+  </data>
+  <data name="ClassroomName" xml:space="preserve">
+    <value>Classroom</value>
+  </data>
+  <data name="ClassroomRequired" xml:space="preserve">
+    <value>Classroom required</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email required</value>
+  </data>
+  <data name="ErrorSavingImage" xml:space="preserve">
+    <value>Error saving image</value>
+  </data>
+  <data name="InvalidLogin" xml:space="preserve">
+    <value>Login must be a valid email</value>
+  </data>
+  <data name="LoginRequired" xml:space="preserve">
+    <value>Login required</value>
+  </data>
+  <data name="PasswordConfirmationFieldName" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="PasswordConfirmationRequired" xml:space="preserve">
+    <value>Password confirmation required</value>
+  </data>
+  <data name="PasswordDoenstMatch" xml:space="preserve">
+    <value>Password doesn't match</value>
+  </data>
+  <data name="PasswordFieldName" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="UserNameFieldName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="UserNameRequired" xml:space="preserve">
+    <value>Name required</value>
+  </data>
+  <data name="UserPasswordRequired" xml:space="preserve">
+    <value>Password required</value>
   </data>
 </root>

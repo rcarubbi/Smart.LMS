@@ -1,12 +1,13 @@
-﻿@model SmartLMS.WebUI.Models.ClassroomViewModel
+﻿@using SmartLMS.Domain.Resources
+@model SmartLMS.WebUI.Models.ClassroomViewModel
 
 @{
-    ViewBag.Title = "Create a new Classroom";
+    ViewBag.Title = Resource.CreateClassroomPageTitle;
 }
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        Create a new Classroom
+        @Resource.CreateClassroomPageTitle
     </div>
     <div class="panel-body">
         @using (Html.BeginForm())
@@ -16,14 +17,14 @@
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.CourseIds, htmlAttributes: new { @class = "control-label col-md-2"})
+                    @Html.LabelFor(model => model.CourseIds, new { @class = "control-label col-md-2"})
                     <div class="col-md-10">
                         @Html.DropDownListFor(model => model.CourseIds, ViewBag.Courses as SelectList, new { @class="multiselect" , multiple = "multiple", data_multiselect_filter= false, data_multiselect_group = false })
                         @Html.ValidationMessageFor(model => model.CourseIds, "", new { @class = "text-danger" })
@@ -35,7 +36,7 @@
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fa fa-save"></i>
                         </button>
-                        @Html.ActionLink("Back", "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                        @Html.ActionLink(Resource.BackButton, "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
                     </div>
                 </div>
             </div>

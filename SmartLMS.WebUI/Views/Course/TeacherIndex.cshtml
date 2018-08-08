@@ -3,18 +3,18 @@
 @using SmartLMS.Domain.Resources
 @model IEnumerable<Course>
 @{
-    ViewBag.Title = "My Courses";
+    ViewBag.Title = Resource.MyCoursesTitle;
 }
 
 
 <div class="col-md-8">
     <div class="card">
         <div class="content">
-            <h3 class="text-primary index-title">My Courses</h3>
+            <h3 class="text-primary index-title">@Resource.MyCoursesTitle</h3>
             <div class="list-group">
-                @foreach (Course course in Model)
+                @foreach (var course in Model)
                 {
-                    <a href="@Url.Action("Index", "Class", new { Id = course.Id })" class="link-group-item">
+                    <a href="@Url.Action("Index", "Class", new { course.Id })" class="link-group-item">
                         <div class="list-group-item">
                             <div class="row-action-primary">
                                 <i class="fa fa-graduation-cap"></i>

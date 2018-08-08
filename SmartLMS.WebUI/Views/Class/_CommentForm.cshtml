@@ -1,4 +1,5 @@
-﻿@model SmartLMS.WebUI.Models.CommentViewModel
+﻿@using SmartLMS.Domain.Resources
+@model SmartLMS.WebUI.Models.CommentViewModel
 
 @using (Html.BeginForm("", "", FormMethod.Post, new { id = "comment-form" }))
 {
@@ -9,15 +10,14 @@
         @Html.HiddenFor(model => model.ClassId, new { htmlAttributes = new { @class = "form-control" } })
 
 
-        @Html.TextAreaFor(model => model.CommentText, new { @class = "form-control", placeholder = "Make your comment about the class here", rows = "5" })
+        @Html.TextAreaFor(model => model.CommentText, new { @class = "form-control", placeholder = Resource.CommentPlaceholder, rows = "5" })
         @Html.ValidationMessageFor(model => model.CommentText, "", new { @class = "text-danger" })
 
         <div class="row">
             <div class="col-md-12 text-right">
-                <input type="submit" value="Send" class="btn btn-sm btn-primary" />
+                <input type="submit" value="@Resource.SendButton" class="btn btn-sm btn-primary" />
             </div>
         </div>
-
     </div>
 }
 

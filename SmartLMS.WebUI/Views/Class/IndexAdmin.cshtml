@@ -1,7 +1,8 @@
-﻿@model Carubbi.GenericRepository.PagedListResult<ClassViewModel>
+﻿@using SmartLMS.Domain.Resources
+@model Carubbi.GenericRepository.PagedListResult<ClassViewModel>
 
 @{
-    ViewBag.Title = "Class management";
+    ViewBag.Title = Resource.ClassManagementPageTitle;
 }
 @section styles {
     <style type="text/css">
@@ -18,22 +19,25 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Class list
+        @Resource.ClassManagementPageTitle
     </div>
     <div class="panel-body">
         <div class="row">
             <div class="col-md-5">
-                <a href="@Url.Action("Create")" class="btn btn-sm btn-info"><i class="fa fa-plus" style="font-size: 10px; top: 0px; left: 2px;"></i> <i class="fa fa-laptop"></i> </a>
+                <a href="@Url.Action("Create")" class="btn btn-sm btn-info">
+                    <i class="fa fa-plus" style="font-size: 10px; top: 0px; left: 2px;"></i>
+                    <i class="fa fa-laptop"></i>
+                </a>
             </div>
             <div class="col-md-7 pull-right">
                 <div class="col-md-4">
                     <div class="form-group label-static is-empty">
-                        <label for="SearchField" class="control-label">Search by</label>
-                        @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new { @class = "form-control dropdownjs" })
+                        <label for="SearchField" class="control-label">@Resource.SearchByLabel</label>
+                        @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new { id= "SearchField", @class = "form-control dropdownjs" })
                     </div>
                 </div>
                 <div class="form-group label-floating is-empty col-md-7">
-                    <label class="control-label" for="q">type the term you want to find</label>
+                    <label class="control-label" for="q">@Resource.AdminSearchText</label>
                     <div class="input-group" style="display:block">
                         <div class="row">
                             <div class="col-md-10">
@@ -53,25 +57,25 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayName("Order")
+                        @Html.DisplayName(Resource.OrderFieldName)
                     </th>
                     <th>
-                        @Html.DisplayName("Name")
+                        @Html.DisplayName(Resource.ClassNameFieldName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Course")
+                        @Html.DisplayName(Resource.CourseName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Subject")
+                        @Html.DisplayName(Resource.SubjectName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Knowledge Area")
+                        @Html.DisplayName(Resource.KnowledgeAreaName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Active")
+                        @Html.DisplayName(Resource.ActiveFieldName)
                     </th>
                     <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName("Created at")
+                        @Html.DisplayName(Resource.CreatedAtFieldName)
                     </th>
                     <th></th>
                 </tr>
@@ -119,7 +123,7 @@
             {
                 <tr>
                     <td colspan="7" class="text-center">
-                        No class found
+                        @Resource.NoClassAdmin
                     </td>
                 </tr>
             }
@@ -129,14 +133,14 @@
     </div>
 </div>
 
-<div class="modal fade" id="deleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="Confirmação de Exclusão" aria-hidden="true">
+<div class="modal fade" id="deleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="@Resource.DeleteClassConfirmationTitle" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">Delete Course</h4>
+                <h4 class="modal-title">@Resource.DeleteClassConfirmationTitle</h4>
             </div>
             <div class="modal-body">
 
@@ -195,7 +199,7 @@
         {{#equals Count 0}}
         <tr>
             <td colspan="7" class="text-center">
-                No class found
+                @Resource.NoClassAdmin
             </td>
         </tr>
         {{/equals}}
@@ -255,8 +259,8 @@
             $private.delete = function () {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
                 SmartLMS.App.AddNotification({
-                    MessageTitle: 'Content management',
-                    Message: 'Class deleted!',
+                    MessageTitle: '@Resource.ContentManagementToastrTitle',
+                    Message: '@Resource.ClassDeletedToastrMessage',
                     MessageType: 'error'
                 });
 
@@ -272,7 +276,7 @@
                     name: $(this).data("name")
                 };
                 $("#deleteConfirmation").find(".modal-body").data("id", klass.id);
-                $("#deleteConfirmation").find(".modal-body").html("<p>Do you really want to delete the class " + klass.name + "?</p>");
+                $("#deleteConfirmation").find(".modal-body").html("<p>@Resource.DeleteClassConfirmationText " + klass.name + "?</p>");
                 $("#deleteConfirmation").modal();
             };
 

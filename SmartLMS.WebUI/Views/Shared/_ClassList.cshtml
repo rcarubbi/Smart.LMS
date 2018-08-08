@@ -1,4 +1,5 @@
-﻿@model IEnumerable<SmartLMS.WebUI.Models.ClassViewModel>
+﻿@using SmartLMS.Domain.Resources
+@model IEnumerable<SmartLMS.WebUI.Models.ClassViewModel>
 <div class="list-group">
     @foreach (var klass in Model)
     {
@@ -7,7 +8,7 @@
             @:<a href="@Url.Action("Watch", "Class", new { Id = klass.Id })" class="link-group-item">
             }
             <div class="list-group-item">
-                <div class="row-action-primary" @if (!klass.Available) { <text> data-toggle="tooltip" data-placement="right" data-container="body" data-original-title="You don't have access to this class" </text> }>
+                <div class="row-action-primary" @if (!klass.Available) { <text> data-toggle="tooltip" data-placement="right" data-container="body" data-original-title="@Resource.NoAccessToClassMessage" </text> }>
                     <i class="fa fa-laptop"></i>
                 </div>
                 <div class="row-content">
@@ -29,11 +30,11 @@
                 {
                     <div class="progress progress-line-primary">
                         <div class="progress-bar" role="progressbar" aria-valuenow="@klass.Percentual" aria-valuemin="0" aria-valuemax="100" style="width: @klass.Percentual%;">
-                            <span class="sr-only">">@(klass.Percentual)% Concluída</span>
+                            <span class="sr-only">">@(klass.Percentual)% @Resource.ConcludedLabel</span>
                         </div>
                     </div>
                 }
-                <label>Teacher: </label><span> @klass.TeacherName</span>
+                <label>@Resource.TeacherName: </label><span> @klass.TeacherName</span>
             </div>
         </div>
         if (klass.Available)

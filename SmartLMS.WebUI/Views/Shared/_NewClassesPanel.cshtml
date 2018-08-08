@@ -1,4 +1,5 @@
-﻿@model IEnumerable<SmartLMS.WebUI.Models.ClassViewModel>
+﻿@using SmartLMS.Domain.Resources
+@model IEnumerable<SmartLMS.WebUI.Models.ClassViewModel>
 
 <div class="panel panel-info">
     <div class="panel-heading">
@@ -28,7 +29,7 @@
                 }
                 else
                 {
-                    <div class="text-center">No classes added</div>
+                    <div class="text-center">@Resource.NoClasses</div>
                 }
             </div>
         </div>

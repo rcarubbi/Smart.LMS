@@ -29,7 +29,7 @@
                     <ul class="dropdown-menu dropdown-menu-right">
                         @foreach (var item in Model.KnowledgeAreas)
                         {
-                            <li><a href="@Url.Action("Index", "Subject", new { Id = item.Id })">@item.Name</a></li>
+                            <li><a href="@Url.Action("Index", "Subject", new { item.Id })">@item.Name</a></li>
                         }
                     </ul>
                 </li>

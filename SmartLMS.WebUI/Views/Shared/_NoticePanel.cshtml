@@ -1,7 +1,8 @@
-﻿@model IEnumerable<SmartLMS.WebUI.Models.NoticeViewModel>
+﻿@using SmartLMS.Domain.Resources
+@model IEnumerable<SmartLMS.WebUI.Models.NoticeViewModel>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title">Notices</h3>
+        <h3 class="panel-title">@Resource.NoticesPanelTitle</h3>
     </div>
     <div class="panel-body" style="min-height: 253px;" id="notice-panel-body">
         @if (Model.Any())
@@ -15,15 +16,15 @@
                         <div class="notice-type">
                             @if (item.DirectMessage)
                             {
-                                <span class="label label-danger">Personal</span>
+                                <span class="label label-danger">@Resource.NoticeTypePersonal</span>
                             }
                             else if (!string.IsNullOrEmpty(item.ClassroomName))
                             {
-                                <span class="label label-warning">Classroom @item.ClassroomName</span>
+                                <span class="label label-warning">@Resource.NoticeTypeClassroom @item.ClassroomName</span>
                             }
                             else
                             {
-                                <span class="label label-info">Public</span>
+                                <span class="label label-info">@Resource.NoticeTypePublic</span>
                             }
                         </div>
 
@@ -34,7 +35,7 @@
         }
         else
         {
-            <div class="text-center">You don't have notices at this moment</div>
+            <div class="text-center">@Resource.NoNotices</div>
         }
     </div>
 </div>
@@ -48,12 +49,12 @@
             <div class="notice-datetime">{{DateTimeDescription}}</div>
             <div class="notice-type">
                 {{#if DirectMessage}}
-                <span class="label label-danger">Personal</span>
+                <span class="label label-danger">@Resource.NoticeTypePersonal</span>
                 {{else}}
                     {{#if ClassroomName}}
-                    <span class="label label-warning">Classroom {{ClassroomName}}</span>
+                <span class="label label-warning">@Resource.NoticeTypeClassroom {{ClassroomName}}</span>
                     {{else}}
-                    <span class="label label-info">Public</span>
+                <span class="label label-info">@Resource.NoticeTypePublic</span>
                     {{/if}}
                 {{/if}}
             </div>

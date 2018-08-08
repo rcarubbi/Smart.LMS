@@ -51,7 +51,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
             var subjectRepository = new SubjectRepository(_context);
-            ViewBag.SearchFields = new SelectList(new string[] { "Name", "Knowledge Area", "Id" });
+            ViewBag.SearchFields = new SelectList(new string[] { Resource.SubjectNameFieldName, Resource.KnowledgeAreaName, "Id" });
             return View(SubjectViewModel.FromEntityList(subjectRepository.Search(term, searchFieldName, page)));
         }
 

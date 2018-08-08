@@ -71,14 +71,14 @@ namespace SmartLMS.WebUI.Controllers
                     _loggedUser);
 
                 TempData["MessageType"] = "success";
-                TempData["MessageTitle"] = Resource.TeacherManagementToasterTitle;
+                TempData["MessageTitle"] = Resource.TeacherManagementToastrTitle;
                 TempData["Message"] = Resource.TeacherAddedToastrMessage;
                 return RedirectToAction("IndexAdmin");
             }
             catch (Exception ex)
             {
                 TempData["MessageType"] = "error";
-                TempData["MessageTitle"] = Resource.TeacherManagementToasterTitle;
+                TempData["MessageTitle"] = Resource.TeacherManagementToastrTitle;
                 TempData["Message"] = ex.Message;
             }
 
@@ -124,14 +124,14 @@ namespace SmartLMS.WebUI.Controllers
                     _loggedUser);
 
                 TempData["MessageType"] = "success";
-                TempData["MessageTitle"] = Resource.TeacherManagementToasterTitle;
+                TempData["MessageTitle"] = Resource.TeacherManagementToastrTitle;
                 TempData["Message"] = Resource.TeacherUpdatedToastrMessage;
                 return RedirectToAction("IndexAdmin");
             }
             catch (Exception ex)
             {
                 TempData["MessageType"] = "error";
-                TempData["MessageTitle"] = Resource.TeacherManagementToasterTitle;
+                TempData["MessageTitle"] = Resource.TeacherManagementToastrTitle;
                 TempData["Message"] = ex.Message;
             }
             return View(teacher);
