@@ -2175,7 +2175,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://unsplash.imgix.net/photo-1418065460487-3e41a6c84dc5?q=25&amp;amp;fm=jpg&amp;amp;s=127f3a3ccf4356b7f79594e05f6c840e.
+        ///   Looks up a localized string similar to https://i.ytimg.com/vi/MLX2wLdHrYU/maxresdefault.jpg|https://content.paulreiffer.com//wp-content/gallery/landscapes/Bonsai-Rock-Lake-Tahoe-California-Incline-Village-Paul-Reiffer-Professional-Landscape-Photographer-View-Photography.jpg.jpg|http://moore.photos/perch/resources/Adventure%20Images/advbbcmediacitysalfordquays.jpg|https://wallup.net/wp-content/uploads/2015/12/132972-England-landscape-architecture-nature-Tower_Bridge-UK.jpg|https://www.setaswall.com/wp-content/uploads/2018/04/London-UK-Wallpaper-0 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Wallpaper {
             get {

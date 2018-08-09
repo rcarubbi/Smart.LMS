@@ -67,10 +67,10 @@ namespace SmartLMS.DAL
             return base.Set<TEntidade>();
         }
 
-        public void Update<TEntidade>(TEntidade objetoAntigo, TEntidade objetoNovo) where TEntidade : class
+        public void Update<TEntidade>(TEntidade oldState, TEntidade newState) where TEntidade : class
         {
-            Entry(objetoAntigo).CurrentValues.SetValues(objetoNovo);
-            Entry(objetoAntigo).State = EntityState.Modified;
+            Entry(oldState).CurrentValues.SetValues(newState);
+            Entry(oldState).State = EntityState.Modified;
         }
 
         public void Save()

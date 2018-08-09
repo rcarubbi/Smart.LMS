@@ -2,79 +2,83 @@
 @model IEnumerable<SmartLMS.WebUI.Models.KnowledgeAreaViewModel>
 @{
     ViewBag.Title = "Home";
-    
+
 }
-@Html.Partial("_ContextualSearch")
 
-<div class="row">
-    @if (HttpContext.Current.User.Identity.IsAuthenticated)
-    {
-        <div class="col-md-6">
-            @Html.Action("MyCoursesPanel", "Course")
-        </div>
-        <div class="col-md-6">
-            @Html.Action("NoticePanel", "Notice")
-        </div>
-    }
-</div>
-<div class="row"> 
-    <div class="col-md-12">
-        <div class="card" style="min-height: 295px;">
-            <div class="content">
-                <h6 class="panel-title text-primary">
-                    <strong>@Resource.SelectKnowledgeArea</strong>
-                </h6>
-                <div class="card-body knowledge-areas-bar">
-                    <ul class="nav nav-pills" role="tablist">
-                        @{
-                            var firstLine = true;
-                        }
+@if (Model.Any())
+{
+    @Html.Partial("_ContextualSearch")
 
-                        @foreach (var item in Model)
-                        {
-                        <li class="@(firstLine ? "active" : "")">
-                            <a href="#knowledge-area-@item.Order" role="tab" data-toggle="tab" aria-expanded="@(firstLine ? "true" : "false")">
-                                <i class="fa fa-map-signs text-primary"></i>
-                                <p class="text-primary">@item.Name</p>
-                            </a>
-                        </li>
-                            if (firstLine)
-                            {
-                                firstLine = false;
+    <div class="row">
+        @if (HttpContext.Current.User.Identity.IsAuthenticated)
+        {
+            <div class="col-md-6">
+                @Html.Action("MyCoursesPanel", "Course")
+            </div>
+            <div class="col-md-6">
+                @Html.Action("NoticePanel", "Notice")
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card" style="min-height: 295px;">
+                <div class="content">
+                    <h6 class="panel-title text-primary">
+                        <strong>@Resource.SelectKnowledgeArea</strong>
+                    </h6>
+                    <div class="card-body knowledge-areas-bar">
+                        <ul class="nav nav-pills" role="tablist">
+                            @{
+                                var firstLine = true;
                             }
-                        }
 
-                    </ul>
-                </div>
-                <div class="card-footer">
-                    <h6 class="text-primary"><strong>@Resource.CheckCoursesBySubjectMessage</strong></h6>
+                            @foreach (var item in Model)
+                            {
+                                <li class="@(firstLine ? "active" : "")">
+                                    <a href="#knowledge-area-@item.Order" role="tab" data-toggle="tab" aria-expanded="@(firstLine ? "true" : "false")">
+                                        <i class="fa fa-map-signs text-primary"></i>
+                                        <p class="text-primary">@item.Name</p>
+                                    </a>
+                                </li>
+                                if (firstLine)
+                                {
+                                    firstLine = false;
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <h6 class="text-primary"><strong>@Resource.CheckCoursesBySubjectMessage</strong></h6>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="tab-content">
-            @{
-                firstLine = true;
-            }
-            @foreach (var item in Model)
-            {
-
-            <div id="knowledge-area-@item.Order" class="tab-pane fade @(firstLine? "in active" : "")">
-                @Html.Partial("_KnowledgeAreaPanel", item)
-            </div>
-
-                if (firstLine)
-                {
-                    firstLine = false;
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tab-content">
+                @{
+                    firstLine = true;
                 }
-            }
+                @foreach (var item in Model)
+                {
+
+                    <div id="knowledge-area-@item.Order" class="tab-pane fade @(firstLine ? "in active" : "")">
+                        @Html.Partial("_KnowledgeAreaPanel", item)
+                    </div>
+
+                    if (firstLine)
+                    {
+                        firstLine = false;
+                    }
+                }
+            </div>
         </div>
     </div>
-</div>
+}
 
 
 @if (HttpContext.Current.User.Identity.IsAuthenticated)
@@ -101,182 +105,181 @@
 }
 
 @section scripts {
- 
-    <script>
-        SmartLMS.HomeControllerProxy = (function () {
-            var $private = {}, $public = {};
+    @if (Model.Any())
+    {
+        <script>
+            SmartLMS.HomeControllerProxy = (function () {
+                var $private = {}, $public = {};
 
-            $public.contextualSearch = function (term, page) {
-                return $.ajax({
-                    type: "POST",
-                    url: SmartLMS.api + "Home/PagedContextualSearch",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: JSON.stringify({ term, page })
+                $public.contextualSearch = function (term, page) {
+                    return $.ajax({
+                        type: "POST",
+                        url: SmartLMS.api + "Home/PagedContextualSearch",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: JSON.stringify({ term, page })
+                    });
+                };
+
+
+                $public.visualizeNotice = function (noticeId, userId) {
+                    return $.ajax({
+                        type: "POST",
+                        url: SmartLMS.api + "Notice/Visualize",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: JSON.stringify({ noticeId, userId })
+                    });
+                };
+
+                return $public;
+            }());
+            (function (proxy) {
+                var $private = {}, contextualSearch = {};
+
+                $(function () {
+                    $("#contextual-search-button").on("click", $private.searchTerm);
+                    $("#search-results-container")
+                        .on("click", ".contextual-search-pagination-next", $private.goToNextPage);
+                    $("#search-results-container")
+                        .on("click", ".contextual-search-pagination-pagenumber", $private.goToPage);
+                    $("#search-results-container").on("click",
+                        ".contextual-search-pagination-previous",
+                        $private.goToPreviousPage);
+                    $("#notice-panel-body").on("click", ".notice .alert button[aria-hidden]", $private.visualizeNotice);
+
+                    $(".scroll-panel").slimScroll({
+                        'size': '8px',
+                        'height': '253px'
+                    });
+
+
+                    $private.searchResultsTemplate = Handlebars.compile($("#search-results-template").html());
+                    if ($("#notice-template").html())
+                        $private.noticeTemplate = Handlebars.compile($("#notice-template").html());
                 });
-            };
+
+                $private.searchTerm = function () {
+                    contextualSearch.CurrentPage = 1;
+                    contextualSearch.Term = $("#q").val();
+
+                    $private.search();
+                };
+
+                $private.search = function () {
+                    $("#search-results-container").slideUp();
+                    proxy.contextualSearch(contextualSearch.Term, contextualSearch.CurrentPage)
+                        .done($private.showResults)
+                        .fail(function () { console.log("Error"); });
+                };
 
 
-            $public.visualizeNotice = function (noticeId, userId) {
-                return $.ajax({
-                    type: "POST",
-                    url: SmartLMS.api + "Notice/Visualize",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: JSON.stringify({ noticeId, userId })
-                });
-            };
+                $private.refreshPage = function () {
 
-            return $public;
-        }());
+                    proxy.contextualSearch(contextualSearch.Term, contextualSearch.CurrentPage)
+                        .done($private.refreshResults)
+                        .fail(function () { console.log("Error"); });
+                };
 
-        (function (proxy) {
-            var $private = {}, contextualSearch = {};
+                $private.goToNextPage = function () {
+                    contextualSearch.CurrentPage++;
+                    $private.refreshPage();
+                };
 
-            $(function () {
-                $("#contextual-search-button").on("click", $private.searchTerm);
-                $("#search-results-container").on("click", ".contextual-search-pagination-next", $private.goToNextPage);
-                $("#search-results-container").on("click", ".contextual-search-pagination-pagenumber", $private.goToPage);
-                $("#search-results-container").on("click", ".contextual-search-pagination-previous", $private.goToPreviousPage);
-                $("#notice-panel-body").on("click", ".notice .alert button[aria-hidden]", $private.visualizeNotice);
+                $private.goToPage = function () {
+                    var pagina = $(this).text();
+                    contextualSearch.CurrentPage = pagina;
+                    $private.refreshPage();
+                };
 
-                $(".scroll-panel").slimScroll({
-                    'size': '8px',
-                    'height': '253px'
-                });
+                $private.goToPreviousPage = function () {
+                    contextualSearch.CurrentPage--;
+                    $private.refreshPage();
+                };
 
-                 
+                $private.getMinPage = function (pageCount, pageIndex) {
+                    pageIndex = parseInt(pageIndex);
+                    if (pageIndex < 4) {
+                        return 1;
+                    } else if (pageIndex > pageCount - 3) {
+                        return pageCount - 4;
+                    } else {
+                        return pageIndex - 2;
+                    }
+                };
 
-                $private.searchResultsTemplate = Handlebars.compile($("#search-results-template").html());
-                if ($("#notice-template").html())
-                    $private.noticeTemplate = Handlebars.compile($("#notice-template").html());
-            });
-
-            $private.searchTerm = function () {
-                contextualSearch.CurrentPage = 1;
-                contextualSearch.Term = $("#q").val();
-
-                $private.search();
-            };
-
-            $private.search = function () {
-                $("#search-results-container").slideUp();
-                proxy.contextualSearch(contextualSearch.Term, contextualSearch.CurrentPage)
-                    .done($private.showResults)
-                    .fail(function () { console.log("Error"); });
-            };
-
-
-            $private.refreshPage = function () {
-
-                proxy.contextualSearch(contextualSearch.Term, contextualSearch.CurrentPage)
-                    .done($private.refreshResults)
-                    .fail(function () { console.log("Error"); });
-            };
-
-            $private.goToNextPage = function () {
-                contextualSearch.CurrentPage++;
-                $private.refreshPage();
-            };
-
-            $private.goToPage = function () {
-                var pagina = $(this).text();
-                contextualSearch.CurrentPage = pagina;
-                $private.refreshPage();
-            };
-
-            $private.goToPreviousPage = function () {
-                contextualSearch.CurrentPage--;
-                $private.refreshPage();
-            };
-
-            $private.getMinPage = function (pageCount, pageIndex) {
-                pageIndex = parseInt(pageIndex);
-                if (pageIndex < 4) {
-                    return 1;
-                }
-                else if (pageIndex > pageCount - 3) {
-                    return pageCount - 4;
-                }
-                else {
-                    return pageIndex - 2;
-                }
-            };
-
-            $private.getMaxPage = function (pageCount, pageIndex) {
-                pageIndex = parseInt(pageIndex);
-                if (pageIndex < 4) {
-                    if (pageCount < 6) {
+                $private.getMaxPage = function (pageCount, pageIndex) {
+                    pageIndex = parseInt(pageIndex);
+                    if (pageIndex < 4) {
+                        if (pageCount < 6) {
+                            return pageCount + 1;
+                        } else {
+                            return 6;
+                        }
+                    } else if (pageIndex > pageCount - 3) {
                         return pageCount + 1;
+                    } else {
+                        return pageIndex + 3;
                     }
-                    else {
-                        return 6;
-                    }
-                }
-                else if (pageIndex > pageCount - 3) {
-                    return pageCount + 1;
-                }
-                else {
-                    return pageIndex + 3;
-                }
-            };
+                };
 
-            $private.showResults = function (data) {
-                $("#search-results-container").html($private.searchResultsTemplate(
-                    {
-                        searchResults: data.results.Entities,
-                        term: contextualSearch.Term,
-                        pageCount: Math.ceil(data.results.Count / 8),
-                        hasPrevious: data.results.HasPrevious,
-                        hasNext: data.results.HasNext,
-                        currentPage: data.CurrentPage,
-                        minPage: $private.getMinPage(Math.ceil(data.results.Count / 8), data.CurrentPage),
-                        maxPage: $private.getMaxPage(Math.ceil(data.results.Count / 8), data.CurrentPage)
-                    }));
-                $("#search-results-container").slideDown();
-            };
+                $private.showResults = function (data) {
+                    $("#search-results-container").html($private.searchResultsTemplate(
+                        {
+                            searchResults: data.results.Entities,
+                            term: contextualSearch.Term,
+                            pageCount: Math.ceil(data.results.Count / 8),
+                            hasPrevious: data.results.HasPrevious,
+                            hasNext: data.results.HasNext,
+                            currentPage: data.CurrentPage,
+                            minPage: $private.getMinPage(Math.ceil(data.results.Count / 8), data.CurrentPage),
+                            maxPage: $private.getMaxPage(Math.ceil(data.results.Count / 8), data.CurrentPage)
+                        }));
+                    $("#search-results-container").slideDown();
+                };
 
-            $private.refreshResults = function (data) {
-                $("#search-results-container").html($private.searchResultsTemplate(
-                    {
-                        searchResults: data.results.Entities,
-                        term: contextualSearch.Term,
-                        pageCount: Math.ceil(data.results.Count / 8),
-                        hasPrevious: data.results.HasPrevious,
-                        hasNext: data.results.HasNext,
-                        currentPage: data.CurrentPage,
-                        minPage: $private.getMinPage(Math.ceil(data.results.Count / 8), data.CurrentPage),
-                        maxPage: $private.getMaxPage(Math.ceil(data.results.Count / 8), data.CurrentPage)
-                    }));
+                $private.refreshResults = function (data) {
+                    $("#search-results-container").html($private.searchResultsTemplate(
+                        {
+                            searchResults: data.results.Entities,
+                            term: contextualSearch.Term,
+                            pageCount: Math.ceil(data.results.Count / 8),
+                            hasPrevious: data.results.HasPrevious,
+                            hasNext: data.results.HasNext,
+                            currentPage: data.CurrentPage,
+                            minPage: $private.getMinPage(Math.ceil(data.results.Count / 8), data.CurrentPage),
+                            maxPage: $private.getMaxPage(Math.ceil(data.results.Count / 8), data.CurrentPage)
+                        }));
 
-            };
+                };
 
-            $private.visualizeNotice = function (e) {
+                $private.visualizeNotice = function (e) {
 
-                var notice = $(e.target).closest(".notice");
-                var noticeId = notice.data("id");
-                notice.fadeOut("slow", null, function () {
-                    proxy.visualizeNotice(noticeId, SmartLMS.LoggedUserId).done($private.refreshNotices);
-                });
-            };
+                    var notice = $(e.target).closest(".notice");
+                    var noticeId = notice.data("id");
+                    notice.fadeOut("slow",
+                        null,
+                        function () {
+                            proxy.visualizeNotice(noticeId, SmartLMS.LoggedUserId).done($private.refreshNotices);
+                        });
+                };
 
-            $private.refreshNotices = function (data) {
-                var notice = $private.noticeTemplate(data);
-                $(notice).hide().appendTo($("#notice-panel-body")).fadeIn("slow");
+                $private.refreshNotices = function (data) {
+                    var notice = $private.noticeTemplate(data);
+                    $(notice).hide().appendTo($("#notice-panel-body")).fadeIn("slow");
 
-            };
-        }(SmartLMS.HomeControllerProxy));
-
-
-    </script>
+                };
+            }(SmartLMS.HomeControllerProxy));
+        </script>
+    }
     <script src="~/Scripts/addtohomescreen/addtohomescreen.js"></script>
     <script>
-            $(function () {
-                addToHomescreen({
-                    modal: true,
-                    detectHomescreen: true
-                });
+        $(function () {
+            addToHomescreen({
+                modal: true,
+                detectHomescreen: true
             });
+        });
 
     </script>
 }

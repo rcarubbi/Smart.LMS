@@ -14,8 +14,8 @@ namespace SmartLMS.WebUI.Controllers
     [AllowAnonymous]
     public class AuthenticationController : BaseController
     {
-        public AuthenticationController(IContext contexto)
-            : base(contexto)
+        public AuthenticationController(IContext context)
+            : base(context)
         {
 
         }

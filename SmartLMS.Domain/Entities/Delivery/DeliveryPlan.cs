@@ -31,15 +31,21 @@ namespace SmartLMS.Domain.Entities.Delivery
             if (Concluded)
                 return;
 
-            var classWasDelivered = false;
+            bool classWasDelivered;
           
             do
             {
+                var courseOrder = 0;
                 var lastDeliveredClass = AvailableClasses.OrderByDescending(x => x.DeliveryDate).FirstOrDefault();
-                var nextCourse = GetNextCourse(lastDeliveredClass);
+                var nextCourse = GetNextCourse(lastDeliveredClass, courseOrder);
+
+                while (nextCourse?.Classes?.Count == 0 && courseOrder < Classroom.Courses.Max(x => x.Order))
+                {
+                    nextCourse = GetNextCourse(lastDeliveredClass, courseOrder++);
+                }
 
                 var nextClass = GetNextClass(lastDeliveredClass, lastDeliveredClass?.Class?.Course);
-                if (nextClass == null && (lastDeliveredClass == null || (lastDeliveredClass.DeliveryDate.Date < DateTime.Today)))
+                if (nextClass == null && (lastDeliveredClass == null || (lastDeliveredClass.DeliveryDate.Date <= DateTime.Today)))
                 {
                     nextClass = GetNextClass(lastDeliveredClass, nextCourse);
                 }
@@ -77,12 +83,12 @@ namespace SmartLMS.Domain.Entities.Delivery
             SendDeliveringClassEmail(context, sender, klass, Students);
         }
 
-        private bool CheckDeliveryStatus(IContext contexto, IMailSender sender, Class klass)
+        private bool CheckDeliveryStatus(IContext context, IMailSender sender, Class klass)
         {
             DateTime? lastDeliveryDate = AvailableClasses.OrderByDescending(x => x.DeliveryDate).Select(x => x.DeliveryDate).FirstOrDefault();
 
             if ((lastDeliveryDate.Value).AddDays(klass.DeliveryDays).Date > DateTime.Today) return false;
-            DeliverClass(contexto, sender, klass);
+            DeliverClass(context, sender, klass);
              
             return true;
         }
@@ -98,12 +104,12 @@ namespace SmartLMS.Domain.Entities.Delivery
 
    
 
-        private Course GetNextCourse(ClassDeliveryPlan lastDeliveredClass)
+        private Course GetNextCourse(ClassDeliveryPlan lastDeliveredClass, int order)
         {
-            var ordem = 0;
+            
             if (lastDeliveredClass != null)
             {
-                ordem = Classroom.Courses
+                order = Classroom.Courses
                     .Single(x => x.CourseId == lastDeliveredClass.Class.Course.Id)
                     .Order;
             }
@@ -111,7 +117,7 @@ namespace SmartLMS.Domain.Entities.Delivery
             var course = Classroom.Courses
                 .Where(a => a.Course.Active)
                 .OrderBy(x => x.Order)
-                .FirstOrDefault(x => x.Order > ordem);
+                .FirstOrDefault(x => x.Order > order);
 
             return course?.Course;
         }
@@ -120,19 +126,19 @@ namespace SmartLMS.Domain.Entities.Delivery
         {
             if (course == null)
                 return null;
-            var ordem = 0;
+            var order = 0;
             if (lastDeliveredClass == null)
                 return course.Classes
                     .Where(a => a.Active)
                     .OrderBy(x => x.Order)
-                    .FirstOrDefault(x => x.Order > ordem);
+                    .FirstOrDefault(x => x.Order > order);
 
-            ordem = lastDeliveredClass.Class.Course.Id == course.Id ? lastDeliveredClass.Class.Order : 0;
+            order = lastDeliveredClass.Class.Course.Id == course.Id ? lastDeliveredClass.Class.Order : 0;
 
             return course.Classes
                 .Where(a => a.Active)
                 .OrderBy(x => x.Order)
-                .FirstOrDefault(x => x.Order > ordem);
+                .FirstOrDefault(x => x.Order > order);
         }
 
     }

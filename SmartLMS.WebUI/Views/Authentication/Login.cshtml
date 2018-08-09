@@ -68,16 +68,7 @@
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        if (navigator.serviceWorker.controller) {
-            console.log('[smartlms] active service worker found, no need to register');
-        } else {
-            //Register the ServiceWorker
-            navigator.serviceWorker.register('smartlms-sw.js', {
-                scope: './'
-            }).then(function(reg) {
-                console.log('Service worker has been registered for scope:'+ reg.scope);
-            });
-        }
+     
 
         (function () {
             var $private = {};

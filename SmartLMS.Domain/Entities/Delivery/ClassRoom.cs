@@ -8,7 +8,7 @@ namespace SmartLMS.Domain.Entities.Delivery
 {
     public class Classroom : Entity
     {
-      
+
         public string Name { get; set; }
 
         public virtual ICollection<ClassroomCourse> Courses { get; set; } = new List<ClassroomCourse>();
@@ -17,22 +17,23 @@ namespace SmartLMS.Domain.Entities.Delivery
 
         internal async Task SyncAccessesAsync(IContext context, IMailSender sender)
         {
-            await Task.Run(() => { 
+            await Task.Run(() =>
+            {
                 using (var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     foreach (var deliveryPlan in DeliveryPlans)
                     {
                         var lastDeliveredClass = deliveryPlan.AvailableClasses.OrderByDescending(x => x.DeliveryDate).FirstOrDefault();
-                        if (lastDeliveredClass != null)
+                        if (lastDeliveredClass == null) continue;
+
+                        var courseOrder = Courses.Single(c => c.CourseId == lastDeliveredClass.Class.Course.Id).Order;
+                        var previousCoursesClasses = Courses.Where(c => c.Order < courseOrder).SelectMany(x => x.Course.Classes);
+                        var notDeliveredPreviousCoursesClasses = previousCoursesClasses.Except(deliveryPlan.AvailableClasses.Select(x => x.Class));
+                        foreach (var item in notDeliveredPreviousCoursesClasses)
                         {
-                            var courseOrder = Courses.Single(c => c.CourseId == lastDeliveredClass.Class.Course.Id).Order;
-                            var previousCoursesClasses = Courses.Where(c => c.Order < courseOrder).SelectMany(x => x.Course.Classes);
-                            var notDeliveredPreviousCoursesClasses = previousCoursesClasses.Except(deliveryPlan.AvailableClasses.Select(x => x.Class));
-                            foreach (var item in notDeliveredPreviousCoursesClasses)
-                            {
-                                deliveryPlan.DeliverClass(context, sender, item);
-                            }
+                            deliveryPlan.DeliverClass(context, sender, item);
                         }
+
                     }
                     tx.Complete();
                 }

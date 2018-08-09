@@ -39,9 +39,9 @@ namespace SmartLMS.WebUI.Controllers
 
         protected User _loggedUser;
         protected IContext _context;
-        public BaseController(IContext contexto)
+        public BaseController(IContext context)
         {
-            _context = contexto;
+            _context = context;
         }
 
         protected Role GetUserRole(User user)

@@ -14,8 +14,8 @@ namespace SmartLMS.WebUI.Controllers
     [Authorize]
     public class UserController : BaseController
     {
-        public UserController(IContext contexto)
-             : base(contexto)
+        public UserController(IContext context)
+             : base(context)
         {
 
         }

@@ -39,7 +39,7 @@ namespace SmartLMS.ContentDeliveryAgent
                                     .AddTrigger(() =>
                                         TriggerBuilder.Create()
                                             .WithSimpleSchedule(builder => builder
-                                                                            .WithIntervalInHours(6)
+                                                                            .WithIntervalInHours(1)
                                                                             .RepeatForever())
                                                                             .Build())
                                 );

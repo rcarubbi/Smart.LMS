@@ -1,5 +1,11 @@
 ﻿@{
     Layout = null;
+
+
+    var wallpapers = Resource.Wallpaper.Split('|');
+    Random rnd = new Random();
+    var wallpaperIndex = rnd.Next(0, wallpapers.Length);
+
 }
 @using SmartLMS.Domain.Entities
 @using SmartLMS.Domain.Resources
@@ -45,7 +51,7 @@
 </head>
 <body class="signup-page">
     <div class="wrapper">
-        <div class="header header-filter" style="background-image: url('@Resource.Wallpaper'); background-size: cover; background-position: top center;">
+        <div class="header header-filter" style="background-image: url('@wallpapers[wallpaperIndex]'); background-size: cover; background-position: top center;">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4">
@@ -68,12 +74,12 @@
                     </div>
                 </footer>
             </div>
-         </div>
+        </div>
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/data")
     @Scripts.Render("~/bundles/bootstrap")
-   @RenderSection("scripts", false)
+    @RenderSection("scripts", false)
 </body>
 </html>
