@@ -428,6 +428,7 @@
     <Content Include="Views\Classroom\_CoursesListModal.cshtml" />
     <Content Include="Views\Course\TeacherIndex.cshtml" />
     <Content Include="Views\Shared\_MyCoursesPanel.cshtml" />
+    <Content Include="Views\Teacher\StudentsAccessHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

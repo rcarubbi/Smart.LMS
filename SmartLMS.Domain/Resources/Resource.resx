@@ -854,4 +854,10 @@ Regards, Gnatta Training Tool Team
   <data name="UserPasswordRequired" xml:space="preserve">
     <value>Password required</value>
   </data>
+  <data name="AccessHistoryPageTitle" xml:space="preserve">
+    <value>Access History</value>
+  </data>
+  <data name="SelectStudent" xml:space="preserve">
+    <value>Select a Student</value>
+  </data>
 </root>

@@ -97,6 +97,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access History.
+        /// </summary>
+        public static string AccessHistoryPageTitle {
+            get {
+                return ResourceManager.GetString("AccessHistoryPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string AccessTypeAll {
@@ -1703,6 +1712,15 @@ namespace SmartLMS.Domain.Resources {
         public static string SelectOneSubjectIndexMessage {
             get {
                 return ResourceManager.GetString("SelectOneSubjectIndexMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a Student.
+        /// </summary>
+        public static string SelectStudent {
+            get {
+                return ResourceManager.GetString("SelectStudent", resourceCulture);
             }
         }
         

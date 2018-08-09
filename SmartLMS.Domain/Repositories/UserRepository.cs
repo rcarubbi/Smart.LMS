@@ -189,6 +189,16 @@ namespace SmartLMS.Domain.Repositories
                 .OrderBy(x => x.Name).ToList();
         }
 
-    
+
+        public List<Student> ListStudentsByTeacher(Guid teacherId)
+        {
+            var students = ListActiveStudents()
+                .Where(s =>s.DeliveryPlans.Select(dp => dp.Classroom)
+                    .SelectMany(cr => cr.Courses)
+                    .Select(c => c.Course)
+                    .Any(c => c.TeacherInCharge.Id == teacherId || c.Classes.Any(cl => cl.Teacher.Id == teacherId)));
+
+            return students.ToList();
+        }
     }
 }

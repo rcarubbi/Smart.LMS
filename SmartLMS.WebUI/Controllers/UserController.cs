@@ -5,6 +5,7 @@ using SmartLMS.WebUI.Models;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Carubbi.GenericRepository;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Services;
@@ -62,7 +63,6 @@ namespace SmartLMS.WebUI.Controllers
             var historyService = new HistoryService(_context, new DefaultDateTimeHumanizeStrategy());
             return View(AccessViewModel.FromEntityList(historyService.SearchAccess(range, 1, _loggedUser.Id, AccessType.All)));
         }
-
 
 
         public ActionResult ListAccessHistory(DateTime? startDate, DateTime? endDate, AccessType accessType = AccessType.All, int page = 1)

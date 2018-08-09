@@ -60,7 +60,7 @@
     <div class="text-center">
         <ul class="pagination pagination-primary">
             {{#if hasPrevious}}
-            <li><a class="contextual-search-pagination-previous" href="javascript:void(0);">@Resource.PreviousPage</a></li>
+            <li><a class="contextual-search-pagination-previous" href="javascript:void(0);">@Html.Raw(Resource.PreviousPage)</a></li>
             {{/if}}
 
             {{#for minPage maxPage 1}}
@@ -73,7 +73,7 @@
                 </li>
             {{/for}}
             {{#if hasNext}}
-            <li><a class="contextual-search-pagination-next" href="javascript:void(0);">@Resource.NextPage</a></li>
+            <li><a class="contextual-search-pagination-next" href="javascript:void(0);">@Html.Raw(Resource.NextPage)</a></li>
             {{/if}}
         </ul>
     </div>

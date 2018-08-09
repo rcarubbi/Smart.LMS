@@ -2,7 +2,7 @@
 @model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.AccessViewModel>
 @{
     ViewBag.Title = Resource.AccessHistoryPageTitle;
-   
+
 }
 <div class="panel panel-info">
     <div class="panel-heading">
@@ -10,22 +10,28 @@
     </div>
     <div class="panel-body panel-body-no-margin">
         <div class="form-horizontal">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group label-static is-empty">
                     <label class="control-label">@Resource.StartDateLabel</label>
                     <input class="datepicker form-control" type="text" id="startDate" value="@DateTime.Now.AddMonths(-1).ToShortDateString()" />
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group label-static is-empty">
                     <label class="control-label">@Resource.EndDateLabel</label>
                     <input class="datepicker form-control" type="text" id="endDate" value="@DateTime.Now.ToShortDateString()" />
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group label-static is-empty">
                     <label for="AccessType" class="control-label">@Resource.AccessTypeLabel</label>
                     @Html.DropDownList("AccessType", ViewBag.AccessTypes as SelectList, new { @class = "form-control dropdownjs" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group label-static is-empty">
+                    <label for="Students" class="control-label">@Resource.StudentPlural</label>
+                    @Html.DropDownList("Students", ViewBag.Students as SelectList, Resource.SelectStudent, new { id="Students", @class = "form-control dropdownjs" })
                 </div>
             </div>
             <div class="text-right">
@@ -130,13 +136,13 @@
         SmartLMS.AccessHistoryProxy = (function() {
             $public = {}, $private = {};
 
-            $public.search = function(startDate, endDate, accessType, page) {
+            $public.search = function (startDate, endDate, userId, accessType, page) {
                 return $.ajax({
                     type: "POST",
-                    url: SmartLMS.api + "User/ListAccessHistory",
+                    url: SmartLMS.api + "Teacher/ListAccessHistory",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    data: JSON.stringify({ startDate, endDate, accessType, page })
+                    data: JSON.stringify({ startDate, endDate, userId, accessType, page })
                 });
             };
 
@@ -148,6 +154,7 @@
 
             $(function() {
                 $private.AccessType = 0;
+                $private.UserId = "";
 
                 SmartLMS.Pagination.init({
                     onPageChanged: $private.changePage,
@@ -160,20 +167,28 @@
 
                     });
 
+                $("#Students").on("dropdownjs.change",
+                    function() {
+                        var selectedItem = $(this).find("option:selected");
+                        $private.UserId = selectedItem.val();
+
+                    });
+
                 $("#filter-button").on("click", $private.search);
             });
 
             $private.changePage = function(page) {
                 var startDate = $("#startDate").val();
                 var endDate = $("#endDate").val();
-                return proxy.search(startDate, endDate, $private.AccessType, page);
+                return proxy.search(startDate, endDate, userId, $private.AccessType, page);
             };
 
             $private.search = function() {
                 SmartLMS.Pagination.CurrentPage = 1;
                 var startDate = $("#startDate").val();
                 var endDate = $("#endDate").val();
-                $.when(proxy.search(startDate, endDate, $private.AccessType, SmartLMS.Pagination.CurrentPage))
+       
+                $.when(proxy.search(startDate, endDate, $private.UserId, $private.AccessType, SmartLMS.Pagination.CurrentPage))
                     .then(SmartLMS.Pagination.refreshResults)
                     .then(SmartLMS.App.InitControls);
             };

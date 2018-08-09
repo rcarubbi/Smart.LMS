@@ -7,8 +7,13 @@ using SmartLMS.WebUI.Models;
 using System;
 using System.Net;
 using System.Web.Mvc;
+using Carubbi.GenericRepository;
+using Carubbi.Utils.Data;
+using Carubbi.Utils.DataTypes;
+using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Resources;
+using AccessViewModel = SmartLMS.WebUI.Models.AccessViewModel;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -41,7 +46,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
             var userRepository = new UserRepository(_context);
-            ViewBag.SearchFields = new SelectList(new[] { "Name", "Email", "Id" });
+            ViewBag.SearchFields = new SelectList(new[] {"Name", "Email", "Id"});
             return View(UserViewModel.FromEntityList(userRepository.ListTeachers(term, searchFieldName, page)));
         }
 
@@ -99,6 +104,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(UserViewModel.FromEntity(teacher));
         }
 
@@ -107,7 +113,8 @@ namespace SmartLMS.WebUI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Login,Password,Email,Active")] Teacher teacher)
+        public ActionResult Edit([Bind(Include = "Id,Name,Login,Password,Email,Active")]
+            Teacher teacher)
         {
             if (!ModelState.IsValid) return View(teacher);
             try
@@ -134,7 +141,36 @@ namespace SmartLMS.WebUI.Controllers
                 TempData["MessageTitle"] = Resource.TeacherManagementToastrTitle;
                 TempData["Message"] = ex.Message;
             }
+
             return View(teacher);
+        }
+
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin,Teacher")]
+        public ActionResult StudentsAccessHistory()
+        {
+            const AccessType accessType = AccessType.File;
+            ViewBag.AccessTypes = new SelectList(accessType.ToDataSource<AccessType>(), "Key", "Value");
+
+
+            var userRepository = new UserRepository(_context);
+           
+            ViewBag.Students = new SelectList(userRepository.ListStudentsByTeacher(_loggedUser.Id), "Id", "Name");
+            return View(new PagedListResult<AccessViewModel>());
+        }
+
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin,Teacher")]
+        public ActionResult ListAccessHistory(DateTime? startDate, DateTime? endDate, Guid userId, AccessType accessType = AccessType.All, int page = 1)
+        {
+            var range = new DateRange
+            {
+                StartDate = startDate,
+                EndDate = endDate
+            };
+
+            var historyService = new HistoryService(_context, new DefaultDateTimeHumanizeStrategy());
+            return Json(AccessViewModel.FromEntityList(historyService.SearchAccess(range, page, userId, accessType)), JsonRequestBehavior.AllowGet);
         }
     }
 }
