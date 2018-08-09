@@ -92,7 +92,7 @@
 
                 if ($(this).valid()) {
                     var sendOriginalText = $("#login-submit").text();
-                    var sending = $("<img src='@Url.Content("~/Content/img/loading-green.gif")'> <span>@Resource.Authenticating</span>");
+                    var sending = $("<img src='@Url.Content("~/Content/img/loading-green.gif")' style='width:18px'> <span>@Resource.Authenticating</span>");
                     $("#login-submit").html(sending);
                     $("#login-submit").prop('disabled', true);
                     $.ajax({

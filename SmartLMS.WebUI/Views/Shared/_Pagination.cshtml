@@ -9,7 +9,7 @@
     <ul class="pagination pagination-primary">
 
         <li>
-            <a class="pagination-previous" @if (!Model.HasPrevious) { <text> style="display:none" </text>      } href="javascript:void(0);">@Resource.PreviousPage</a>
+            <a class="pagination-previous" @if (!Model.HasPrevious) { <text> style="display:none" </text>      } href="javascript:void(0);">@Html.Raw(Resource.PreviousPage)</a>
         </li>
 
         @for (int i = 1; i <= maxPage; i++)
@@ -18,7 +18,7 @@
                 <a href="javascript:void(0);" class="pagination-page">@i</a>
             </li>
         }
-        <li><a class="pagination-next" style="@(!Model.HasNext? "display:none;": string.Empty)" href="javascript:void(0);">@Resource.NextPage</a></li>
+        <li><a class="pagination-next" style="@(!Model.HasNext? "display:none;": string.Empty)" href="javascript:void(0);">@Html.Raw(Resource.NextPage)</a></li>
     </ul>
 </div>
 
@@ -26,7 +26,7 @@
 
     <ul class="pagination pagination-primary">
         {{#if hasPrevious}}
-        <li><a class="pagination-previous" href="javascript:void(0);">@Resource.PreviousPage</a></li>
+        <li><a class="pagination-previous" href="javascript:void(0);">@Html.Raw(Resource.PreviousPage)</a></li>
         {{/if}}
         {{#for minPage maxPage 1}}
         {{#equals this @@root.currentPage}}
@@ -38,7 +38,7 @@
         </li>
         {{/for}}
         {{#if hasNext}}
-        <li><a class="pagination-next" href="javascript:void(0);">@Resource.NextPage</a></li>
+        <li><a class="pagination-next" href="javascript:void(0);">@Html.Raw(Resource.NextPage)</a></li>
         {{/if}}
     </ul>
 

@@ -20,7 +20,7 @@
                         <div class="form-group label-floating">
                             <label class="control-label">@Resource.TalkToUsEmailLabel</label>
                             @Html.TextBoxFor(x => x.Email, new { @class = "form-control", id = "talk-to-us-email-textbox", autocomplete = "email" })
-                            @Html.ValidationMessageFor(x => x.Email)
+                            @Html.ValidationMessageFor(x => x.Email, string.Empty, new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="input-group">
@@ -30,7 +30,7 @@
                         <div class="form-group label-floating">
                             <label class="control-label">@Resource.TalkToUsNameLabel</label>
                             @Html.TextBoxFor(x => x.Name, new { @class = "form-control", id = "talk-to-us-name-textbox", autocomplete = "name" })
-                            @Html.ValidationMessageFor(x => x.Name)
+                            @Html.ValidationMessageFor(x => x.Name, string.Empty, new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="input-group">
@@ -38,7 +38,7 @@
                             <i class="material-icons">message</i>
                         </span>
                         @Html.TextAreaFor(model => model.Message, new { @class = "form-control", placeholder = Resource.TalkToUsMessagePlaceholder, rows = "5", id= "talk-to-us-message-textbox" })
-                        @Html.ValidationMessageFor(x => x.Message)
+                        @Html.ValidationMessageFor(x => x.Message, string.Empty, new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="modal-footer">

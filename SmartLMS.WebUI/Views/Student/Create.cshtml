@@ -59,7 +59,14 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.ClassroomId,  new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.ClassroomId, ViewBag.Classrooms as SelectList, "-- Select --", new { @class= "form-control dropdownjs" })
+                    <div class="row">
+                        <div class="col-xs-10">
+                            @Html.DropDownListFor(model => model.ClassroomId, ViewBag.Classrooms as SelectList, "-- Select --", new { @class = "form-control dropdownjs" })
+                        </div>
+                        <div class="col-xs-1">
+                            <a href="@Url.Action("Create", "Classroom")" class="btn btn-sm btn-info"> <i class="material-icons">group_add</i></a>
+                        </div>
+                    </div>
                     @Html.ValidationMessageFor(model => model.ClassroomId, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -69,7 +76,7 @@
                     <button type="submit" class="btn btn-success btn-sm">
                         <i class="fa fa-save"></i>
                     </button>
-                    @Html.ActionLink(Resource.BackButton, "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                    <a href="@ViewBag.BackURL" class="btn btn-simple btn-sm btn-default">@Resource.BackButton</a>
                 </div>
             </div>
         </div>

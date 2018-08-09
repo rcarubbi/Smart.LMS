@@ -14,7 +14,7 @@
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.Id)
-            @Html.Hidden("BackURL", (string)ViewBag.BackURL)
+          
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">

@@ -28,7 +28,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             var courseRepository = new CourseRepository(_context);
             var courses = courseRepository.ListMyCourses(_loggedUser.Id, GetUserRole(_loggedUser));
-            return PartialView("_MyCoursesPanel", CourseViewModel.FromEntityList(courses, 0));
+            return PartialView("_MyCoursesPanel", CourseViewModel.FromEntityList(courses, 3));
         }
 
 
@@ -147,7 +147,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = Resource.CourseCreatedToastrMessage;
-                    return RedirectToAction("IndexAdmin");
+                    return Redirect(TempData["BackURL"].ToString());
                 }
                 catch (Exception ex)
                 {
@@ -264,7 +264,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = Resource.CourseUpdatedToastrMessage;
-                    return RedirectToAction("IndexAdmin");
+                    return Redirect(TempData["BackURL"].ToString());
                 }
                 catch (Exception ex)
                 {

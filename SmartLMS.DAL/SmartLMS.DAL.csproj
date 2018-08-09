@@ -69,9 +69,9 @@
     <Compile Include="Mapping\ClassroomCourseConfiguration.cs" />
     <Compile Include="Mapping\UserNoticeConfiguration.cs" />
     <Compile Include="Mapping\UserConfiguration.cs" />
-    <Compile Include="Migrations\201808021401436_InitialModel.cs" />
-    <Compile Include="Migrations\201808021401436_InitialModel.Designer.cs">
-      <DependentUpon>201808021401436_InitialModel.cs</DependentUpon>
+    <Compile Include="Migrations\201808090923060_InitialMigration.cs" />
+    <Compile Include="Migrations\201808090923060_InitialMigration.Designer.cs">
+      <DependentUpon>201808090923060_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,8 +97,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201808021401436_InitialModel.resx">
-      <DependentUpon>201808021401436_InitialModel.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808090923060_InitialMigration.resx">
+      <DependentUpon>201808090923060_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -253,7 +253,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = Resource.ClassCreatedToastrMessage;
-                    return RedirectToAction("IndexAdmin");
+                    return Redirect(TempData["BackURL"].ToString());
                 }
                 catch (Exception ex)
                 {
@@ -344,7 +344,7 @@ namespace SmartLMS.WebUI.Controllers
         [Authorize(Roles = "Admin, Teacher")]
         public ActionResult Edit(Guid id)
         {
-            ViewBag.BackURL = Request.UrlReferrer.ToString();
+           
             var classRepository = new ClassRepository(_context);
             var klass = classRepository.GetById(id);
             var userRole = GetUserRole(_loggedUser);
@@ -375,7 +375,7 @@ namespace SmartLMS.WebUI.Controllers
         [HttpPost]
         public ActionResult Edit(Guid id, ClassViewModel viewModel)
         {
-            ViewBag.BackURL = Request.Form["BackURL"];
+           
             var userRole = GetUserRole(_loggedUser);
             var courseRepository = new CourseRepository(_context);
             var course = courseRepository.GetById(viewModel.CourseId);
@@ -400,7 +400,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = "Class updated";
                  
-                    return Redirect(ViewBag.BackURL);
+                    return Redirect(TempData["BackURL"].ToString());
                 }
                 catch (Exception ex)
                 {

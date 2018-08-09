@@ -64,7 +64,7 @@ namespace SmartLMS.WebUI.Controllers
                 TempData["MessageType"] = "success";
                 TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                 TempData["Message"] = "Knowledge Area created";
-                return RedirectToAction("IndexAdmin");
+                return Redirect(TempData["BackURL"].ToString());
             }
             catch (Exception ex)
             {
@@ -97,7 +97,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = "Knowledge Area updated";
-                    return RedirectToAction("IndexAdmin");
+                    return Redirect(TempData["BackURL"].ToString());
                 }
                 catch (Exception ex)
                 {

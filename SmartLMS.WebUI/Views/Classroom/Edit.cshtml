@@ -50,7 +50,7 @@
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fa fa-save"></i>
                         </button>
-                        @Html.ActionLink(Resource.BackButton, "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                         <a href="@ViewBag.BackURL" class="btn btn-simple btn-sm btn-default">@Resource.BackButton</a>
                     </div>
                 </div>
             </div>

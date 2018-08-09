@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.DeliveryDays,  new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.DeliveryDays, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.DeliveryDays, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.DeliveryDays, "", new { @class = "text-danger" })
@@ -39,26 +39,43 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.CourseId, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.CourseId, ViewBag.Courses as SelectList, Resource.SelectCourse, new { @class = "form-control dropdownjs" })
+                        <div class="row">
+                            <div class="col-xs-10">
+                                @Html.DropDownListFor(model => model.CourseId, ViewBag.Courses as SelectList, Resource.SelectCourse, new { @class = "form-control dropdownjs" })
+                            </div>
+                            <div class="col-xs-1">
+                                <a href="@Url.Action("Create", "Course")" class="btn btn-sm btn-info">
+                                    <i class="fa fa-plus" style="font-size: 10px; top: 0px; left: 2px;"></i>
+                                    <i class="fa fa-graduation-cap"></i>
+                                </a>
+                            </div>
+                        </div>
                         @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.TeacherId,  new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.TeacherId, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.TeacherId, ViewBag.Teachers as SelectList, Resource.SelectTeacher, new { @class = "form-control dropdownjs" })
+                        <div class="row">
+                            <div class="col-xs-10">
+                                @Html.DropDownListFor(model => model.TeacherId, ViewBag.Teachers as SelectList, Resource.SelectTeacher, new { @class = "form-control dropdownjs" })
+                            </div>
+                            <div class="col-xs-1">
+                                <a href="@Url.Action("Create", "Teacher")" class="btn btn-sm btn-info"> <i class="material-icons">person_add</i> </a>
+                            </div>
+                        </div>
                         @Html.ValidationMessageFor(model => model.TeacherId, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ContentType,  new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.ContentType, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.DropDownListFor(model => model.ContentType, ViewBag.ContentTypes as SelectList, Resource.SelectContentType, new { @class = "form-control dropdownjs" })
                         @Html.ValidationMessageFor(model => model.ContentType, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Content,  new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Content, new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
@@ -69,14 +86,14 @@
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fa fa-save"></i>
                         </button>
-                        @Html.ActionLink(Resource.BackButton, "IndexAdmin", null, new { @class = "btn btn-simple btn-sm btn-default" })
+                        <a href="@ViewBag.BackURL" class="btn btn-simple btn-sm btn-default">@Resource.BackButton</a>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
- 
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

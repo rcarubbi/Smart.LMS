@@ -220,9 +220,9 @@ SmartLMS.App = (function () {
         $(window).on("resize", $private.resizeSlimControl);
         
         $(document).ajaxError(function (event, xhr, options, thrownError) {
-            var erro = $(xhr.responseText).filter("span").find("h2 > i").text();
-            if (erro !== "") {
-                $public.toastr["error"](erro, "Erro");
+            var error = $(xhr.responseText).filter("span").find("h2 > i").text();
+            if (error !== "") {
+                $public.toastr["error"](error, "Error");
             }
         });
     });

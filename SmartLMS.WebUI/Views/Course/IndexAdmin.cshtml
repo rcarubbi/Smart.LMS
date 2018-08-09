@@ -31,7 +31,7 @@
                 <div class="col-md-4">
                     <div class="form-group label-static is-empty">
                         <label for="SearchField" class="control-label">@Resource.SearchByLabel</label>
-                        @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new { id= "SearchField", @class = "form -control dropdownjs" })
+                        @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new { id= "SearchField", @class = "form-control dropdownjs" })
                     </div>
                 </div>
                 <div class="form-group label-floating is-empty col-md-7">
@@ -115,7 +115,7 @@
             @if (!Model.Entities.Any())
             {
                 <tr>
-                    <td colspan="5" class="text-center">
+                    <td colspan="6" class="text-center">
                         @Resource.NoCoursesAdmin
                     </td>
                 </tr>
@@ -188,7 +188,7 @@
         {{/each}}
         {{#equals Count 0}}
         <tr>
-            <td colspan="5" class="text-center">
+            <td colspan="6" class="text-center">
                 @Resource.NoCoursesAdmin
             </td>
         </tr>

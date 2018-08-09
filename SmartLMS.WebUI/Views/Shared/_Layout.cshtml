@@ -65,7 +65,7 @@
         }
 
         var SmartLMS = {};
-        SmartLMS.api = '@Parameter.BASE_URL';
+        SmartLMS.api = '@Parameter.BASE_URL/';
 
 
     </script>
@@ -126,7 +126,7 @@
 
                 if ($(this).valid()) {
                     var sendMessageOriginalText = $("#talk-to-us-send-button").text();
-                    var sending = $("<img src='@Url.Content("~/Content/Img/loading-white.gif")'><span> @Resource.Sending</span>");
+                    var sending = $("<img src='@Url.Content("~/Content/Img/loading-white.gif")' style='width:17px'><span> @Resource.Sending</span>");
                     $("#talk-to-us-send-button").html(sending);
                     $("#talk-to-us-send-button").prop('disabled', true);
                     $.ajax({

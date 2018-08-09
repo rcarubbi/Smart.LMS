@@ -1,13 +1,13 @@
 ﻿using Carubbi.Mailer.Implementation;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Resources;
 using SmartLMS.Domain.Services;
 using SmartLMS.WebUI.Models;
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
-using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -66,23 +66,21 @@ namespace SmartLMS.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(viewModel);
+            var sender = new SmtpSender();
+            var authenticationService = new AuthenticationService(_context, sender);
+            var password = authenticationService.RecoverPassword(viewModel.Email);
+            if (password != null)
             {
-                var sender = new SmtpSender();
-                var authenticationService = new AuthenticationService(_context, sender);
-                var password = authenticationService.RecoverPassword(viewModel.Email);
-                if (password != null)
-                {
 
-                    var notificationService = new NotificationService(_context, sender);
-                    await Task.Run(() => notificationService.SendRecoverPasswordNotification(viewModel.Email, password)).ConfigureAwait(false);
-                    ViewBag.Message = "We sent an e-mail to you with your password.";
-                }
-                else
-                {
-                    ViewBag.Message = "";
-                    ModelState.AddModelError("EmailNaoEncontrado", "E-mail not found");
-                }
+                var notificationService = new NotificationService(_context, sender);
+                await Task.Run(() => notificationService.SendRecoverPasswordNotification(viewModel.Email, password)).ConfigureAwait(false);
+                ViewBag.Message = "We sent an e-mail to you with your password.";
+            }
+            else
+            {
+                ViewBag.Message = "";
+                ModelState.AddModelError("EmailNaoEncontrado", "E-mail not found");
             }
             return View(viewModel);
         }
@@ -97,7 +95,7 @@ namespace SmartLMS.WebUI.Controllers
         [Authorize]
         public ActionResult ChangePassword()
         {
-            ChangePasswordViewModel viewModel = new ChangePasswordViewModel();
+            var viewModel = new ChangePasswordViewModel();
             return View(viewModel);
         }
 

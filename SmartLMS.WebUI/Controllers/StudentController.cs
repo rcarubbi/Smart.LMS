@@ -1,17 +1,16 @@
 ﻿using Carubbi.Mailer.Implementation;
+using SmartLMS.Domain;
+using SmartLMS.Domain.Entities.Delivery;
+using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Repositories;
+using SmartLMS.Domain.Resources;
+using SmartLMS.Domain.Services;
 using SmartLMS.WebUI.Models;
 using System;
 using System.Linq;
 using System.Net;
 using System.Transactions;
 using System.Web.Mvc;
-using SmartLMS.Domain;
-using SmartLMS.Domain.Entities;
-using SmartLMS.Domain.Entities.Delivery;
-using SmartLMS.Domain.Entities.UserAccess;
-using SmartLMS.Domain.Repositories;
-using SmartLMS.Domain.Resources;
-using SmartLMS.Domain.Services;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -25,7 +24,7 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult ListStudents(string term, string searchFieldName, int page = 1)
+        public ActionResult Search(string term, string searchFieldName, int page = 1)
         {
             UserRepository userRepository = new UserRepository(_context);
             return Json(UserViewModel.FromEntityList(userRepository.ListStudents(term, searchFieldName, page)));
@@ -121,7 +120,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageTitle"] = Resource.StudentManagementToastrTitle;
                     TempData["Message"] = "Student added";
 
-                    return RedirectToAction("IndexAdmin");
+                    return Redirect(TempData["BackURL"].ToString());
                 }
                 catch (Exception ex)
                 {
@@ -176,7 +175,7 @@ namespace SmartLMS.WebUI.Controllers
                 TempData["MessageType"] = "success";
                 TempData["MessageTitle"] = Resource.StudentManagementToastrTitle;
                 TempData["Message"] = "Student updated";
-                return RedirectToAction("IndexAdmin");
+                return Redirect(TempData["BackURL"].ToString());
             }
             catch (Exception ex)
             {

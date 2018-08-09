@@ -9,9 +9,9 @@ namespace SmartLMS.DAL.Mapping
         public ClassConfiguration()
         {
             Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-            HasMany(x => x.Accesses).WithRequired(x => x.Class);
-            HasMany(x => x.Files).WithOptional(x => x.Class);
-            HasMany(x => x.Comments).WithRequired(x => x.Class);
+            HasMany(x => x.Accesses).WithRequired(x => x.Class).WillCascadeOnDelete(true);
+            HasMany(x => x.Files).WithOptional(x => x.Class).WillCascadeOnDelete(true);
+            HasMany(x => x.Comments).WithRequired(x => x.Class).WillCascadeOnDelete(true);
             HasMany(x => x.DeliveredPlans).WithRequired(x => x.Class);
         }
     }

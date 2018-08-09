@@ -113,7 +113,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ClassroomManagementToastrTitle;
                     TempData["Message"] = "Classroom added";
-                    return RedirectToAction("IndexAdmin");
+                    return Redirect(TempData["BackURL"].ToString());
                 }
                 catch (Exception ex)
                 {
@@ -179,7 +179,7 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ClassroomManagementToastrTitle;
                     TempData["Message"] = Resource.ClassroomUpdatedToastrMessage;
-                    return RedirectToAction("IndexAdmin");
+                    return Redirect(TempData["BackURL"].ToString());
                 }
                 catch (Exception ex)
                 {

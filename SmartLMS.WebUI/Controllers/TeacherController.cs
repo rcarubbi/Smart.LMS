@@ -22,7 +22,7 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult ListTeachers(string term, string searchFieldName, int page = 1)
+        public ActionResult Search(string term, string searchFieldName, int page = 1)
         {
             var userRepository = new UserRepository(_context);
             var teachers = userRepository.ListTeachers(term, searchFieldName, page);
@@ -73,7 +73,7 @@ namespace SmartLMS.WebUI.Controllers
                 TempData["MessageType"] = "success";
                 TempData["MessageTitle"] = Resource.TeacherManagementToastrTitle;
                 TempData["Message"] = Resource.TeacherAddedToastrMessage;
-                return RedirectToAction("IndexAdmin");
+                return Redirect(TempData["BackURL"].ToString());
             }
             catch (Exception ex)
             {
@@ -126,7 +126,7 @@ namespace SmartLMS.WebUI.Controllers
                 TempData["MessageType"] = "success";
                 TempData["MessageTitle"] = Resource.TeacherManagementToastrTitle;
                 TempData["Message"] = Resource.TeacherUpdatedToastrMessage;
-                return RedirectToAction("IndexAdmin");
+                return Redirect(TempData["BackURL"].ToString());
             }
             catch (Exception ex)
             {

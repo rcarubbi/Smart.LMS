@@ -82,9 +82,19 @@ namespace SmartLMS.Domain.Repositories
 
         public void DeleteTeacher(Guid id, User loggedUser)
         {
-            Teacher teacher = _context.GetList<Teacher>().Find(id);
+            var teacher = _context.GetList<Teacher>().Find(id);
             var userNotices = _context.GetList<UserNotice>();
             var notices = _context.GetList<Notice>();
+
+            var logToBeDeleted = from l in _context.GetList<Log>()
+                where l.User.Id == id
+                select l;
+
+       
+            foreach (var log in logToBeDeleted)
+            {
+                _context.GetList<Log>().Remove(log);
+            }
 
             teacher.VisitedNotices.ToList()
                 .ForEach(a => userNotices.Remove(a));

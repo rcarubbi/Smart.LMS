@@ -3,7 +3,7 @@ namespace SmartLMS.DAL.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialModel : DbMigration
+    public partial class InitialMigration : DbMigration
     {
         public override void Up()
         {

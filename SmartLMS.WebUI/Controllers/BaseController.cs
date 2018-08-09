@@ -64,9 +64,19 @@ namespace SmartLMS.WebUI.Controllers
             var userRepository = new UserRepository(_context);
 
             if (!HttpContext.User.Identity.IsAuthenticated) return;
+            
+            if (!Request.IsAjaxRequest())
+            {
+                if (Request.Url != Request.UrlReferrer)
+                {
+                    ViewBag.BackURL = Request.UrlReferrer;
+                    TempData["BackURL"] = Request.UrlReferrer;
+                }
+
+            }
 
             _loggedUser = userRepository.GetByLogin(HttpContext.User.Identity.Name);
-            ViewBag.LoggedUserId = _loggedUser != null? _loggedUser.Id.ToString() : string.Empty;
+            ViewBag.LoggedUserId = _loggedUser != null ? _loggedUser.Id.ToString() : string.Empty;
         }
     }
 }

@@ -30,12 +30,12 @@
 </div>
 <script id="search-results-template" type="text/x-handlebars-template">
     {{#equals pageCount 0}}
-    <h4>@Resource.NoSearchResultsMessage  </h4>
+    <h4>@Html.Raw(Resource.NoSearchResultsMessage)</h4>
     {{else}}
     {{#equals pageCount 1}}
-    <h4>@Resource.OnePageResultMessage </h4>
+    <h4>@Html.Raw(Resource.OnePageResultMessage) </h4>
     {{else}}
-    <h4>@Resource.ManyPagesResultMessage</h4>
+    <h4>@Html.Raw(Resource.ManyPagesResultMessage)</h4>
     {{/equals}}
     {{/equals}}
     <div class="bs-component">
