@@ -35,7 +35,7 @@ namespace SmartLMS.WebUI.Controllers
             return View(classrooms);
         }
 
-        // GET: Turma
+        // GET: Classroom
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
             var classroomRepository = new ClassroomRepository(_context);
@@ -49,6 +49,8 @@ namespace SmartLMS.WebUI.Controllers
             var classroomRepository = new ClassroomRepository(_context);
             return Json(ClassroomViewModel.FromEntityList(classroomRepository.Search(term, searchFieldName, page)));
         }
+
+        
 
         [HttpPost]
         [OverrideAuthorization]
@@ -201,13 +203,47 @@ namespace SmartLMS.WebUI.Controllers
 
         [OverrideAuthorization]
         [Authorize(Roles = "Admin, Teacher")]
-        public ActionResult Plans(Guid classroomId)
+        public ActionResult DeliveryPlan(Guid classroomId)
         {
             var classroomRepository = new ClassroomRepository(_context);
             var classroom = classroomRepository.GetById(classroomId);
             return View(classroom.Courses.OrderBy(x => x.Order).ToList());
         }
 
-       
+        [HttpPost]
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin, Teacher")]
+        public ActionResult DeliveryPlanHistory(DateTime deliveryPlanStartDate, Guid classroomId)
+        {
+            var classroomRepository = new ClassroomRepository(_context);
+            var classroom = classroomRepository.GetById(classroomId);
+            var deliveryPlan = classroom.DeliveryPlans.FirstOrDefault(dp => dp.StartDate == deliveryPlanStartDate);
+            var classes = new List<ClassDeliveryPlanViewModel>();
+            if (deliveryPlan == null) return Json(classes);
+             
+            classes.AddRange(ClassDeliveryPlanViewModel.FromEntityList(deliveryPlan.AvailableClasses.ToList()));
+
+            var notDeliveredClasses = classroom.Courses.SelectMany(c => c.Course.Classes)
+                .Where(c => classes.All(dc => dc.ClassId != c.Id)).ToList();
+
+            var notDeliveredClassesViewModels = ClassDeliveryPlanViewModel.FromClassEntityList(notDeliveredClasses, deliveryPlan);
+            var lastDeliveryDate = classes.Max(c => c.DeliveryDate);
+                
+            EstimateDeliveryDates(notDeliveredClassesViewModels, lastDeliveryDate ?? deliveryPlan.StartDate);
+                
+            classes.AddRange(notDeliveredClassesViewModels);
+           
+            return Json(classes.OrderBy(x => x.CourseOrder).ThenBy(x => x.ClassOrder).ToList());
+        }
+
+        private void EstimateDeliveryDates(IList<ClassDeliveryPlanViewModel> notDeliveredClassesViewModels, DateTime lastDeliveryDate)
+        {
+            var previousClassDeliveryDate = lastDeliveryDate;
+            foreach (var notDeliveredClass in notDeliveredClassesViewModels)
+            {
+                notDeliveredClass.DeliveryDate = previousClassDeliveryDate.AddDays(notDeliveredClass.DaysToDeliver);
+                previousClassDeliveryDate = notDeliveredClass.DeliveryDate.Value;
+            }
+        }
     }
 }

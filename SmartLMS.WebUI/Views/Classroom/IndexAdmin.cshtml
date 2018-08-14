@@ -85,7 +85,7 @@
                                 <a href="javascript:void(0);" class="btn btn-warning btn-sm show-students-button" data-id="@item.Id " data-name="@item.Name" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.StudentPlural">
                                     <i class="material-icons">group</i>
                                 </a>
-                                <a href="@Url.Action("Plans", new { ClassroomId = item.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.DeliveryPlanName">
+                                <a href="@Url.Action("DeliveryPlan", new { ClassroomId = item.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.DeliveryPlanName">
                                     <i class="fa fa-calendar delivery-plan-button"></i>
                                 </a>
                             </div>
@@ -171,7 +171,7 @@
                     <a href="javascript:void(0);" class="btn btn-warning btn-sm show-students-button" data-id="{{Id}}" data-name="{{Name}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.StudentPlural" rel=tooltip>
                         <i class="material-icons">group</i>
                     </a>
-                    <a href="@Url.Content("~/Classroom/Plans/"){{Id}}" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.DeliveryPlanName" rel=tooltip>
+                    <a href="@Url.Content("~/Classroom/DeliveryPlan/"){{Id}}" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.DeliveryPlanName" rel=tooltip>
                         <i class="fa fa-calendar delivery-plan-button"></i>
                     </a>
                 </div>

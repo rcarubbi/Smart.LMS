@@ -195,6 +195,7 @@
     <Compile Include="Models\ClassAccessViewModel.cs" />
     <Compile Include="Models\AccessViewModel.cs" />
     <Compile Include="Models\ChangePasswordViewModel.cs" />
+    <Compile Include="Models\ClassDeliveryPlanViewModel.cs" />
     <Compile Include="Models\KnowledgeAreaViewModel.cs" />
     <Compile Include="Models\FileViewModel.cs" />
     <Compile Include="Models\SubjectViewModel.cs" />
@@ -408,7 +409,7 @@
     <Content Include="Views\Teacher\IndexAdmin.cshtml" />
     <Content Include="Views\Classroom\Edit.cshtml" />
     <Content Include="Views\Classroom\Create.cshtml" />
-    <Content Include="Views\Classroom\Plans.cshtml" />
+    <Content Include="Views\Classroom\DeliveryPlan.cshtml" />
     <Content Include="Views\KnowledgeArea\IndexAdmin.cshtml" />
     <Content Include="Views\Subject\IndexAdmin.cshtml" />
     <Content Include="Views\Classroom\IndexAdmin.cshtml" />
@@ -429,6 +430,7 @@
     <Content Include="Views\Course\TeacherIndex.cshtml" />
     <Content Include="Views\Shared\_MyCoursesPanel.cshtml" />
     <Content Include="Views\Teacher\StudentsAccessHistory.cshtml" />
+    <Content Include="Views\Classroom\_DeliveryPlanHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

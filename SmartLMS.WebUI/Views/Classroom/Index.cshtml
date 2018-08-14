@@ -37,7 +37,7 @@
                                             <a href="javascript:void(0);" class="btn btn-warning btn-sm show-students-button" data-id="@classroom.Id " data-name="@classroom.Name" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.StudentPlural">
                                                 <i class="material-icons">group</i>
                                             </a>
-                                            <a href="@Url.Action("Plans", new { ClassroomId = classroom.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.DeliveryPlanName">
+                                            <a href="@Url.Action("DeliveryPlan", new { ClassroomId = classroom.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.DeliveryPlanName">
                                                 <i class="fa fa-calendar delivery-plan-button"></i>
                                             </a>
                                         </div>

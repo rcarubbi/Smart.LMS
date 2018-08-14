@@ -849,6 +849,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delivery date.
+        /// </summary>
+        public static string DeliveryPlanDate {
+            get {
+                return ResourceManager.GetString("DeliveryPlanDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delivery Plan.
         /// </summary>
         public static string DeliveryPlanName {

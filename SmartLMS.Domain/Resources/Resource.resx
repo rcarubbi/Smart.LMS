@@ -860,4 +860,7 @@ Regards, Gnatta Training Tool Team
   <data name="SelectStudent" xml:space="preserve">
     <value>Select a Student</value>
   </data>
+  <data name="DeliveryPlanDate" xml:space="preserve">
+    <value>Delivery date</value>
+  </data>
 </root>
