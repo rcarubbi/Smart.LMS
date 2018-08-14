@@ -13,6 +13,7 @@ using System.Net;
 using System.Transactions;
 using System.Web.Mvc;
 using System.Web.Security;
+using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Resources;
 
@@ -249,6 +250,9 @@ namespace SmartLMS.WebUI.Controllers
                     var teacher = (Teacher)userRepository.GetById(viewModel.TeacherId);
                     var classRepository = new ClassRepository(_context);
                     classRepository.Create(ClassViewModel.ToEntity(viewModel, course, teacher));
+
+                    ResumeConcludedDeliveryPlans(course);
+
                     _context.Save(_loggedUser);
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
@@ -271,6 +275,19 @@ namespace SmartLMS.WebUI.Controllers
             var activeTeachers = userRepository.ListActiveTeachers();
             ViewBag.Teachers = new SelectList(activeTeachers, "Id", "Name");
             return View(viewModel);
+        }
+
+        private void ResumeConcludedDeliveryPlans(Course course)
+        {
+            var classrooms = _context.GetList<Classroom>()
+                .Where(cr => cr.Courses.Any(c => c.CourseId == course.Id));
+
+            var deliveryPlans = classrooms.SelectMany(x => x.DeliveryPlans).ToList();
+            deliveryPlans.ForEach(dp =>
+            {
+                dp.Concluded = false;
+                _context.Update(dp, dp);
+            });
         }
 
         [Authorize(Roles = "Admin, Teacher")]
