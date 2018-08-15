@@ -4205,6 +4205,8 @@ h2.title {
     .signup-page .wrapper .card-signup {
         margin: 60px 0 5px;
     }
+
+    .modal .modal-dialog { margin-top: -10px; }
 }
 
 @media (max-width: 991px) {
@@ -4230,9 +4232,7 @@ h2.title {
         float: none !important;
     }
 
-    .footer ul li {
-        padding: 5px;
-    }
+    .footer ul li { padding: 5px; }
 
     .navbar.navbar-transparent {
         background-color: rgba(0, 0, 0, 0.4);
@@ -4245,9 +4245,9 @@ h2.title {
         margin-right: 10px;
     }
 
-    .signup-page .wrapper .card-signup {
-        margin: 60px 0 5px;
-    }
+    .signup-page .wrapper .card-signup { margin: 60px 0 5px; }
+
+    .modal .modal-dialog { margin-top: -10px; }
 }
 
 /*# sourceMappingURL=material-kit.css.map */

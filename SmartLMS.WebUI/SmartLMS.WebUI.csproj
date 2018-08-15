@@ -307,8 +307,8 @@
     <Content Include="Content\material-design\ripples.min.css.map" />
     <Content Include="Content\material-kit\material-kit.css.map" />
     <Content Include="manifest.json" />
-    <None Include="Properties\PublishProfiles\Homologacao.pubxml" />
-    <None Include="Properties\PublishProfiles\Produção.pubxml" />
+    <None Include="Properties\PublishProfiles\smartlmsgnatta - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\smartlmsgnatta - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\classroomProxy.js" />
     <Content Include="Scripts\dropzone\dropzone.js" />

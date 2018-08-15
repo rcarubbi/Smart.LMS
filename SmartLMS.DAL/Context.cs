@@ -88,7 +88,7 @@ namespace SmartLMS.DAL
             {
                 foreach (var entry in ChangeTracker?.Entries())
                 {
-                    if (entry.Entity?.GetType() != typeof(Log))
+                    if (loggedUser != null && entry.Entity?.GetType() != typeof(Log))
                     {
                         GerarLog(entry, loggedUser);
                     }
