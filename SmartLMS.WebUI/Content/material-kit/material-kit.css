@@ -4200,6 +4200,13 @@ h2.title {
     padding-top: 25px;
 }
 
+
+@media (max-height: 600px) {
+    .signup-page .wrapper .card-signup {
+        margin: 60px 0 5px;
+    }
+}
+
 @media (max-width: 991px) {
     .landing-page .header {
         height: auto;
@@ -4238,9 +4245,8 @@ h2.title {
         margin-right: 10px;
     }
 
-
     .signup-page .wrapper .card-signup {
-        margin: 58px 0 5px;
+        margin: 60px 0 5px;
     }
 }
 
