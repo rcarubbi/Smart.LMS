@@ -97,7 +97,7 @@ namespace SmartLMS.WebUI.Controllers
 
                         var notificationService = new NotificationService(_context, sender);
                         
-                        // notifica as aulas já liberadas no dia
+                        // notify already delivered classes
                         foreach (var item in todayDeliveryPlan.AvailableClasses)
                         {
                             try
@@ -110,7 +110,7 @@ namespace SmartLMS.WebUI.Controllers
                             }
                         }
                         
-                        // força a liberação de aulas pendentes para o dia
+                        // force deliver for today
                         todayDeliveryPlan.DeliverPendingClasses(_context, new SmtpSender());
 
                         _context.Save(_loggedUser);

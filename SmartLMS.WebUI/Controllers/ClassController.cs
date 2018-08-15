@@ -10,9 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Transactions;
 using System.Web.Mvc;
 using System.Web.Security;
+using Carubbi.Mailer.Implementation;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Resources;
@@ -251,7 +253,8 @@ namespace SmartLMS.WebUI.Controllers
                     var classRepository = new ClassRepository(_context);
                     classRepository.Create(ClassViewModel.ToEntity(viewModel, course, teacher));
 
-                    ResumeConcludedDeliveryPlans(course);
+                    var affectedClassrooms = ResumeConcludedDeliveryPlans(course);
+                    SyncAccesses(affectedClassrooms);
 
                     _context.Save(_loggedUser);
                     TempData["MessageType"] = "success";
@@ -274,10 +277,14 @@ namespace SmartLMS.WebUI.Controllers
             ViewBag.Courses = new SelectList(activeCourses, "Id", "Name");
             var activeTeachers = userRepository.ListActiveTeachers();
             ViewBag.Teachers = new SelectList(activeTeachers, "Id", "Name");
+
+            
+
+
             return View(viewModel);
         }
 
-        private void ResumeConcludedDeliveryPlans(Course course)
+        private List<Classroom> ResumeConcludedDeliveryPlans(Course course)
         {
             var classrooms = _context.GetList<Classroom>()
                 .Where(cr => cr.Courses.Any(c => c.CourseId == course.Id));
@@ -288,6 +295,15 @@ namespace SmartLMS.WebUI.Controllers
                 dp.Concluded = false;
                 _context.Update(dp, dp);
             });
+            _context.Save();
+
+            return classrooms.ToList();
+        }
+
+        private void SyncAccesses(IList<Classroom> classrooms)
+        {
+            var syncProcesses = classrooms.Select(classroom => classroom.SyncAccessesAsync(_context, new SmtpSender())).ToArray();
+            Task.WaitAll(syncProcesses);
         }
 
         [Authorize(Roles = "Admin, Teacher")]

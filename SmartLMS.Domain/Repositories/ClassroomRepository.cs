@@ -159,7 +159,7 @@ namespace SmartLMS.Domain.Repositories
                 todayDeliveryPlan.SendDeliveringClassEmail(_context, sender, classDeliveryPlan.Class, newStudents);
             }
 
-            todayDeliveryPlan.DeliverPendingClasses(_context, sender);
+             
         }
 
         private void RemoveStudents(Classroom classroom, List<Guid> studentIds)

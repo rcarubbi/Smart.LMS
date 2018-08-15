@@ -32,39 +32,19 @@ namespace SmartLMS.WebUI.Models
             return entities.ConvertAll(FromEntity);
         }
 
-        public static ClassDeliveryPlanViewModel FromEntity(ClassDeliveryPlan entity)
+        private static ClassDeliveryPlanViewModel FromEntity(ClassDeliveryPlan input)
         {
             return new ClassDeliveryPlanViewModel
             {
-                ClassId =  entity.ClassId,
-                CourseName = entity.Class.Course.Name,
-                ClassName = entity.Class.Name,
-                ClassOrder = entity.Class.Order,
-                CourseOrder = entity.DeliveryPlan.Classroom.Courses.Single(x => x.CourseId == entity.Class.Course.Id).Order,
-                Available = true,
-                DeliveryDate = entity.DeliveryDate,
-                DaysToDeliver =  entity.Class.DeliveryDays
+                DeliveryDate = input.DeliveryDate,
+                DaysToDeliver = input.Class.DeliveryDays,
+                Available =  input.DeliveryPlan.AvailableClasses.Any(x => x.ClassId == input.Class.Id),
+                CourseName = input.Class.Course.Name,
+                CourseOrder =  input.DeliveryPlan.Classroom.Courses.Single(c => c.CourseId == input.Class.Course.Id).Order,
+                ClassId = input.Class.Id,
+                ClassName =  input.Class.Name,
+                ClassOrder =  input.Class.Order
             };
-        }
-
-        public static ClassDeliveryPlanViewModel FromEntity(Class entity, DeliveryPlan deliveryPlan)
-        {
-            return new ClassDeliveryPlanViewModel
-            {
-                ClassId = entity.Id,
-                CourseName = entity.Course.Name,
-                ClassName = entity.Name,
-                ClassOrder = entity.Order,
-                CourseOrder = deliveryPlan.Classroom.Courses.Single(x => x.CourseId == entity.Course.Id).Order,
-                Available = false,
-                DaysToDeliver = entity.DeliveryDays
-            };
-        }
-
-
-        internal static IList<ClassDeliveryPlanViewModel> FromClassEntityList(List<Class> classes, DeliveryPlan deliveryPlan)
-        {
-            return classes.ConvertAll(klass => FromEntity(klass, deliveryPlan));
         }
     }
 }

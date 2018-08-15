@@ -220,30 +220,12 @@ namespace SmartLMS.WebUI.Controllers
             var deliveryPlan = classroom.DeliveryPlans.FirstOrDefault(dp => dp.StartDate == deliveryPlanStartDate);
             var classes = new List<ClassDeliveryPlanViewModel>();
             if (deliveryPlan == null) return Json(classes);
-             
-            classes.AddRange(ClassDeliveryPlanViewModel.FromEntityList(deliveryPlan.AvailableClasses.ToList()));
 
-            var notDeliveredClasses = classroom.Courses.SelectMany(c => c.Course.Classes)
-                .Where(c => classes.All(dc => dc.ClassId != c.Id)).ToList();
-
-            var notDeliveredClassesViewModels = ClassDeliveryPlanViewModel.FromClassEntityList(notDeliveredClasses, deliveryPlan);
-            var lastDeliveryDate = classes.Max(c => c.DeliveryDate);
-                
-            EstimateDeliveryDates(notDeliveredClassesViewModels, lastDeliveryDate ?? deliveryPlan.StartDate);
-                
-            classes.AddRange(notDeliveredClassesViewModels);
+            classes.AddRange(ClassDeliveryPlanViewModel.FromEntityList(deliveryPlan.GetDeliveryPlanClassesInfo().ToList()));
            
             return Json(classes.OrderBy(x => x.CourseOrder).ThenBy(x => x.ClassOrder).ToList());
         }
 
-        private void EstimateDeliveryDates(IList<ClassDeliveryPlanViewModel> notDeliveredClassesViewModels, DateTime lastDeliveryDate)
-        {
-            var previousClassDeliveryDate = lastDeliveryDate;
-            foreach (var notDeliveredClass in notDeliveredClassesViewModels)
-            {
-                notDeliveredClass.DeliveryDate = previousClassDeliveryDate.AddDays(notDeliveredClass.DaysToDeliver);
-                previousClassDeliveryDate = notDeliveredClass.DeliveryDate.Value;
-            }
-        }
+     
     }
 }

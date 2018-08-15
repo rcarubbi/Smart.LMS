@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
+using SmartLMS.Domain.Repositories;
 
 namespace SmartLMS.Domain.Entities.Delivery
 {
@@ -15,25 +16,17 @@ namespace SmartLMS.Domain.Entities.Delivery
 
         public virtual ICollection<DeliveryPlan> DeliveryPlans { get; set; } = new List<DeliveryPlan>();
 
-        internal async Task SyncAccessesAsync(IContext context, IMailSender sender)
+        public async Task SyncAccessesAsync(IContext context, IMailSender sender)
         {
+            var classroomRepository = new ClassroomRepository(context);
+
             await Task.Run(() =>
             {
                 using (var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    foreach (var deliveryPlan in DeliveryPlans)
+                    foreach (var deliveryPlan in classroomRepository.ListNotConcludedDeliveryPlans())
                     {
-                        var lastDeliveredClass = deliveryPlan.AvailableClasses.OrderByDescending(x => x.DeliveryDate).FirstOrDefault();
-                        if (lastDeliveredClass == null) continue;
-
-                        var courseOrder = Courses.Single(c => c.CourseId == lastDeliveredClass.Class.Course.Id).Order;
-                        var previousCoursesClasses = Courses.Where(c => c.Order < courseOrder).SelectMany(x => x.Course.Classes);
-                        var notDeliveredPreviousCoursesClasses = previousCoursesClasses.Except(deliveryPlan.AvailableClasses.Select(x => x.Class));
-                        foreach (var item in notDeliveredPreviousCoursesClasses)
-                        {
-                            deliveryPlan.DeliverClass(context, sender, item);
-                        }
-
+                        deliveryPlan.DeliverPendingClasses(context, sender);
                     }
                     tx.Complete();
                 }

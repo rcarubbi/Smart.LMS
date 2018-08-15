@@ -28,70 +28,64 @@ namespace SmartLMS.Domain.Entities.Delivery
 
         public void DeliverPendingClasses(IContext context, IMailSender sender)
         {
-            if (Concluded)
+            var classroomClasses = GetDeliveryPlanClassesInfo();
+            if (Concluded && AvailableClasses.Count != classroomClasses.Count())
                 return;
 
-            bool classWasDelivered;
-          
-            do
+           
+            foreach (var classroomClass in classroomClasses)
             {
-                var courseOrder = 0;
-                var lastDeliveredClass = AvailableClasses.OrderByDescending(x => x.DeliveryDate).FirstOrDefault();
-                var nextCourse = GetNextCourse(lastDeliveredClass, courseOrder);
+                if (classroomClass.DeliveryDate <= DateTime.Today && AvailableClasses.All(ac => ac.ClassId != classroomClass.Class.Id))
+                {
+                    DeliverClass(context, sender, classroomClass);
+                }
+            }
 
-                while (nextCourse?.Classes?.Count == 0 && courseOrder < Classroom.Courses.Max(x => x.Order))
-                {
-                    nextCourse = GetNextCourse(lastDeliveredClass, courseOrder++);
-                }
-
-                var nextClass = GetNextClass(lastDeliveredClass, lastDeliveredClass?.Class?.Course);
-                if (nextClass == null && (lastDeliveredClass == null || (lastDeliveredClass.DeliveryDate.Date <= DateTime.Today)))
-                {
-                    nextClass = GetNextClass(lastDeliveredClass, nextCourse);
-                }
-
-                if (nextClass == null)
-                {
-                    Concluded = nextCourse == null;
-                    classWasDelivered = false;
-                    context.Save();
-                }
-                else
-                {
-                    classWasDelivered = CheckDeliveryStatus(context, sender, nextClass);
-                }
-            } while (classWasDelivered);
+            if (AvailableClasses.Count != classroomClasses.Count()) return;
+            Concluded = true;
+            context.Save();
         }
 
-        internal void DeliverClass(IContext context, IMailSender sender, Class klass)
+        public IEnumerable<ClassDeliveryPlan> GetDeliveryPlanClassesInfo()
         {
-            AvailableClasses.Add(new ClassDeliveryPlan
+            var lastDate = StartDate;
+            var classroomCourses = Classroom.Courses.OrderBy(x => x.Order);
+            foreach (var classroomCourse in classroomCourses)
             {
-                Class = klass,
-                DeliveryDate = DateTime.Now,
-                DeliveryPlan = this
-            });
+                foreach (var classroomClass in classroomCourse.Course.Classes.OrderBy(c => c.Order))
+                {
+                    var deliveryDate = lastDate.AddDays(classroomClass.DeliveryDays);
+                    yield return new ClassDeliveryPlan
+                    {
+                        DeliveryPlan = this,
+                        Class = classroomClass,
+                        ClassId =  classroomClass.Id,
+                        DeliveryDate = deliveryDate,
+                        DeliveryPlanId = this.Id
+                    };
+                    lastDate = deliveryDate;
+                }
+            }
+        }
+
+
+        internal void DeliverClass(IContext context, IMailSender sender, ClassDeliveryPlan classDeliveryPlan)
+        {
+            classDeliveryPlan.DeliveryDate = DateTime.Now;
+            AvailableClasses.Add(classDeliveryPlan);
 
             context.GetList<Notice>().Add(new Notice
             {
-                Text = $@"New <a href='Class/Watch/{klass.Id}'>{SmartLMS.Domain.Resources.Resource.ClassName} {klass.Name}</a> available! <br />
-                               <a href='Class/Index/{klass.Course.Id}'>{SmartLMS.Domain.Resources.Resource.CourseName} {klass.Course.Name}</a> <br />",
+                Text = $@"New <a href='Class/Watch/{classDeliveryPlan.ClassId}'>{SmartLMS.Domain.Resources.Resource.ClassName} {classDeliveryPlan.Class.Name}</a> available! <br />
+                               <a href='Class/Index/{classDeliveryPlan.Class.Course.Id}'>{SmartLMS.Domain.Resources.Resource.CourseName} {classDeliveryPlan.Class.Course.Name}</a> <br />",
                 DateTime = DateTime.Now,
                 DeliveryPlan = this,
             });
             context.Save();
-            SendDeliveringClassEmail(context, sender, klass, Students);
+            SendDeliveringClassEmail(context, sender, classDeliveryPlan.Class, Students);
         }
 
-        private bool CheckDeliveryStatus(IContext context, IMailSender sender, Class klass)
-        {
-            DateTime? lastDeliveryDate = AvailableClasses.OrderByDescending(x => x.DeliveryDate).Select(x => x.DeliveryDate).FirstOrDefault();
-
-            if ((lastDeliveryDate.Value).AddDays(klass.DeliveryDays).Date > DateTime.Today) return false;
-            DeliverClass(context, sender, klass);
-             
-            return true;
-        }
+      
 
         public void SendDeliveringClassEmail(IContext context, IMailSender sender, Class klass, ICollection<Student> students)
         {
@@ -101,45 +95,5 @@ namespace SmartLMS.Domain.Entities.Delivery
                 notificationService.SendDeliveryClassEmail(klass, student);
             }
         }
-
-   
-
-        private Course GetNextCourse(ClassDeliveryPlan lastDeliveredClass, int order)
-        {
-            
-            if (lastDeliveredClass != null)
-            {
-                order = Classroom.Courses
-                    .Single(x => x.CourseId == lastDeliveredClass.Class.Course.Id)
-                    .Order;
-            }
-
-            var course = Classroom.Courses
-                .Where(a => a.Course.Active)
-                .OrderBy(x => x.Order)
-                .FirstOrDefault(x => x.Order > order);
-
-            return course?.Course;
-        }
-
-        private static Class GetNextClass(ClassDeliveryPlan lastDeliveredClass, Course course)
-        {
-            if (course == null)
-                return null;
-            var order = 0;
-            if (lastDeliveredClass == null)
-                return course.Classes
-                    .Where(a => a.Active)
-                    .OrderBy(x => x.Order)
-                    .FirstOrDefault(x => x.Order > order);
-
-            order = lastDeliveredClass.Class.Course.Id == course.Id ? lastDeliveredClass.Class.Order : 0;
-
-            return course.Classes
-                .Where(a => a.Active)
-                .OrderBy(x => x.Order)
-                .FirstOrDefault(x => x.Order > order);
-        }
-
     }
 }

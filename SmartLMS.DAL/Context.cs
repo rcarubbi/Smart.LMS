@@ -175,6 +175,7 @@ namespace SmartLMS.DAL
                     EntityId = ((Entity)entry.Entity).Id,
                     Type = GetType(entry.Entity).ToString()
                 }).State = EntityState.Added;
+                Entry(loggedUser).State = EntityState.Unchanged;
             }
         }
 
