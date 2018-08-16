@@ -488,3 +488,10 @@ body.dragging, body.dragging * {
     min-height: 29px;
     max-width: 53px;
 }
+
+tbody#result-container td {
+    max-width: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
