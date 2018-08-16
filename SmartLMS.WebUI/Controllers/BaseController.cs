@@ -3,7 +3,9 @@ using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
 using System;
+using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -60,6 +62,12 @@ namespace SmartLMS.WebUI.Controllers
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
+            var languageCookie = requestContext.HttpContext.Request.Cookies.Get("languageCookie");
+            var currentCulture = new CultureInfo(languageCookie?.Value ?? "en-UK");
+
+
+            CultureInfo.CurrentUICulture = currentCulture;
+            CultureInfo.CurrentCulture = currentCulture;
 
             var userRepository = new UserRepository(_context);
 

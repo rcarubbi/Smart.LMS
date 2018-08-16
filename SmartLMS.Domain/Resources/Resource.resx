@@ -869,4 +869,28 @@ Regards, Gnatta Training Tool Team
   <data name="SelectClassroom" xml:space="preserve">
     <value>Select a Classroom</value>
   </data>
+  <data name="CommentRequired" xml:space="preserve">
+    <value>Type your comment</value>
+  </data>
+  <data name="NoticeMessageLabel" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="NoticeMessagePlaceholder" xml:space="preserve">
+    <value>Type your message here</value>
+  </data>
+  <data name="SendNoticeInformation" xml:space="preserve">
+    <value>Send notices visible to all users by this form</value>
+  </data>
+  <data name="SendNoticePageTitle" xml:space="preserve">
+    <value>Send Public Notices</value>
+  </data>
+  <data name="ContentTypeName" xml:space="preserve">
+    <value>Class type</value>
+  </data>
+  <data name="MessageRequired" xml:space="preserve">
+    <value>Type your message</value>
+  </data>
+  <data name="ChangeLanguageMenuItem" xml:space="preserve">
+    <value>Change Language</value>
+  </data>
 </root>

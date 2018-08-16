@@ -7,6 +7,7 @@ using System.Linq;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -23,7 +24,7 @@ namespace SmartLMS.WebUI.Models
 
         public string Username { get; set; }
 
-        [Required(ErrorMessage = "Type your comment")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "CommentRequired")]
         public string CommentText { get; set; }
 
         internal static IEnumerable<CommentViewModel> FromEntityList(IEnumerable<Comment> comments, DefaultDateTimeHumanizeStrategy humanizer, Guid loggedUserId)

@@ -232,6 +232,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change Language.
+        /// </summary>
+        public static string ChangeLanguageMenuItem {
+            get {
+                return ResourceManager.GetString("ChangeLanguageMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fill in the form below to change your password.
         /// </summary>
         public static string ChangePasswordInformation {
@@ -457,6 +466,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Type your comment.
+        /// </summary>
+        public static string CommentRequired {
+            get {
+                return ResourceManager.GetString("CommentRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discussion.
         /// </summary>
         public static string CommentsTitle {
@@ -498,6 +516,15 @@ namespace SmartLMS.Domain.Resources {
         public static string ContentManagementToastrTitle {
             get {
                 return ResourceManager.GetString("ContentManagementToastrTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class type.
+        /// </summary>
+        public static string ContentTypeName {
+            get {
+                return ResourceManager.GetString("ContentTypeName", resourceCulture);
             }
         }
         
@@ -1164,6 +1191,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Type your message.
+        /// </summary>
+        public static string MessageRequired {
+            get {
+                return ResourceManager.GetString("MessageRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Monitoring.
         /// </summary>
         public static string MonitoringMenuSectionMenuDivider {
@@ -1349,6 +1385,24 @@ namespace SmartLMS.Domain.Resources {
         public static string NoticeMenuItem {
             get {
                 return ResourceManager.GetString("NoticeMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message.
+        /// </summary>
+        public static string NoticeMessageLabel {
+            get {
+                return ResourceManager.GetString("NoticeMessageLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type your message here.
+        /// </summary>
+        public static string NoticeMessagePlaceholder {
+            get {
+                return ResourceManager.GetString("NoticeMessagePlaceholder", resourceCulture);
             }
         }
         
@@ -1779,11 +1833,29 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Send notices visible to all users by this form.
+        /// </summary>
+        public static string SendNoticeInformation {
+            get {
+                return ResourceManager.GetString("SendNoticeInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Send Notice.
         /// </summary>
         public static string SendNoticeMenuItem {
             get {
                 return ResourceManager.GetString("SendNoticeMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send Public Notices.
+        /// </summary>
+        public static string SendNoticePageTitle {
+            get {
+                return ResourceManager.GetString("SendNoticePageTitle", resourceCulture);
             }
         }
         

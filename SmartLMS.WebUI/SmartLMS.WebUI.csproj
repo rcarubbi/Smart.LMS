@@ -198,6 +198,7 @@
     <Compile Include="Models\ClassDeliveryPlanViewModel.cs" />
     <Compile Include="Models\KnowledgeAreaViewModel.cs" />
     <Compile Include="Models\FileViewModel.cs" />
+    <Compile Include="Models\SendNoticeViewModel.cs" />
     <Compile Include="Models\SubjectViewModel.cs" />
     <Compile Include="Models\ClassViewModel.cs" />
     <Compile Include="Models\NoticeViewModel.cs" />

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using SmartLMS.Domain.Attributes;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -14,8 +16,8 @@ namespace SmartLMS.WebUI.Models
 
         public DateTime CreatedAt { get; set; }
 
-        [Display(Name = "Knowledge area")]
-        [Required(ErrorMessage = "Select a knowledge area")]
+        [LocalizedDisplay("KnowledgeAreaName")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectKnowledgeArea")]
         public Guid KnowledgeAreaId { get; set; }
         public Guid Id { get; set; }
 

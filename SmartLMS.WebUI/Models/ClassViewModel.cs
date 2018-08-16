@@ -9,19 +9,21 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using SmartLMS.Domain.Attributes;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Models
 {
     public class ClassViewModel
     {
-        [Required(ErrorMessage = "Select a teacher")]
-        [Display(Name = "Teacher")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectTeacher")]
+        [LocalizedDisplay("TeacherName")]
         public Guid TeacherId { get; set; }
 
         [Required]
         public int Order { get; set; }
 
-        [Display(Name = "Delivery days")]
+        [LocalizedDisplay("DaysToDeliverLabel")]
         [Required]
         public int DeliveryDays { get; set; }
 
@@ -38,13 +40,14 @@ namespace SmartLMS.WebUI.Models
 
         public decimal WatchedSeconds { get; set; }
 
-        [Display(Name = "Course")]
-        [Required(ErrorMessage = "Select a course")]
+        [LocalizedDisplay("CourseName")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectCourse")]
         public Guid CourseId { get; set; }
 
         public Guid Id { get; set; }
 
-        [Display(Name = "Support material")]
+         
+        [LocalizedDisplay("FileName")]
         public IEnumerable<FileViewModel> Files { get; set; }
 
         [Required]
@@ -54,8 +57,8 @@ namespace SmartLMS.WebUI.Models
         public string Name { get; set; }
         public string TeacherName { get; set; }
 
-        [Required(ErrorMessage = "Select a class type")]
-        [Display(Name = "Class type")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectContentType")]
+        [LocalizedDisplay("ContentTypeName")]
         public ContentType ContentType { get; set; }
 
         public DateTime DeliveryDate { get; set; }
@@ -67,7 +70,7 @@ namespace SmartLMS.WebUI.Models
 
         public DateTime CreatedAt { get; set; }
 
-        [Display(Name = "Active")]
+        [LocalizedDisplay("ActiveFieldName")]
         public bool Active { get; set; }
 
         public bool Editable { get; set; }

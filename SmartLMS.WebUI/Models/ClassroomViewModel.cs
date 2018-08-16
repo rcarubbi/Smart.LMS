@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using SmartLMS.Domain.Attributes;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -13,11 +15,11 @@ namespace SmartLMS.WebUI.Models
 
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "At least one course is required")]
-        [Display(Name = "Courses")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectCourse")]
+        [LocalizedDisplay("CoursePlural")]
         public List<Guid> CourseIds { get; set; }
 
-        [Display(Name = "Students")]
+        [LocalizedDisplay("StudentPlural")]
         public List<Guid> StudentIds { get; set; }
 
         public bool Active { get; set; }

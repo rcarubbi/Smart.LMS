@@ -46,15 +46,22 @@
                         <li>@Html.ActionLink(Resource.ClassPlural, "IndexAdmin", "Class")</li>
                     </ul>
                 </li>
+                <li><a href="@Url.Action("Send", "Notice")">@Resource.SendNoticeMenuItem</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"  data-toggle="modal" data-target="#about">@Resource.AboutMenuItem</a></li>
-                <li><a href="#"  data-toggle="modal" data-target="#talk-to-us">@Resource.TalkToUsMenuItem</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Resource.ChangeLanguageMenuItem <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Português (Brasil)", "ChangeLanguage", "Home", new { culture = "pt-BR" }, null)</li>
+                        <li>@Html.ActionLink("English (UK)", "ChangeLanguage", "Home", new { culture = "en-UK" }, null)</li>
+                    </ul>
+                </li>
+                <li><a href="#" data-toggle="modal" data-target="#about">@Resource.AboutMenuItem</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#talk-to-us">@Resource.TalkToUsMenuItem</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">person</i>@Model.User.Name <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="@Url.Action("Index", "Notice")">@Resource.NoticeMenuItem</a></li>
-                        <li><a href="@Url.Action("Send", "Notice")">@Resource.SendNoticeMenuItem</a></li>
                         <li><a href="@Url.Action("AccessHistory", "User")">@Resource.AccessHistoryMenuItem</a></li>
                         <li><a href="@Url.Action("ChangePassword", "Authentication")">@Resource.ChangePasswordMenuItem</a></li>
                         <li><a href="@Url.Action("Signout", "Authentication")">@Resource.LogoutMenuItem</a></li>

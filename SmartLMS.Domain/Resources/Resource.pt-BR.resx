@@ -869,4 +869,16 @@ Atenciosamente, Time Gnatta Training Tool
   <data name="SelectClassroom" xml:space="preserve">
     <value>Selecione uma turma</value>
   </data>
+  <data name="CommentRequired" xml:space="preserve">
+    <value>Digite seu comentário</value>
+  </data>
+  <data name="ContentTypeName" xml:space="preserve">
+    <value>Tipo de Aula</value>
+  </data>
+  <data name="MessageRequired" xml:space="preserve">
+    <value>Type your message</value>
+  </data>
+  <data name="ChangeLanguageMenuItem" xml:space="preserve">
+    <value>Mudar Idioma</value>
+  </data>
 </root>

@@ -1,8 +1,43 @@
 ﻿@using SmartLMS.Domain.Resources
-
+@model SendNoticeViewModel
 @{
-    ViewBag.Title = Resource.SendNoticeMenuItem;
+    ViewBag.Title = Resource.SendNoticePageTitle;
 }
 
-<h2>@Resource.SendNoticeMenuItem</h2>
+
+<div class="col-md-offset-2 col-md-8">
+    <div class="card">
+        <div class="content">
+            <h2 class="text-primary index-title">@Resource.SendNoticePageTitle</h2>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <h4>@Resource.SendNoticeInformation</h4>
+                    <div class="form-group label-floating">
+                        <div class="col-md-offset-2 col-md-8">
+                            <label class="control-label">@Resource.NoticeMessagePlaceholder</label>
+                            @Html.TextAreaFor(model => model.Text, new { @class = "form-control", rows = "5" })
+                            @Html.ValidationMessageFor(x => x.Text, string.Empty, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="@Resource.SendButton" class="btn btn-primary" />
+                            @Html.ActionLink(Resource.BackToHome, "Index", "Home", null, new { @class = "btn btn-default" })
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
 

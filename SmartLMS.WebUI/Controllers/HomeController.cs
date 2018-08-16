@@ -1,4 +1,6 @@
-﻿using Carubbi.Mailer.Implementation;
+﻿using System;
+using System.Globalization;
+using Carubbi.Mailer.Implementation;
 using Carubbi.Utils.Data;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Entities;
@@ -6,6 +8,8 @@ using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Services;
 using SmartLMS.WebUI.Models;
 using System.Linq;
+using System.Threading;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -33,7 +37,7 @@ namespace SmartLMS.WebUI.Controllers
             var knowledgeAreaRepository = new KnowledgeAreaRepository(_context);
             var viewModel = KnowledgeAreaViewModel.FromEntityList(knowledgeAreaRepository.ListActiveKnowledgeAreas(), 2);
 
-          
+
             return View(viewModel);
         }
 
@@ -56,17 +60,24 @@ namespace SmartLMS.WebUI.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return Json(new {Success = false});
+                if (!ModelState.IsValid) return Json(new { Success = false });
 
                 var notificationService = new NotificationService(_context, new SmtpSender());
                 notificationService.SendTalkToUsMessage(viewModel.Name, viewModel.Email, viewModel.Message);
-                  
+
                 return Json(new { Success = true });
             }
             catch
             {
                 return Json(new { Success = false });
             }
+        }
+
+        public ActionResult ChangeLanguage(string culture)
+        {
+            var languageCookie = new HttpCookie("languageCookie", culture) { Expires = DateTime.MaxValue };
+            Response.Cookies.Add(languageCookie);
+            return Redirect(Request.UrlReferrer.ToString());
         }
     }
 }
