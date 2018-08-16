@@ -431,6 +431,7 @@
     <Content Include="Views\Shared\_MyCoursesPanel.cshtml" />
     <Content Include="Views\Teacher\StudentsAccessHistory.cshtml" />
     <Content Include="Views\Classroom\_DeliveryPlanHistory.cshtml" />
+    <Content Include="Views\Notice\Send.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

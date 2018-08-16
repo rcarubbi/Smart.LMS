@@ -1680,6 +1680,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a Classroom.
+        /// </summary>
+        public static string SelectClassroom {
+            get {
+                return ResourceManager.GetString("SelectClassroom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select a content type.
         /// </summary>
         public static string SelectContentType {
@@ -1770,6 +1779,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Send Notice.
+        /// </summary>
+        public static string SendNoticeMenuItem {
+            get {
+                return ResourceManager.GetString("SendNoticeMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start date.
         /// </summary>
         public static string StartDateLabel {
@@ -1815,7 +1833,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Student List.
+        ///   Looks up a localized string similar to Student Management.
         /// </summary>
         public static string StudentManagementPageTitle {
             get {
@@ -1896,7 +1914,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Subject management.
+        ///   Looks up a localized string similar to Subject Management.
         /// </summary>
         public static string SubjectManagementPageTitle {
             get {

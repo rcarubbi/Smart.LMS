@@ -61,7 +61,7 @@
                 <div class="col-md-10">
                     <div class="row">
                         <div class="col-xs-10">
-                            @Html.DropDownListFor(model => model.ClassroomId, ViewBag.Classrooms as SelectList, "-- Select --", new { @class = "form-control dropdownjs" })
+                            @Html.DropDownListFor(model => model.ClassroomId, ViewBag.Classrooms as SelectList, Resource.SelectClassroom, new { @class = "form-control dropdownjs" })
                         </div>
                         <div class="col-xs-1">
                             <a href="@Url.Action("Create", "Classroom")" class="btn btn-sm btn-info"> <i class="material-icons">group_add</i></a>

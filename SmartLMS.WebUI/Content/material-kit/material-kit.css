@@ -4206,7 +4206,7 @@ h2.title {
         margin: 60px 0 5px;
     }
 
-    .modal .modal-dialog { margin-top: -10px; }
+    .modal .modal-dialog { margin-top: 0px; }
 }
 
 @media (max-width: 991px) {
@@ -4247,7 +4247,7 @@ h2.title {
 
     .signup-page .wrapper .card-signup { margin: 60px 0 5px; }
 
-    .modal .modal-dialog { margin-top: -10px; }
+    .modal .modal-dialog { margin-top: 0px; }
 }
 
 /*# sourceMappingURL=material-kit.css.map */

@@ -69,6 +69,13 @@ namespace SmartLMS.WebUI.Controllers
 
         }
 
+        public ActionResult Send()
+        {
+            const NoticeType notivceType = NoticeType.Public;
+            ViewBag.NoticeTypes = new SelectList(notivceType.ToDataSource<NoticeType>(), "Key", "Value");
+            return View();
+        }
+
         public ActionResult ListNoticeHistory(DateTime? startDate, DateTime? endDate, NoticeType noticeType = NoticeType.All, int page = 1)
         {
             var range = new DateRange
