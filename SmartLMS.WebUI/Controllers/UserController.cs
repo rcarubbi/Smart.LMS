@@ -1,14 +1,13 @@
-﻿using Carubbi.Utils.Data;
-using Carubbi.Utils.DataTypes;
-using Humanizer.DateTimeHumanizeStrategy;
-using SmartLMS.WebUI.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Carubbi.GenericRepository;
+using Carubbi.Extensions;
+using Carubbi.Utils.DataTypes;
+using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Services;
+using SmartLMS.WebUI.Models;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -16,9 +15,8 @@ namespace SmartLMS.WebUI.Controllers
     public class UserController : BaseController
     {
         public UserController(IContext context)
-             : base(context)
+            : base(context)
         {
-
         }
 
         [AllowAnonymous]
@@ -32,7 +30,8 @@ namespace SmartLMS.WebUI.Controllers
                 var viewModel = new HeaderViewModel
                 {
                     User = UserViewModel.FromEntity(userRepository.GetByLogin(HttpContext.User.Identity.Name)),
-                    KnowledgeAreas = KnowledgeAreaViewModel.FromEntityList(knowledgeAreaRepository.ListActiveKnowledgeAreas(), 2).ToList(),
+                    KnowledgeAreas = KnowledgeAreaViewModel
+                        .FromEntityList(knowledgeAreaRepository.ListActiveKnowledgeAreas(), 2).ToList()
                 };
 
                 return PartialView($"_{viewModel.User.RoleName}Header", viewModel);
@@ -41,18 +40,18 @@ namespace SmartLMS.WebUI.Controllers
             {
                 var viewModel = new HeaderViewModel
                 {
-                    KnowledgeAreas = KnowledgeAreaViewModel.FromEntityList(knowledgeAreaRepository.ListActiveKnowledgeAreas(), 2).ToList(),
+                    KnowledgeAreas = KnowledgeAreaViewModel
+                        .FromEntityList(knowledgeAreaRepository.ListActiveKnowledgeAreas(), 2).ToList()
                 };
                 return PartialView("_Login", viewModel);
             }
-                
         }
 
 
         public ActionResult AccessHistory()
         {
             const AccessType accessType = AccessType.File;
-            ViewBag.AccessTypes = new SelectList(accessType.ToDataSource<AccessType>(),"Key", "Value");
+            ViewBag.AccessTypes = new SelectList(accessType.ToDataSource<AccessType>(), "Key", "Value");
 
             var range = new DateRange
             {
@@ -61,11 +60,13 @@ namespace SmartLMS.WebUI.Controllers
             };
 
             var historyService = new HistoryService(_context, new DefaultDateTimeHumanizeStrategy());
-            return View(AccessViewModel.FromEntityList(historyService.SearchAccess(range, 1, _loggedUser.Id, AccessType.All)));
+            return View(
+                AccessViewModel.FromEntityList(historyService.SearchAccess(range, 1, _loggedUser.Id, AccessType.All)));
         }
 
 
-        public ActionResult ListAccessHistory(DateTime? startDate, DateTime? endDate, AccessType accessType = AccessType.All, int page = 1)
+        public ActionResult ListAccessHistory(DateTime? startDate, DateTime? endDate,
+            AccessType accessType = AccessType.All, int page = 1)
         {
             var range = new DateRange
             {
@@ -74,9 +75,9 @@ namespace SmartLMS.WebUI.Controllers
             };
 
             var historyService = new HistoryService(_context, new DefaultDateTimeHumanizeStrategy());
-            return Json(AccessViewModel.FromEntityList(historyService.SearchAccess(range, page, _loggedUser.Id, accessType)), JsonRequestBehavior.AllowGet);
+            return Json(
+                AccessViewModel.FromEntityList(historyService.SearchAccess(range, page, _loggedUser.Id, accessType)),
+                JsonRequestBehavior.AllowGet);
         }
-      
-
     }
 }

@@ -1,9 +1,10 @@
-﻿using SmartLMS.Domain.Entities.UserAccess;
-using System.Data.Entity;
+﻿using System.Data.Entity;
+using Carubbi.GenericRepository;
+using SmartLMS.Domain.Entities.UserAccess;
 
 namespace SmartLMS.Domain
 {
-    public interface IContext : Carubbi.GenericRepository.IDbContext
+    public interface IContext : IDbContext
     {
         void Save();
 

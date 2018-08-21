@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 using SmartLMS.Domain.Attributes;
 using SmartLMS.Domain.Resources;
 
@@ -13,6 +9,5 @@ namespace SmartLMS.WebUI.Models
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MessageRequired")]
         [LocalizedDisplay("NoticeMessagePlaceholder")]
         public string Text { get; set; }
-
     }
 }

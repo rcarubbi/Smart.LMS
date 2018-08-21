@@ -1,9 +1,9 @@
-﻿using Humanizer.DateTimeHumanizeStrategy;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.UserAccess;
@@ -27,7 +27,8 @@ namespace SmartLMS.WebUI.Models
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "CommentRequired")]
         public string CommentText { get; set; }
 
-        internal static IEnumerable<CommentViewModel> FromEntityList(IEnumerable<Comment> comments, DefaultDateTimeHumanizeStrategy humanizer, Guid loggedUserId)
+        internal static IEnumerable<CommentViewModel> FromEntityList(IEnumerable<Comment> comments,
+            DefaultDateTimeHumanizeStrategy humanizer, Guid loggedUserId)
         {
             return comments.Select(item => FromEntity(item, humanizer, loggedUserId));
         }
@@ -46,7 +47,7 @@ namespace SmartLMS.WebUI.Models
 
         internal Comment ToEntity(User user, Class klass)
         {
-            return new Comment()
+            return new Comment
             {
                 DateTime = DateTime,
                 Class = klass,

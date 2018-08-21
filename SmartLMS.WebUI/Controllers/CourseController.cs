@@ -1,16 +1,15 @@
-﻿using SmartLMS.Domain;
-using SmartLMS.Domain.Entities.Content;
-using SmartLMS.Domain.Repositories;
-using SmartLMS.WebUI.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Resources;
 using System.Transactions;
 using System.Web.Mvc;
+using SmartLMS.Domain;
+using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Resources;
+using SmartLMS.WebUI.Models;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -20,7 +19,6 @@ namespace SmartLMS.WebUI.Controllers
         public CourseController(IContext context)
             : base(context)
         {
-
         }
 
         [ChildActionOnly]
@@ -58,7 +56,9 @@ namespace SmartLMS.WebUI.Controllers
 
             var viewModel = SubjectViewModel.FromEntity(subject, 3);
 
-            ViewBag.OtherSubjects = new SelectList(subject.KnowledgeArea.Subjects.Where(a => a.Active).Except(new List<Subject> { subject }), "Id", "Name");
+            ViewBag.OtherSubjects =
+                new SelectList(subject.KnowledgeArea.Subjects.Where(a => a.Active).Except(new List<Subject> {subject}),
+                    "Id", "Name");
             return View(viewModel);
         }
 
@@ -67,15 +67,16 @@ namespace SmartLMS.WebUI.Controllers
         {
             var courseRepository = new CourseRepository(_context);
             var courses = courseRepository.ListActiveCourses().Where(c => c.TeacherInCharge.Id == _loggedUser.Id);
- 
+
             return View(courses);
         }
 
         [Authorize(Roles = "Admin")]
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
-            ViewBag.SearchFields = new SelectList(new[] { Resource.CourseNameFieldName, Resource.SubjectName, Resource.KnowledgeAreaName, "Id" });
-            var courseRepository= new CourseRepository(_context);
+            ViewBag.SearchFields = new SelectList(new[]
+                {Resource.CourseNameFieldName, Resource.SubjectName, Resource.KnowledgeAreaName, "Id"});
+            var courseRepository = new CourseRepository(_context);
             return View(CourseViewModel.FromEntityList(courseRepository.Search(term, searchFieldName, page)));
         }
 
@@ -97,14 +98,12 @@ namespace SmartLMS.WebUI.Controllers
             var course = courseRepository.GetById(new Guid(id));
             using (var tx = new TransactionScope())
             {
-                if (course.Image != null)
-                {
-                    uploader.DeleteFile(course.Image);
-                }
+                if (course.Image != null) uploader.DeleteFile(course.Image);
                 courseRepository.Delete(course.Id);
                 _context.Save(_loggedUser);
                 tx.Complete();
             }
+
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
@@ -136,11 +135,10 @@ namespace SmartLMS.WebUI.Controllers
             var courseRepository = new CourseRepository(_context);
 
             if (ModelState.IsValid)
-            {
                 try
                 {
                     var subject = subjectRepository.GetById(viewModel.SubjectId);
-                    var teacher = (Teacher)userRepository.GetById(viewModel.TeacherInChargeId);
+                    var teacher = (Teacher) userRepository.GetById(viewModel.TeacherInChargeId);
                     courseRepository.Create(CourseViewModel.ToEntity(viewModel, subject, teacher));
                     _context.Save(_loggedUser);
 
@@ -155,7 +153,6 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
-            }
 
             var subjects = subjectRepository.ListActiveSubjects();
             ViewBag.Subjects = new SelectList(subjects, "Id", "Name");
@@ -177,7 +174,6 @@ namespace SmartLMS.WebUI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteImage(string imageName)
         {
-
             var uploader = new ImageUploader();
 
             var courseRepository = new CourseRepository(_context);
@@ -188,10 +184,10 @@ namespace SmartLMS.WebUI.Controllers
                 courseRepository.Update(course);
                 _context.Save(_loggedUser);
             }
+
             uploader.DeleteFile(imageName);
 
             return new HttpStatusCodeResult(HttpStatusCode.OK);
-
         }
 
 
@@ -203,10 +199,7 @@ namespace SmartLMS.WebUI.Controllers
 
             var uploader = new ImageUploader();
             var file = uploader.GetFile(course.Image);
-            if (file != null)
-            {
-                return File(file, "image");
-            }
+            if (file != null) return File(file, "image");
 
             return File(Server.MapPath("~/Content/img/courses/no-image.png"), "image");
         }
@@ -218,10 +211,7 @@ namespace SmartLMS.WebUI.Controllers
             var course = courseRepository.GetById(new Guid(courseId));
             var uploader = new ImageUploader();
             var info = uploader.GetFileInfo(course.Image);
-            if (info != null)
-            {
-                return Json(new { Name = course.Image, Size = info.Length / 1024 });
-            }
+            if (info != null) return Json(new {Name = course.Image, Size = info.Length / 1024});
 
             return new EmptyResult();
         }
@@ -246,16 +236,14 @@ namespace SmartLMS.WebUI.Controllers
         [HttpPost]
         public ActionResult Edit(Guid id, CourseViewModel viewModel)
         {
-
             var subjectRepository = new SubjectRepository(_context);
             var userRepository = new UserRepository(_context);
 
             if (ModelState.IsValid)
-            {
                 try
                 {
                     var subject = subjectRepository.GetById(viewModel.SubjectId);
-                    var teacher = (Teacher)userRepository.GetById(viewModel.TeacherInChargeId);
+                    var teacher = (Teacher) userRepository.GetById(viewModel.TeacherInChargeId);
                     var courseRepository = new CourseRepository(_context);
 
                     courseRepository.UpdateWithClasses(CourseViewModel.ToEntity(viewModel, subject, teacher));
@@ -272,7 +260,6 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
-            }
 
 
             var activeSubjects = subjectRepository.ListActiveSubjects();
@@ -284,7 +271,4 @@ namespace SmartLMS.WebUI.Controllers
             return View(viewModel);
         }
     }
-
-
 }
-

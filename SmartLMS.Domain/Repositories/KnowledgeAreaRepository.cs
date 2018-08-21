@@ -1,8 +1,8 @@
-﻿using Carubbi.GenericRepository;
-using SmartLMS.Domain.Entities.Content;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Carubbi.GenericRepository;
+using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Repositories
@@ -10,6 +10,7 @@ namespace SmartLMS.Domain.Repositories
     public class KnowledgeAreaRepository
     {
         private readonly IContext _context;
+
         public KnowledgeAreaRepository(IContext context)
         {
             _context = context;
@@ -32,13 +33,13 @@ namespace SmartLMS.Domain.Repositories
         {
             var repo = new GenericRepository<KnowledgeArea>(_context);
             var query = new SearchQuery<KnowledgeArea>();
-            query.AddFilter(a => (searchFieldName == Resource.KnowledgeAreaNameFieldName && a.Name.Contains(term)) ||
-                                 (searchFieldName == "Id" && a.Id.ToString().Contains(term)) ||
-                                    string.IsNullOrEmpty(searchFieldName));
+            query.AddFilter(a => searchFieldName == Resource.KnowledgeAreaNameFieldName && a.Name.Contains(term) ||
+                                 searchFieldName == "Id" && a.Id.ToString().Contains(term) ||
+                                 string.IsNullOrEmpty(searchFieldName));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<KnowledgeArea>("Order"));
             query.Take = 8;
-            query.Skip = ((page - 1) * 8);
+            query.Skip = (page - 1) * 8;
 
             return repo.Search(query);
         }
@@ -47,7 +48,6 @@ namespace SmartLMS.Domain.Repositories
         {
             var knowledgeArea = _context.GetList<KnowledgeArea>().Find(id);
             _context.GetList<KnowledgeArea>().Remove(knowledgeArea);
-          
         }
 
         public void Create(KnowledgeArea knowledgeArea)
@@ -55,7 +55,6 @@ namespace SmartLMS.Domain.Repositories
             knowledgeArea.Active = true;
             knowledgeArea.CreatedAt = DateTime.Now;
             _context.GetList<KnowledgeArea>().Add(knowledgeArea);
-            
         }
 
         public void Update(KnowledgeArea knowledgeArea)
@@ -72,9 +71,6 @@ namespace SmartLMS.Domain.Repositories
                 subject.Active = false;
                 subjectRepository.Update(subject);
             }
-
-
         }
     }
 }
-

@@ -1,10 +1,8 @@
-﻿
+﻿using System.Linq;
 using Carubbi.GenericRepository;
 using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.UserAccess;
-using System.Linq;
-
 
 namespace SmartLMS.Domain.Services
 {
@@ -12,6 +10,7 @@ namespace SmartLMS.Domain.Services
     {
         private readonly IContext _context;
         private User _loggedUser;
+
         public ContextualSearchService(IContext context, User loggedUser)
         {
             _context = context;
@@ -26,11 +25,11 @@ namespace SmartLMS.Domain.Services
                         Search<Class>(term, ResultType.Class).Union(
                             Search<File>(term, ResultType.File))))).OrderBy(x => x.Description);
 
-            GenericRepository<SearchResult> repo = new GenericRepository<SearchResult>(_context, query);
-            SearchQuery<SearchResult> filter = new SearchQuery<SearchResult>
+            var repo = new GenericRepository<SearchResult>(_context, query);
+            var filter = new SearchQuery<SearchResult>
             {
                 Take = pageSize,
-                Skip = ((page - 1) * pageSize)
+                Skip = (page - 1) * pageSize
             };
             filter.SortCriterias.Add(new DynamicFieldSortCriteria<SearchResult>("Description"));
 
@@ -41,7 +40,6 @@ namespace SmartLMS.Domain.Services
         private IQueryable<SearchResult> Search<T>(string term, ResultType resultType)
             where T : class, ISearchResult
         {
-
             return _context.GetList<T>().Where(x => x.Active && x.Name.Contains(term))
                 .Select(x => new SearchResult
                 {
@@ -50,11 +48,5 @@ namespace SmartLMS.Domain.Services
                     ResultType = resultType
                 });
         }
-
-
-
-
-
-
     }
 }

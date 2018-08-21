@@ -1,13 +1,13 @@
-﻿using Carubbi.Mailer.Implementation;
+﻿using System;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Web.Security;
+using Carubbi.Mailer.Implementation;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Resources;
 using SmartLMS.Domain.Services;
 using SmartLMS.WebUI.Models;
-using System;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.Security;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -17,7 +17,6 @@ namespace SmartLMS.WebUI.Controllers
         public AuthenticationController(IContext context)
             : base(context)
         {
-
         }
 
         // GET: Autenticacao
@@ -44,7 +43,7 @@ namespace SmartLMS.WebUI.Controllers
             {
                 FormsAuthentication.SetAuthCookie(viewModel.Login, viewModel.RememberMe);
                 var url = FormsAuthentication.GetRedirectUrl(viewModel.Login, viewModel.RememberMe);
-                return Json(new { Url = url, Authenticated = true }, JsonRequestBehavior.AllowGet);
+                return Json(new {Url = url, Authenticated = true}, JsonRequestBehavior.AllowGet);
             }
 
             ModelState.AddModelError("IvalidUserOrPassword", "Invalid User or password");
@@ -72,9 +71,9 @@ namespace SmartLMS.WebUI.Controllers
             var password = authenticationService.RecoverPassword(viewModel.Email);
             if (password != null)
             {
-
                 var notificationService = new NotificationService(_context, sender);
-                await Task.Run(() => notificationService.SendRecoverPasswordNotification(viewModel.Email, password)).ConfigureAwait(false);
+                await Task.Run(() => notificationService.SendRecoverPasswordNotification(viewModel.Email, password))
+                    .ConfigureAwait(false);
                 ViewBag.Message = "We sent an e-mail to you with your password.";
             }
             else
@@ -82,6 +81,7 @@ namespace SmartLMS.WebUI.Controllers
                 ViewBag.Message = "";
                 ModelState.AddModelError("EmailNaoEncontrado", "E-mail not found");
             }
+
             return View(viewModel);
         }
 
@@ -113,7 +113,7 @@ namespace SmartLMS.WebUI.Controllers
                 _loggedUser.Login,
                 changePasswordViewModel.Password,
                 _loggedUser.Active,
-                (Role)Enum.Parse(typeof(Role),
+                (Role) Enum.Parse(typeof(Role),
                     _context.UnProxy(_loggedUser).GetType().Name),
                 _loggedUser);
 

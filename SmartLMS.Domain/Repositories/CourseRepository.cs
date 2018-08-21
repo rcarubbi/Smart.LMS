@@ -1,8 +1,8 @@
-﻿using Carubbi.GenericRepository;
-using SmartLMS.Domain.Entities.Content;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Carubbi.GenericRepository;
+using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Resources;
 
@@ -10,8 +10,8 @@ namespace SmartLMS.Domain.Repositories
 {
     public class CourseRepository
     {
-
         private readonly IContext _context;
+
         public CourseRepository(IContext context)
         {
             _context = context;
@@ -30,20 +30,21 @@ namespace SmartLMS.Domain.Repositories
         {
             var courseIndex = new CourseIndex();
             var classRepository = new ClassRepository(_context);
-            
+
 
             courseIndex.Course = _context.GetList<Course>().Find(id);
             courseIndex.ClassesInfo = courseIndex.Course.Classes.Where(a => a.Active)
                 .OrderBy(x => x.Order)
-                .Select(a => new ClassInfo {
+                .Select(a => new ClassInfo
+                {
                     Class = a,
                     Available = userId.HasValue && classRepository.CheckClassAvailability(a.Id, userId.Value),
-                    Percentual = userId.HasValue ? a.Accesses.LastOrDefault(x => x.User.Id == userId)?.Percentual ?? 0 : 0,
-                    Editable =  classRepository.CheckClassEditable(a, userId, loggedUserRole)
-            });
+                    Percentual =
+                        userId.HasValue ? a.Accesses.LastOrDefault(x => x.User.Id == userId)?.Percentual ?? 0 : 0,
+                    Editable = classRepository.CheckClassEditable(a, userId, loggedUserRole)
+                });
 
             return courseIndex;
-            
         }
 
         public List<Course> ListMyCourses(Guid userId, Role userRole)
@@ -68,16 +69,18 @@ namespace SmartLMS.Domain.Repositories
         {
             var repo = new GenericRepository<Course>(_context);
             var query = new SearchQuery<Course>();
-            query.AddFilter(a => (searchFieldName == Resource.CourseNameFieldName && a.Name.Contains(term)) ||
-                                 (searchFieldName == "Id" && a.Id.ToString().Contains(term)) ||
-                                  (searchFieldName == Resource.KnowledgeAreaName && a.Subject.KnowledgeArea.Name.Contains(term)) ||
-                                  (searchFieldName == Resource.SubjectName && a.Subject.Name.Contains(term)) ||
-                                    string.IsNullOrEmpty(searchFieldName));
+            query.AddFilter(a => searchFieldName == Resource.CourseNameFieldName && a.Name.Contains(term) ||
+                                 searchFieldName == "Id" && a.Id.ToString().Contains(term) ||
+                                 searchFieldName == Resource.KnowledgeAreaName &&
+                                 a.Subject.KnowledgeArea.Name.Contains(term) ||
+                                 searchFieldName == Resource.SubjectName && a.Subject.Name.Contains(term) ||
+                                 string.IsNullOrEmpty(searchFieldName));
 
-            query.AddSortCriteria(new DynamicFieldSortCriteria<Course>("Subject.KnowledgeArea.Order, Subject.Order, Order"));
+            query.AddSortCriteria(
+                new DynamicFieldSortCriteria<Course>("Subject.KnowledgeArea.Order, Subject.Order, Order"));
 
             query.Take = 8;
-            query.Skip = ((page - 1) * 8);
+            query.Skip = (page - 1) * 8;
 
             return repo.Search(query);
         }
@@ -86,7 +89,6 @@ namespace SmartLMS.Domain.Repositories
         {
             var course = GetById(id);
             _context.GetList<Course>().Remove(course);
-           
         }
 
         public Course GetById(Guid id)
@@ -99,14 +101,12 @@ namespace SmartLMS.Domain.Repositories
             course.CreatedAt = DateTime.Now;
             course.Active = true;
             _context.GetList<Course>().Add(course);
-         
         }
 
         public void Update(Course course)
         {
             var currentCourse = GetById(course.Id);
             _context.Update(currentCourse, course);
-          
         }
 
         public Course GetByImageName(string imageName)
@@ -132,9 +132,6 @@ namespace SmartLMS.Domain.Repositories
                 klass.Active = false;
                 classRepository.Update(klass);
             }
-
         }
-
-   
     }
 }

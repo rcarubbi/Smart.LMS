@@ -1,7 +1,7 @@
-﻿using Carubbi.Utils.Data;
-using SmartLMS.DAL;
-using System;
+﻿using System;
 using System.Linq;
+using Carubbi.Extensions;
+using SmartLMS.DAL;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
 
@@ -9,6 +9,8 @@ namespace SmartLMS.WebUI.Providers
 {
     public class RoleProvider : System.Web.Security.RoleProvider
     {
+        public override string ApplicationName { get; set; }
+
         public override void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
         {
             throw new NotSupportedException();
@@ -29,18 +31,12 @@ namespace SmartLMS.WebUI.Providers
             throw new NotSupportedException();
         }
 
-        public override string ApplicationName
-        {
-            get;
-            set;
-        }
-
         public override string[] FindUsersInRole(string roleName, string usernameToMatch)
         {
             using (var context = new Context())
             {
                 var userRepository = new UserRepository(context);
-                var users = userRepository.ListByRole((Role)Enum.Parse(typeof(Role), roleName));
+                var users = userRepository.ListByRole((Role) Enum.Parse(typeof(Role), roleName));
                 return users.Where(x => x.Login.Contains(usernameToMatch))
                     .Select(x => x.Login)
                     .ToArray();
@@ -59,7 +55,7 @@ namespace SmartLMS.WebUI.Providers
             using (var context = new Context())
             {
                 var userRepository = new UserRepository(context);
-                return new[] { context.UnProxy(userRepository.GetByLogin(username)).GetType().Name };
+                return new[] {context.UnProxy(userRepository.GetByLogin(username)).GetType().Name};
             }
         }
 
@@ -68,7 +64,8 @@ namespace SmartLMS.WebUI.Providers
             using (var context = new Context())
             {
                 var userRepository = new UserRepository(context);
-                return userRepository.ListByRole((Role)Enum.Parse(typeof(Role), roleName)).Select(x => x.Login).ToArray();
+                return userRepository.ListByRole((Role) Enum.Parse(typeof(Role), roleName)).Select(x => x.Login)
+                    .ToArray();
             }
         }
 
@@ -77,7 +74,7 @@ namespace SmartLMS.WebUI.Providers
             using (var context = new Context())
             {
                 var userRepository = new UserRepository(context);
-                return (context.UnProxy(userRepository.GetByLogin(username)).GetType().Name == roleName);
+                return context.UnProxy(userRepository.GetByLogin(username)).GetType().Name == roleName;
             }
         }
 

@@ -5,13 +5,13 @@ namespace SmartLMS.DAL.Mapping
 {
     public class StudentConfiguration : EntityTypeConfiguration<Student>
     {
-        public StudentConfiguration() {
-            
-              HasMany(x => x.DeliveryPlans).WithMany(x => x.Students).Map((a) =>
-              {
-                  a.MapLeftKey("StudentId");
-                  a.MapRightKey("DeliveryPlanId");
-              });
+        public StudentConfiguration()
+        {
+            HasMany(x => x.DeliveryPlans).WithMany(x => x.Students).Map(a =>
+            {
+                a.MapLeftKey("StudentId");
+                a.MapRightKey("DeliveryPlanId");
+            });
         }
     }
 }

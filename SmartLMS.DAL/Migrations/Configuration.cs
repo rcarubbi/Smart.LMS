@@ -1,27 +1,26 @@
+using System;
+using System.Data.Entity.Migrations;
+using Carubbi.Security;
 using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.UserAccess;
 
 namespace SmartLMS.DAL.Migrations
 {
-    using Carubbi.Utils.Security;
-    using System;
-    using System.Data.Entity.Migrations;
-
-    internal sealed class Configuration : DbMigrationsConfiguration<SmartLMS.DAL.Context>
+    internal sealed class Configuration : DbMigrationsConfiguration<Context>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(SmartLMS.DAL.Context context)
+        protected override void Seed(Context context)
         {
-            var crypto = new CriptografiaSimetrica(SymmetricCryptProvider.TripleDES) { Key = "Gnatta123" };
+            var crypto = new SymmetricCrypt(SymmetricCryptProvider.TripleDES) {Key = "Gnatta123"};
 
             #region User
 
             context.Set<User>().AddOrUpdate(u => u.Name,
-                new Admin()
+                new Admin
                 {
                     Name = "Admin",
                     Active = true,
@@ -33,7 +32,7 @@ namespace SmartLMS.DAL.Migrations
 
 
             context.Set<User>().AddOrUpdate(u => u.Name,
-                new Admin()
+                new Admin
                 {
                     Name = "Daemon User",
                     Active = true,
@@ -45,10 +44,10 @@ namespace SmartLMS.DAL.Migrations
 
             context.Save();
 
-
             #endregion
 
             #region Parametro
+
             context.Set<Parameter>()
                 .AddOrUpdate(p => p.Key,
                     new Parameter
@@ -114,15 +113,13 @@ namespace SmartLMS.DAL.Migrations
                         Value = "false",
                         Active = true
                     },
-
-
-                     new Parameter
-                     {
-                         CreatedAt = DateTime.Now,
-                         Key = Parameter.FILE_STORAGE_KEY,
-                         Value = "Content/Support",
-                         Active = true
-                     },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.FILE_STORAGE_KEY,
+                        Value = "Content/Support",
+                        Active = true
+                    },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
@@ -159,7 +156,3 @@ namespace SmartLMS.DAL.Migrations
         }
     }
 }
-
-
-
-

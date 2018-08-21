@@ -1,5 +1,5 @@
-﻿using SmartLMS.Domain.Entities.UserAccess;
-using System;
+﻿using System;
+using SmartLMS.Domain.Entities.UserAccess;
 
 namespace SmartLMS.Domain.Entities.History
 {

@@ -9,7 +9,5 @@ namespace SmartLMS.Domain.Entities.Content
         public virtual ICollection<Course> Courses { get; set; }
 
         public string Name { get; set; }
-
-      
     }
 }

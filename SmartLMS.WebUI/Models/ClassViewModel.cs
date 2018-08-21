@@ -1,15 +1,15 @@
-﻿using Carubbi.GenericRepository;
-using Humanizer.DateTimeHumanizeStrategy;
-using SmartLMS.Domain.Entities.Content;
-using SmartLMS.Domain.Entities.Delivery;
-using SmartLMS.Domain.Entities.UserAccess;
-using SmartLMS.Domain.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using Carubbi.GenericRepository;
+using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Domain.Attributes;
+using SmartLMS.Domain.Entities.Content;
+using SmartLMS.Domain.Entities.Delivery;
+using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Models
@@ -20,8 +20,7 @@ namespace SmartLMS.WebUI.Models
         [LocalizedDisplay("TeacherName")]
         public Guid TeacherId { get; set; }
 
-        [Required]
-        public int Order { get; set; }
+        [Required] public int Order { get; set; }
 
         [LocalizedDisplay("DaysToDeliverLabel")]
         [Required]
@@ -46,15 +45,13 @@ namespace SmartLMS.WebUI.Models
 
         public Guid Id { get; set; }
 
-         
-        [LocalizedDisplay("FileName")]
-        public IEnumerable<FileViewModel> Files { get; set; }
 
-        [Required]
-        public string Content { get; set; }
+        [LocalizedDisplay("FileName")] public IEnumerable<FileViewModel> Files { get; set; }
 
-        [Required]
-        public string Name { get; set; }
+        [Required] public string Content { get; set; }
+
+        [Required] public string Name { get; set; }
+
         public string TeacherName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectContentType")]
@@ -70,12 +67,12 @@ namespace SmartLMS.WebUI.Models
 
         public DateTime CreatedAt { get; set; }
 
-        [LocalizedDisplay("ActiveFieldName")]
-        public bool Active { get; set; }
+        [LocalizedDisplay("ActiveFieldName")] public bool Active { get; set; }
 
         public bool Editable { get; set; }
 
-        internal static IEnumerable<ClassViewModel> FromEntityList(IEnumerable<Class> classes, int depth, DefaultDateTimeHumanizeStrategy humanizer)
+        internal static IEnumerable<ClassViewModel> FromEntityList(IEnumerable<Class> classes, int depth,
+            DefaultDateTimeHumanizeStrategy humanizer)
         {
             return classes.Select(item => FromEntity(item, depth, humanizer));
         }
@@ -113,7 +110,6 @@ namespace SmartLMS.WebUI.Models
 
         public static ClassViewModel FromEntity(Class item, int depth, DefaultDateTimeHumanizeStrategy humanizer)
         {
-
             return new ClassViewModel
             {
                 Id = item.Id,
@@ -126,7 +122,9 @@ namespace SmartLMS.WebUI.Models
                 ContentType = item.ContentType,
                 CreatedAt = item.CreatedAt,
                 DeliveryDays = item.DeliveryDays,
-                CreatedAtDescription = humanizer != null ? humanizer.Humanize(item.CreatedAt, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
+                CreatedAtDescription = humanizer != null
+                    ? humanizer.Humanize(item.CreatedAt, DateTime.Now, CultureInfo.CurrentUICulture)
+                    : string.Empty,
                 Active = item.Active,
                 Order = item.Order,
                 Files = depth > 3 ? FileViewModel.FromEntityList(item.Files) : new List<FileViewModel>()
@@ -182,7 +180,8 @@ namespace SmartLMS.WebUI.Models
             };
         }
 
-        internal static IEnumerable<ClassViewModel> FromEntityList(IEnumerable<ClassDeliveryPlan> classes, DefaultDateTimeHumanizeStrategy humanizer)
+        internal static IEnumerable<ClassViewModel> FromEntityList(IEnumerable<ClassDeliveryPlan> classes,
+            DefaultDateTimeHumanizeStrategy humanizer)
         {
             return classes.Select(item => FromEntity(item, humanizer));
         }
@@ -200,15 +199,19 @@ namespace SmartLMS.WebUI.Models
                 CreatedAt = item.Class.CreatedAt,
                 DeliveryDate = item.DeliveryDate,
                 CourseName = item.Class.Course.Name,
-                CreatedAtDescription = humanizer != null ? humanizer.Humanize(item.Class.CreatedAt, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
-                DeliveryDateDescription = humanizer != null ? humanizer.Humanize(item.DeliveryDate, DateTime.Now, CultureInfo.CurrentUICulture) : string.Empty,
-                Available = true,
+                CreatedAtDescription = humanizer != null
+                    ? humanizer.Humanize(item.Class.CreatedAt, DateTime.Now, CultureInfo.CurrentUICulture)
+                    : string.Empty,
+                DeliveryDateDescription = humanizer != null
+                    ? humanizer.Humanize(item.DeliveryDate, DateTime.Now, CultureInfo.CurrentUICulture)
+                    : string.Empty,
+                Available = true
             };
         }
 
         internal static Class ToEntity(ClassViewModel klass, Course course, Teacher teacher)
         {
-            return new Class()
+            return new Class
             {
                 Id = klass.Id,
                 CreatedAt = klass.CreatedAt,

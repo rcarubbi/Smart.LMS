@@ -1,55 +1,48 @@
-﻿using StructureMap;
-using Topshelf;
-using Topshelf.StructureMap;
-using Topshelf.Quartz.StructureMap;
-using Quartz;
+﻿using Quartz;
 using SmartLMS.DAL;
+using StructureMap;
+using Topshelf;
+using Topshelf.Quartz.StructureMap;
+using Topshelf.StructureMap;
 using IContext = SmartLMS.Domain.IContext;
 
 namespace SmartLMS.ContentDeliveryAgent
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             HostFactory.Run(serviceConfig =>
             {
                 serviceConfig.UseNLog();
 
-                var container = new Container(cfg =>
-                {
-                    cfg.For<IContext>().Use<Context>();
-                });
+                var container = new Container(cfg => { cfg.For<IContext>().Use<Context>(); });
 
                 serviceConfig.UseStructureMap(container);
 
                 serviceConfig.Service<ContentDeliveryService>(serviceInstance =>
-                        {
-                            serviceInstance.ConstructUsingStructureMap();
-                            serviceInstance.WhenStarted(execute => execute.Start());
-                            serviceInstance.WhenStopped(execute => execute.Stop());
-                          
-                            serviceInstance.UseQuartzStructureMap();
-
-                            serviceInstance.ScheduleQuartzJob(q =>
-                                q.WithJob(() =>
-                                    JobBuilder.Create<ContentDeliveryJob>().Build())
-                                    //.AddTrigger(() =>
-                                    //    TriggerBuilder.Create().StartNow().Build())
-                                    .AddTrigger(() =>
-                                        TriggerBuilder.Create()
-                                            .WithSimpleSchedule(builder => builder
-                                                                            .WithIntervalInHours(1)
-                                                                            .RepeatForever())
-                                                                            .Build())
-                                );
-
-                        });
-
-                serviceConfig.EnableServiceRecovery(recoveryOption =>
                 {
-                    recoveryOption.RestartService(5);
+                    serviceInstance.ConstructUsingStructureMap();
+                    serviceInstance.WhenStarted(execute => execute.Start());
+                    serviceInstance.WhenStopped(execute => execute.Stop());
+
+                    serviceInstance.UseQuartzStructureMap();
+
+                    serviceInstance.ScheduleQuartzJob(q =>
+                        q.WithJob(() =>
+                                JobBuilder.Create<ContentDeliveryJob>().Build())
+                            //.AddTrigger(() =>
+                            //    TriggerBuilder.Create().StartNow().Build())
+                            .AddTrigger(() =>
+                                TriggerBuilder.Create()
+                                    .WithSimpleSchedule(builder => builder
+                                        .WithIntervalInHours(1)
+                                        .RepeatForever())
+                                    .Build())
+                    );
                 });
+
+                serviceConfig.EnableServiceRecovery(recoveryOption => { recoveryOption.RestartService(5); });
 
                 serviceConfig.SetServiceName("SmartLMS.ContentDeliveryAgent");
                 serviceConfig.SetDisplayName("Smart LMS - Content Delivery Agent");

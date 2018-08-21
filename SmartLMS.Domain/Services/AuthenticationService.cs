@@ -1,13 +1,13 @@
-﻿using Carubbi.DiffAnalyzer;
+﻿using System;
+using System.Linq;
+using System.Text;
+using Carubbi.DiffAnalyzer;
 using Carubbi.Mailer.Interfaces;
-using Carubbi.Utils.Security;
+using Carubbi.Security;
 using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
-using System;
-using System.Linq;
-using System.Text;
 using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Services
@@ -15,14 +15,14 @@ namespace SmartLMS.Domain.Services
     public class AuthenticationService
     {
         private readonly IContext _context;
-        private readonly CriptografiaSimetrica _crypt;
+        private readonly SymmetricCrypt _crypt;
         private readonly NotificationService _notificationService;
 
         public AuthenticationService(IContext context, IMailSender sender)
         {
             _context = context;
             _notificationService = new NotificationService(_context, sender);
-            _crypt = new CriptografiaSimetrica(SymmetricCryptProvider.TripleDES);
+            _crypt = new SymmetricCrypt(SymmetricCryptProvider.TripleDES);
             var parameterRepository = new ParameterRepository(_context);
             _crypt.Key = parameterRepository.GetValueByKey(Parameter.CRYPTO_KEY);
         }
@@ -34,16 +34,15 @@ namespace SmartLMS.Domain.Services
             return _context.GetList<User>().Any(u => u.Login == login && u.Password == encryptedPassword && u.Active);
         }
 
-        public void UpdatedUser(Guid id, string name, string email, string login, string password, bool active, Role role, User loggedUser)
+        public void UpdatedUser(Guid id, string name, string email, string login, string password, bool active,
+            Role role, User loggedUser)
         {
             var userRepository = new UserRepository(_context);
             var user = userRepository.GetById(id);
             var userByAccount = userRepository.GetByLogin(login);
 
             if (userByAccount != null && userByAccount.Id != id)
-            {
                 throw new ApplicationException(Resource.AnotherUserToThisLoginException);
-            }
 
             User updatedUser = null;
 
@@ -72,30 +71,28 @@ namespace SmartLMS.Domain.Services
             updatedUser.Login = login;
             updatedUser.Email = email;
             updatedUser.CreatedAt = user.CreatedAt;
-            
+
 
             var analyzer = new DiffAnalyzer(1);
             var differences = analyzer.Compare(_context.UnProxy(user), updatedUser, a => a.State == DiffState.Modified);
 
-            
+
             var diffText = new StringBuilder($"{Resource.PersonalInfoUpdatedTitle}:{Environment.NewLine}<br />");
             foreach (var item in differences)
-            {
                 diffText.AppendLine(item.PropertyName == "Password"
                     ? $"- {Resource.PasswordUpdatedNoticeMessage} <br />"
                     : $"- {item.PropertyName} {Resource.PersonalInfoUpdatedFrom} {item.OldValue} {Resource.PersonalInfoUpdatedTo} {item.NewValue}<br />");
-            }
 
-            var updatingNotice = new Notice {
+            var updatingNotice = new Notice
+            {
                 Text = diffText.ToString(),
                 DateTime = DateTime.Now,
-                User = user,
+                User = user
             };
 
             _context.GetList<Notice>().Add(updatingNotice);
             _context.Update(user, updatedUser);
             _context.Save(loggedUser);
- 
         }
 
         public User CreateUser(string name, string login, string email, string password, Role role, User loggedUser)
@@ -136,7 +133,7 @@ namespace SmartLMS.Domain.Services
                 {
                     User = user,
                     Text = Resource.WelcomeNoticeMessage,
-                    DateTime = DateTime.Now,
+                    DateTime = DateTime.Now
                 };
                 _context.GetList<Notice>().Add(notice);
             }
@@ -153,7 +150,6 @@ namespace SmartLMS.Domain.Services
             var userRepository = new UserRepository(_context);
             var user = userRepository.GetByEmail(email);
             return user == null ? null : _crypt.Decrypt(user.Password);
-
         }
     }
 }

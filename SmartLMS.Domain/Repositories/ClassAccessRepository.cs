@@ -1,7 +1,7 @@
-﻿using SmartLMS.Domain.Entities.History;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartLMS.Domain.Entities.History;
 
 namespace SmartLMS.Domain.Repositories
 {
@@ -17,9 +17,9 @@ namespace SmartLMS.Domain.Repositories
         public ClassAccess GetLongestAccess(Guid classId, Guid studentId)
         {
             var longestAccess = _context.GetList<ClassAccess>()
-                    .Where(x => x.Class.Id == classId && x.User.Id == studentId)
-                    .OrderByDescending(x => x.Percentual)
-                    .FirstOrDefault();
+                .Where(x => x.Class.Id == classId && x.User.Id == studentId)
+                .OrderByDescending(x => x.Percentual)
+                .FirstOrDefault();
 
             return longestAccess;
         }
@@ -29,9 +29,9 @@ namespace SmartLMS.Domain.Repositories
             var accesses = _context.GetList<ClassAccess>();
             var existingAccess = accesses
                 .Where(x => x.Class.Id == access.Class.Id && x.User.Id == access.User.Id)
-                .OrderByDescending(x=> x.AccessDateTime)
+                .OrderByDescending(x => x.AccessDateTime)
                 .FirstOrDefault();
-               
+
             if (existingAccess == null)
             {
                 accesses.Add(access);
@@ -55,10 +55,10 @@ namespace SmartLMS.Domain.Repositories
         public IEnumerable<ClassAccess> ListLastAccesses(Guid id)
         {
             var query = from access in _context.GetList<ClassAccess>()
-            where access.User.Id == id
-            group access by access.Class.Id
-            into accessByClass
-            select accessByClass.OrderByDescending(x => x.AccessDateTime).FirstOrDefault();
+                where access.User.Id == id
+                group access by access.Class.Id
+                into accessByClass
+                select accessByClass.OrderByDescending(x => x.AccessDateTime).FirstOrDefault();
 
             return query.ToList();
         }

@@ -1,13 +1,11 @@
-﻿using SmartLMS.Domain.Entities.Communication;
+﻿using System.Collections.Generic;
+using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.History;
-using System.Collections.Generic;
 
 namespace SmartLMS.Domain.Entities.UserAccess
 {
     public abstract class User : Entity
     {
-        
-     
         public string Name { get; set; }
 
         public string Login { get; set; }
@@ -23,6 +21,5 @@ namespace SmartLMS.Domain.Entities.UserAccess
         public virtual ICollection<FileAccess> FileAccesses { get; set; }
 
         public virtual ICollection<Notice> PrivateNotices { get; set; }
-
     }
 }

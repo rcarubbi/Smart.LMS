@@ -17,12 +17,11 @@ namespace SmartLMS.WebUI.Controllers
         internal dynamic Upload(HttpPostedFileBase file)
         {
             var isSavedSuccessfully = true;
-          
+
             try
             {
                 if (file != null && file.ContentLength > 0)
                 {
-
                     if (!Directory.Exists(_pathString))
                         Directory.CreateDirectory(_pathString);
 
@@ -35,9 +34,9 @@ namespace SmartLMS.WebUI.Controllers
                 isSavedSuccessfully = false;
             }
 
-            return isSavedSuccessfully 
-                ? new { Success = true, Message = file?.FileName } 
-                : new { Success = false, Message = Resource.ErrorSavingImage };
+            return isSavedSuccessfully
+                ? new {Success = true, Message = file?.FileName}
+                : new {Success = false, Message = Resource.ErrorSavingImage};
         }
 
         internal void DeleteFile(string filename)

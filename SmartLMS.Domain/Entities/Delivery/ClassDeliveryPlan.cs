@@ -1,5 +1,5 @@
-﻿using SmartLMS.Domain.Entities.Content;
-using System;
+﻿using System;
+using SmartLMS.Domain.Entities.Content;
 
 namespace SmartLMS.Domain.Entities.Delivery
 {

@@ -1,6 +1,6 @@
-﻿using SmartLMS.Domain.Resources;
-using System;
+﻿using System;
 using System.ComponentModel;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Attributes
 {
@@ -11,14 +11,14 @@ namespace SmartLMS.Domain.Attributes
                     AttributeTargets.Delegate | AttributeTargets.ReturnValue | AttributeTargets.GenericParameter)]
     public class LocalizedDescriptionAttribute : DescriptionAttribute
     {
-        private static string Localize(string key)
-        {
-            return Resource.ResourceManager.GetString(key);
-        }
-
         public LocalizedDescriptionAttribute(string key)
             : base(Localize(key))
         {
+        }
+
+        private static string Localize(string key)
+        {
+            return Resource.ResourceManager.GetString(key);
         }
     }
 }

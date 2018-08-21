@@ -1,18 +1,23 @@
-﻿using SmartLMS.Domain;
-using SmartLMS.Domain.Entities;
-using SmartLMS.Domain.Entities.UserAccess;
-using SmartLMS.Domain.Repositories;
-using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
-using System.Threading;
 using System.Web.Mvc;
 using System.Web.Routing;
+using SmartLMS.Domain;
+using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Repositories;
 
 namespace SmartLMS.WebUI.Controllers
 {
     public class BaseController : Controller
     {
+        protected IContext _context;
+
+        protected User _loggedUser;
+
+        public BaseController(IContext context)
+        {
+            _context = context;
+        }
 
         protected override void OnException(ExceptionContext filterContext)
         {
@@ -30,20 +35,13 @@ namespace SmartLMS.WebUI.Controllers
             using (var sw = new StringWriter())
             {
                 var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext,
-                                                                         viewName);
+                    viewName);
                 var viewContext = new ViewContext(ControllerContext, viewResult.View,
-                                             ViewData, TempData, sw);
+                    ViewData, TempData, sw);
                 viewResult.View.Render(viewContext, sw);
                 viewResult.ViewEngine.ReleaseView(ControllerContext, viewResult.View);
                 return sw.GetStringBuilder().ToString();
             }
-        }
-
-        protected User _loggedUser;
-        protected IContext _context;
-        public BaseController(IContext context)
-        {
-            _context = context;
         }
 
         protected Role GetUserRole(User user)
@@ -72,16 +70,13 @@ namespace SmartLMS.WebUI.Controllers
             var userRepository = new UserRepository(_context);
 
             if (!HttpContext.User.Identity.IsAuthenticated) return;
-            
+
             if (!Request.IsAjaxRequest())
-            {
                 if (Request.Url != Request.UrlReferrer)
                 {
                     ViewBag.BackURL = Request.UrlReferrer;
                     TempData["BackURL"] = Request.UrlReferrer;
                 }
-
-            }
 
             _loggedUser = userRepository.GetByLogin(HttpContext.User.Identity.Name);
             ViewBag.LoggedUserId = _loggedUser != null ? _loggedUser.Id.ToString() : string.Empty;

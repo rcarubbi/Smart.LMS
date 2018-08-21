@@ -1,29 +1,25 @@
-﻿using Carubbi.Mailer.Implementation;
-using SmartLMS.Domain;
-using SmartLMS.Domain.Entities.Content;
-using SmartLMS.Domain.Entities.Delivery;
-using SmartLMS.Domain.Repositories;
-using SmartLMS.WebUI.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using SmartLMS.Domain.Entities;
+using Carubbi.Mailer.Implementation;
+using SmartLMS.Domain;
+using SmartLMS.Domain.Entities.Content;
+using SmartLMS.Domain.Entities.Delivery;
+using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Resources;
+using SmartLMS.WebUI.Models;
 
 namespace SmartLMS.WebUI.Controllers
 {
-
     [Authorize(Roles = "Admin")]
     public class ClassroomController : BaseController
     {
-
         public ClassroomController(IContext context)
             : base(context)
         {
-
         }
 
         [OverrideAuthorization]
@@ -31,7 +27,8 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult Index()
         {
             var classroomRepository = new ClassroomRepository(_context);
-            var classrooms = classroomRepository.ListActiveClassrooms().Where(cr => cr.Courses.Any(c => c.Course.TeacherInCharge.Id == _loggedUser.Id));
+            var classrooms = classroomRepository.ListActiveClassrooms()
+                .Where(cr => cr.Courses.Any(c => c.Course.TeacherInCharge.Id == _loggedUser.Id));
             return View(classrooms);
         }
 
@@ -39,7 +36,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
             var classroomRepository = new ClassroomRepository(_context);
-            ViewBag.SearchFields = new SelectList(new string[] { "Name", "Course" });
+            ViewBag.SearchFields = new SelectList(new[] {"Name", "Course"});
             return View(ClassroomViewModel.FromEntityList(classroomRepository.Search(term, searchFieldName, page)));
         }
 
@@ -50,7 +47,6 @@ namespace SmartLMS.WebUI.Controllers
             return Json(ClassroomViewModel.FromEntityList(classroomRepository.Search(term, searchFieldName, page)));
         }
 
-        
 
         [HttpPost]
         [OverrideAuthorization]
@@ -73,14 +69,14 @@ namespace SmartLMS.WebUI.Controllers
             var classroom = classroomRepository.GetById(id);
 
             var query = from p in classroom.DeliveryPlans
-                        from s in p.Students
-                        orderby p.StartDate descending, s.Name
-                        select new
-                        {
-                            SubscriptionDate = p.StartDate,
-                            s.Name,
-                            s.Id,
-                        };
+                from s in p.Students
+                orderby p.StartDate descending, s.Name
+                select new
+                {
+                    SubscriptionDate = p.StartDate,
+                    s.Name,
+                    s.Id
+                };
 
             return Json(query.ToList());
         }
@@ -98,7 +94,8 @@ namespace SmartLMS.WebUI.Controllers
         {
             var courseRepository = new CourseRepository(_context);
 
-            ViewBag.Courses = new SelectList(CourseViewModel.FromEntityList(courseRepository.ListActiveCourses(), 0), "Id", "Name");
+            ViewBag.Courses = new SelectList(CourseViewModel.FromEntityList(courseRepository.ListActiveCourses(), 0),
+                "Id", "Name");
             return View();
         }
 
@@ -106,7 +103,6 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult Create(ClassroomViewModel viewModel)
         {
             if (ModelState.IsValid)
-            {
                 try
                 {
                     var classroomRepository = new ClassroomRepository(_context);
@@ -123,10 +119,10 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageTitle"] = Resource.ClassroomManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
-            }
 
             var courseRepository = new CourseRepository(_context);
-            ViewBag.Courses = new SelectList(CourseViewModel.FromEntityList(courseRepository.ListActiveCourses(), 0), "Id", "Name");
+            ViewBag.Courses = new SelectList(CourseViewModel.FromEntityList(courseRepository.ListActiveCourses(), 0),
+                "Id", "Name");
             return View(viewModel);
         }
 
@@ -163,19 +159,17 @@ namespace SmartLMS.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(Guid id, ClassroomViewModel viewModel)
         {
-
             var classroomRepository = new ClassroomRepository(_context);
             var classroom = classroomRepository.GetById(id);
             if (ModelState.IsValid)
-            {
                 try
                 {
                     await classroomRepository.UpdateAsync(new SmtpSender(),
-                        classroom, 
-                        viewModel.Name, 
+                        classroom,
+                        viewModel.Name,
                         viewModel.Active,
-                        viewModel.CourseIds, 
-                        viewModel.StudentIds, 
+                        viewModel.CourseIds,
+                        viewModel.StudentIds,
                         _loggedUser);
 
                     TempData["MessageType"] = "success";
@@ -189,7 +183,6 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageTitle"] = Resource.ClassroomManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
-            }
 
             var courses = ReorderCourses(classroom);
             ViewBag.Courses = new SelectList(CourseViewModel.FromEntityList(courses, 0), "Id", "Name");
@@ -198,7 +191,6 @@ namespace SmartLMS.WebUI.Controllers
             ViewBag.Students = new SelectList(userRepository.ListActiveStudents(), "id", "Name");
 
             return View(viewModel);
-
         }
 
         [OverrideAuthorization]
@@ -221,11 +213,10 @@ namespace SmartLMS.WebUI.Controllers
             var classes = new List<ClassDeliveryPlanViewModel>();
             if (deliveryPlan == null) return Json(classes);
 
-            classes.AddRange(ClassDeliveryPlanViewModel.FromEntityList(deliveryPlan.GetDeliveryPlanClassesInfo().ToList()));
-           
+            classes.AddRange(
+                ClassDeliveryPlanViewModel.FromEntityList(deliveryPlan.GetDeliveryPlanClassesInfo().ToList()));
+
             return Json(classes.OrderBy(x => x.CourseOrder).ThenBy(x => x.ClassOrder).ToList());
         }
-
-     
     }
 }

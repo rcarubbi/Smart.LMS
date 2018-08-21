@@ -1,5 +1,5 @@
-﻿using SmartLMS.Domain.Entities.Content;
-using System;
+﻿using System;
+using SmartLMS.Domain.Entities.Content;
 
 namespace SmartLMS.Domain.Entities.Delivery
 {
@@ -14,6 +14,5 @@ namespace SmartLMS.Domain.Entities.Delivery
         public virtual Course Course { get; set; }
 
         public virtual Classroom Classroom { get; set; }
-
     }
 }

@@ -1,11 +1,11 @@
-﻿using Humanizer.DateTimeHumanizeStrategy;
-using SmartLMS.Domain.Entities.Content;
-using SmartLMS.Domain.Entities.History;
-using SmartLMS.Domain.Entities.UserAccess;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Humanizer.DateTimeHumanizeStrategy;
+using SmartLMS.Domain.Entities.Content;
+using SmartLMS.Domain.Entities.History;
+using SmartLMS.Domain.Entities.UserAccess;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -23,7 +23,7 @@ namespace SmartLMS.WebUI.Models
 
         internal ClassAccess ToEntity(User user, Class klass)
         {
-            return new ClassAccess()
+            return new ClassAccess
             {
                 AccessDateTime = DateTime.Now,
                 Percentual = Percentual,
@@ -33,7 +33,8 @@ namespace SmartLMS.WebUI.Models
             };
         }
 
-        internal static IEnumerable<ClassAccessViewModel> FromEntityList(IEnumerable<ClassAccess> classAccesses, DefaultDateTimeHumanizeStrategy humanizer)
+        internal static IEnumerable<ClassAccessViewModel> FromEntityList(IEnumerable<ClassAccess> classAccesses,
+            DefaultDateTimeHumanizeStrategy humanizer)
         {
             return classAccesses.Select(item => FromEntity(item, humanizer));
         }
@@ -46,7 +47,8 @@ namespace SmartLMS.WebUI.Models
                 Percentual = item.Percentual,
                 ClassName = item.Class.Name,
                 CourseName = item.Class.Course.Name,
-                DateTimeDescription = humanizer.Humanize(item.AccessDateTime, DateTime.Now, CultureInfo.CurrentUICulture),
+                DateTimeDescription =
+                    humanizer.Humanize(item.AccessDateTime, DateTime.Now, CultureInfo.CurrentUICulture)
             };
         }
     }

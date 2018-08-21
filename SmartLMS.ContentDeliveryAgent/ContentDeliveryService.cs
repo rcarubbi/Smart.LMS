@@ -1,23 +1,23 @@
-﻿using NLog;
+﻿using System;
+using System.Collections.Generic;
+using NLog;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Entities;
-using SmartLMS.Domain.Repositories;
-using System;
-using System.Collections.Generic;
 
 namespace SmartLMS.ContentDeliveryAgent
 {
     public class ContentDeliveryService
     {
-        public static List<Parameter> Parameters { get; set; }
-
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly IContext _context;
+
         public ContentDeliveryService(IContext context)
         {
             _context = context;
         }
+
+        public static List<Parameter> Parameters { get; set; }
 
         public bool Start()
         {
@@ -32,6 +32,5 @@ namespace SmartLMS.ContentDeliveryAgent
             Logger.Trace("Service ended");
             return true;
         }
-
     }
 }

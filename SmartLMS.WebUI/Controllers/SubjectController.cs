@@ -1,5 +1,4 @@
-﻿using SmartLMS.WebUI.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -8,6 +7,7 @@ using SmartLMS.Domain;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Resources;
+using SmartLMS.WebUI.Models;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -17,7 +17,6 @@ namespace SmartLMS.WebUI.Controllers
         public SubjectController(IContext context)
             : base(context)
         {
-
         }
 
         [AllowAnonymous]
@@ -33,8 +32,11 @@ namespace SmartLMS.WebUI.Controllers
                 TempData["Message"] = "This knowledge area is not available at this moment";
                 return RedirectToAction("Index", "Home");
             }
+
             var viewModel = KnowledgeAreaViewModel.FromEntity(selectedKnowledgeArea, 2);
-            ViewBag.OtherKnowledgeAreas = new SelectList(activeKnowledgeAreas.Except(new List<KnowledgeArea> { selectedKnowledgeArea }), "Id", "Name");
+            ViewBag.OtherKnowledgeAreas =
+                new SelectList(activeKnowledgeAreas.Except(new List<KnowledgeArea> {selectedKnowledgeArea}), "Id",
+                    "Name");
             return View(viewModel);
         }
 
@@ -51,7 +53,8 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
             var subjectRepository = new SubjectRepository(_context);
-            ViewBag.SearchFields = new SelectList(new string[] { Resource.SubjectNameFieldName, Resource.KnowledgeAreaName, "Id" });
+            ViewBag.SearchFields =
+                new SelectList(new[] {Resource.SubjectNameFieldName, Resource.KnowledgeAreaName, "Id"});
             return View(SubjectViewModel.FromEntityList(subjectRepository.Search(term, searchFieldName, page)));
         }
 
@@ -74,7 +77,6 @@ namespace SmartLMS.WebUI.Controllers
         }
 
 
-
         [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
@@ -95,10 +97,8 @@ namespace SmartLMS.WebUI.Controllers
         {
             var knowledgeAreaRepository = new KnowledgeAreaRepository(_context);
             if (ModelState.IsValid)
-            {
                 try
                 {
-                 
                     var knowledgeArea = knowledgeAreaRepository.GetById(viewModel.KnowledgeAreaId);
                     var subjectRepository = new SubjectRepository(_context);
                     subjectRepository.Create(SubjectViewModel.ToEntity(viewModel, knowledgeArea));
@@ -115,9 +115,8 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
-            }
 
-           
+
             var knowledgeAreas = knowledgeAreaRepository.ListActiveKnowledgeAreas();
             ViewBag.KnowledgeAreas = new SelectList(knowledgeAreas, "Id", "Name");
 
@@ -143,13 +142,11 @@ namespace SmartLMS.WebUI.Controllers
         {
             var knowledgeAreaRepository = new KnowledgeAreaRepository(_context);
             var subjectRepository = new SubjectRepository(_context);
-          
+
 
             if (ModelState.IsValid)
-            {
                 try
                 {
-                  
                     var knowledgeArea = knowledgeAreaRepository.GetById(id);
                     subjectRepository.Update(SubjectViewModel.ToEntity(viewModel, knowledgeArea));
                     _context.Save(_loggedUser);
@@ -165,7 +162,6 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
-            }
 
             var knowledgeAreas = knowledgeAreaRepository.ListActiveKnowledgeAreas();
             ViewBag.KnowledgeAreas = new SelectList(knowledgeAreas, "Id", "Name");

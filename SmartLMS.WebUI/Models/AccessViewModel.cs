@@ -1,7 +1,7 @@
-﻿using Carubbi.GenericRepository;
-using SmartLMS.Domain.Services;
-using System;
+﻿using System;
 using System.Linq;
+using Carubbi.GenericRepository;
+using SmartLMS.Domain.Services;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -55,6 +55,7 @@ namespace SmartLMS.WebUI.Models
                 access.CourseName = item.ClassAccess.Class.Course.Name;
                 access.Percentual = item.ClassAccess.Percentual;
             }
+
             return access;
         }
     }

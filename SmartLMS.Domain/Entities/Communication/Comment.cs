@@ -1,6 +1,6 @@
-﻿using SmartLMS.Domain.Entities.Content;
+﻿using System;
+using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.UserAccess;
-using System;
 
 namespace SmartLMS.Domain.Entities.Communication
 {

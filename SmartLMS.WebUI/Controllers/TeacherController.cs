@@ -1,19 +1,17 @@
-﻿using Carubbi.Mailer.Implementation;
+﻿using System;
+using System.Net;
+using System.Web.Mvc;
+using Carubbi.Extensions;
+using Carubbi.GenericRepository;
+using Carubbi.Mailer.Implementation;
+using Carubbi.Utils.DataTypes;
+using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
+using SmartLMS.Domain.Resources;
 using SmartLMS.Domain.Services;
 using SmartLMS.WebUI.Models;
-using System;
-using System.Net;
-using System.Web.Mvc;
-using Carubbi.GenericRepository;
-using Carubbi.Utils.Data;
-using Carubbi.Utils.DataTypes;
-using Humanizer.DateTimeHumanizeStrategy;
-using SmartLMS.Domain.Entities;
-using SmartLMS.Domain.Resources;
-using AccessViewModel = SmartLMS.WebUI.Models.AccessViewModel;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -23,7 +21,6 @@ namespace SmartLMS.WebUI.Controllers
         public TeacherController(IContext context)
             : base(context)
         {
-
         }
 
         [HttpPost]
@@ -93,17 +90,11 @@ namespace SmartLMS.WebUI.Controllers
         // GET: Student/Edit/5
         public ActionResult Edit(Guid? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             var teacher = _context.GetList<Teacher>().Find(id);
 
-            if (teacher == null)
-            {
-                return HttpNotFound();
-            }
+            if (teacher == null) return HttpNotFound();
 
             return View(UserViewModel.FromEntity(teacher));
         }
@@ -154,14 +145,15 @@ namespace SmartLMS.WebUI.Controllers
 
 
             var userRepository = new UserRepository(_context);
-           
+
             ViewBag.Students = new SelectList(userRepository.ListStudentsByTeacher(_loggedUser.Id), "Id", "Name");
             return View(new PagedListResult<AccessViewModel>());
         }
 
         [OverrideAuthorization]
         [Authorize(Roles = "Admin,Teacher")]
-        public ActionResult ListAccessHistory(DateTime? startDate, DateTime? endDate, Guid userId, AccessType accessType = AccessType.All, int page = 1)
+        public ActionResult ListAccessHistory(DateTime? startDate, DateTime? endDate, Guid userId,
+            AccessType accessType = AccessType.All, int page = 1)
         {
             var range = new DateRange
             {
@@ -170,7 +162,8 @@ namespace SmartLMS.WebUI.Controllers
             };
 
             var historyService = new HistoryService(_context, new DefaultDateTimeHumanizeStrategy());
-            return Json(AccessViewModel.FromEntityList(historyService.SearchAccess(range, page, userId, accessType)), JsonRequestBehavior.AllowGet);
+            return Json(AccessViewModel.FromEntityList(historyService.SearchAccess(range, page, userId, accessType)),
+                JsonRequestBehavior.AllowGet);
         }
     }
 }

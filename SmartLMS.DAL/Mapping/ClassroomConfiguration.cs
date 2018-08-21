@@ -10,8 +10,6 @@ namespace SmartLMS.DAL.Mapping
         {
             Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             HasMany(x => x.DeliveryPlans).WithRequired(x => x.Classroom);
-
         }
-
     }
 }

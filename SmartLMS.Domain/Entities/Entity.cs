@@ -5,6 +5,7 @@ namespace SmartLMS.Domain.Entities
     public abstract class Entity
     {
         private Guid _guid;
+
         public Guid Id
         {
             get

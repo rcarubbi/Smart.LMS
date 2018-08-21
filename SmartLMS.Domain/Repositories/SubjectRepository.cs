@@ -1,8 +1,8 @@
-﻿using Carubbi.GenericRepository;
-using SmartLMS.Domain.Entities.Content;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Carubbi.GenericRepository;
+using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Repositories
@@ -10,6 +10,7 @@ namespace SmartLMS.Domain.Repositories
     public class SubjectRepository
     {
         private readonly IContext _context;
+
         public SubjectRepository(IContext context)
         {
             _context = context;
@@ -24,15 +25,15 @@ namespace SmartLMS.Domain.Repositories
         {
             var repo = new GenericRepository<Subject>(_context);
             var query = new SearchQuery<Subject>();
-            query.AddFilter(a => (searchFieldName == Resource.SubjectNameFieldName && a.Name.Contains(term)) ||
-                                 (searchFieldName == "Id" && a.Id.ToString().Contains(term)) ||
-                                 (searchFieldName == Resource.KnowledgeAreaName && a.KnowledgeArea.Name.Contains(term)) ||
-                                    string.IsNullOrEmpty(searchFieldName));
+            query.AddFilter(a => searchFieldName == Resource.SubjectNameFieldName && a.Name.Contains(term) ||
+                                 searchFieldName == "Id" && a.Id.ToString().Contains(term) ||
+                                 searchFieldName == Resource.KnowledgeAreaName && a.KnowledgeArea.Name.Contains(term) ||
+                                 string.IsNullOrEmpty(searchFieldName));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Subject>("KnowledgeArea.Order, Order"));
 
             query.Take = 8;
-            query.Skip = ((page - 1) * 8);
+            query.Skip = (page - 1) * 8;
 
             return repo.Search(query);
         }
@@ -41,7 +42,6 @@ namespace SmartLMS.Domain.Repositories
         {
             var subject = GetById(id);
             _context.GetList<Subject>().Remove(subject);
-          
         }
 
         public void Create(Subject subject)
@@ -49,7 +49,6 @@ namespace SmartLMS.Domain.Repositories
             subject.Active = true;
             subject.CreatedAt = DateTime.Now;
             _context.GetList<Subject>().Add(subject);
-           
         }
 
         public void Update(Subject subject)
@@ -77,7 +76,5 @@ namespace SmartLMS.Domain.Repositories
                 .OrderBy(x => x.Name)
                 .ToList();
         }
-
-   
     }
 }

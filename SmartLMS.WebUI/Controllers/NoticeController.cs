@@ -5,6 +5,7 @@ using SmartLMS.WebUI.Models;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Carubbi.Extensions;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Repositories;

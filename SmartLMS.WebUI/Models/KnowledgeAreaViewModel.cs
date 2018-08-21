@@ -1,24 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Carubbi.GenericRepository;
-using System.ComponentModel.DataAnnotations;
 using SmartLMS.Domain.Entities.Content;
 
 namespace SmartLMS.WebUI.Models
 {
     public class KnowledgeAreaViewModel
     {
-        [Display(Name = "Created at")]
+        [Display(Name = "Created at")] public DateTime CreatedAt { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        [Display(Name = "Active")] public bool Active { get; set; }
 
-        [Display(Name = "Active")]
-        public bool Active { get; set; }
-
-        [Display(Name = "Order")]
-        [Required]
-        public int Order { get; set; }
+        [Display(Name = "Order")] [Required] public int Order { get; set; }
 
 
         public IEnumerable<SubjectViewModel> Subjects { get; set; }
@@ -26,11 +21,10 @@ namespace SmartLMS.WebUI.Models
 
         public Guid Id { get; set; }
 
-        [Display(Name = "Name")]
-        [Required]
-        public string Name { get; set; }
+        [Display(Name = "Name")] [Required] public string Name { get; set; }
 
-        internal static IEnumerable<KnowledgeAreaViewModel> FromEntityList(IEnumerable<KnowledgeArea> knowledgeAreas, int depth)
+        internal static IEnumerable<KnowledgeAreaViewModel> FromEntityList(IEnumerable<KnowledgeArea> knowledgeAreas,
+            int depth)
         {
             return knowledgeAreas.Select(item => FromEntity(item, depth));
         }
@@ -45,12 +39,14 @@ namespace SmartLMS.WebUI.Models
                 Id = knowledgeArea.Id,
                 CreatedAt = knowledgeArea.CreatedAt,
                 Subjects = depth > 0
-                ? SubjectViewModel.FromEntityList(knowledgeArea.Subjects.Where(x =>x.Active).OrderBy(x => x.Order), depth)
-                : new List<SubjectViewModel>()
+                    ? SubjectViewModel.FromEntityList(knowledgeArea.Subjects.Where(x => x.Active).OrderBy(x => x.Order),
+                        depth)
+                    : new List<SubjectViewModel>()
             };
         }
 
-        internal static PagedListResult<KnowledgeAreaViewModel> FromEntityList(PagedListResult<KnowledgeArea> knowledgeAreas)
+        internal static PagedListResult<KnowledgeAreaViewModel> FromEntityList(
+            PagedListResult<KnowledgeArea> knowledgeAreas)
         {
             return new PagedListResult<KnowledgeAreaViewModel>
             {
@@ -69,7 +65,7 @@ namespace SmartLMS.WebUI.Models
                 CreatedAt = knowledgeArea.CreatedAt,
                 Name = knowledgeArea.Name,
                 Order = knowledgeArea.Order,
-                Id = knowledgeArea.Id,
+                Id = knowledgeArea.Id
             };
         }
     }

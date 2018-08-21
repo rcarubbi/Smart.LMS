@@ -1,10 +1,9 @@
-﻿using Carubbi.Mailer.Implementation;
+﻿using System;
+using Carubbi.Mailer.Implementation;
 using NLog;
 using Quartz;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Repositories;
-using System;
-using SmartLMS.Domain.Entities;
 
 namespace SmartLMS.ContentDeliveryAgent
 {
@@ -13,6 +12,7 @@ namespace SmartLMS.ContentDeliveryAgent
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly IContext _context;
+
         public ContentDeliveryJob(IContext context)
         {
             _context = context;
@@ -24,20 +24,19 @@ namespace SmartLMS.ContentDeliveryAgent
             var classroomRepository = new ClassroomRepository(_context);
             var plans = classroomRepository.ListNotConcludedDeliveryPlans();
             foreach (var item in plans)
-            {
                 try
                 {
-                    Logger.Info($"Granting access according to the plan of the day {item.StartDate.ToShortDateString()} to the {item.Classroom.Name} classroom");
+                    Logger.Info(
+                        $"Granting access according to the plan of the day {item.StartDate.ToShortDateString()} to the {item.Classroom.Name} classroom");
                     item.DeliverPendingClasses(_context, new SmtpSender());
                     Logger.Info($"Access granted");
                 }
                 catch (Exception ex)
                 {
-                   Logger.Error(ex, "Error on grant access");
+                    Logger.Error(ex, "Error on grant access");
                 }
-            }
+
             Logger.Trace("Execution ended");
         }
-
-      }
+    }
 }

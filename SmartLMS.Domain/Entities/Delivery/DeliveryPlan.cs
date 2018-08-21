@@ -1,18 +1,17 @@
-﻿using Carubbi.Mailer.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Carubbi.Mailer.Interfaces;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Resources;
 using SmartLMS.Domain.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 
 namespace SmartLMS.Domain.Entities.Delivery
 {
     public class DeliveryPlan
     {
-        
         public virtual ICollection<Notice> Notices { get; set; }
 
         public long Id { get; set; }
@@ -32,14 +31,11 @@ namespace SmartLMS.Domain.Entities.Delivery
             if (Concluded && AvailableClasses.Count != classroomClasses.Count())
                 return;
 
-           
+
             foreach (var classroomClass in classroomClasses)
-            {
-                if (classroomClass.DeliveryDate <= DateTime.Today && AvailableClasses.All(ac => ac.ClassId != classroomClass.Class.Id))
-                {
+                if (classroomClass.DeliveryDate <= DateTime.Today &&
+                    AvailableClasses.All(ac => ac.ClassId != classroomClass.Class.Id))
                     DeliverClass(context, sender, classroomClass);
-                }
-            }
 
             if (AvailableClasses.Count != classroomClasses.Count()) return;
             Concluded = true;
@@ -51,20 +47,18 @@ namespace SmartLMS.Domain.Entities.Delivery
             var lastDate = StartDate;
             var classroomCourses = Classroom.Courses.OrderBy(x => x.Order);
             foreach (var classroomCourse in classroomCourses)
+            foreach (var classroomClass in classroomCourse.Course.Classes.OrderBy(c => c.Order))
             {
-                foreach (var classroomClass in classroomCourse.Course.Classes.OrderBy(c => c.Order))
+                var deliveryDate = lastDate.AddDays(classroomClass.DeliveryDays);
+                yield return new ClassDeliveryPlan
                 {
-                    var deliveryDate = lastDate.AddDays(classroomClass.DeliveryDays);
-                    yield return new ClassDeliveryPlan
-                    {
-                        DeliveryPlan = this,
-                        Class = classroomClass,
-                        ClassId =  classroomClass.Id,
-                        DeliveryDate = deliveryDate,
-                        DeliveryPlanId = this.Id
-                    };
-                    lastDate = deliveryDate;
-                }
+                    DeliveryPlan = this,
+                    Class = classroomClass,
+                    ClassId = classroomClass.Id,
+                    DeliveryDate = deliveryDate,
+                    DeliveryPlanId = Id
+                };
+                lastDate = deliveryDate;
             }
         }
 
@@ -76,24 +70,22 @@ namespace SmartLMS.Domain.Entities.Delivery
 
             context.GetList<Notice>().Add(new Notice
             {
-                Text = $@"New <a href='Class/Watch/{classDeliveryPlan.ClassId}'>{SmartLMS.Domain.Resources.Resource.ClassName} {classDeliveryPlan.Class.Name}</a> available! <br />
-                               <a href='Class/Index/{classDeliveryPlan.Class.Course.Id}'>{SmartLMS.Domain.Resources.Resource.CourseName} {classDeliveryPlan.Class.Course.Name}</a> <br />",
+                Text =
+                    $@"New <a href='Class/Watch/{classDeliveryPlan.ClassId}'>{Resource.ClassName} {classDeliveryPlan.Class.Name}</a> available! <br />
+                               <a href='Class/Index/{classDeliveryPlan.Class.Course.Id}'>{Resource.CourseName} {classDeliveryPlan.Class.Course.Name}</a> <br />",
                 DateTime = DateTime.Now,
-                DeliveryPlan = this,
+                DeliveryPlan = this
             });
             context.Save();
             SendDeliveringClassEmail(context, sender, classDeliveryPlan.Class, Students);
         }
 
-      
 
-        public void SendDeliveringClassEmail(IContext context, IMailSender sender, Class klass, ICollection<Student> students)
+        public void SendDeliveringClassEmail(IContext context, IMailSender sender, Class klass,
+            ICollection<Student> students)
         {
             var notificationService = new NotificationService(context, sender);
-            foreach (var student in students)
-            {
-                notificationService.SendDeliveryClassEmail(klass, student);
-            }
+            foreach (var student in students) notificationService.SendDeliveryClassEmail(klass, student);
         }
     }
 }

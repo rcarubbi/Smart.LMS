@@ -1,10 +1,11 @@
-﻿using SmartLMS.Domain.Entities;
-using SmartLMS.Domain.Entities.UserAccess;
-using System;
+﻿using System;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
+using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.History;
+using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Services
 {
@@ -31,6 +32,7 @@ namespace SmartLMS.Domain.Services
                 }
             }
         }
+
         public string Link
         {
             get
@@ -60,20 +62,21 @@ namespace SmartLMS.Domain.Services
                 switch (ResultType)
                 {
                     case ResultType.KnowledgeArea:
-                        return Resources.Resource.KnowledgeAreaName;
+                        return Resource.KnowledgeAreaName;
                     case ResultType.Subject:
-                        return Resources.Resource.SubjectName;
+                        return Resource.SubjectName;
                     case ResultType.Course:
-                        return Resources.Resource.CourseName;
+                        return Resource.CourseName;
                     case ResultType.Class:
-                        return Resources.Resource.ClassName;
+                        return Resource.ClassName;
                     case ResultType.File:
-                        return Resources.Resource.FileName;
+                        return Resource.FileName;
                     default:
                         return string.Empty;
                 }
             }
         }
+
         public Guid Id { get; set; }
 
         public int Percentual { get; set; }
@@ -82,19 +85,19 @@ namespace SmartLMS.Domain.Services
 
         public string Description { get; set; }
 
-     
 
         public static SearchResult Parse<T>(T item, User loggedUser, IContext context)
-            where T: ISearchResult
+            where T : ISearchResult
         {
             var result = new SearchResult
             {
                 Id = item.Id,
                 Description = item.Name,
-                ResultType = (ResultType)(Enum.Parse(typeof(ResultType), ObjectContext.GetObjectType(item.GetType()).Name))
+                ResultType =
+                    (ResultType) Enum.Parse(typeof(ResultType), ObjectContext.GetObjectType(item.GetType()).Name)
             };
 
-           
+
             if (result.ResultType == ResultType.File && context.GetList<FileAccess>().Any(x => x.File.Id == result.Id))
             {
                 result.Percentual = 100;
@@ -103,15 +106,10 @@ namespace SmartLMS.Domain.Services
             {
                 var classAccessRepository = new ClassAccessRepository(context);
                 var longestAccess = classAccessRepository.GetLongestAccess(result.Id, loggedUser.Id);
-                if (longestAccess != null)
-                {
-                    result.Percentual = longestAccess.Percentual;
-                }
+                if (longestAccess != null) result.Percentual = longestAccess.Percentual;
             }
 
             return result;
         }
-
-     
     }
 }

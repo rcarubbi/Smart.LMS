@@ -1,5 +1,5 @@
-﻿using SmartLMS.Domain.Entities.History;
-using System.Data.Entity.ModelConfiguration;
+﻿using System.Data.Entity.ModelConfiguration;
+using SmartLMS.Domain.Entities.History;
 
 namespace SmartLMS.DAL.Mapping
 {
@@ -9,7 +9,6 @@ namespace SmartLMS.DAL.Mapping
         {
             HasRequired(x => x.User).WithMany(x => x.FileAccesses).WillCascadeOnDelete(true);
             HasRequired(x => x.File).WithMany(x => x.FileAccesses).WillCascadeOnDelete(true);
-
         }
     }
 }

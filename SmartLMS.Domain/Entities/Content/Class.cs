@@ -1,8 +1,9 @@
-﻿using SmartLMS.Domain.Entities.Communication;
-using SmartLMS.Domain.Entities.History;
+﻿using System.Collections.Generic;
+using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Delivery;
+using SmartLMS.Domain.Entities.History;
 using SmartLMS.Domain.Entities.UserAccess;
-using System.Collections.Generic;
+
 namespace SmartLMS.Domain.Entities.Content
 {
     public class Class : Entity, ISearchResult
@@ -16,8 +17,6 @@ namespace SmartLMS.Domain.Entities.Content
 
         public virtual Teacher Teacher { get; set; }
 
-        public string Name { get; set; }
-
         public virtual ICollection<File> Files { get; set; }
 
         public string Content { get; set; }
@@ -27,8 +26,6 @@ namespace SmartLMS.Domain.Entities.Content
 
         public int Order { get; set; }
 
-    
-
-       
+        public string Name { get; set; }
     }
 }

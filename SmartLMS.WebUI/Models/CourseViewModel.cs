@@ -1,8 +1,8 @@
-﻿using Carubbi.GenericRepository;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Carubbi.GenericRepository;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.UserAccess;
@@ -13,7 +13,7 @@ namespace SmartLMS.WebUI.Models
     public class CourseViewModel
     {
         [Required(ErrorMessage = "Select a teacher in charge of this course")]
-        [Display(Name = "Teacher in charge"  )]
+        [Display(Name = "Teacher in charge")]
         public Guid TeacherInChargeId { get; set; }
 
         public string SubjectName { get; set; }
@@ -22,11 +22,9 @@ namespace SmartLMS.WebUI.Models
         [Display(Name = "Subject")]
         public Guid SubjectId { get; set; }
 
-        [Required]
-        public int Order { get; set; }
+        [Required] public int Order { get; set; }
 
-        [Required]
-        public string Name { get; set; }
+        [Required] public string Name { get; set; }
 
         public Guid Id { get; set; }
 
@@ -41,7 +39,7 @@ namespace SmartLMS.WebUI.Models
         public string TeacherInChargeName { get; set; }
 
         public IEnumerable<ClassViewModel> Classes { get; set; }
-        
+
         internal static IEnumerable<CourseViewModel> FromEntityList(IEnumerable<Course> courses, int depth)
         {
             return courses.Select(item => FromEntity(item, depth));
@@ -62,7 +60,6 @@ namespace SmartLMS.WebUI.Models
         {
             return new CourseViewModel
             {
-
                 Active = item.Active,
                 CreatedAt = item.CreatedAt,
                 SubjectId = item.Subject.Id,
@@ -75,10 +72,11 @@ namespace SmartLMS.WebUI.Models
                 TeacherInChargeId = item.TeacherInCharge.Id,
                 TeacherInChargeName = item.TeacherInCharge.Name,
                 Classes = depth > 2
-                ? ClassViewModel.FromEntityList(item.Classes.Where(a => a.Active).OrderBy(x => x.Order), depth) 
-                : new List<ClassViewModel>()
+                    ? ClassViewModel.FromEntityList(item.Classes.Where(a => a.Active).OrderBy(x => x.Order), depth)
+                    : new List<ClassViewModel>()
             };
         }
+
         internal static IEnumerable<CourseViewModel> FromEntityList(List<ClassroomCourse> classroomCourses)
         {
             return classroomCourses.OrderBy(x => x.Order).Select(FromEntity);
@@ -111,7 +109,7 @@ namespace SmartLMS.WebUI.Models
 
         internal static Course ToEntity(CourseViewModel course, Subject subject, Teacher teacher)
         {
-            return new Course()
+            return new Course
             {
                 Id = course.Id,
                 Name = course.Name,

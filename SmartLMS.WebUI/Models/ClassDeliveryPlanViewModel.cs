@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.Delivery;
 
 namespace SmartLMS.WebUI.Models
 {
     public class ClassDeliveryPlanViewModel
     {
-
         public Guid ClassId { get; set; }
 
         public string ClassName { get; set; }
@@ -38,12 +35,13 @@ namespace SmartLMS.WebUI.Models
             {
                 DeliveryDate = input.DeliveryDate,
                 DaysToDeliver = input.Class.DeliveryDays,
-                Available =  input.DeliveryPlan.AvailableClasses.Any(x => x.ClassId == input.Class.Id),
+                Available = input.DeliveryPlan.AvailableClasses.Any(x => x.ClassId == input.Class.Id),
                 CourseName = input.Class.Course.Name,
-                CourseOrder =  input.DeliveryPlan.Classroom.Courses.Single(c => c.CourseId == input.Class.Course.Id).Order,
+                CourseOrder = input.DeliveryPlan.Classroom.Courses.Single(c => c.CourseId == input.Class.Course.Id)
+                    .Order,
                 ClassId = input.Class.Id,
-                ClassName =  input.Class.Name,
-                ClassOrder =  input.Class.Order
+                ClassName = input.Class.Name,
+                ClassOrder = input.Class.Order
             };
         }
     }

@@ -11,7 +11,6 @@ namespace SmartLMS.DAL.Mapping
             Property(o => o.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             HasMany(x => x.FileAccesses).WithRequired(x => x.User);
             HasMany(x => x.ClassAccesses).WithRequired(x => x.User);
-            
         }
     }
 }

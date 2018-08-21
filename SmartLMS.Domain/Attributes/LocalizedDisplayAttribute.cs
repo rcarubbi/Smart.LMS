@@ -1,15 +1,13 @@
-﻿using SmartLMS.Domain.Resources;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Attributes
 {
     public sealed class LocalizedDisplayAttribute : DisplayNameAttribute
     {
-
         public LocalizedDisplayAttribute(string key)
             : base(Localize(key))
         {
-
         }
 
 
@@ -17,6 +15,5 @@ namespace SmartLMS.Domain.Attributes
         {
             return Resource.ResourceManager.GetString(key);
         }
-
     }
 }

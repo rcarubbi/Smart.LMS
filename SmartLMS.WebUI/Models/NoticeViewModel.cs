@@ -1,11 +1,11 @@
-﻿using Carubbi.GenericRepository;
-using Humanizer.DateTimeHumanizeStrategy;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using SmartLMS.Domain.Services;
+using Carubbi.GenericRepository;
+using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Domain.Entities.Communication;
+using SmartLMS.Domain.Services;
 
 namespace SmartLMS.WebUI.Models
 {
@@ -30,9 +30,11 @@ namespace SmartLMS.WebUI.Models
                 return !string.IsNullOrEmpty(ClassroomName) ? NoticeType.Classroom : NoticeType.Public;
             }
         }
+
         public string Text { get; set; }
 
-        internal static IEnumerable<NoticeViewModel> FromEntityList(IEnumerable<Notice> notices, DefaultDateTimeHumanizeStrategy humanizer)
+        internal static IEnumerable<NoticeViewModel> FromEntityList(IEnumerable<Notice> notices,
+            DefaultDateTimeHumanizeStrategy humanizer)
         {
             return notices.Select(item => FromEntity(item, humanizer));
         }
@@ -45,7 +47,7 @@ namespace SmartLMS.WebUI.Models
                 DateTimeDescription = humanizer.Humanize(item.DateTime, DateTime.Now, CultureInfo.CurrentUICulture),
                 Text = item.Text,
                 ClassroomName = item.DeliveryPlan?.Classroom?.Name,
-                DirectMessage = item.User != null,
+                DirectMessage = item.User != null
             };
         }
 
@@ -70,7 +72,5 @@ namespace SmartLMS.WebUI.Models
                 DirectMessage = item.Notice?.User != null
             };
         }
-
-       
     }
 }

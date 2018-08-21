@@ -1,8 +1,8 @@
-﻿using Carubbi.GenericRepository;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
+using Carubbi.GenericRepository;
 using SmartLMS.Domain.Attributes;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Resources;
@@ -11,13 +11,13 @@ namespace SmartLMS.WebUI.Models
 {
     public class UserViewModel
     {
-        [LocalizedDisplay("ActiveFieldName")]
-        public bool Active { get; set; }
+        [LocalizedDisplay("ActiveFieldName")] public bool Active { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "EmailRequired")]
         [DataType(DataType.EmailAddress)]
         [EmailAddress(ErrorMessage = "Invalid email")]
         public string Email { get; set; }
+
         public Guid Id { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "LoginRequired")]
@@ -26,7 +26,6 @@ namespace SmartLMS.WebUI.Models
         public string Login { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "ClassroomRequired")]
-
         [LocalizedDisplay("ClassroomName")]
         public Guid ClassroomId { get; set; }
 
@@ -34,20 +33,21 @@ namespace SmartLMS.WebUI.Models
         [LocalizedDisplay("UserNameFieldName")]
         public string Name { get; set; }
 
-       
+
         public DateTime CreatedAt { get; set; }
 
         public string RoleName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "UserPasswordRequired")]
         [LocalizedDisplay("PasswordFieldName")]
-
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Compare("Password", ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "PasswordDoenstMatch")]
+        [Compare("Password", ErrorMessageResourceType = typeof(Resource),
+            ErrorMessageResourceName = "PasswordDoenstMatch")]
         [DataType(DataType.Password)]
-        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "PasswordConfirmationRequired")]
+        [Required(ErrorMessageResourceType = typeof(Resource),
+            ErrorMessageResourceName = "PasswordConfirmationRequired")]
         [LocalizedDisplay("PasswordConfirmationFieldName")]
         public string ConfirmPassword { get; set; }
 
@@ -56,7 +56,7 @@ namespace SmartLMS.WebUI.Models
             return new UserViewModel
             {
                 Name = user.Name,
-                RoleName = ObjectContext.GetObjectType(user.GetType()).Name,
+                RoleName = ObjectContext.GetObjectType(user.GetType()).Name
             };
         }
 

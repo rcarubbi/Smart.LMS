@@ -7,9 +7,11 @@ namespace SmartLMS.DAL.Mapping
     {
         public ClassroomCourseConfiguration()
         {
-            HasKey(ta => new { ta.CourseId, ta.ClassroomId });
-            HasRequired(ta => ta.Classroom).WithMany(a => a.Courses).HasForeignKey(x => x.ClassroomId).WillCascadeOnDelete(true);
-            HasRequired(ta => ta.Course).WithMany(a => a.Classrooms).HasForeignKey(x => x.CourseId).WillCascadeOnDelete(true);
+            HasKey(ta => new {ta.CourseId, ta.ClassroomId});
+            HasRequired(ta => ta.Classroom).WithMany(a => a.Courses).HasForeignKey(x => x.ClassroomId)
+                .WillCascadeOnDelete(true);
+            HasRequired(ta => ta.Course).WithMany(a => a.Classrooms).HasForeignKey(x => x.CourseId)
+                .WillCascadeOnDelete(true);
         }
     }
 }

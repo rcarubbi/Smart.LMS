@@ -1,5 +1,4 @@
-﻿
-namespace SmartLMS.Domain.Services
+﻿namespace SmartLMS.Domain.Services
 {
     public enum ResultType
     {

@@ -1,6 +1,6 @@
 ﻿@using SmartLMS.Domain.Entities
 @using SmartLMS.Domain.Resources
-@model SmartLMS.WebUI.Models.LoginViewModel
+@model LoginViewModel
 @{
     ViewBag.Title = "Login";
     Layout = "~/Views/Authentication/_Layout.cshtml";
@@ -9,10 +9,10 @@
 
 <div class="card card-signup">
 
-    @using (Html.BeginForm("Login", "Authentication", 
-        new { ReturnUrl = Request.QueryString["ReturnUrl"] }, 
+    @using (Html.BeginForm("Login", "Authentication",
+        new {ReturnUrl = Request.QueryString["ReturnUrl"]},
         FormMethod.Post,
-        new { @class = "form", id = "login-form" }))
+        new {@class = "form", id = "login-form"}))
     {
         @Html.AntiForgeryToken()
 
@@ -27,7 +27,7 @@
                 </span>
                 <div class="form-group label-floating">
                     <label class="control-label">@Resource.LoginEmailLabel</label>
-                    @Html.TextBoxFor(x => x.Login, new { @class = "form-control", id="login-textbox" })
+                    @Html.TextBoxFor(x => x.Login, new {@class = "form-control", id = "login-textbox"})
                 </div>
             </div>
             <div class="input-group">
@@ -36,30 +36,30 @@
                 </span>
                 <div class="form-group label-floating">
                     <label class="control-label">@Resource.LoginPasswordLabel</label>
-                     @Html.EditorFor(x => x.Password, new { HtmlAttributes = new { id = "password-textbox" } })
+                    @Html.EditorFor(x => x.Password, new {HtmlAttributes = new {id = "password-textbox"}})
                 </div>
             </div>
             <div class="togglebutton text-center">
                 <label>
-                    @Html.CheckBoxFor(x => x.RememberMe, new { name = "remember", id = "remember" })
+                    @Html.CheckBoxFor(x => x.RememberMe, new {name = "remember", id = "remember"})
                     @Resource.RememberMeLabel
                 </label>
             </div>
 
-         
-        </div>
-            <div class="footer text-center">
-                <button name="login-submit" id="login-submit" class="btn btn-simple btn-primary btn-lg">Login</button>
-            </div>
-            <div class="footer text-center">
-                @Html.ActionLink(Resource.BackToHome, "Index", "Home", null, new { @class = "btn btn-simple btn-primary" })
-            </div>
-            <div id="ValidationSummaryContainer" class="container">
 
-            </div>
-        
+        </div>
+        <div class="footer text-center">
+            <button name="login-submit" id="login-submit" class="btn btn-simple btn-primary btn-lg">Login</button>
+        </div>
+        <div class="footer text-center">
+            @Html.ActionLink(Resource.BackToHome, "Index", "Home", null, new {@class = "btn btn-simple btn-primary"})
+        </div>
+        <div id="ValidationSummaryContainer" class="container">
+
+        </div>
+
         <div class="text-center">
-            @Html.ActionLink(Resource.ForgotPasswordButton, "ForgotPassword", null, new { @class = "btn btn-simple forgot-password" })
+            @Html.ActionLink(Resource.ForgotPasswordButton, "ForgotPassword", null, new {@class = "btn btn-simple forgot-password"})
         </div>
     }
 </div>
@@ -68,34 +68,36 @@
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-     
 
-        (function () {
+
+        (function() {
             var $private = {};
 
-            $(function () {
+            $(function() {
                 $("#login-form").on("submit", $private.Authenticate);
             });
 
-            $private.Authenticate = function (e) {
+            $private.Authenticate = function(e) {
                 e.preventDefault();
                 $.validator.unobtrusive.parse($(this));
 
                 if ($(this).valid()) {
                     var sendOriginalText = $("#login-submit").text();
-                    var sending = $("<img src='@Url.Content("~/Content/img/loading-green.gif")' style='width:18px'> <span>@Resource.Authenticating</span>");
+                    var sending =
+                        $(
+                            "<img src='@Url.Content("~/Content/img/loading-green.gif")' style='width:18px'> <span>@Resource.Authenticating</span>");
                     $("#login-submit").html(sending);
                     $("#login-submit").prop('disabled', true);
                     $.ajax({
                         url: this.action,
                         type: this.method,
                         data: $(this).serialize(),
-                        success: function (result) {
+                        success: function(result) {
                             if (result.Authenticated)
                                 document.location.href = result.Url;
                             else {
                                 $("#login-textbox").val("");
-                                $("#password-textbox").val(""); 
+                                $("#password-textbox").val("");
                                 $("#login-submit").text(sendOriginalText);
                                 $("#login-submit").prop('disabled', false);
                                 $("#ValidationSummaryContainer").html(result.ValidationSummary);

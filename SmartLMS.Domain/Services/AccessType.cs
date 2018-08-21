@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using SmartLMS.Domain.Attributes;
+﻿using SmartLMS.Domain.Attributes;
 
 namespace SmartLMS.Domain.Services
 {
@@ -7,10 +6,11 @@ namespace SmartLMS.Domain.Services
     {
         [LocalizedDescription("AccessTypeAll")]
         All,
+
         [LocalizedDescription("AccessTypeClass")]
         Class,
+
         [LocalizedDescription("AccessTypeSupportMaterial")]
         File
-            
     }
 }

@@ -49,6 +49,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Carubbi.Extensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Extensions.1.0.0.0\lib\net472\Carubbi.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.GenericRepository, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.GenericRepository.1.4.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.Mailer, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Mailer.1.2.3.0\lib\net472\Carubbi.Mailer.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.Mailer.Interfaces, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Mailer.Interfaces.1.2.0.0\lib\net472\Carubbi.Mailer.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.ServiceLocator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.ServiceLocator.1.0.0.0\lib\net472\Carubbi.ServiceLocator.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.0.0\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
@@ -139,22 +154,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Carubbi.Components\Carubbi.GenericRepository\Carubbi.GenericRepository.csproj">
-      <Project>{232785de-bb1d-41b5-8690-e650b4120452}</Project>
-      <Name>Carubbi.GenericRepository</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Carubbi.Components\Carubbi.Mailer.Interfaces\Carubbi.Mailer.Interfaces.csproj">
-      <Project>{37c2c203-709c-4485-96f9-4a82c26d6631}</Project>
-      <Name>Carubbi.Mailer.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Carubbi.Components\Carubbi.Mailer\Carubbi.Mailer.csproj">
-      <Project>{dbbde3f8-fdac-453b-b7f3-bc36c0b08d95}</Project>
-      <Name>Carubbi.Mailer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Carubbi.Components\Carubbi.Utils\Carubbi.Utils.csproj">
-      <Project>{b24443c4-5f13-4747-863a-146dc7040561}</Project>
-      <Name>Carubbi.Utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SmartLMS.DAL\SmartLMS.DAL.csproj">
       <Project>{3cadb06f-ef96-4c65-882e-1de1f882a95f}</Project>
       <Name>SmartLMS.DAL</Name>

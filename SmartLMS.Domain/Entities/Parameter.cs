@@ -29,7 +29,7 @@ namespace SmartLMS.Domain.Entities
 
 
         public static string FILE_STORAGE { get; set; }
- 
+
 
         public static string DAEMON_USER { get; set; }
 

@@ -6,7 +6,6 @@ namespace SmartLMS.WebUI.Controllers
 {
     internal class ImageUploader
     {
-      
         private readonly string _pathString;
 
 
@@ -14,12 +13,13 @@ namespace SmartLMS.WebUI.Controllers
         {
             _pathString = HttpContext.Current.Server.MapPath("~/Content/img/courses");
         }
-        
+
 
         internal dynamic Upload(HttpPostedFileBase file)
         {
             var isSavedSuccessfully = true;
-            var tempFileName = $"{Path.GetFileNameWithoutExtension(file.FileName)}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var tempFileName =
+                $"{Path.GetFileNameWithoutExtension(file.FileName)}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
             try
             {
                 if (file.ContentLength > 0)
@@ -36,22 +36,17 @@ namespace SmartLMS.WebUI.Controllers
                 isSavedSuccessfully = false;
             }
 
-            return isSavedSuccessfully 
-                ? new { Success = true, Message = tempFileName } 
-                : new { Success = false, Message = "Error saving image" };
+            return isSavedSuccessfully
+                ? new {Success = true, Message = tempFileName}
+                : new {Success = false, Message = "Error saving image"};
         }
 
         internal byte[] GetFile(string filename)
         {
             var fullPath = Path.Combine(_pathString, filename);
             if (File.Exists(fullPath))
-            {
                 return File.ReadAllBytes(fullPath);
-            }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         internal FileInfo GetFileInfo(string filename)
@@ -61,13 +56,8 @@ namespace SmartLMS.WebUI.Controllers
 
             var fullPath = Path.Combine(_pathString, filename);
             if (File.Exists(fullPath))
-            {
                 return new FileInfo(fullPath);
-            }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         internal void DeleteFile(string filename)

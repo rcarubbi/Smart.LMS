@@ -1,12 +1,12 @@
-﻿using Carubbi.GenericRepository;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
+using Carubbi.GenericRepository;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.History;
 using SmartLMS.Domain.Entities.UserAccess;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
 using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.Domain.Repositories
@@ -32,7 +32,8 @@ namespace SmartLMS.Domain.Repositories
             switch (user)
             {
                 case Student student:
-                    student.DeliveryPlans.Select(x => x.Classroom).ToList().ForEach(x => classRooms.Add(_context.UnProxy(x)));
+                    student.DeliveryPlans.Select(x => x.Classroom).ToList()
+                        .ForEach(x => classRooms.Add(_context.UnProxy(x)));
                     break;
                 case Teacher _:
                     _context.GetList<Classroom>()
@@ -61,21 +62,20 @@ namespace SmartLMS.Domain.Repositories
         internal void Save(User user)
         {
             _context.GetList<User>().Add(user);
-            
         }
 
         public PagedListResult<Teacher> ListTeachers(string term, string searchFieldName, int page)
         {
             var repo = new GenericRepository<Teacher>(_context);
             var query = new SearchQuery<Teacher>();
-            query.AddFilter(a => (searchFieldName == Resource.TeacherNameFieldName && a.Name.Contains(term)) ||
-                                             (searchFieldName == Resource.TeacherEmailFieldName && a.Email.Contains(term)) ||
-                                             (searchFieldName == "Id" && a.Id.ToString().Contains(term)) ||
-                                             string.IsNullOrEmpty(searchFieldName));
+            query.AddFilter(a => searchFieldName == Resource.TeacherNameFieldName && a.Name.Contains(term) ||
+                                 searchFieldName == Resource.TeacherEmailFieldName && a.Email.Contains(term) ||
+                                 searchFieldName == "Id" && a.Id.ToString().Contains(term) ||
+                                 string.IsNullOrEmpty(searchFieldName));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Teacher>("Name"));
             query.Take = 8;
-            query.Skip = ((page - 1) * 8);
+            query.Skip = (page - 1) * 8;
 
             return repo.Search(query);
         }
@@ -90,18 +90,15 @@ namespace SmartLMS.Domain.Repositories
                 where l.User.Id == id
                 select l;
 
-       
-            foreach (var log in logToBeDeleted)
-            {
-                _context.GetList<Log>().Remove(log);
-            }
+
+            foreach (var log in logToBeDeleted) _context.GetList<Log>().Remove(log);
 
             teacher.VisitedNotices.ToList()
                 .ForEach(a => userNotices.Remove(a));
 
             notices.Where(a => a.User.Id == id)
                 .ToList().ForEach(a => notices.Remove(a));
-           
+
             _context.GetList<Teacher>().Remove(teacher);
 
             try
@@ -111,13 +108,9 @@ namespace SmartLMS.Domain.Repositories
             catch (DbUpdateException ex)
             {
                 if (ex.InnerException.InnerException.Message.Contains("FK_dbo.Class_dbo.User_Teacher_Id"))
-                {
                     throw new ApplicationException(Resource.TeacherClassesAssociationException);
-                }
-                else if (ex.InnerException.InnerException.Message.Contains("FK_dbo.Course_dbo.User_TeacherInCharge_Id"))
-                {
+                if (ex.InnerException.InnerException.Message.Contains("FK_dbo.Course_dbo.User_TeacherInCharge_Id"))
                     throw new ApplicationException(Resource.TeacherInChargeException);
-                }
             }
         }
 
@@ -129,20 +122,19 @@ namespace SmartLMS.Domain.Repositories
                 .ToList();
         }
 
-       
 
         public PagedListResult<Student> ListStudents(string term, string searchFieldName, int page)
         {
             var repo = new GenericRepository<Student>(_context);
             var query = new SearchQuery<Student>();
-            query.AddFilter(a => (searchFieldName == Resource.StudentNameFieldName && a.Name.Contains(term)) ||
-                                             (searchFieldName == Resource.StudentEmailFieldName && a.Email.Contains(term)) ||
-                                             (searchFieldName == "Id" && a.Id.ToString().Contains(term)) ||
-                                             string.IsNullOrEmpty(searchFieldName));
+            query.AddFilter(a => searchFieldName == Resource.StudentNameFieldName && a.Name.Contains(term) ||
+                                 searchFieldName == Resource.StudentEmailFieldName && a.Email.Contains(term) ||
+                                 searchFieldName == "Id" && a.Id.ToString().Contains(term) ||
+                                 string.IsNullOrEmpty(searchFieldName));
 
             query.AddSortCriteria(new DynamicFieldSortCriteria<Student>("Name"));
             query.Take = 8;
-            query.Skip = ((page - 1) * 8);
+            query.Skip = (page - 1) * 8;
 
             return repo.Search(query);
         }
@@ -177,9 +169,8 @@ namespace SmartLMS.Domain.Repositories
             studentComments.ToList().ForEach(a => comments.Remove(a));
             notices.Where(a => a.User.Id == id).ToList().ForEach(a => notices.Remove(a));
             deliveryPlans.ToList().ForEach(x => x.Students.Remove(student));
-            
+
             _context.GetList<Student>().Remove(student);
-        
         }
 
         public List<Student> ListActiveStudents()
@@ -193,7 +184,7 @@ namespace SmartLMS.Domain.Repositories
         public List<Student> ListStudentsByTeacher(Guid teacherId)
         {
             var students = ListActiveStudents()
-                .Where(s =>s.DeliveryPlans.Select(dp => dp.Classroom)
+                .Where(s => s.DeliveryPlans.Select(dp => dp.Classroom)
                     .SelectMany(cr => cr.Courses)
                     .Select(c => c.Course)
                     .Any(c => c.TeacherInCharge.Id == teacherId || c.Classes.Any(cl => cl.Teacher.Id == teacherId)));

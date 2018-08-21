@@ -1,7 +1,7 @@
-﻿using SmartLMS.Domain.Entities.Content;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartLMS.Domain.Entities.Content;
 
 namespace SmartLMS.WebUI.Models
 {

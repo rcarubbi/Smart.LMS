@@ -1,10 +1,10 @@
-﻿using Carubbi.GenericRepository;
-using SmartLMS.Domain.Entities.Content;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Carubbi.GenericRepository;
 using SmartLMS.Domain.Attributes;
+using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Models
@@ -19,13 +19,12 @@ namespace SmartLMS.WebUI.Models
         [LocalizedDisplay("KnowledgeAreaName")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectKnowledgeArea")]
         public Guid KnowledgeAreaId { get; set; }
+
         public Guid Id { get; set; }
 
-        [Required]
-        public int Order { get; set; }
+        [Required] public int Order { get; set; }
 
-        [Required]
-        public string Name { get; set; }
+        [Required] public string Name { get; set; }
 
         public IEnumerable<CourseViewModel> Courses { get; set; }
 
@@ -58,14 +57,14 @@ namespace SmartLMS.WebUI.Models
                 Order = item.Order,
                 Name = item.Name,
                 Courses = depth > 1
-                ? CourseViewModel.FromEntityList(item.Courses.Where(x => x.Active).OrderBy(x => x.Order), depth)
-                : new List<CourseViewModel>()
+                    ? CourseViewModel.FromEntityList(item.Courses.Where(x => x.Active).OrderBy(x => x.Order), depth)
+                    : new List<CourseViewModel>()
             };
         }
 
         internal static Subject ToEntity(SubjectViewModel subject, KnowledgeArea knowledgeArea)
         {
-            return new Subject()
+            return new Subject
             {
                 Id = subject.Id,
                 KnowledgeArea = knowledgeArea,

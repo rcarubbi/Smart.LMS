@@ -9,12 +9,10 @@ namespace SmartLMS.WebUI.Models
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
-        public string Name { get; set; }
+        [Required] public string Name { get; set; }
 
         [Required]
         [DataType(DataType.MultilineText)]
         public string Message { get; set; }
-
     }
 }

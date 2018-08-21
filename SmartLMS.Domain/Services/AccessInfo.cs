@@ -1,5 +1,5 @@
-﻿using SmartLMS.Domain.Entities.History;
-using System;
+﻿using System;
+using SmartLMS.Domain.Entities.History;
 
 namespace SmartLMS.Domain.Services
 {
@@ -14,6 +14,5 @@ namespace SmartLMS.Domain.Services
         public FileAccess FileAccess { get; set; }
 
         public DateTime AccessDateTime { get; set; }
-
     }
 }
