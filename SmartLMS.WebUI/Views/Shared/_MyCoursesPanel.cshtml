@@ -1,0 +1,38 @@
+﻿@using SmartLMS.Domain.Resources
+@model IEnumerable<CourseViewModel>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Resource.MyCoursesTitle</h3>
+    </div>
+    <div class="panel-body scroll-panel">
+        <div class="bs-component">
+            <div class="list-group">
+                @if (Model.Any())
+                {
+                    foreach (var course in Model)
+                    {
+                        <div class="list-group-item list-group-item-sm">
+                            <a href="@Url.Action("Index", "Class", new {course.Id})" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <h5 class="list-group-item-heading">@course.Name</h5>
+                                    <p class="list-group-item-text">@course.Classes.Count() @(course.Classes.Count() > 1 ? Resource.ClassPlural : Resource.ClassName)</p>
+                                    <p>
+                                        <label>Teacher: </label> @course.TeacherInChargeName</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator list-group-separator-sm"></div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center">@Resource.NoCourses</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,23 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.WebUI", "SmartLMS.WebUI\SmartLMS.WebUI.csproj", "{7FB79F55-B752-4B26-93EA-0709E2F4EA20}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Apresentacao", "1. Apresentacao", "{692DEB81-4F71-45E6-80D8-F781F25CDC63}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. UI", "1. UI", "{692DEB81-4F71-45E6-80D8-F781F25CDC63}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Dominio", "2. Dominio", "{CF5957B2-7609-41C5-A23E-4066785FA8AA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Domain", "2. Domain", "{CF5957B2-7609-41C5-A23E-4066785FA8AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.Dominio", "SmartLMS.Dominio\SmartLMS.Dominio.csproj", "{8AA461EA-0DB0-4DC3-84E8-63A286E73A95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.Domain", "SmartLMS.Domain\SmartLMS.Domain.csproj", "{8AA461EA-0DB0-4DC3-84E8-63A286E73A95}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. AcessoADados", "3. AcessoADados", "{3356FD88-3542-4640-9F02-CA95C0F69161}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. DataAccess", "3. DataAccess", "{3356FD88-3542-4640-9F02-CA95C0F69161}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.DAL", "SmartLMS.DAL\SmartLMS.DAL.csproj", "{3CADB06F-EF96-4C65-882E-1DE1F882A95F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Infraestrutura", "4. Infraestrutura", "{B66F478C-C9FB-4819-8110-5CE4FD1E1AE6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Infrastructure", "4. Infrastructure", "{B66F478C-C9FB-4819-8110-5CE4FD1E1AE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.AgenteLiberacaoConteudo", "SmartLMS.AgenteLiberacaoConteudo\SmartLMS.AgenteLiberacaoConteudo.csproj", "{4CA80507-4109-4BDB-B7AE-200B845C789B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLMS.ContentDeliveryAgent", "SmartLMS.ContentDeliveryAgent\SmartLMS.ContentDeliveryAgent.csproj", "{4CA80507-4109-4BDB-B7AE-200B845C789B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,5 +50,8 @@ Global
 		{8AA461EA-0DB0-4DC3-84E8-63A286E73A95} = {CF5957B2-7609-41C5-A23E-4066785FA8AA}
 		{3CADB06F-EF96-4C65-882E-1DE1F882A95F} = {3356FD88-3542-4640-9F02-CA95C0F69161}
 		{4CA80507-4109-4BDB-B7AE-200B845C789B} = {B66F478C-C9FB-4819-8110-5CE4FD1E1AE6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E15D0E9B-1317-4313-B2F1-24A98A9D7CB5}
 	EndGlobalSection
 EndGlobal

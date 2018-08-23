@@ -1,0 +1,81 @@
+﻿@using SmartLMS.Domain.Entities
+@using SmartLMS.Domain.Resources
+@model HeaderViewModel
+<nav class="navbar navbar-primary navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <div id="logo" class="img-circle img-raised navbar-brand">
+                <img src="~/content/img/logo.png" width="40" height="40" alt="@Parameter.APP_NAME logo" rel="tooltip">
+            </div>
+            @Html.ActionLink(Parameter.APP_NAME, "Index", "Home", null, new {@class = "navbar-brand"})
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        @Resource.ManagementAdminMenuItem <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">@Resource.PeopleManagementSection</li>
+                        <li>@Html.ActionLink(Resource.StudentAdminMenuItem, "IndexAdmin", "Student")</li>
+                        <li>@Html.ActionLink(Resource.TeacherAdminMenuItem, "IndexAdmin", "Teacher")</li>
+                        <li>@Html.ActionLink(Resource.ClassroomAdminMenuItem, "IndexAdmin", "ClassRoom")</li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">@Resource.ContentManagementSection</li>
+                        <li>@Html.ActionLink(Resource.KnowledgeAreaPlural, "IndexAdmin", "KnowledgeArea")</li>
+                        <li>@Html.ActionLink(Resource.SubjectPlural, "IndexAdmin", "Subject")</li>
+                        <li>@Html.ActionLink(Resource.CoursePlural, "IndexAdmin", "Course")</li>
+                        <li>@Html.ActionLink(Resource.ClassPlural, "IndexAdmin", "Class")</li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="@Url.Action("Send", "Notice")">@Resource.SendNoticeMenuItem</a>
+                </li>
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#talk-to-us">@Resource.TalkToUsMenuItem</a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        @Resource.ChangeLanguageMenuItem <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Português (Brasil)", "ChangeLanguage", "Home", new { culture = "pt-BR" }, null)</li>
+                        <li>@Html.ActionLink("English (UK)", "ChangeLanguage", "Home", new { culture = "en-UK" }, null)</li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#about">@Resource.AboutMenuItem</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <i class="material-icons">person</i>@Model.User.Name <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="@Url.Action("Index", "Notice")">@Resource.NoticeMenuItem</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("AccessHistory", "User")">@Resource.AccessHistoryMenuItem</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("ChangePassword", "Authentication")">@Resource.ChangePasswordMenuItem</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Signout", "Authentication")">@Resource.LogoutMenuItem</a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>

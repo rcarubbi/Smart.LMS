@@ -1,47 +1,49 @@
-.withripple {
-  position: relative;
-}
+.withripple { position: relative; }
+
 .ripple-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: inherit;
-  pointer-events: none;
+    border-radius: inherit;
+    height: 100%;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
 }
+
 .ripple {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  margin-left: -10px;
-  margin-top: -10px;
-  border-radius: 100%;
-  background-color: #000;
-  background-color: rgba(0, 0, 0, 0.05);
-  -webkit-transform: scale(1);
-      -ms-transform: scale(1);
-       -o-transform: scale(1);
-          transform: scale(1);
-  -webkit-transform-origin: 50%;
-      -ms-transform-origin: 50%;
-       -o-transform-origin: 50%;
-          transform-origin: 50%;
-  opacity: 0;
-  pointer-events: none;
+    -ms-transform: scale(1);
+    -ms-transform-origin: 50%;
+    -o-transform: scale(1);
+    -o-transform-origin: 50%;
+    -webkit-transform: scale(1);
+    -webkit-transform-origin: 50%;
+    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 100%;
+    height: 20px;
+    margin-left: -10px;
+    margin-top: -10px;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    transform: scale(1);
+    transform-origin: 50%;
+    width: 20px;
 }
+
 .ripple.ripple-on {
-  -webkit-transition: opacity 0.15s ease-in 0s, -webkit-transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
-       -o-transition: opacity 0.15s ease-in 0s, -o-transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
-          transition: opacity 0.15s ease-in 0s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
-  opacity: 0.1;
+    -o-transition: opacity 0.15s ease-in 0s, -o-transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+    -webkit-transition: opacity 0.15s ease-in 0s, -webkit-transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+    opacity: 0.1;
+    transition: opacity 0.15s ease-in 0s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
 }
+
 .ripple.ripple-out {
-  -webkit-transition: opacity 0.1s linear 0s !important;
-       -o-transition: opacity 0.1s linear 0s !important;
-          transition: opacity 0.1s linear 0s !important;
-  opacity: 0;
+    -o-transition: opacity 0.1s linear 0s !important;
+    -webkit-transition: opacity 0.1s linear 0s !important;
+    opacity: 0;
+    transition: opacity 0.1s linear 0s !important;
 }
 /*# sourceMappingURL=ripples.css.map */

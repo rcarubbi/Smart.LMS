@@ -1,0 +1,884 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutMenuItem" xml:space="preserve">
+    <value>Sobre</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>Sobre o Your Company Training</value>
+  </data>
+  <data name="AboutTitle" xml:space="preserve">
+    <value>Sobre o Your Company Training</value>
+  </data>
+  <data name="AccessHistoryMenuItem" xml:space="preserve">
+    <value>Acessos</value>
+  </data>
+  <data name="AccessTypeAll" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="AccessTypeClass" xml:space="preserve">
+    <value>Aula</value>
+  </data>
+  <data name="AccessTypeSupportMaterial" xml:space="preserve">
+    <value>Material de Apoio</value>
+  </data>
+  <data name="AnotherUserToThisLoginException" xml:space="preserve">
+    <value>Este login pertence a outro usuário</value>
+  </data>
+  <data name="BackToIndex" xml:space="preserve">
+    <value>Voltar para o Índice</value>
+  </data>
+  <data name="ChangePasswordMenuItem" xml:space="preserve">
+    <value>Alterar Senha</value>
+  </data>
+  <data name="ClassCreatedToastrMessage" xml:space="preserve">
+    <value>Aula criada</value>
+  </data>
+  <data name="ClassIndex" xml:space="preserve">
+    <value>Índice de Aulas</value>
+  </data>
+  <data name="ClassName" xml:space="preserve">
+    <value>Aula</value>
+  </data>
+  <data name="ClassNameFieldName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="ClassPlural" xml:space="preserve">
+    <value>Aulas</value>
+  </data>
+  <data name="ClassroomAdminMenuItem" xml:space="preserve">
+    <value>Turmas</value>
+  </data>
+  <data name="ClassroomManagementToastrTitle" xml:space="preserve">
+    <value>Gerenciamento de Turmas</value>
+  </data>
+  <data name="ClassroomNameFieldName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="ClassroomsMenuItem" xml:space="preserve">
+    <value>Turma</value>
+  </data>
+  <data name="ClassroomUpdatedToastrMessage" xml:space="preserve">
+    <value>Turma alterada</value>
+  </data>
+  <data name="ContentManagementToastrTitle" xml:space="preserve">
+    <value>Gerenciamento de Conteúdo</value>
+  </data>
+  <data name="CourseCreatedToastrMessage" xml:space="preserve">
+    <value>Curso criado</value>
+  </data>
+  <data name="CourseIndex" xml:space="preserve">
+    <value>Índice de Cursos</value>
+  </data>
+  <data name="CourseName" xml:space="preserve">
+    <value>Curso</value>
+  </data>
+  <data name="CourseNameFieldName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="CourseNotAvailableToastrMessage" xml:space="preserve">
+    <value>Este curso não está disponível no momento</value>
+  </data>
+  <data name="CoursePlural" xml:space="preserve">
+    <value>Cursos</value>
+  </data>
+  <data name="CourseUpdatedToastrMessage" xml:space="preserve">
+    <value>Curso alterado</value>
+  </data>
+  <data name="CreatingUserNotificationEmailBody" xml:space="preserve">
+    <value>&lt;div&gt;
+Olá {username}, suas credenciais do Your Company Training são:
+&lt;/div&gt;
+&lt;div&gt;Login: {login}&lt;/div&gt;&lt;div&gt;Senha: {password}.&lt;/div&gt;
+&lt;div&gt;Acesse a plataforma clicando &lt;a href='{link}'&gt;aqui&lt;/a&gt;.&lt;/div&gt;
+&lt;div&gt;Atenciosamente, Time Your Company Training&lt;/div&gt;</value>
+  </data>
+  <data name="CreatingUserNotificationEmailSubject" xml:space="preserve">
+    <value>Bem-vindo ao Your Company Training</value>
+  </data>
+  <data name="DeliveredClassNotificationEmailBody" xml:space="preserve">
+    <value>Hi {username}, how are you? &lt;br /&gt; The class &lt;a href='{link}/Class/Watch/{classId}'&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href='{link}/Class/Index/{courseId}'&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Bons estudos! &lt;br /&gt;&lt;br /&gt; Time Your Company Training</value>
+  </data>
+  <data name="DeliveredClassNotificationEmailSubject" xml:space="preserve">
+    <value>Your Company Training - Nova aula disponível!</value>
+  </data>
+  <data name="FileName" xml:space="preserve">
+    <value>Material de Apoio</value>
+  </data>
+  <data name="KnowledgeAreaIndex" xml:space="preserve">
+    <value>Índice de Áreas de Conhecimento</value>
+  </data>
+  <data name="KnowledgeAreaName" xml:space="preserve">
+    <value>Área de Conhecimento</value>
+  </data>
+  <data name="KnowledgeAreaNameFieldName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="KnowledgeAreaPlural" xml:space="preserve">
+    <value>Áreas de Conhecimento</value>
+  </data>
+  <data name="LastClassesTitle" xml:space="preserve">
+    <value>Novas Aulas</value>
+  </data>
+  <data name="LogoutMenuItem" xml:space="preserve">
+    <value>Sair</value>
+  </data>
+  <data name="MonitoringMenuSectionMenuDivider" xml:space="preserve">
+    <value>Monitoramento</value>
+  </data>
+  <data name="MyCoursesTitle" xml:space="preserve">
+    <value>Meus cursos</value>
+  </data>
+  <data name="NoCourses" xml:space="preserve">
+    <value>Nós ainda não temos conteúdo nesta seção</value>
+  </data>
+  <data name="NotAllowedWatchClassToastrMessage" xml:space="preserve">
+    <value>Você não está autorizado a assistir esta aula</value>
+  </data>
+  <data name="NoticeMenuItem" xml:space="preserve">
+    <value>Avisos</value>
+  </data>
+  <data name="NoticeTypeAll" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="NoticeTypeClassroom" xml:space="preserve">
+    <value>Turma</value>
+  </data>
+  <data name="NoticeTypePersonal" xml:space="preserve">
+    <value>Pessoal</value>
+  </data>
+  <data name="NoticeTypePublic" xml:space="preserve">
+    <value>Público</value>
+  </data>
+  <data name="NotificationToastrTitle" xml:space="preserve">
+    <value>Notificação</value>
+  </data>
+  <data name="PasswordRecoveryEmailBody" xml:space="preserve">
+    <value>&lt;div&gt;Olá {username}, suas credenciais do Your Company Training são:&lt;/div&gt;
+&lt;div&gt;
+Login: {login}.
+&lt;/div&gt;
+&lt;div&gt;
+Senha: {password}
+&lt;/div&gt;
+&lt;div&gt;
+Acesse a plataforma clicando &lt;a href='{link}'&gt;aqui&lt;/a&gt;.
+&lt;/div&gt;
+&lt;div&gt;
+Atenciosamente, Time Your Company Training
+&lt;/div&gt;</value>
+  </data>
+  <data name="PasswordRecoveryEmailSubject" xml:space="preserve">
+    <value>Your Company Training - Recuperação de Senha</value>
+  </data>
+  <data name="PasswordUpdatedNoticeMessage" xml:space="preserve">
+    <value>Sua senha foi atualizada</value>
+  </data>
+  <data name="PasswordUpdatedToastrMessage" xml:space="preserve">
+    <value>Senha atualizada!</value>
+  </data>
+  <data name="PersonalInfoUpdatedFrom" xml:space="preserve">
+    <value>de</value>
+  </data>
+  <data name="PersonalInfoUpdatedTitle" xml:space="preserve">
+    <value>Informações pessoais atualizadas</value>
+  </data>
+  <data name="PersonalInfoUpdatedTo" xml:space="preserve">
+    <value>para</value>
+  </data>
+  <data name="SeeOtherClasses" xml:space="preserve">
+    <value>Veja também outras aulas para este curso</value>
+  </data>
+  <data name="SeeOtherCourses" xml:space="preserve">
+    <value>Veja também outros cursos para este assunto</value>
+  </data>
+  <data name="SeeOtherKnowledgeAreas" xml:space="preserve">
+    <value>Veja também outras áreas de conhecimento</value>
+  </data>
+  <data name="SeeOtherSubjects" xml:space="preserve">
+    <value>Veja também outros assuntos para esta área de conhecimento</value>
+  </data>
+  <data name="SelectClass" xml:space="preserve">
+    <value>Selecione uma aula</value>
+  </data>
+  <data name="SelectCourse" xml:space="preserve">
+    <value>Selecione um curso</value>
+  </data>
+  <data name="SelectKnowledgeArea" xml:space="preserve">
+    <value>Selecione uma área de conhecimento</value>
+  </data>
+  <data name="SelectOneCourseIndexMessage" xml:space="preserve">
+    <value>Selecione abaixo uma das aulas disponíveis neste curso</value>
+  </data>
+  <data name="SelectOneSubjectIndexMessage" xml:space="preserve">
+    <value>Selecione abaixo um dos cursos disponíveis neste assunto</value>
+  </data>
+  <data name="SelectSubject" xml:space="preserve">
+    <value>Selecione um assunto</value>
+  </data>
+  <data name="StudentAdminMenuItem" xml:space="preserve">
+    <value>Alunos</value>
+  </data>
+  <data name="StudentEmailFieldName" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="StudentNameFieldName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="SubjectIndex" xml:space="preserve">
+    <value>Índice de Assuntos</value>
+  </data>
+  <data name="SubjectName" xml:space="preserve">
+    <value>Assunto</value>
+  </data>
+  <data name="SubjectNameFieldName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="SubjectNotAvailableToastrMessage" xml:space="preserve">
+    <value>Este assunto não está disponível no momento</value>
+  </data>
+  <data name="SubjectPlural" xml:space="preserve">
+    <value>Assuntos</value>
+  </data>
+  <data name="SupportMaterialDownloadToastrTitle" xml:space="preserve">
+    <value>Download de Material de Apoio</value>
+  </data>
+  <data name="TalkToUsEmailBody" xml:space="preserve">
+    <value>&lt;div&gt;&lt;h1&gt;Fale conosco - Your Company Training&lt;/h1&gt;
+&lt;dl&gt;
+&lt;dt&gt;Nome:&lt;/dt&gt;
+ &lt;dd&gt;{name}&lt;/dd&gt;
+&lt;dt&gt;Email:&lt;/dt&gt;
+&lt;dd&gt;{email}&lt;/dd&gt;
+&lt;dt&gt;Mensagem:&lt;/dt&gt;
+&lt;dd&gt;{message}&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="TalkToUsEmailSubject" xml:space="preserve">
+    <value>Your Company Training - Fale Conosco</value>
+  </data>
+  <data name="TeacherAddedToastrMessage" xml:space="preserve">
+    <value>Professor adicionado</value>
+  </data>
+  <data name="TeacherAdminMenuItem" xml:space="preserve">
+    <value>Professores</value>
+  </data>
+  <data name="TeacherClassesAssociationException" xml:space="preserve">
+    <value>Este professor tem aulas associadas a ele</value>
+  </data>
+  <data name="TeacherEmailFieldName" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="TeacherInChargeException" xml:space="preserve">
+    <value>Este professor é responsável por algum curso</value>
+  </data>
+  <data name="TeacherManagementToastrTitle" xml:space="preserve">
+    <value>Gerenciamento de Professores</value>
+  </data>
+  <data name="TeacherNameFieldName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="TeacherUpdatedToastrMessage" xml:space="preserve">
+    <value>Professor alterado</value>
+  </data>
+  <data name="WarningToastrTitle" xml:space="preserve">
+    <value>Aviso</value>
+  </data>
+  <data name="WatchedClassesTitle" xml:space="preserve">
+    <value>Últimas aulas assistidas</value>
+  </data>
+  <data name="WelcomeNoticeMessage" xml:space="preserve">
+    <value>Bem-vindo ao Your Company Training, Bons Estudos!</value>
+  </data>
+  <data name="WithoutPermissionDownloadToastrMessage" xml:space="preserve">
+    <value>Você não tem permissão para baixar este material</value>
+  </data>
+  <data name="CloseButton" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="TalkToUsTitle" xml:space="preserve">
+    <value>Fale Conosco</value>
+  </data>
+  <data name="TalkToUsMenuItem" xml:space="preserve">
+    <value>Fale conosco</value>
+  </data>
+  <data name="ContentManagementSection" xml:space="preserve">
+    <value>Gerenciamento de Conteúdo</value>
+  </data>
+  <data name="PeopleManagementSection" xml:space="preserve">
+    <value>Gerenciamento de Pessoas</value>
+  </data>
+  <data name="QueryFiltersTitle" xml:space="preserve">
+    <value>Filtros de pesquisa</value>
+  </data>
+  <data name="StartDateLabel" xml:space="preserve">
+    <value>Data de Início</value>
+  </data>
+  <data name="AccessTypeLabel" xml:space="preserve">
+    <value>Tipo de Acesso</value>
+  </data>
+  <data name="ActiveFieldName" xml:space="preserve">
+    <value>Ativo</value>
+  </data>
+  <data name="AdminSearchText" xml:space="preserve">
+    <value>digite o termo que deseja encontrar</value>
+  </data>
+  <data name="BackButton" xml:space="preserve">
+    <value>Voltar</value>
+  </data>
+  <data name="ConcludedLabel" xml:space="preserve">
+    <value>Concluído</value>
+  </data>
+  <data name="CreatedAtFieldName" xml:space="preserve">
+    <value>Criado em</value>
+  </data>
+  <data name="CreateTeacherPageTitle" xml:space="preserve">
+    <value>Criação de Professor</value>
+  </data>
+  <data name="DeleteTeacherConfirmationText" xml:space="preserve">
+    <value>Você realmente deseja excluir o professor</value>
+  </data>
+  <data name="DeleteTeacherConfirmationTitle" xml:space="preserve">
+    <value>Exclusão de Professor</value>
+  </data>
+  <data name="EndDateLabel" xml:space="preserve">
+    <value>Data Fim</value>
+  </data>
+  <data name="FilterButton" xml:space="preserve">
+    <value>Filtro</value>
+  </data>
+  <data name="ManagementAdminMenuItem" xml:space="preserve">
+    <value>Gerenciamento</value>
+  </data>
+  <data name="NoTeachers" xml:space="preserve">
+    <value>Nenhum professor encontrado</value>
+  </data>
+  <data name="SearchByLabel" xml:space="preserve">
+    <value>Pesquisar por</value>
+  </data>
+  <data name="StudentAccessMenuItem" xml:space="preserve">
+    <value>Acessos de Aluno</value>
+  </data>
+  <data name="SubjectManagementPageTitle" xml:space="preserve">
+    <value>Gerenciamento de Assuntos</value>
+  </data>
+  <data name="TeacherDeletedToastrMessage" xml:space="preserve">
+    <value>Professor excluído!</value>
+  </data>
+  <data name="TeacherManagementPageTitle" xml:space="preserve">
+    <value>Gerenciamento de Professores</value>
+  </data>
+  <data name="TeacherUpdatePageTitle" xml:space="preserve">
+    <value>Alteração de Professor</value>
+  </data>
+  <data name="DeleteSubjectConfirmationText" xml:space="preserve">
+    <value>Você realmente deseja excluir o assunto</value>
+  </data>
+  <data name="NoSubjectsAdmin" xml:space="preserve">
+    <value>Nenhum assunto encontrado</value>
+  </data>
+  <data name="OrderFieldName" xml:space="preserve">
+    <value>Ordem</value>
+  </data>
+  <data name="SubjectDeletedToastrMessage" xml:space="preserve">
+    <value>Assunto excluído!</value>
+  </data>
+  <data name="CreateStudentPageTitle" xml:space="preserve">
+    <value>Criação de Aluno</value>
+  </data>
+  <data name="CreateSubjectPageTitle" xml:space="preserve">
+    <value>Criação de Assunto</value>
+  </data>
+  <data name="DeleteStudentConfirmationText" xml:space="preserve">
+    <value>Você realmente deseja excluir o aluno</value>
+  </data>
+  <data name="DeleteStudentConfirmationTitle" xml:space="preserve">
+    <value>Exclusão de Aluno</value>
+  </data>
+  <data name="NoStudentsAdmin" xml:space="preserve">
+    <value>Nenhum aluno encontrado</value>
+  </data>
+  <data name="StudentDeletedToastrMessage" xml:space="preserve">
+    <value>Aluno excluído!</value>
+  </data>
+  <data name="StudentManagementPageTitle" xml:space="preserve">
+    <value>Índice de Alunos</value>
+  </data>
+  <data name="StudentManagementToastrTitle" xml:space="preserve">
+    <value>Gerenciamento de Alunos</value>
+  </data>
+  <data name="StudentUpdatePageTitle" xml:space="preserve">
+    <value>Alteração de Aluno</value>
+  </data>
+  <data name="SubjectUpdatePageTitle" xml:space="preserve">
+    <value>Atualização de Assunto</value>
+  </data>
+  <data name="BackToHome" xml:space="preserve">
+    <value>Voltar para Home</value>
+  </data>
+  <data name="CheckCoursesBySubjectMessage" xml:space="preserve">
+    <value>e veja abaixo os cursos por assunto</value>
+  </data>
+  <data name="CourseManagementPageTitle" xml:space="preserve">
+    <value>Gerenciamento de Cursos</value>
+  </data>
+  <data name="CreateKnowledgeAreaPageTitle" xml:space="preserve">
+    <value>Criação de Área de Conhecimento</value>
+  </data>
+  <data name="DeleteKnowledgeAreaConfirmationText" xml:space="preserve">
+    <value>Você realmente deseja excluir a área de conhecimento</value>
+  </data>
+  <data name="DeleteKnowledgeAreaConfirmationTitle" xml:space="preserve">
+    <value>Exclusão de Área de Conhecimento</value>
+  </data>
+  <data name="ErrorDetailsTitle" xml:space="preserve">
+    <value>Detalhes do Erro</value>
+  </data>
+  <data name="KnowledgeAreaDeletedToastrMessage" xml:space="preserve">
+    <value>Área de Conhecimento excluída!</value>
+  </data>
+  <data name="KnowledgeAreaManagementPageTitle" xml:space="preserve">
+    <value>Gerenciamento de Áreas de Conhecimento</value>
+  </data>
+  <data name="KnowledgeAreaUpdatePageTitle" xml:space="preserve">
+    <value>Alteração de Área de Conhecimento</value>
+  </data>
+  <data name="MadeBy" xml:space="preserve">
+    <value>por</value>
+  </data>
+  <data name="MadeWithLoveMessage" xml:space="preserve">
+    <value>Feito com</value>
+  </data>
+  <data name="ManyPagesResultMessage" xml:space="preserve">
+    <value>Foram encontradas &lt;strong&gt;{{pageCount}}&lt;/strong&gt; páginas para o termo &lt;strong&gt;"{{term}}"&lt;/strong&gt;</value>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>próxima &amp;gt;</value>
+  </data>
+  <data name="NoAccessToClassMessage" xml:space="preserve">
+    <value>Você não tem acesso a esta aula</value>
+  </data>
+  <data name="NoClasses" xml:space="preserve">
+    <value>Nenhuma aula nesta seção</value>
+  </data>
+  <data name="NoCoursesAdmin" xml:space="preserve">
+    <value>Nenhum curso encontrado</value>
+  </data>
+  <data name="NoKnowledgeAreasAdmin" xml:space="preserve">
+    <value>Nenhuma Área de Conhecimento encontrada</value>
+  </data>
+  <data name="NoNotices" xml:space="preserve">
+    <value>Você não tem avisos neste momento</value>
+  </data>
+  <data name="NoSearchResultsMessage" xml:space="preserve">
+    <value>Sua pesquisa não retornou nenhum resultado para o termo &lt;strong&gt;"{{term}}"&lt;/strong&gt;</value>
+  </data>
+  <data name="NoticeHistoryPageTitle" xml:space="preserve">
+    <value>Histórico de Avisos</value>
+  </data>
+  <data name="NoticesPanelTitle" xml:space="preserve">
+    <value>Avisos</value>
+  </data>
+  <data name="NoticeTypeLabel" xml:space="preserve">
+    <value>Tipo de Aviso</value>
+  </data>
+  <data name="OnePageResultMessage" xml:space="preserve">
+    <value>Foi encontrada &lt;strong&gt;uma&lt;/strong&gt; página para o termo &lt;strong&gt;"{{term}}"&lt;/strong&gt;</value>
+  </data>
+  <data name="PreviousPage" xml:space="preserve">
+    <value>&amp;lt; anterior</value>
+  </data>
+  <data name="QuickPanelsMessage" xml:space="preserve">
+    <value>Fique ligado nas novidades através dos painéis de acesso rápido</value>
+  </data>
+  <data name="SearchBarText" xml:space="preserve">
+    <value>O que você quer aprender hoje?</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>Pesquisar</value>
+  </data>
+  <data name="SeeFullIndex" xml:space="preserve">
+    <value>Veja o Índice Completo</value>
+  </data>
+  <data name="Sending" xml:space="preserve">
+    <value>Enviando</value>
+  </data>
+  <data name="TalkToUsEmailLabel" xml:space="preserve">
+    <value>Digite seu email</value>
+  </data>
+  <data name="TalkToUsErrorMessage" xml:space="preserve">
+    <value>Ocorreu um erro. Tente novamente</value>
+  </data>
+  <data name="TalkToUsMessagePlaceholder" xml:space="preserve">
+    <value>Digite sua mensagem aqui</value>
+  </data>
+  <data name="TalkToUsMessageSent" xml:space="preserve">
+    <value>Sua mensagem foi enviada!</value>
+  </data>
+  <data name="TalkToUsNameLabel" xml:space="preserve">
+    <value>Digite seu nome</value>
+  </data>
+  <data name="SendButton" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="TalkToUsToastrTitle" xml:space="preserve">
+    <value>Fale Conosco</value>
+  </data>
+  <data name="TeacherName" xml:space="preserve">
+    <value>Professor</value>
+  </data>
+  <data name="CourseDeletedToastrMessage" xml:space="preserve">
+    <value>Curso excluído!</value>
+  </data>
+  <data name="DeleteCourseConfirmationText" xml:space="preserve">
+    <value>Você realmente deseja excluir o curso</value>
+  </data>
+  <data name="DeleteCourseConfirmationTitle" xml:space="preserve">
+    <value>Exclusão de Curso</value>
+  </data>
+  <data name="CancelImageButton" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="ClassroomDeletedToastrMessage" xml:space="preserve">
+    <value>Turma excluída!</value>
+  </data>
+  <data name="ClassroomManagementPageTitle" xml:space="preserve">
+    <value>Gerenciamento de Turmas</value>
+  </data>
+  <data name="ClassroomPlural" xml:space="preserve">
+    <value>Turmas</value>
+  </data>
+  <data name="CoursesInClassroomTitle" xml:space="preserve">
+    <value>Cursos incluídos nesta turma</value>
+  </data>
+  <data name="CreateCoursePageTitle" xml:space="preserve">
+    <value>Criação de Curso</value>
+  </data>
+  <data name="DaysToDeliverLabel" xml:space="preserve">
+    <value>Dias para entrega</value>
+  </data>
+  <data name="DeleteClassroomConfirmationText" xml:space="preserve">
+    <value>Você realmente deseja excluir a turma</value>
+  </data>
+  <data name="DeleteClassroomConfirmationTitle" xml:space="preserve">
+    <value>Exclusão de Turma</value>
+  </data>
+  <data name="DeleteImageButton" xml:space="preserve">
+    <value>Excluir</value>
+  </data>
+  <data name="DeliveryPlanName" xml:space="preserve">
+    <value>Plano de entrega</value>
+  </data>
+  <data name="DeliveryPlanPageTitle" xml:space="preserve">
+    <value>Plano de entrega</value>
+  </data>
+  <data name="DetailsColumn" xml:space="preserve">
+    <value>Detalhes</value>
+  </data>
+  <data name="DragAndDropImageMessage" xml:space="preserve">
+    <value>Arraste a imagem do curso aqui ou apenas clique nesta área para selecioná-la</value>
+  </data>
+  <data name="EditDeleteColumn" xml:space="preserve">
+    <value>Editar/Excluir</value>
+  </data>
+  <data name="NoClassroomAdmin" xml:space="preserve">
+    <value>Nehuma turma encontrada</value>
+  </data>
+  <data name="OnlyOneImageCourseMessage" xml:space="preserve">
+    <value>O curso só pode ter uma imagem</value>
+  </data>
+  <data name="SelectTeacher" xml:space="preserve">
+    <value>Selecione um professor</value>
+  </data>
+  <data name="StudentPlural" xml:space="preserve">
+    <value>Alunos</value>
+  </data>
+  <data name="StudentsInClassroomTitle" xml:space="preserve">
+    <value>Alunos inscritos nesta turma</value>
+  </data>
+  <data name="Authenticating" xml:space="preserve">
+    <value>Autenticando</value>
+  </data>
+  <data name="BackToLogin" xml:space="preserve">
+    <value>Voltar para o Login</value>
+  </data>
+  <data name="CancelFileButton" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="ChangePasswordInformation" xml:space="preserve">
+    <value>Preencha o formulário abaixo para mudar sua senha</value>
+  </data>
+  <data name="ChangePasswordPageTitle" xml:space="preserve">
+    <value>Alterar Senha</value>
+  </data>
+  <data name="ClassDeletedToastrMessage" xml:space="preserve">
+    <value>Aula excluída!</value>
+  </data>
+  <data name="ClassManagementPageTitle" xml:space="preserve">
+    <value>Gerenciamento de Aulas</value>
+  </data>
+  <data name="ClassroomUpdatePageTitle" xml:space="preserve">
+    <value>Alteração de Turma</value>
+  </data>
+  <data name="ClassUpdatePageTitle" xml:space="preserve">
+    <value>Alteração de Turma</value>
+  </data>
+  <data name="CommentPlaceholder" xml:space="preserve">
+    <value>Faça seu comentário sobre a aula aqui</value>
+  </data>
+  <data name="CommentsTitle" xml:space="preserve">
+    <value>Discussão</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Confirme sua senha</value>
+  </data>
+  <data name="CreateClassPageTitle" xml:space="preserve">
+    <value>Criação de Aula</value>
+  </data>
+  <data name="CreateClassroomPageTitle" xml:space="preserve">
+    <value>Criação de Turma</value>
+  </data>
+  <data name="DeleteClassConfirmationText" xml:space="preserve">
+    <value>Você realmente deseja excluir a aula</value>
+  </data>
+  <data name="DeleteClassConfirmationTitle" xml:space="preserve">
+    <value>Exclusão de Aula</value>
+  </data>
+  <data name="DeleteFileButton" xml:space="preserve">
+    <value>Excluir</value>
+  </data>
+  <data name="DeliveryPlanPlural" xml:space="preserve">
+    <value>Planos de entrega</value>
+  </data>
+  <data name="DragAndDropFileMessage" xml:space="preserve">
+    <value>Arraste os documentos aqui ou apenas clique nesta área para selecioná-los</value>
+  </data>
+  <data name="FilePlural" xml:space="preserve">
+    <value>Materiais de Apoio</value>
+  </data>
+  <data name="ForgotPasswordButton" xml:space="preserve">
+    <value>Esqueceu sua senha?</value>
+  </data>
+  <data name="ForgotPasswordLoginLabel" xml:space="preserve">
+    <value>Digite o seu email de inscrição</value>
+  </data>
+  <data name="ForgotPasswordTitle" xml:space="preserve">
+    <value>Esqueceu sua senha?</value>
+  </data>
+  <data name="LoginEmailLabel" xml:space="preserve">
+    <value>Digite seu email</value>
+  </data>
+  <data name="LoginPasswordLabel" xml:space="preserve">
+    <value>Digite sua senha</value>
+  </data>
+  <data name="NewPasswordLabel" xml:space="preserve">
+    <value>Digite sua nova senha</value>
+  </data>
+  <data name="NextClasses" xml:space="preserve">
+    <value>Próximas aulas</value>
+  </data>
+  <data name="NoClassAdmin" xml:space="preserve">
+    <value>Nenhuma aula encontrada</value>
+  </data>
+  <data name="NoMoreComments" xml:space="preserve">
+    <value>Sem mais comentários para esta aula</value>
+  </data>
+  <data name="RememberMeLabel" xml:space="preserve">
+    <value>Lembrar-me</value>
+  </data>
+  <data name="SelectContentType" xml:space="preserve">
+    <value>Selecione um tipo de conteúdo</value>
+  </data>
+  <data name="StudentName" xml:space="preserve">
+    <value>Aluno</value>
+  </data>
+  <data name="SubscribedAtColumn" xml:space="preserve">
+    <value>Inscrito em</value>
+  </data>
+  <data name="Wallpaper" xml:space="preserve">
+    <value>https://i.ytimg.com/vi/MLX2wLdHrYU/maxresdefault.jpg|https://content.paulreiffer.com//wp-content/gallery/landscapes/Bonsai-Rock-Lake-Tahoe-California-Incline-Village-Paul-Reiffer-Professional-Landscape-Photographer-View-Photography.jpg.jpg|http://moore.photos/perch/resources/Adventure%20Images/advbbcmediacitysalfordquays.jpg|https://wallup.net/wp-content/uploads/2015/12/132972-England-landscape-architecture-nature-Tower_Bridge-UK.jpg|https://www.setaswall.com/wp-content/uploads/2018/04/London-UK-Wallpaper-01-1920x1080.jpg|http://avante.biz/wp-content/uploads/Wallpapers-Europe/Wallpapers-Europe-054.jpg|http://www.portoalegre.travel/upload/b/62/629785_london-wallpaper-black-and-white.jpg</value>
+  </data>
+  <data name="ClassroomName" xml:space="preserve">
+    <value>Turma</value>
+  </data>
+  <data name="ClassroomRequired" xml:space="preserve">
+    <value>Informe a Turma</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Informe o Email</value>
+  </data>
+  <data name="ErrorSavingImage" xml:space="preserve">
+    <value>Erro ao salvar imagem</value>
+  </data>
+  <data name="InvalidLogin" xml:space="preserve">
+    <value>O Login deve ser um email válido</value>
+  </data>
+  <data name="LoginRequired" xml:space="preserve">
+    <value>Informe seu login</value>
+  </data>
+  <data name="PasswordConfirmationFieldName" xml:space="preserve">
+    <value>Confirme sua senha</value>
+  </data>
+  <data name="PasswordConfirmationRequired" xml:space="preserve">
+    <value>Você deve confirmar sua senha </value>
+  </data>
+  <data name="PasswordDoenstMatch" xml:space="preserve">
+    <value>A senha não corresponde</value>
+  </data>
+  <data name="PasswordFieldName" xml:space="preserve">
+    <value>Senha</value>
+  </data>
+  <data name="UserNameFieldName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="UserNameRequired" xml:space="preserve">
+    <value>Informe o nome</value>
+  </data>
+  <data name="UserPasswordRequired" xml:space="preserve">
+    <value>Informe a senha</value>
+  </data>
+  <data name="AccessHistoryPageTitle" xml:space="preserve">
+    <value>Histórico de Acessos</value>
+  </data>
+  <data name="SelectStudent" xml:space="preserve">
+    <value>Selecione um aluno</value>
+  </data>
+  <data name="DeliveryPlanDate" xml:space="preserve">
+    <value>Data de entrega</value>
+  </data>
+  <data name="SendNoticeMenuItem" xml:space="preserve">
+    <value>Enviar aviso</value>
+  </data>
+  <data name="SelectClassroom" xml:space="preserve">
+    <value>Selecione uma turma</value>
+  </data>
+  <data name="CommentRequired" xml:space="preserve">
+    <value>Digite seu comentário</value>
+  </data>
+  <data name="ContentTypeName" xml:space="preserve">
+    <value>Tipo de Aula</value>
+  </data>
+  <data name="MessageRequired" xml:space="preserve">
+    <value>Type your message</value>
+  </data>
+  <data name="ChangeLanguageMenuItem" xml:space="preserve">
+    <value>Mudar Idioma</value>
+  </data>
+</root>

@@ -1,6 +1,4 @@
-﻿@using System.ComponentModel.DataAnnotations;
-
-@model Boolean  
+﻿@model bool
 
 @{
     var name = ViewData.TemplateInfo.HtmlFieldPrefix;
@@ -11,6 +9,6 @@
 
 <div class="checkbox">
     <label>
-        <input name="@name" value="true" type="checkbox" @(Model? "checked" : "") class="@htmlAttributes["class"]">
+        <input name="@name" value="true" type="checkbox" @(Model ? "checked" : "") class="@htmlAttributes["class"]">
     </label>
 </div>

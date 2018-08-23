@@ -1,113 +1,139 @@
-﻿@using SmartLMS.Dominio.Entidades;
+﻿@using SmartLMS.Domain.Entities
+@using SmartLMS.Domain.Resources
 @{
     Layout = null;
 
-    Exception ex = ViewData["Exception"] as Exception;
-
-
+    var ex = ViewData["Exception"] as Exception;
 }
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="x-ua-compatible" content="IE=10">
-    <title>@Parametro.PROJETO - @ViewBag.Title</title>
-    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
-    <link rel="icon" href="~/favicon.ico" type="image/ico" />
+    <title>@Parameter.APP_NAME - @ViewBag.Title</title>
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="~/favicon.ico" type="image/ico"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
-    <link rel="apple-touch-icon" sizes="57x57" href="~/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="~/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="~/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="~/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="~/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="~/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="~/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="~/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="~/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="~/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="~/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="~/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="~/favicon-16x16.png">
+
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Content/icons/icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="96x96" href="~/Content/icons/icon-96x96.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="~/Content/icons/icon-128x128.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/Content/icons/icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/Content/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="~/Content/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="384x384" href="~/Content/icons/icon-384x384.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="~/Content/icons/icon-512x512.png">
+    <link rel="icon" type="image/png" sizes="72x72" href="~/Content/icons/icon-72x72.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/Content/icons/icon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="~/Content/icons/icon-128x128.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="~/Content/icons/icon-144x144.png">
+    <link rel="icon" type="image/png" sizes="152x152" href="~/Content/icons/icon-152x152.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/Content/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="384x384" href="~/Content/icons/icon-384x384.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="~/Content/icons/icon-512x512.png">
     <link rel="manifest" href="/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="~/ms-icon-144x144.png">
+    <meta name="msapplication-TileImage" content="~/Content/icons/icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
     <script>
         var SmartLMS = {};
-        SmartLMS.api = '@Url.Content("~/")';
+        SmartLMS.api = '@Url.Content("~/")/';
     </script>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/csscustom")
     @Scripts.Render("~/bundles/modernizr")
-    <base href="@HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")" />
+    <base href="@HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")"/>
 </head>
 <body>
-    <nav class="navbar navbar-primary navbar-static-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+<nav class="navbar navbar-primary navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
 
-                <div id="logo" class="img-circle img-raised navbar-brand">
-                    <img src="~/content/img/logo.png" width="40" height="40" alt="@Parametro.PROJETO logo" rel="tooltip">
-                </div>
-                @Html.ActionLink(Parametro.PROJETO, "Index", "Home", null, new { @class = "navbar-brand" })
+            <div id="logo" class="img-circle img-raised navbar-brand">
+                <img src="~/content/img/logo.png" width="40" height="40" alt="@Parameter.APP_NAME logo" rel="tooltip">
             </div>
+            @Html.ActionLink(Parameter.APP_NAME, "Index", "Home", null, new {@class = "navbar-brand"})
         </div>
-    </nav>
-    <div class="sidebar-container">
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <div class="panel panel-danger">
-                        <div class="panel-heading">
-                            Erro não esperado
-                        </div>
-                        <div class="panel-body">
-                            <h5><strong>Ops! Desculpe... Ocorreu um erro não esperado</strong></h5>
-                            <p class="text-danger">@ex?.Message</>
-                        </div>
-
+    </div>
+</nav>
+<div class="sidebar-container">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        Unexpected Error
+                    </div>
+                    <div class="panel-body">
+                        <h5>
+                            <strong>Ops! Sorry... We have an unexpected error</strong>
+                        </h5>
+                        <a href="#" data-toggle="modal" data-target="#details">See details</a>
                     </div>
 
                 </div>
+
             </div>
+        </div>
 
-            <p>
-                @Html.ActionLink("Voltar para a Home", "Index", "Home", null, new { @class = "btn btn-primary" })
-            </p>
-          
+        <p>
+            @Html.ActionLink(Resource.BackToHome, "Index", "Home", null, new {@class = "btn btn-primary"})
+        </p>
 
+
+    </div>
+</div>
+<footer class="footer footer-black">
+    <div class="container">
+        <div class="col-sm-3">
+            <nav class="pull-left">
+                <ul>
+                    <li>
+                        Smart 2.0 - LMS
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-sm-9">
+            <div class="copyright pull-right">
+                © 2016, @Resource.MadeWithLoveMessage <i class="fa fa-heart heart"></i> @Resource.MadeBy <a href="http://www.github.com/rcarubbi" target="_blank">Raphael Carubbi Neto</a>
+            </div>
         </div>
     </div>
-    <footer class="footer footer-black">
-        <div class="container">
-            <div class="col-sm-3">
-                <nav class="pull-left">
-                    <ul>
-                        <li>
-                            Smart 2.0 - LMS
-                        </li>
-                    </ul>
-                </nav>
+</footer>
+<div class="modal fade" id="details" tabindex="-1" role="dialog" aria-labelledby="@Resource.ErrorDetailsTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">@Resource.ErrorDetailsTitle</h4>
             </div>
-            <div class="col-sm-9">
-                <div class="copyright pull-right">
-                    © 2016, feito com <i class="fa fa-heart heart"></i> por <a href="http://www.itanio.com.br" target="_blank">Itanio</a>
-                </div>
+            <div class="modal-body">
+                <p class="text-danger" style="max-height: 450px; overflow: auto">
+                    @ex?.Message
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">@Resource.CloseButton</button>
             </div>
         </div>
-    </footer>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/data")
-    @Scripts.Render("~/bundles/bootstrap")
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/data")
+@Scripts.Render("~/bundles/bootstrap")
 
 </body>
 </html>

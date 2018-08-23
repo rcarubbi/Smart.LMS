@@ -1,0 +1,68 @@
+﻿@using SmartLMS.Domain.Entities
+@using SmartLMS.Domain.Resources
+@{
+    Layout = null;
+
+    var wallpapers = Resource.Wallpaper.Split('|');
+    var rnd = new Random();
+    var wallpaperIndex = rnd.Next(0, wallpapers.Length);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>@Parameter.APP_NAME - Login</title>
+    <meta http-equiv="x-ua-compatible" content="IE=10">
+    <script>
+        var SmartLMS = {};
+        SmartLMS.api = '@Url.Content("~/")';
+    </script>
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/csscustom")
+ 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/Content/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/Content/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/Content/icons/favicon-16x16.png">
+    <link rel="manifest" href="~/Content/icons/site.webmanifest">
+    <link rel="mask-icon" href="~/Content/icons/safari-pinned-tab.svg" color="#7f1887">
+    <meta name="msapplication-TileColor" content="#7f1887">
+    <meta name="theme-color" content="#7f1887">
+ 
+</head>
+<body class="signup-page">
+<div class="wrapper">
+    <div class="header header-filter" style="background-image: url('@wallpapers[wallpaperIndex]'); background-position: top center; background-size: cover;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4">
+                    @RenderBody()
+                </div>
+            </div>
+
+            <footer class="footer">
+                <div class="container">
+                    <nav class="pull-left">
+                        <ul>
+                            <li>
+                                Smart 2.0 - LMS
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="copyright pull-right">
+                        © 2016, @Resource.MadeWithLoveMessage <i class="fa fa-heart heart"></i> @Resource.MadeBy <a href="http://www.github.com/rcarubbi" target="_blank">Raphael Carubbi</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/data")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", false)
+</body>
+</html>

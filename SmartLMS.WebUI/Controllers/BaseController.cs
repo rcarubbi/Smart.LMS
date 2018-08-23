@@ -1,28 +1,32 @@
-﻿using SmartLMS.Dominio;
-using SmartLMS.Dominio.Entidades;
-using SmartLMS.Dominio.Entidades.Pessoa;
-using SmartLMS.Dominio.Repositorios;
-using System;
+﻿using System.Globalization;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
+using SmartLMS.Domain;
+using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Repositories;
 
 namespace SmartLMS.WebUI.Controllers
 {
     public class BaseController : Controller
     {
+        protected IContext _context;
+
+        protected User _loggedUser;
+
+        public BaseController(IContext context)
+        {
+            _context = context;
+        }
 
         protected override void OnException(ExceptionContext filterContext)
         {
-    
-            if (!Request.IsAjaxRequest())
-            {
-                base.OnException(filterContext);
-                filterContext.ExceptionHandled = true;
-                Exception e = filterContext.Exception;
-                ViewData["Exception"] = e; // pass the exception to the view
-                filterContext.Result = View("Error");
-            }
+            if (Request.IsAjaxRequest()) return;
+            base.OnException(filterContext);
+            filterContext.ExceptionHandled = true;
+            var exception = filterContext.Exception;
+            ViewData["Exception"] = exception; // pass the exception to the view
+            filterContext.Result = View("Error");
         }
 
         public string RenderRazorViewToString(string viewName, object model)
@@ -31,41 +35,51 @@ namespace SmartLMS.WebUI.Controllers
             using (var sw = new StringWriter())
             {
                 var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext,
-                                                                         viewName);
+                    viewName);
                 var viewContext = new ViewContext(ControllerContext, viewResult.View,
-                                             ViewData, TempData, sw);
+                    ViewData, TempData, sw);
                 viewResult.View.Render(viewContext, sw);
                 viewResult.ViewEngine.ReleaseView(ControllerContext, viewResult.View);
                 return sw.GetStringBuilder().ToString();
             }
         }
 
-        protected Usuario _usuarioLogado;
-        protected IContexto _contexto;
-        public BaseController(IContexto contexto)
+        protected Role GetUserRole(User user)
         {
-            _contexto = contexto;
+            switch (user)
+            {
+                case Admin _:
+                    return Role.Admin;
+                case Teacher _:
+                    return Role.Teacher;
+                default:
+                    return Role.Student;
+            }
         }
 
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
+            var languageCookie = requestContext.HttpContext.Request.Cookies.Get("languageCookie");
+            var currentCulture = new CultureInfo(languageCookie?.Value ?? "en-UK");
 
-            ViewBag.AreaConhecimento = Parametro.AREA_CONHECIMENTO;
-            ViewBag.Assunto = Parametro.ASSUNTO;
-            ViewBag.Curso = Parametro.CURSO;
-            ViewBag.Aula = Parametro.AULA;
-            ViewBag.AreaConhecimentoPlural = Parametro.AREA_CONHECIMENTO_PLURAL;
-            ViewBag.AssuntoPlural = Parametro.ASSUNTO_PLURAL;
-            ViewBag.CursoPlural = Parametro.CURSO_PLURAL;
-            ViewBag.AulaPlural = Parametro.AULA_PLURAL;
 
-            RepositorioUsuario usuarioRepo = new RepositorioUsuario(_contexto);
-            if (HttpContext.User.Identity.IsAuthenticated)
-            {
-                _usuarioLogado = usuarioRepo.ObterPorLogin(HttpContext.User.Identity.Name);
-                ViewBag.IdUsuarioLogado = _usuarioLogado != null? _usuarioLogado.Id.ToString() : string.Empty;
-            }
+            CultureInfo.CurrentUICulture = currentCulture;
+            CultureInfo.CurrentCulture = currentCulture;
+
+            var userRepository = new UserRepository(_context);
+
+            if (!HttpContext.User.Identity.IsAuthenticated) return;
+
+            if (!Request.IsAjaxRequest())
+                if (Request.Url != Request.UrlReferrer)
+                {
+                    ViewBag.BackURL = Request.UrlReferrer;
+                    TempData["BackURL"] = Request.UrlReferrer;
+                }
+
+            _loggedUser = userRepository.GetByLogin(HttpContext.User.Identity.Name);
+            ViewBag.LoggedUserId = _loggedUser != null ? _loggedUser.Id.ToString() : string.Empty;
         }
     }
 }

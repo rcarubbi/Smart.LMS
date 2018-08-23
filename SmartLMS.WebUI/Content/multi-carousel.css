@@ -1,61 +1,40 @@
-﻿
-.carousel-control.left, .carousel-control.right {
-	background-image:none;
-}
+﻿.carousel-control.left, .carousel-control.right { background-image: none; }
 
 .img-responsive {
-    width: 100%;
     height: auto;
-    min-height: 220px;
+    width: 100%;
 }
 
-@media (min-width: 992px ) {
-	.carousel-inner .active.left {
-		left: -25%;
-	}
-	.carousel-inner .next {
-		left:  25%;
-	}
-	.carousel-inner .prev {
-		left: -25%;
-	}
+@media (min-width: 992px) {
+    .carousel-inner .active.left { left: -25%; }
+
+    .carousel-inner .next { left: 25%; }
+
+    .carousel-inner .prev { left: -25%; }
 }
 
-@media (min-width: 768px) and (max-width: 991px ) {
-	.carousel-inner .active.left {
-		left: -33.3%;
-	}
-	.carousel-inner .next {
-		left:  33.3%;
-	}
-	.carousel-inner .prev {
-		left: -33.3%;
-	}
-	.active > div:first-child {
-		display:block;
-	}
-	.active > div:first-child + div {
-		display:block;
-	}
-	.active > div:last-child {
-		display:none;
-	}
+@media (min-width: 768px) and (max-width: 991px) {
+    .carousel-inner .active.left { left: -33.3%; }
+
+    .carousel-inner .next { left: 33.3%; }
+
+    .carousel-inner .prev { left: -33.3%; }
+
+    .active > div:first-child { display: block; }
+
+    .active > div:first-child + div { display: block; }
+
+    .active > div:last-child { display: none; }
 }
 
 @media (max-width: 767px) {
-	.carousel-inner .active.left {
-		left: -100%;
-	}
-	.carousel-inner .next {
-		left:  100%;
-	}
-	.carousel-inner .prev {
-		left: -100%;
-	}
-	.active > div {
-		display:none;
-	}
-	.active > div:first-child {
-		display:block;
-	}
+    .carousel-inner .active.left { left: -100%; }
+
+    .carousel-inner .next { left: 100%; }
+
+    .carousel-inner .prev { left: -100%; }
+
+    .active > div { display: none; }
+
+    .active > div:first-child { display: block; }
 }

@@ -1,0 +1,22 @@
+﻿@using SmartLMS.Domain.Resources
+@model CommentViewModel
+
+@using (Html.BeginForm("", "", FormMethod.Post, new {id = "comment-form"}))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        @Html.HiddenFor(model => model.ClassId, new {htmlAttributes = new {@class = "form-control"}})
+
+
+        @Html.TextAreaFor(model => model.CommentText, new {@class = "form-control", placeholder = Resource.CommentPlaceholder, rows = "5"})
+        @Html.ValidationMessageFor(model => model.CommentText, "", new {@class = "text-danger"})
+
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <input type="submit" value="@Resource.SendButton" class="btn btn-sm btn-primary"/>
+            </div>
+        </div>
+    </div>
+}

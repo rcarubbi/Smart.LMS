@@ -1,223 +1,158 @@
+using System;
+using System.Data.Entity.Migrations;
+using Carubbi.Security;
+using SmartLMS.Domain.Entities;
+using SmartLMS.Domain.Entities.UserAccess;
+
 namespace SmartLMS.DAL.Migrations
 {
-    using Carubbi.Utils.Security;
-    using Dominio.Entidades;
-    using Dominio.Entidades.Pessoa;
-    using System;
-    using System.Data.Entity.Migrations;
-
-    internal sealed class Configuration : DbMigrationsConfiguration<SmartLMS.DAL.Contexto>
+    internal sealed class Configuration : DbMigrationsConfiguration<Context>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(SmartLMS.DAL.Contexto context)
+        protected override void Seed(Context context)
         {
-            var criptografia = new CriptografiaSimetrica(SymmetricCryptProvider.TripleDES);
-            criptografia.Key = "IT_Newest_49387_In";
+            var crypto = new SymmetricCrypt(SymmetricCryptProvider.TripleDES) {Key = "smart123"};
 
-            #region Usuario
-            context.Set<Usuario>().AddOrUpdate(u => u.Nome,
-                new Administrador
+            #region User
+
+            context.Set<User>().AddOrUpdate(u => u.Name,
+                new Admin
                 {
-                    Nome = "Administrador",
-                    Ativo = true,
-                    Login = "administrador@itanio.com.br",
-                    Email = "raphael@itanio.com.br",
-                    Senha = criptografia.Encrypt("Administrador"),
-                    DataCriacao = DateTime.Now
+                    Name = "Admin",
+                    Active = true,
+                    Login = "administrator@yourcompany.com",
+                    Email = "administrator@yourcompany.com",
+                    Password = crypto.Encrypt("smart123"),
+                    CreatedAt = DateTime.Now
                 });
- 
-      
-            context.Salvar();
 
+
+            context.Set<User>().AddOrUpdate(u => u.Name,
+                new Admin
+                {
+                    Name = "Daemon User",
+                    Active = true,
+                    Login = "delivery.agent@yourcompany.com",
+                    Email = "delivery.agent@yourcompany.com",
+                    Password = crypto.Encrypt("smart123"),
+                    CreatedAt = DateTime.Now
+                });
+
+            context.Save();
 
             #endregion
 
             #region Parametro
-            context.Set<Parametro>()
-                .AddOrUpdate(p => p.Chave,
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_CRIPTOGRAFIA,
-                        Valor = "IT_Newest_49387_In",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.REMETENTE_EMAIL,
-                        Valor = "raphael@itanio.com.br",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_PORTA,
-                        Valor = "587",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_SENHA,
-                        Valor = "raphakf061208",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_SERVIDOR,
-                        Valor = "mail.exchange.locaweb.com.br",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_USA_SSL,
-                        Valor = "true",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_USUARIO,
-                        Valor = "raphael@itanio.com.br",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.NOME_PROJETO,
-                        Valor = "Código Nerd",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.SMTP_USAR_CREDENCIAIS_PADRAO,
-                        Valor = "false",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_AREA_CONHECIMENTO_PLURAL,
-                        Valor = "Áreas de Conhecimento",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_AREA_CONHECIMENTO,
-                        Valor = "Área de Conhecimento",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_ASSUNTO_PLURAL,
-                        Valor = "Assuntos",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_ASSUNTO,
-                        Valor = "Assunto",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_CURSO_PLURAL,
-                        Valor = "Cursos",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_CURSO,
-                        Valor = "Curso",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_AULA,
-                        Valor = "Aula",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_AULA_PLURAL,
-                        Valor = "Aulas",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_ARQUIVO,
-                        Valor = "Material de apoio",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_TITULO_AULAS_ASSISTIDAS,
-                        Valor = "Últimas aulas assistidas",
-                        Ativo = true
-                    },
-                    new Parametro
-                    {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_TITULO_ULTIMAS_AULAS,
-                        Valor = "Novas aulas",
-                        Ativo = true
-                    },
 
-                     new Parametro
-                     {
-                         DataCriacao = DateTime.Now,
-                         Chave = Parametro.CHAVE_STORAGE_ARQUIVOS,
-                         Valor = "Content/Apoio",
-                         Ativo = true
-                     },
-                    new Parametro
+            context.Set<Parameter>()
+                .AddOrUpdate(p => p.Key,
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_NOME_DESTINATARIO_FALE_CONOSCO,
-                        Valor = "Raphael Carubbi Neto",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.CRYPTO_KEY,
+                        Value = "smart123",
+                        Active = true
                     },
-                    new Parametro
+                    new Parameter
                     {
-                        DataCriacao = DateTime.Now,
-                        Chave = Parametro.CHAVE_EMAIL_DESTINATARIO_FALE_CONOSCO,
-                        Valor = "rcarubbi@gmail.com",
-                        Ativo = true
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.EMAIL_FROM_KEY,
+                        Value = "noreply@yourcompany.com",
+                        Active = true
                     },
-                      new Parametro
-                      {
-                          DataCriacao = DateTime.Now,
-                          Chave = Parametro.CHAVE_CORPO_NOTIFICACAO_AULA_LIBERADA,
-                          Valor = "Olá {Nome}, Tudo bem com você? <br /> Foi disponibilizado uma nova aula <a href='www.codigonerd.net/SmartLMS/Aula/Ver/{IdAula}'>{Aula}</a> no curso <a href='www.codigonerd.net/SmartLMS/Aula/Index/{IdCurso}'>{Curso}</a> <br />Bons estudos! <br /><br /> Código Nerd",
-                          Ativo = true
-                      });
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_PORT_KEY,
+                        Value = "25",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_PASSWORD_KEY,
+                        Value = "",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_SERVER_KEY,
+                        Value = "localhost",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_USE_SSL_KEY,
+                        Value = "false",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_USERNAME_KEY,
+                        Value = "",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.APP_NAME_KEY,
+                        Value = "Your Company Training",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.SMTP_USE_DEFAULT_CREDENTIALS_KEY,
+                        Value = "true",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.FILE_STORAGE_KEY,
+                        Value = "Content/Support",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.TALK_TO_US_RECEIVER_NAME_KEY,
+                        Value = "Raphael Carubbi Neto",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.TALK_TO_US_RECEIVER_EMAIL_KEY,
+                        Value = "talk-to-us@yourcompany.com",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.DAEMON_USER_KEY,
+                        Value = "delivery.agent@yourcompany.com",
+                        Active = true
+                    },
+                    new Parameter
+                    {
+                        CreatedAt = DateTime.Now,
+                        Key = Parameter.BASE_URL_KEY,
+                        Value = "http://localhost:21114",
+                        Active = true
+                    });
 
 
-
-            context.Salvar();
+            context.Save();
 
             #endregion
         }
     }
 }
-
-
-
-

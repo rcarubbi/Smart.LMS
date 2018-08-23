@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SmartLMS.WebUI</RootNamespace>
     <AssemblyName>SmartLMS.WebUI</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -23,6 +23,8 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,21 +44,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Carubbi.Extensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Extensions.1.0.0.0\lib\net472\Carubbi.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="Carubbi.GenericRepository, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Carubbi.GenericRepository.1.4.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Carubbi.Mailer, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.Mailer.1.2.3.0\lib\net45\Carubbi.Mailer.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Carubbi.Mailer.1.2.3.0\lib\net472\Carubbi.Mailer.dll</HintPath>
     </Reference>
     <Reference Include="Carubbi.Mailer.Interfaces, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Carubbi.Mailer.Interfaces.1.2.0.0\lib\net45\Carubbi.Mailer.Interfaces.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Carubbi.Mailer.Interfaces.1.2.0.0\lib\net472\Carubbi.Mailer.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.ServiceLocator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.ServiceLocator.1.0.0.0\lib\net472\Carubbi.ServiceLocator.dll</HintPath>
     </Reference>
     <Reference Include="Carubbi.Utils, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Carubbi.Utils.1.4.3.0\lib\net45\Carubbi.Utils.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -93,6 +97,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Linq.Dynamic, Version=1.0.5840.25917, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
@@ -103,11 +108,8 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
@@ -149,6 +151,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.0.5\lib\net40\WebActivatorEx.dll</HintPath>
       <Private>True</Private>
@@ -183,20 +186,20 @@
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\StructuremapWebApi.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\AreaConhecimentoController.cs" />
-    <Compile Include="Controllers\ImagemUploader.cs" />
-    <Compile Include="Controllers\MaterialApoioUploader.cs" />
-    <Compile Include="Controllers\ProfessorController.cs" />
-    <Compile Include="Controllers\AlunoController.cs" />
-    <Compile Include="Controllers\AssuntoController.cs" />
-    <Compile Include="Controllers\AulaController.cs" />
-    <Compile Include="Controllers\AutenticacaoController.cs" />
-    <Compile Include="Controllers\AvisoController.cs" />
+    <Compile Include="Controllers\KnowledgeAreaController.cs" />
+    <Compile Include="Controllers\ImageUploader.cs" />
+    <Compile Include="Controllers\SupportMaterialUploader.cs" />
+    <Compile Include="Controllers\TeacherController.cs" />
+    <Compile Include="Controllers\StudentController.cs" />
+    <Compile Include="Controllers\SubjectController.cs" />
+    <Compile Include="Controllers\ClassController.cs" />
+    <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\NoticeController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\CursoController.cs" />
+    <Compile Include="Controllers\CourseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\TurmaController.cs" />
-    <Compile Include="Controllers\UsuarioController.cs" />
+    <Compile Include="Controllers\ClassroomController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DependencyResolution\ControllerConvention.cs" />
     <Compile Include="DependencyResolution\DefaultRegistry.cs" />
     <Compile Include="DependencyResolution\IoC.cs" />
@@ -207,44 +210,28 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AcessoAulaViewModel.cs" />
-    <Compile Include="Models\AcessoViewModel.cs" />
-    <Compile Include="Models\AlterarSenhaViewModel.cs" />
-    <Compile Include="Models\AreaConhecimentoViewModel.cs" />
-    <Compile Include="Models\ArquivoViewModel.cs" />
-    <Compile Include="Models\AssuntoViewModel.cs" />
-    <Compile Include="Models\AulaViewModel.cs" />
-    <Compile Include="Models\AvisoViewModel.cs" />
-    <Compile Include="Models\CabecalhoViewModel.cs" />
-    <Compile Include="Models\ComentarioViewModel.cs" />
-    <Compile Include="Models\CursoViewModel.cs" />
-    <Compile Include="Models\EsqueciMinhaSenhaViewModel.cs" />
-    <Compile Include="Models\FaleConoscoViewModel.cs" />
+    <Compile Include="Models\ClassAccessViewModel.cs" />
+    <Compile Include="Models\AccessViewModel.cs" />
+    <Compile Include="Models\ChangePasswordViewModel.cs" />
+    <Compile Include="Models\ClassDeliveryPlanViewModel.cs" />
+    <Compile Include="Models\KnowledgeAreaViewModel.cs" />
+    <Compile Include="Models\FileViewModel.cs" />
+    <Compile Include="Models\SendNoticeViewModel.cs" />
+    <Compile Include="Models\SubjectViewModel.cs" />
+    <Compile Include="Models\ClassViewModel.cs" />
+    <Compile Include="Models\NoticeViewModel.cs" />
+    <Compile Include="Models\HeaderViewModel.cs" />
+    <Compile Include="Models\CommentViewModel.cs" />
+    <Compile Include="Models\CourseViewModel.cs" />
+    <Compile Include="Models\ForgotPasswordViewModel.cs" />
+    <Compile Include="Models\TalkToUsViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
-    <Compile Include="Models\TurmaViewModel.cs" />
-    <Compile Include="Models\UsuarioViewModel.cs" />
+    <Compile Include="Models\ClassroomViewModel.cs" />
+    <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Servicos\RoleProvider.cs" />
+    <Compile Include="Providers\RoleProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="android-icon-144x144.png" />
-    <Content Include="android-icon-192x192.png" />
-    <Content Include="android-icon-36x36.png" />
-    <Content Include="android-icon-48x48.png" />
-    <Content Include="android-icon-72x72.png" />
-    <Content Include="android-icon-96x96.png" />
-    <Content Include="apple-icon-114x114.png" />
-    <Content Include="apple-icon-120x120.png" />
-    <Content Include="apple-icon-144x144.png" />
-    <Content Include="apple-icon-152x152.png" />
-    <Content Include="apple-icon-180x180.png" />
-    <Content Include="apple-icon-57x57.png" />
-    <Content Include="apple-icon-60x60.png" />
-    <Content Include="apple-icon-72x72.png" />
-    <Content Include="apple-icon-76x76.png" />
-    <Content Include="apple-icon-precomposed.png" />
-    <Content Include="apple-icon.png" />
-    <Content Include="browserconfig.xml" />
     <Content Include="Content\addtohomescreen\addtohomescreen.css" />
     <Content Include="Content\bootstrap-multiselect\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap.css" />
@@ -252,6 +239,15 @@
     <Content Include="Content\datepicker\datepicker.css" />
     <Content Include="Content\dropzone\basic.css" />
     <Content Include="Content\dropzone\dropzone.css" />
+    <Content Include="Content\icons\android-chrome-192x192.png" />
+    <Content Include="Content\icons\android-chrome-256x256.png" />
+    <Content Include="Content\icons\apple-touch-icon.png" />
+    <Content Include="Content\icons\browserconfig.xml" />
+    <Content Include="Content\icons\favicon-16x16.png" />
+    <Content Include="Content\icons\favicon-32x32.png" />
+    <Content Include="favicon.ico" />
+    <Content Include="Content\icons\mstile-150x150.png" />
+    <Content Include="Content\icons\safari-pinned-tab.svg" />
     <Content Include="Content\img\action-icon-android.png" />
     <Content Include="Content\img\action-icon-ios6.png" />
     <Content Include="Content\img\action-icon-ios7.png" />
@@ -271,8 +267,7 @@
     <Content Include="Content\img\loading-green.gif" />
     <Content Include="Content\img\loading-white.gif" />
     <Content Include="Content\img\logo.png" />
-    <Content Include="Content\img\cursos\sem-imagem.png" />
-    <Content Include="Content\img\smart.png" />
+    <Content Include="Content\img\courses\no-image.png" />
     <Content Include="Content\jquery.dropdown\jquery.dropdown.css" />
     <Content Include="Content\listgroup.css" />
     <Content Include="Content\material-design\bootstrap-material-design.css" />
@@ -308,18 +303,10 @@
     <Content Include="Content\themes\notheme\jquery-ui.structure.css" />
     <Content Include="Content\themes\notheme\jquery-ui.structure.min.css" />
     <Content Include="Content\toastr\toastr.min.css" />
-    <Content Include="favicon-16x16.png" />
-    <Content Include="favicon-32x32.png" />
-    <Content Include="favicon-96x96.png" />
-    <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="ms-icon-144x144.png" />
-    <Content Include="ms-icon-150x150.png" />
-    <Content Include="ms-icon-310x310.png" />
-    <Content Include="ms-icon-70x70.png" />
     <Content Include="Scripts\addtohomescreen\addtohomescreen.js" />
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\bootstrap-datepicker\bootstrap-datepicker.js" />
@@ -338,10 +325,9 @@
     <Content Include="Content\material-design\ripples.css.map" />
     <Content Include="Content\material-design\ripples.min.css.map" />
     <Content Include="Content\material-kit\material-kit.css.map" />
-    <Content Include="manifest.json" />
-    <None Include="Properties\PublishProfiles\Homologacao.pubxml" />
-    <None Include="Properties\PublishProfiles\Produção.pubxml" />
+    <Content Include="Content\icons\site.webmanifest" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\classroomProxy.js" />
     <Content Include="Scripts\dropzone\dropzone.js" />
     <Content Include="Scripts\handlebars.amd.js" />
     <Content Include="Scripts\handlebars.amd.min.js" />
@@ -377,11 +363,13 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\momentjs\moment-with-locales.js" />
     <Content Include="Scripts\pace\pace.min.js" />
-    <Content Include="Scripts\paginacao.js" />
+    <Content Include="Scripts\pagination.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\slimscroll\jquery.slimscroll.min.js" />
     <Content Include="Scripts\toastr\toastr.min.js" />
+    <Content Include="Scripts\youtube.js" />
+    <Content Include="Scripts\vimeo.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -392,70 +380,77 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Senha.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Password.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Autenticacao\EsqueciMinhaSenha.cshtml" />
-    <Content Include="Views\Autenticacao\Login.cshtml" />
-    <Content Include="Views\Autenticacao\_Layout.cshtml" />
-    <Content Include="Views\Usuario\_ExibirCabecalhoAdministrador.cshtml" />
-    <Content Include="Views\Shared\_errosValidacao.cshtml" />
-    <Content Include="Views\Usuario\_ExibirCabecalhoAluno.cshtml" />
-    <Content Include="Views\Usuario\_ExibirCabecalhoProfessor.cshtml" />
-    <Content Include="Views\Shared\_AreaConhecimentoPanel.cshtml" />
-    <Content Include="Views\Shared\_AssuntoPanel.cshtml" />
-    <Content Include="Views\Shared\_CursoGroupItem.cshtml" />
-    <Content Include="Views\Curso\Index.cshtml" />
-    <Content Include="Views\Shared\_BuscaContextual.cshtml" />
-    <Content Include="Views\Aula\Index.cshtml" />
-    <Content Include="Views\Assunto\Index.cshtml" />
-    <Content Include="Views\Shared\_indiceAssunto.cshtml" />
-    <Content Include="Views\Shared\_indiceCurso.cshtml" />
-    <Content Include="Views\Shared\_PainelNovasAulas.cshtml" />
-    <Content Include="Views\Shared\_PainelUltimasAulas.cshtml" />
-    <Content Include="Views\Shared\_PainelAvisos.cshtml" />
-    <Content Include="Views\Autenticacao\AlterarSenha.cshtml" />
-    <Content Include="Views\Aluno\Create.cshtml" />
-    <Content Include="Views\Aluno\Edit.cshtml" />
-    <Content Include="Views\Aluno\IndexAdmin.cshtml" />
+    <Content Include="Views\Authentication\ForgotPassword.cshtml" />
+    <Content Include="Views\Authentication\Login.cshtml" />
+    <Content Include="Views\Authentication\_Layout.cshtml" />
+    <Content Include="Views\User\_AdminHeader.cshtml" />
+    <Content Include="Views\Shared\_ValidationErrors.cshtml" />
+    <Content Include="Views\User\_StudentHeader.cshtml" />
+    <Content Include="Views\User\_TeacherHeader.cshtml" />
+    <Content Include="Views\Shared\_KnowledgeAreaPanel.cshtml" />
+    <Content Include="Views\Shared\_SubjectPanel.cshtml" />
+    <Content Include="Views\Shared\_CourseGroupItem.cshtml" />
+    <Content Include="Views\Course\Index.cshtml" />
+    <Content Include="Views\Shared\_ContextualSearch.cshtml" />
+    <Content Include="Views\Class\Index.cshtml" />
+    <Content Include="Views\Subject\Index.cshtml" />
+    <Content Include="Views\Shared\_SubjectIndex.cshtml" />
+    <Content Include="Views\Shared\_CoursePanel.cshtml" />
+    <Content Include="Views\Shared\_NewClassesPanel.cshtml" />
+    <Content Include="Views\Shared\_LastClassesPanel.cshtml" />
+    <Content Include="Views\Shared\_NoticePanel.cshtml" />
+    <Content Include="Views\Authentication\ChangePassword.cshtml" />
+    <Content Include="Views\Student\Create.cshtml" />
+    <Content Include="Views\Student\Edit.cshtml" />
+    <Content Include="Views\Student\IndexAdmin.cshtml" />
     <Content Include="Views\Shared\_Alert.cshtml" />
-    <Content Include="Views\Aula\Ver.cshtml" />
-    <Content Include="Views\Shared\_listaAulas.cshtml" />
-    <Content Include="Views\Shared\_listaAulasPequena.cshtml" />
-    <Content Include="Views\Usuario\Historico.cshtml" />
-    <Content Include="Views\Aula\_formularioComentario.cshtml" />
-    <Content Include="Views\Shared\_sobre.cshtml" />
-    <Content Include="Views\Shared\_faleConosco.cshtml" />
-    <Content Include="Views\Aviso\Index.cshtml" />
-    <Content Include="Views\Shared\_paginacao.cshtml" />
+    <Content Include="Views\Class\Watch.cshtml" />
+    <Content Include="Views\Shared\_ClassList.cshtml" />
+    <Content Include="Views\Shared\_ClassListSmall.cshtml" />
+    <Content Include="Views\User\AccessHistory.cshtml" />
+    <Content Include="Views\Class\_CommentForm.cshtml" />
+    <Content Include="Views\Shared\_About.cshtml" />
+    <Content Include="Views\Shared\_TalkToUs.cshtml" />
+    <Content Include="Views\Notice\Index.cshtml" />
+    <Content Include="Views\Shared\_Pagination.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
-    <Content Include="Views\Professor\Create.cshtml" />
-    <Content Include="Views\Professor\Edit.cshtml" />
-    <Content Include="Views\Professor\IndexAdmin.cshtml" />
-    <Content Include="Views\Turma\Edit.cshtml" />
-    <Content Include="Views\Turma\Create.cshtml" />
-    <Content Include="Views\Turma\Planejamentos.cshtml" />
-    <Content Include="Views\AreaConhecimento\IndexAdmin.cshtml" />
-    <Content Include="Views\Assunto\IndexAdmin.cshtml" />
-    <Content Include="Views\Turma\IndexAdmin.cshtml" />
-    <Content Include="Views\Curso\IndexAdmin.cshtml" />
-    <Content Include="Views\AreaConhecimento\Create.cshtml" />
-    <Content Include="Views\AreaConhecimento\Edit.cshtml" />
-    <Content Include="Views\Assunto\Create.cshtml" />
-    <Content Include="Views\Assunto\Edit.cshtml" />
-    <Content Include="Views\Usuario\_Login.cshtml" />
-    <Content Include="Views\Aula\IndexAdmin.cshtml" />
-    <Content Include="Views\Curso\Create.cshtml" />
-    <Content Include="Views\Curso\Edit.cshtml" />
-    <Content Include="Views\Aula\Create.cshtml" />
-    <Content Include="Views\Aula\Edit.cshtml" />
+    <Content Include="Views\Teacher\Create.cshtml" />
+    <Content Include="Views\Teacher\Edit.cshtml" />
+    <Content Include="Views\Teacher\IndexAdmin.cshtml" />
+    <Content Include="Views\Classroom\Edit.cshtml" />
+    <Content Include="Views\Classroom\Create.cshtml" />
+    <Content Include="Views\Classroom\DeliveryPlan.cshtml" />
+    <Content Include="Views\KnowledgeArea\IndexAdmin.cshtml" />
+    <Content Include="Views\Subject\IndexAdmin.cshtml" />
+    <Content Include="Views\Classroom\IndexAdmin.cshtml" />
+    <Content Include="Views\Course\IndexAdmin.cshtml" />
+    <Content Include="Views\KnowledgeArea\Create.cshtml" />
+    <Content Include="Views\KnowledgeArea\Edit.cshtml" />
+    <Content Include="Views\Subject\Create.cshtml" />
+    <Content Include="Views\Subject\Edit.cshtml" />
+    <Content Include="Views\User\_Login.cshtml" />
+    <Content Include="Views\Class\IndexAdmin.cshtml" />
+    <Content Include="Views\Course\Create.cshtml" />
+    <Content Include="Views\Course\Edit.cshtml" />
+    <Content Include="Views\Class\Create.cshtml" />
+    <Content Include="Views\Class\Edit.cshtml" />
+    <Content Include="Views\Classroom\Index.cshtml" />
+    <Content Include="Views\Classroom\_StudentsListModal.cshtml" />
+    <Content Include="Views\Classroom\_CoursesListModal.cshtml" />
+    <Content Include="Views\Course\TeacherIndex.cshtml" />
+    <Content Include="Views\Shared\_MyCoursesPanel.cshtml" />
+    <Content Include="Views\Teacher\StudentsAccessHistory.cshtml" />
+    <Content Include="Views\Classroom\_DeliveryPlanHistory.cshtml" />
+    <Content Include="Views\Notice\Send.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\apoio\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -464,16 +459,15 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartLMS.DAL\SmartLMS.DAL.csproj">
       <Project>{3CADB06F-EF96-4C65-882E-1DE1F882A95F}</Project>
       <Name>SmartLMS.DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SmartLMS.Dominio\SmartLMS.Dominio.csproj">
-      <Project>{8AA461EA-0DB0-4DC3-84E8-63A286E73A95}</Project>
-      <Name>SmartLMS.Dominio</Name>
+    <ProjectReference Include="..\SmartLMS.Domain\SmartLMS.Domain.csproj">
+      <Project>{8aa461ea-0db0-4dc3-84e8-63a286e73a95}</Project>
+      <Name>SmartLMS.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -1,0 +1,63 @@
+﻿@using SmartLMS.Domain.Resources
+@model IEnumerable<NoticeViewModel>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Resource.NoticesPanelTitle</h3>
+    </div>
+    <div class="panel-body" style="min-height: 253px;" id="notice-panel-body">
+        @if (Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <div class="bs-component notice" data-id="@item.Id">
+                    <div class="alert alert-dismissible alert-default">
+                        <button type="button" class="close" aria-hidden="true">×</button>
+                        <div class="notice-datetime">@item.DateTimeDescription</div>
+                        <div class="notice-type">
+                            @if (item.DirectMessage)
+                            {
+                                <span class="label label-danger">@Resource.NoticeTypePersonal</span>
+                            }
+                            else if (!string.IsNullOrEmpty(item.ClassroomName))
+                            {
+                                <span class="label label-warning">@Resource.NoticeTypeClassroom @item.ClassroomName</span>
+                            }
+                            else
+                            {
+                                <span class="label label-info">@Resource.NoticeTypePublic</span>
+                            }
+                        </div>
+
+                        <div class="notice-text">@Html.Raw(item.Text)</div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center">@Resource.NoNotices</div>
+        }
+    </div>
+</div>
+
+
+<script id="notice-template" type="text/x-handlebars-template">
+    <div class="bs-component notice" data-id="{{Id}}">
+        <div class="alert alert-dismissible alert-default">
+            <button type="button" class="close" aria-hidden="true">×</button>
+            <div class="notice-datetime">{{DateTimeDescription}}</div>
+            <div class="notice-type">
+                {{#if DirectMessage}}
+                <span class="label label-danger">@Resource.NoticeTypePersonal</span>
+                {{else}}
+                    {{#if ClassroomName}}
+                <span class="label label-warning">@Resource.NoticeTypeClassroom {{ClassroomName}}</span>
+                    {{else}}
+                <span class="label label-info">@Resource.NoticeTypePublic</span>
+                    {{/if}}
+                {{/if}}
+            </div>
+            <div class="notice-text">{{{Text}}}</div>
+        </div>
+    </div>
+</script>

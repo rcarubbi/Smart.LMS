@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8AA461EA-0DB0-4DC3-84E8-63A286E73A95}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SmartLMS.Domain</RootNamespace>
+    <AssemblyName>SmartLMS.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Carubbi.DiffAnalyzer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.DiffAnalyzer.1.0.0.0\lib\net472\Carubbi.DiffAnalyzer.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.Extensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Extensions.1.0.0.0\lib\net472\Carubbi.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.GenericRepository, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.GenericRepository.1.4.0.0\lib\net45\Carubbi.GenericRepository.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.Mailer.Interfaces, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Mailer.Interfaces.1.2.0.0\lib\net472\Carubbi.Mailer.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.Security, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Security.1.0.0.0\lib\net472\Carubbi.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.ServiceLocator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.ServiceLocator.1.0.0.0\lib\net472\Carubbi.ServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="Carubbi.Utils, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Carubbi.Utils.1.4.3.0\lib\net45\Carubbi.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Humanizer, Version=2.1.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Humanizer.Core.2.1.0\lib\netstandard1.0\Humanizer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.5840.25917, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\LocalizedDescriptionAttribute.cs" />
+    <Compile Include="Attributes\LocalizedDisplayAttribute.cs" />
+    <Compile Include="Entities\Delivery\Classroom.cs" />
+    <Compile Include="Entities\History\FileAccess.cs" />
+    <Compile Include="Entities\Delivery\DeliveryPlan.cs" />
+    <Compile Include="Entities\Delivery\ClassroomCourse.cs" />
+    <Compile Include="Entities\UserAccess\Admin.cs" />
+    <Compile Include="Entities\UserAccess\Student.cs" />
+    <Compile Include="Entities\Communication\Comment.cs" />
+    <Compile Include="Entities\Communication\UserNotice.cs" />
+    <Compile Include="Entities\Content\KnowledgeArea.cs" />
+    <Compile Include="Entities\Content\File.cs" />
+    <Compile Include="Entities\Content\Subject.cs" />
+    <Compile Include="Entities\Content\Class.cs" />
+    <Compile Include="Entities\History\ClassAccess.cs" />
+    <Compile Include="Entities\Communication\Notice.cs" />
+    <Compile Include="Entities\Content\Course.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\ISearchResult.cs" />
+    <Compile Include="Entities\History\Log.cs" />
+    <Compile Include="Entities\Parameter.cs" />
+    <Compile Include="Entities\UserAccess\Role.cs" />
+    <Compile Include="Entities\UserAccess\Teacher.cs" />
+    <Compile Include="Entities\Content\ContentType.cs" />
+    <Compile Include="Entities\Delivery\ClassDeliveryPlan.cs" />
+    <Compile Include="Entities\UserAccess\User.cs" />
+    <Compile Include="IContexto.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ClassInfo.cs" />
+    <Compile Include="Repositories\CourseIndex.cs" />
+    <Compile Include="Repositories\ClassAccessRepository.cs" />
+    <Compile Include="Repositories\KnowledgeAreaRepository.cs" />
+    <Compile Include="Repositories\SubjectRepository.cs" />
+    <Compile Include="Repositories\ClassRepository.cs" />
+    <Compile Include="Repositories\NoticeRepository.cs" />
+    <Compile Include="Repositories\CourseRepository.cs" />
+    <Compile Include="Repositories\ParameterRepository.cs" />
+    <Compile Include="Repositories\ClassroomRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Resources\Resource.pt-BR.Designer.cs">
+      <DependentUpon>Resource.pt-BR.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Services\NotificationService.cs" />
+    <Compile Include="Services\AccessInfo.cs" />
+    <Compile Include="Services\NoticeInfo.cs" />
+    <Compile Include="Services\SearchResult.cs" />
+    <Compile Include="Services\AuthenticationService.cs" />
+    <Compile Include="Services\ContextualSearchService.cs" />
+    <Compile Include="Services\HistoryService.cs" />
+    <Compile Include="Services\NoticeType.cs" />
+    <Compile Include="Services\ResultType.cs" />
+    <Compile Include="Services\AccessType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Resource.pt-BR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.pt-BR.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,93 @@
+﻿@using SmartLMS.Domain.Resources
+@model UserViewModel
+
+@{
+    ViewBag.Title = Resource.CreateStudentPageTitle;
+}
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        @Resource.CreateStudentPageTitle
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Login, new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Login, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Login, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Password, new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Password, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Password, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ConfirmPassword, new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ConfirmPassword, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Email, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ClassroomId, new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-xs-10">
+                                @Html.DropDownListFor(model => model.ClassroomId, ViewBag.Classrooms as SelectList, Resource.SelectClassroom, new {@class = "form-control dropdownjs"})
+                            </div>
+                            <div class="col-xs-1">
+                                <a href="@Url.Action("Create", "Classroom")" class="btn btn-sm btn-info">
+                                    <i class="material-icons">group_add</i>
+                                </a>
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ClassroomId, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="fa fa-save"></i>
+                        </button>
+                        <a href="@ViewBag.BackURL" class="btn btn-simple btn-sm btn-default">@Resource.BackButton</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

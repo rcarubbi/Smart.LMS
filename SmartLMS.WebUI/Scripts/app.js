@@ -1,81 +1,87 @@
-﻿Handlebars.registerHelper("math", function (lvalue, operator, rvalue, options) {
-    lvalue = parseFloat(lvalue);
-    rvalue = parseFloat(rvalue);
+﻿Handlebars.registerHelper("math",
+    function(lvalue, operator, rvalue, options) {
+        lvalue = parseFloat(lvalue);
+        rvalue = parseFloat(rvalue);
 
-    return {
-        "+": lvalue + rvalue,
-        "-": lvalue - rvalue,
-        "*": lvalue * rvalue,
-        "/": lvalue / rvalue,
-        "%": lvalue % rvalue
-    }[operator];
-});
+        return {
+            "+": lvalue + rvalue,
+            "-": lvalue - rvalue,
+            "*": lvalue * rvalue,
+            "/": lvalue / rvalue,
+            "%": lvalue % rvalue
+        }[operator];
+    });
 
-Handlebars.registerHelper('times', function (n, block) {
-    var accum = '';
-    for (var i = 0; i < n; ++i)
-        accum += block.fn(i + 1);
-    return accum;
-});
+Handlebars.registerHelper("times",
+    function(n, block) {
+        var accum = "";
+        for (var i = 0; i < n; ++i)
+            accum += block.fn(i + 1);
+        return accum;
+    });
 
-Handlebars.registerHelper("greaterThan", function (value1, value2, options) {
-    if (value1 > value2)
-        return options.fn(this);
+Handlebars.registerHelper("greaterThan",
+    function(value1, value2, options) {
+        if (value1 > value2)
+            return options.fn(this);
 
-    return options.inverse(this);
-});
+        return options.inverse(this);
+    });
 
-Handlebars.registerHelper("lessThanOrEquals", function (value1, value2, options) {
-    if (value1 <= value2)
-        return options.fn(this);
-    return options.inverse(this);
-});
+Handlebars.registerHelper("lessThanOrEquals",
+    function(value1, value2, options) {
+        if (value1 <= value2)
+            return options.fn(this);
+        return options.inverse(this);
+    });
 
-Handlebars.registerHelper("equals", function (value1, value2, options) {
-    if (value1 == value2)
-        return options.fn(this);
+Handlebars.registerHelper("equals",
+    function(value1, value2, options) {
+        if (value1 == value2)
+            return options.fn(this);
 
-    return options.inverse(this);
-});
+        return options.inverse(this);
+    });
 
-Handlebars.registerHelper('for', function (from, to, incr, block) {
-    var accum = '';
-    for (var i = from; i < to; i += incr)
-        accum += block.fn(i);
-    return accum;
-});
+Handlebars.registerHelper("for",
+    function(from, to, incr, block) {
+        var accum = "";
+        for (var i = from; i < to; i += incr)
+            accum += block.fn(i);
+        return accum;
+    });
 
-Handlebars.registerHelper("toShortDateString", function(datetime) {
-    return moment(datetime).format("DD/MM/YYYY");
-})
+Handlebars.registerHelper("toShortDateString",
+    function(datetime) {
+        return moment(datetime).format("DD/MM/YYYY");
+    });
 
 
 SmartLMS.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
- 
 
 
-
-SmartLMS.App = (function () {
+SmartLMS.App = (function() {
     var $public = {}, $private = {};
-    $private.createAutoComplete = function () {
+    $private.createAutoComplete = function() {
         var $input = $(this);
         var options = {
             source: $input.attr("data-autocomplete"),
-            open: function () {
-                $('ul.ui-autocomplete').addClass('opened').css({ 'z-index': '1000' });
+            open: function() {
+                $("ul.ui-autocomplete").addClass("opened").css({ 'z-index': "1000" });
             },
-            close: function () { 
-                $('ul.ui-autocomplete').removeClass('opened').css({ 'display': 'block' });
-                setTimeout(function () {
-                    $('ul.ui-autocomplete').removeClass('opened').css({ 'z-index': '-1000' });
-                }, 250);
+            close: function() {
+                $("ul.ui-autocomplete").removeClass("opened").css({ 'display': "block" });
+                setTimeout(function() {
+                        $("ul.ui-autocomplete").removeClass("opened").css({ 'z-index': "-1000" });
+                    },
+                    250);
             },
         };
 
         $input.autocomplete(options);
-    }
+    };
 
-    $private.initializeToastr = function () {
+    $private.initializeToastr = function() {
         $public.toastr = toastr;
         $public.toastr.options = {
             "closeButton": true,
@@ -91,43 +97,44 @@ SmartLMS.App = (function () {
             "hideEasing": "linear",
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
-        }
+        };
     };
 
-    $private.initializeMultiselect = function () {
-        $(".multiselect").each(function (index, item) {
+    $private.initializeMultiselect = function() {
+        $(".multiselect").each(function(index, item) {
 
             $(item).multiselect({
                 enableFiltering: $(item).data("multiselect-filter") == "True",
                 enableClickableOptGroups: $(item).data("multiselect-group") == "True",
                 enableCollapsibleOptGroups: $(item).data("multiselect-group") == "True",
-                enableCaseInsensitiveFiltering:  $(item).data("multiselect-filter") == "True",
-                filterPlaceholder: 'Pesquisar',
-                nonSelectedText: 'Nenhum item selecionado',
-                nSelectedText: 'selecionado(s)',
-                allSelectedText: 'Todos',
-                buttonClass: 'btn btn-default',
-                maxHeight: '400',
+                enableCaseInsensitiveFiltering: $(item).data("multiselect-filter") == "True",
+                filterPlaceholder: "Search",
+                nonSelectedText: "No items selected",
+                nSelectedText: "selected(s)",
+                allSelectedText: "All",
+                buttonClass: "btn btn-default",
+                maxHeight: "400",
                 templates: {
-                    filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-sm btn-simple multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle"></i></button></span>',
+                    filterClearBtn:
+                        '<span class="input-group-btn"><button class="btn btn-default btn-sm btn-simple multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle"></i></button></span>',
                 }
             });
         });
     };
 
-    $private.initializeDropdownJs = function () {
+    $private.initializeDropdownJs = function() {
         $("select.dropdownjs").dropdownjs();
     };
 
-    $public.initializeCarouselMulti = function () {
-        $('.carousel[data-type="multi"] .item').each(function () {
+    $public.initializeCarouselMulti = function() {
+        $('.carousel[data-type="multi"] .item').each(function() {
             var next = jQuery(this).next();
             var maxItem = 3;
             if (!next.length) {
                 next = jQuery(this).parent().children(":first-child");
             }
             for (var i = 0; i < maxItem; i++) {
-                next.children(':first-child').clone().appendTo($(this));
+                next.children(":first-child").clone().appendTo($(this));
                 next = next.next();
                 if (!next.length) {
                     next = jQuery(this).parent().children(":first-child");
@@ -137,66 +144,64 @@ SmartLMS.App = (function () {
 
         $(".carousel-inner").swipe({
             //Generic swipe handler for all directions
-            swipeLeft: function (event, direction, distance, duration, fingerCount) {
-                $(this).parent().carousel('next');
+            swipeLeft: function(event, direction, distance, duration, fingerCount) {
+                $(this).parent().carousel("next");
             },
-            swipeRight: function () {
-                $(this).parent().carousel('prev');
-            },                
+            swipeRight: function() {
+                $(this).parent().carousel("prev");
+            },
             //Default is 75px, set to 0 for demo so any distance triggers swipe
             threshold: 0
         });
 
         $(".carousel-inner a").swipe({
-            tap: function () {
+            tap: function() {
                 document.location.href = $(this).attr("href");
             }
         });
     };
 
-    $public.initializeSlimControl = function (restart) {
+    $public.initializeSlimControl = function(restart) {
         if (!SmartLMS.isMobile) {
             if ($private.resize || restart) {
-                $('.sidebar-container').slimScroll({ destroy: true });
+                $(".sidebar-container").slimScroll({ destroy: true });
             }
-            $('.sidebar-container').slimScroll({
+            $(".sidebar-container").slimScroll({
                 height: window.innerHeight - $(".navbar").height() - $(".footer").height() - 40,
                 railOpacity: 0.4,
                 size: 10,
             });
             $private.resize = true;
-        }
-        else
-        {
-            $('.sidebar-container').css({
+        } else {
+            $(".sidebar-container").css({
                 "height": (window.innerHeight - $(".navbar").height() - $(".footer").height() - 40) + "px",
-                "overflow" : "auto"
+                "overflow": "auto"
             });
         }
     };
 
 
-    $public.AdicionarNotificacao = function (notificacao) {
-        $private.Notificacoes.push(notificacao);
+    $public.AddNotification = function(notification) {
+        $private.Notifications.push(notification);
     };
 
-    $public.InicializarControles = function () {
+    $public.InitControls = function() {
         $.material.checkbox();
-        for (var x = 0; x < $private.Notificacoes.length; x++)
-        {
-            $public.toastr[$private.Notificacoes[x].TipoMensagem]($private.Notificacoes[x].Mensagem, $private.Notificacoes[x].TituloMensagem);
+        for (var x = 0; x < $private.Notifications.length; x++) {
+            $public.toastr[$private.Notifications[x].MessageType]($private.Notifications[x].Message,
+                $private.Notifications[x].MessageTitle);
         }
-        $private.Notificacoes = [];
+        $private.Notifications = [];
     };
 
-    $private.resizeSlimControl = function () {
-        
-            if ($private.mhResizeTimeout) {
-                window.clearTimeout($private.mhResizeTimeout);
-            }
-            $private.mhResizeTimeout = 0;
-            $private.mhResizeTimeout = window.setTimeout(doResizeStuff, 100);
-        
+    $private.resizeSlimControl = function() {
+
+        if ($private.mhResizeTimeout) {
+            window.clearTimeout($private.mhResizeTimeout);
+        }
+        $private.mhResizeTimeout = 0;
+        $private.mhResizeTimeout = window.setTimeout(doResizeStuff, 100);
+
     };
 
     function doResizeStuff() {
@@ -204,12 +209,10 @@ SmartLMS.App = (function () {
         $public.initializeSlimControl(false);
     }
 
-    
 
-
-    $(function () {
-        $private.Notificacoes = [];
-        moment.locale('pt-br');
+    $(function() {
+        $private.Notifications = [];
+        moment.locale("en-gb");
 
         $.each($("input[data-autocomplete]"), $private.createAutoComplete);
         $private.initializeDropdownJs();
@@ -218,11 +221,12 @@ SmartLMS.App = (function () {
         $public.initializeSlimControl(false);
         $private.initializeMultiselect();
         $(window).on("resize", $private.resizeSlimControl);
-        
-        $(document).ajaxError(function (event, xhr, options, thrownError) {
-            var erro = $(xhr.responseText).filter("span").find("h2 > i").text();
-            if (erro != "")
-                $public.toastr["error"](erro, "Erro")
+
+        $(document).ajaxError(function(event, xhr, options, thrownError) {
+            var error = $(xhr.responseText).filter("span").find("h2 > i").text();
+            if (error !== "") {
+                $public.toastr["error"](error, "Error");
+            }
         });
     });
 
@@ -230,4 +234,3 @@ SmartLMS.App = (function () {
     return $public;
 
 }());
-

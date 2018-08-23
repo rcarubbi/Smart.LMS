@@ -1,0 +1,103 @@
+﻿@using SmartLMS.Domain.Resources
+@model ICollection<SmartLMS.Domain.Entities.Delivery.ClassroomCourse>
+
+@{
+    ViewBag.Title = Resource.DeliveryPlanPageTitle;
+}
+
+<div class="col-md-6">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">@Resource.DeliveryPlanPageTitle</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+            <div class="list-group">
+                @foreach (var item in Model)
+                {
+                    <h4>@item.Order - @item.Course.Name</h4>
+
+                    <div class="list-group">
+                        @foreach (var klass in item.Course.Classes.OrderBy(x => x.Order))
+                        {
+                            <div class="list-group-item list-group-item-sm">
+                                <div class="row-action-primary">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <div class="row-content">
+                                    <h5 class="class-name">@klass.Name</h5>
+                                    <label>@Resource.DaysToDeliverLabel: </label><span> @klass.DeliveryDays</span>
+                                </div>
+                            </div>
+                            <div class="list-group-separator list-group-separator-sm"></div>
+                        }
+                    </div>
+                }
+            </div>
+            <a href="@Request.UrlReferrer" class="btn btn-simple btn-sm btn-default">Back</a>
+        </div>
+    </div>
+</div>
+<div class="col-md-6">
+    @Html.Partial("_DeliveryPlanHistory")
+</div>
+
+
+@section scripts {
+    <script type="text/x-handlebars-template" id="delivery-plan-history-template">
+    {{#each Classes}}
+    <div class="list-group-item list-group-item-sm">
+        <div class="row-action-primary">
+            <i class="fa fa-laptop"></i>
+        </div>
+        <div class="row-content">
+            {{#unless Available}}
+            <label class="pull-right label label-default"><i class="fa fa-lock"></i></label>
+            {{/unless}}
+            <h5 class="class-name">
+                {{CourseOrder}}: {{CourseName}} - {{ClassOrder}}: {{ClassName}}
+            </h5>
+            <label>@Resource.DeliveryPlanDate: </label><span> {{toShortDateString DeliveryDate}}</span>
+        </div>
+    </div>
+    <div class="list-group-separator"></div>
+    {{/each}}
+</script>
+    <script>
+        SmartLMS.DeliveryPlanProxy = (function() {
+            $public = {}, $private = {};
+
+            $public.search = function(deliveryPlanStartDate, classroomId) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Classroom/DeliveryPlanHistory",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ deliveryPlanStartDate, classroomId })
+                });
+            };
+
+            return $public;
+        }());
+
+        (function(proxy) {
+            var $private = {}, $public = {};
+            $private.ClassroomId = '@Model.FirstOrDefault().ClassroomId';
+
+
+            $(function() {
+                $("#delivery-plan-filter-button").on("click", $private.search);
+                $private.DeliveryPlanHistoryTemplate = Handlebars.compile($("#delivery-plan-history-template").html());
+            });
+
+            $private.search = function() {
+                var startDate = $("#delivery-plan-start-date").val();
+                proxy.search(startDate, $private.ClassroomId).done($private.refreshResults);
+            };
+
+            $private.refreshResults = function(data) {
+                $("#delivery-plan-history-results").html($private.DeliveryPlanHistoryTemplate({ Classes: data }));
+            };
+
+        }(SmartLMS.DeliveryPlanProxy));
+    </script>
+}

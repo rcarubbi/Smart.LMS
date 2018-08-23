@@ -1,0 +1,66 @@
+﻿@using SmartLMS.Domain.Resources
+@model CourseViewModel
+@{
+    ViewBag.Title = Resource.CourseIndex + " - " + Model.Name;
+}
+<div class="col-md-8">
+    <div id="course-index-container">
+        @Html.Partial("_CoursePanel", Model)
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">@Resource.SeeOtherCourses</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+
+            @Html.DropDownList("otherCourses", ViewBag.OtherCourses as SelectList, Resource.SelectCourse, new {@class = "form-control dropdownjs"})
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        (function() {
+            $(function() {
+                var activeOption = $('<option>',
+                    {
+                        value: '@Model.Id',
+                        text: '@Html.Raw(Model.Name)'
+                    });
+
+                $("#otherCourses").on("dropdownjs.change",
+                    function() {
+                        var selectedItem = $(this).find("option:selected");
+                        var id = selectedItem.val();
+                        var text = selectedItem.text();
+                        if (id !== "") {
+                            $(this).append(activeOption);
+                            activeOption = $('<option>',
+                                {
+                                    value: id,
+                                    text: text
+                                });
+
+                            selectedItem.remove();
+                            $(this).dropdownjs();
+
+                            $("#course-index-container").fadeOut("fast",
+                                null,
+                                function() {
+                                    $("#course-index-container").load(SmartLMS.api + "Class/CoursePanel/" + id,
+                                        null,
+                                        function() {
+                                            $("#course-index-container").fadeIn();
+                                            $.material.init();
+                                            $('[data-toggle="tooltip"]').tooltip();
+                                        });
+                                });
+                        }
+                    });
+            });
+        }());
+
+    </script>
+}

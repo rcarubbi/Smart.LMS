@@ -1,0 +1,273 @@
+﻿@using SmartLMS.Domain.Resources
+@model Carubbi.GenericRepository.PagedListResult<UserViewModel>
+
+@{
+    ViewBag.Title = Resource.TeacherManagementPageTitle;
+}
+
+@section styles {
+    <style type="text/css">
+        .checkbox { margin: 0px; }
+
+        .form-group { margin-top: 10px !important; }
+    </style>
+}
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        @Resource.TeacherManagementPageTitle
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <a href="@Url.Action("Create")" class="btn btn-sm btn-info">
+                    <i class="material-icons">person_add</i>
+                </a>
+            </div>
+            <div class="col-md-6 pull-right">
+                <div class="col-md-3">
+                    <div class="form-group label-static is-empty">
+                        <label for="SearchField" class="control-label">@Resource.SearchByLabel</label>
+                        @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new {@class = "form-control dropdownjs"})
+                    </div>
+                </div>
+                <div class="form-group label-floating is-empty col-md-9">
+                    <label class="control-label" for="q">@Resource.AdminSearchText</label>
+                    <div class="input-group" style="display: block">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input type="search" name="term" id="term" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-sm" id="filter-button">
+                                    <i class="material-icons">search</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    @Html.DisplayName(Resource.TeacherNameFieldName)
+                </th>
+                <th>
+                    @Html.DisplayName(Resource.TeacherEmailFieldName)
+                </th>
+                <th class="hidden-sm  hidden-xs">
+                    @Html.DisplayName(Resource.ActiveFieldName)
+                </th>
+
+                <th class="hidden-sm  hidden-xs">
+                    @Html.DisplayName(Resource.CreatedAtFieldName)
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="result-container">
+            @foreach (var item in Model.Entities)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td class="hidden-sm  hidden-xs">
+                        @Html.DisplayFor(modelItem => item.Active)
+                    </td>
+
+                    <td class="hidden-sm  hidden-xs">
+                        @item.CreatedAt.ToShortDateString()
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                            <a href="@Url.Action("Edit", new {item.Id})" class="btn btn-success btn-sm">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="@item.Id" data-name="@item.Name">
+                                <i class="material-icons">delete</i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+            @if (!Model.Entities.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-center">
+                        @Resource.NoTeachers
+                    </td>
+                </tr>
+            }
+
+        </table>
+        @Html.Partial("_Pagination")
+    </div>
+</div>
+
+<div class="modal fade" id="deleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="@Resource.DeleteTeacherConfirmationTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">@Resource.DeleteTeacherConfirmationTitle</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-delete-agree" data-dismiss="modal">
+                    <i class="fa fa-thumbs-up"></i>
+                </button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    <i class="fa fa-thumbs-down"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/pagination.js"></script>
+    <script type="text/x-handlebars-template" id="result-template">
+        {{#each Entities}}
+        <tr>
+            <td>
+                {{Name}}
+            </td>
+            <td>
+                {{Email}}
+            </td>
+            <td class="hidden-sm hidden-xs">
+                <div class="checkbox">
+                    <label>
+                        <input name="Active" type="checkbox" disabled {{#if Active}} checked {{/if}}>
+                    </label>
+                </div>
+            </td>
+           
+            <td class="hidden-sm  hidden-xs">
+                {{toShortDateString CreatedAt}}
+            </td>
+            <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                    <a href="@Url.Content("~/Teacher/Edit/"){{Id}}" class="btn btn-success btn-sm">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="{{Id}}" data-name="{{Name}}">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+        {{#equals Count 0}}
+        <tr>
+            <td colspan="5" class="text-center">
+                @Resource.NoTeachers
+            </td>
+        </tr>
+        {{/equals}}
+    </script>
+    <script>
+        SmartLMS.TeacherProxy = (function() {
+            $public = {}, $private = {};
+
+
+            $public.search = function(term, searchFieldname, page) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Teacher/Search",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ term, searchFieldname, page })
+                });
+            };
+
+            $public.delete = function(id) {
+                return $.ajax({
+                    type: "POST",
+                    url: SmartLMS.api + "Teacher/Delete",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ id })
+                });
+            };
+
+            return $public;
+        }());
+
+        (function(proxy) {
+            var $private = {}, $public = {};
+
+            $(function() {
+                SmartLMS.Pagination.init({
+                    onPageChanged: $private.changePage,
+                });
+                $private.SearchFieldName = "@Resource.TeacherNameFieldName";
+
+
+                $("#SearchField").on("dropdownjs.change",
+                    function() {
+                        var selectedItem = $(this).find("option:selected");
+                        $private.SearchFieldName = selectedItem.val();
+
+                    });
+                $("#filter-button").on("click", $private.search);
+                $("#deleteConfirmation").on("click", ".btn-delete-agree", $private.delete);
+                $(document).on("click", "#result-container .btn-delete", $private.deleteConfirmation);
+            });
+
+
+            $private.delete = function() {
+                var id = $(this).parent().parent().find(".modal-body").data("id");
+
+                SmartLMS.App.AddNotification({
+                    MessageTitle: '@Resource.TeacherManagementToastrTitle',
+                    Message: '@Resource.TeacherDeletedToastrMessage',
+                    MessageType: 'error'
+                });
+
+                proxy.delete(id).done($private.search);
+
+            };
+
+
+            $private.deleteConfirmation = function(e) {
+                e.preventDefault();
+
+                var teacher = {
+                    id: $(this).data("id"),
+                    name: $(this).data("name")
+                };
+                $("#deleteConfirmation").find(".modal-body").data("id", teacher.id);
+                $("#deleteConfirmation").find(".modal-body")
+                    .html("<p>@Resource.DeleteTeacherConfirmationText " + teacher.name + "?</p>");
+                $("#deleteConfirmation").modal();
+            };
+
+            $private.changePage = function(page) {
+                var term = $("#term").val();
+                return proxy.search(term, $private.SearchFieldName, page);
+            };
+
+
+            $private.search = function() {
+                SmartLMS.Pagination.CurrentPage = 1;
+                var term = $("#term").val();
+                $.when(proxy.search(term, $private.SearchFieldName, SmartLMS.Pagination.CurrentPage))
+                    .then(SmartLMS.Pagination.refreshResults)
+                    .then(SmartLMS.App.InitControls);
+            };
+        }(SmartLMS.TeacherProxy));
+    </script>
+}

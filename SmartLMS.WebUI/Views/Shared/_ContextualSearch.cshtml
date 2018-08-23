@@ -1,0 +1,80 @@
+﻿@using SmartLMS.Domain.Resources
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="content">
+
+                <div class="form-group label-floating is-empty">
+                    <label class="control-label" for="q">@Resource.SearchBarText</label>
+                    <div class="input-group" style="display: block">
+                        <div class="row">
+                            <div class="col-md-11 col-sm-10 col-xs-9">
+                                <input type="search" id="q" class="form-control" data-autocomplete="@Url.Action("ContextualSearch", "Home")" name="q">
+                            </div>
+                            <div class="col-xs-1">
+                                <button type="submit" class="btn btn-primary btn-fab btn-fab-mini btn-round" id="contextual-search-button">
+                                    <i class="material-icons">search</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="search-results-container" style="display: none;">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script id="search-results-template" type="text/x-handlebars-template">
+    {{#equals pageCount 0}}
+    <h4>@Html.Raw(Resource.NoSearchResultsMessage)</h4>
+    {{else}}
+    {{#equals pageCount 1}}
+    <h4>@Html.Raw(Resource.OnePageResultMessage) </h4>
+    {{else}}
+    <h4>@Html.Raw(Resource.ManyPagesResultMessage)</h4>
+    {{/equals}}
+    {{/equals}}
+    <div class="bs-component">
+        <div class="list-group">
+            {{#each searchResults}}
+            <div class="list-group-item list-group-item-sm">
+                <a href="@Url.Content("~/"){{Link}}" class='link-group-item'>
+                    <div class="row-action-primary">
+                        <i class="fa {{Icon}}"></i>
+                    </div>
+                    <div class="row-content">
+                        <div class="action-secondary"><i class="material-icons">{{Status}}</i></div>
+                        <h4 class="list-group-item-heading">{{Description}}</h4>
+                        <p class="list-group-item-text">{{TypeDescription}}</p>
+                    </div>
+                </a>
+            </div>
+            <div class="list-group-separator list-group-separator-sm"></div>
+            {{/each}}
+        </div>
+    </div>
+    <div class="text-center">
+        <ul class="pagination pagination-primary">
+            {{#if hasPrevious}}
+            <li><a class="contextual-search-pagination-previous" href="javascript:void(0);">@Html.Raw(Resource.PreviousPage)</a></li>
+            {{/if}}
+
+            {{#for minPage maxPage 1}}
+            {{#equals this @@root.currentPage}}
+                    <li class="active">
+                {{else}}
+                    <li>
+                {{/equals}}
+                    <a href="javascript:void(0);" class="contextual-search-pagination-pagenumber">{{this}}</a>
+                </li>
+            {{/for}}
+            {{#if hasNext}}
+            <li><a class="contextual-search-pagination-next" href="javascript:void(0);">@Html.Raw(Resource.NextPage)</a></li>
+            {{/if}}
+        </ul>
+    </div>
+</script>
