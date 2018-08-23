@@ -12,6 +12,5 @@ An open-source Learning Management System
 
 > The default admin credentials are:
 
-> username: administrator@yourcompany.com
-> password: smart123
-
+username: administrator@yourcompany.com
+password: smart123
