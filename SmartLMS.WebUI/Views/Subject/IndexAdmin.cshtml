@@ -1,18 +1,15 @@
 ﻿@using SmartLMS.Domain.Resources
-@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.SubjectViewModel>
+@model Carubbi.GenericRepository.PagedListResult<SubjectViewModel>
 
 @{
     ViewBag.Title = Resource.SubjectManagementPageTitle;
 }
+
 @section styles {
     <style type="text/css">
-        .checkbox {
-            margin: 0px;
-        }
+        .checkbox { margin: 0px; }
 
-        .form-group {
-            margin-top: 10px !important;
-        }
+        .form-group { margin-top: 10px !important; }
     </style>
 }
 
@@ -24,18 +21,20 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-5">
-                <a href="@Url.Action("Create")" class="btn btn-sm btn-info"><i class="fa fa-plus" style="font-size: 10px; top: 0px; "></i> <i class="fa fa-map"></i> </a>
+                <a href="@Url.Action("Create")" class="btn btn-sm btn-info">
+                    <i class="fa fa-plus" style="font-size: 10px; top: 0px;"></i> <i class="fa fa-map"></i>
+                </a>
             </div>
             <div class="col-md-7 pull-right">
                 <div class="col-md-4">
                     <div class="form-group label-static is-empty">
                         <label for="SearchField" class="control-label">@Resource.SearchByLabel</label>
-                        @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new { @class = "form-control dropdownjs" })
+                        @Html.DropDownList("SearchField", ViewBag.SearchFields as SelectList, new {@class = "form-control dropdownjs"})
                     </div>
                 </div>
                 <div class="form-group label-floating is-empty col-md-7">
                     <label class="control-label" for="q">@Resource.AdminSearchText</label>
-                    <div class="input-group" style="display:block">
+                    <div class="input-group" style="display: block">
                         <div class="row">
                             <div class="col-md-10">
                                 <input type="search" name="term" id="term" class="form-control">
@@ -52,57 +51,56 @@
         </div>
         <table class="table">
             <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayName(Resource.OrderFieldName)
-                    </th>
-                    <th>
-                        @Html.DisplayName(Resource.SubjectNameFieldName)
-                    </th>
-                    <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName(Resource.KnowledgeAreaName)
-                    </th>
-                    <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName(Resource.ActiveFieldName)
-                    </th>
-                    <th class="hidden-sm  hidden-xs">
-                        @Html.DisplayName(Resource.CreatedAtFieldName)
-                    </th>
-                    <th></th>
-                </tr>
+            <tr>
+                <th>
+                    @Html.DisplayName(Resource.OrderFieldName)
+                </th>
+                <th>
+                    @Html.DisplayName(Resource.SubjectNameFieldName)
+                </th>
+                <th class="hidden-sm  hidden-xs">
+                    @Html.DisplayName(Resource.KnowledgeAreaName)
+                </th>
+                <th class="hidden-sm  hidden-xs">
+                    @Html.DisplayName(Resource.ActiveFieldName)
+                </th>
+                <th class="hidden-sm  hidden-xs">
+                    @Html.DisplayName(Resource.CreatedAtFieldName)
+                </th>
+                <th></th>
+            </tr>
             </thead>
             <tbody id="result-container">
-                @foreach (var item in Model.Entities)
-                {
-
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Order)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td class="hidden-sm  hidden-xs">
-                            @Html.DisplayFor(modelItem => item.KnowledgeAreaName)
-                        </td>
-                        <td class="hidden-sm  hidden-xs">
-                            @Html.DisplayFor(modelItem => item.Active)
-                        </td>
-                        <td class="hidden-sm  hidden-xs">
-                            @item.CreatedAt.ToShortDateString()
-                        </td>
-                        <td>
-                            <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
-                                <a href="@Url.Action("Edit", new { Id = item.Id })" class="btn btn-success btn-sm">
-                                    <i class="material-icons">edit</i>
-                                </a>
-                                <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="@item.Id" data-name="@item.Name">
-                                    <i class="material-icons">delete</i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
+            @foreach (var item in Model.Entities)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Order)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td class="hidden-sm  hidden-xs">
+                        @Html.DisplayFor(modelItem => item.KnowledgeAreaName)
+                    </td>
+                    <td class="hidden-sm  hidden-xs">
+                        @Html.DisplayFor(modelItem => item.Active)
+                    </td>
+                    <td class="hidden-sm  hidden-xs">
+                        @item.CreatedAt.ToShortDateString()
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
+                            <a href="@Url.Action("Edit", new {item.Id})" class="btn btn-success btn-sm">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <a href="javascript:void(0);" class="btn btn-danger btn-sm btn-delete" data-id="@item.Id" data-name="@item.Name">
+                                <i class="material-icons">delete</i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
             </tbody>
             @if (!Model.Entities.Any())
             {
@@ -131,8 +129,12 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success btn-delete-agree" data-dismiss="modal"><i class="fa fa-thumbs-up"></i></button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-thumbs-down"></i></button>
+                <button type="button" class="btn btn-success btn-delete-agree" data-dismiss="modal">
+                    <i class="fa fa-thumbs-up"></i>
+                </button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    <i class="fa fa-thumbs-down"></i>
+                </button>
             </div>
 
         </div>
@@ -184,11 +186,11 @@
         {{/equals}}
     </script>
     <script>
-        SmartLMS.SubjectProxy = (function () {
+        SmartLMS.SubjectProxy = (function() {
             $public = {}, $private = {};
 
 
-            $public.search = function (term, searchFieldname, page) {
+            $public.search = function(term, searchFieldname, page) {
                 return $.ajax({
                     type: "POST",
                     url: SmartLMS.api + "Subject/Search",
@@ -198,7 +200,7 @@
                 });
             };
 
-            $public.delete = function (id) {
+            $public.delete = function(id) {
                 return $.ajax({
                     type: "POST",
                     url: SmartLMS.api + "Subject/Delete",
@@ -210,20 +212,21 @@
             return $public;
         }());
 
-        (function (proxy) {
+        (function(proxy) {
             var $private = {}, $public = {};
 
-            $(function () {
+            $(function() {
 
                 SmartLMS.Pagination.init({
                     onPageChanged: $private.changePage,
                 });
                 $private.SearchFieldName = "@Resource.SubjectNameFieldName";
 
-                $("#SearchField").on("dropdownjs.change", function () {
-                    var selectedItem = $(this).find("option:selected");
-                    $private.SearchFieldName = selectedItem.val();
-                });
+                $("#SearchField").on("dropdownjs.change",
+                    function() {
+                        var selectedItem = $(this).find("option:selected");
+                        $private.SearchFieldName = selectedItem.val();
+                    });
 
                 $("#filter-button").on("click", $private.search);
                 $("#deleteConfirmation").on("click", ".btn-delete-agree", $private.delete);
@@ -231,12 +234,12 @@
             });
 
 
-            $private.changePage = function (page) {
+            $private.changePage = function(page) {
                 var term = $("#term").val();
                 return proxy.search(term, $private.SearchFieldName, page);
             };
 
-            $private.delete = function () {
+            $private.delete = function() {
                 var id = $(this).parent().parent().find(".modal-body").data("id");
                 SmartLMS.App.AddNotification({
                     MessageTitle: '@Resource.ContentManagementToastrTitle',
@@ -246,7 +249,7 @@
                 proxy.delete(id).done($private.search);
             };
 
-            $private.deleteConfirmation = function (e) {
+            $private.deleteConfirmation = function(e) {
                 e.preventDefault();
 
                 var subject = {
@@ -254,11 +257,12 @@
                     name: $(this).data("name")
                 };
                 $("#deleteConfirmation").find(".modal-body").data("id", subject.id);
-                $("#deleteConfirmation").find(".modal-body").html("<p>@Resource.DeleteSubjectConfirmationText " + subject.name + "?</p>");
+                $("#deleteConfirmation").find(".modal-body")
+                    .html("<p>@Resource.DeleteSubjectConfirmationText " + subject.name + "?</p>");
                 $("#deleteConfirmation").modal();
             };
- 
-            $private.search = function () {
+
+            $private.search = function() {
                 SmartLMS.Pagination.CurrentPage = 1;
                 var term = $("#term").val();
                 $.when(proxy.search(term, $private.SearchFieldName, SmartLMS.Pagination.CurrentPage))

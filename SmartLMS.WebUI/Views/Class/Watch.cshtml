@@ -1,26 +1,26 @@
-﻿@using SmartLMS.Domain.Entities
-@using SmartLMS.Domain.Entities.Content
+﻿@using SmartLMS.Domain.Entities.Content
 @using SmartLMS.Domain.Resources
-@model SmartLMS.WebUI.Models.ClassViewModel
+@model ClassViewModel
 @{
     ViewBag.Title = Resource.ClassName + " " + Model.Name;
 }
+
 @section styles {
     <style type="text/css">
         .videoWrapper {
-            position: relative;
+            height: 0;
             padding-bottom: 56.25%; /* 16:9 */
             padding-top: 25px;
-            height: 0;
+            position: relative;
         }
 
-            .videoWrapper iframe {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-            }
+        .videoWrapper iframe {
+            height: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
     </style>
 }
 
@@ -29,79 +29,80 @@
         <div class="content">
             <h2 class="index-title">
                 @Model.Name
-            @if (Model.Editable)
-            {
-                <a href="@Url.Action("Edit", "Class", new { Id = Model.Id })">
-                    <i class="fa fa-pencil"></i>
-                </a>
-            }
-        </h2>
-        @{
-            var url = string.Empty;
-        }
-        @switch (@Model.ContentType)
-        {
-            case ContentType.Vimeo:
-                url = "http://player.vimeo.com/video/" + Model.Content;
-
-                break;
-            case ContentType.YouTube:
-                url = "http://www.youtube.com/embed/" + Model.Content + "?enablejsapi=1&rel=0&showinfo=controls=0&showinfo=0";
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-        <div class="videoWrapper">
-            <iframe id="videoFrame"
-                    src="@url"
-                    frameborder="0"
-                    webkitAllowFullScreen
-                    mozallowfullscreen
-                    allowfullscreen></iframe>
-        </div>
-    </div>
-</div>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h3 class="panel-title">@Resource.FilePlural</h3>
-    </div>
-    <div class="panel-body panel-body-no-margin">
-        <div class="bs-component">
-            <div class="list-group">
-                @foreach (var item in Model.Files)
+                @if (Model.Editable)
                 {
-                    <div class="list-group-item list-group-item-sm">
-
-                        <a href="@Url.Action("Download", "Class", new { Id = item.Id })" class='link-group-item'>
-                            <div class="row-action-primary">
-                                <i class="fa fa-file"></i>
-                            </div>
-                            <div class="row-content">
-                                <h5 class="list-group-item-heading">@item.Name</h5>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="list-group-separator list-group-separator-sm"></div>
+                    <a href="@Url.Action("Edit", "Class", new {Model.Id})">
+                        <i class="fa fa-pencil"></i>
+                    </a>
                 }
+            </h2>
+            @{
+                var url = string.Empty;
+            }
+            @switch (Model.ContentType)
+            {
+                case ContentType.Vimeo:
+                    url = "http://player.vimeo.com/video/" + Model.Content;
+
+                    break;
+                case ContentType.YouTube:
+                    url = "http://www.youtube.com/embed/" + Model.Content + "?enablejsapi=1&rel=0&showinfo=controls=0&showinfo=0";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            <div class="videoWrapper">
+                <iframe id="videoFrame"
+                        src="@url"
+                        frameborder="0"
+                        webkitAllowFullScreen
+                        mozallowfullscreen
+                        allowfullscreen>
+                </iframe>
             </div>
         </div>
     </div>
-</div>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h3 class="panel-title">@Resource.CommentsTitle</h3>
-    </div>
-    <div class="panel-body panel-body-no-margin">
-        @Html.Partial("_CommentForm", new SmartLMS.WebUI.Models.CommentViewModel() { ClassId = Model.Id })
-        <div class="bs-component" id="comments-container" style="max-height: 655px; overflow-x: auto">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">@Resource.FilePlural</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+            <div class="bs-component">
+                <div class="list-group">
+                    @foreach (var item in Model.Files)
+                    {
+                        <div class="list-group-item list-group-item-sm">
 
-            <div class="list-group" id="comments-list">
-
+                            <a href="@Url.Action("Download", "Class", new {item.Id})" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-file"></i>
+                                </div>
+                                <div class="row-content">
+                                    <h5 class="list-group-item-heading">@item.Name</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator list-group-separator-sm"></div>
+                    }
+                </div>
             </div>
-            <div id="no-results" class="text-primary text-center" style="display:none;">@Resource.NoMoreComments</div>
         </div>
     </div>
-</div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">@Resource.CommentsTitle</h3>
+        </div>
+        <div class="panel-body panel-body-no-margin">
+            @Html.Partial("_CommentForm", new CommentViewModel {ClassId = Model.Id})
+            <div class="bs-component" id="comments-container" style="max-height: 655px; overflow-x: auto">
+
+                <div class="list-group" id="comments-list">
+
+                </div>
+                <div id="no-results" class="text-primary text-center" style="display: none;">@Resource.NoMoreComments</div>
+            </div>
+        </div>
+    </div>
 
 </div>
 <div class="col-md-4">
@@ -110,17 +111,16 @@
             <h3 class="panel-title">@Resource.NextClasses</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
-            @Html.Action("ClassListSmall", new { Id = Model.CourseId, CurrentClassId = Model.Id })
+            @Html.Action("ClassListSmall", new {Id = Model.CourseId, CurrentClassId = Model.Id})
             <div class="text-center">
-                <a href="@Url.Action("Index", "Class", new { Id = Model.CourseId })" class="btn btn-simple">
-                    <i class="material-icons">reply</i>  @Resource.BackToIndex
+                <a href="@Url.Action("Index", "Class", new {Id = Model.CourseId})" class="btn btn-simple">
+                    <i class="material-icons">reply</i> @Resource.BackToIndex
                 </a>
             </div>
         </div>
     </div>
 
 </div>
-
 
 
 <script id="comment-template" type="text/x-handlebars-template">
@@ -146,12 +146,12 @@
 
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @if (@Model.ContentType == ContentType.Vimeo)
+    @if (Model.ContentType == ContentType.Vimeo)
     {
         <script src="https://player.vimeo.com/api/player.js"></script>
         <script src="~/Scripts/vimeo.js"></script>
         <script>
-            $(function () {
+            $(function() {
 
                 var vimeoPlayer = SmartLMS.Vimeo(Vimeo);
                 vimeoPlayer.initialize('@Model.Id', '@Url.Action("UpdateProgress", "Class")', '@Model.WatchedSeconds');
@@ -166,8 +166,11 @@
             $(function() {
                 var youtubePlayer = SmartLMS.Youtube(YT);
                 YT.ready(onYouTubeIframeAPIReady);
+
                 function onYouTubeIframeAPIReady() {
-                    youtubePlayer.initialize('@Model.Id', '@Url.Action("UpdateProgress", "Class")', '@Model.WatchedSeconds');
+                    youtubePlayer.initialize('@Model.Id',
+                        '@Url.Action("UpdateProgress", "Class")',
+                        '@Model.WatchedSeconds');
                 }
             })
         </script>
@@ -231,8 +234,6 @@
                 }
 
 
-
-
                 $private.CommentTemplate = Handlebars.compile($("#comment-template").html());
                 $private.CurrentPage = 1;
                 proxy.listComments($private.CurrentPage).done($private.showComments);
@@ -260,8 +261,8 @@
                 proxy.delete(commentId).always(function() {
                     $private.CurrentPage = 1;
                     proxy.listComments($private.CurrentPage).done($private.showComments);
-                })
-            }
+                });
+            };
 
             $private.loadCommentsPage = function(e) {
                 if ($("#comments-container").scrollTop() + $("#comments-container").innerHeight() >=
@@ -277,7 +278,7 @@
                 } else {
                     $("#comments-list").append($private.CommentTemplate({ Comments: data }));
                 }
-            }
+            };
 
             $private.showComments = function(data) {
                 $("#comments-list").html($private.CommentTemplate({ Comments: data }));

@@ -3,61 +3,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="x-ua-compatible" content="IE=10">
     <title>@Parameter.APP_NAME - @ViewBag.Title</title>
-    <link rel="shortcut icon" href="~/Content/icons/icon-72x72.png" type="image/x-icon" />
-    <link rel="icon" href="~/Content/icons/icon-72x72.png" type="image/ico" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
-    <!-- for ios 7 style, multi-resolution icon of 152x152 -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
-    <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="description" content="Learning Management System">
-    <meta property="og:title" content="@Parameter.APP_NAME - Powered by Smart LMS" />
-    <meta property="og:url" content="@Parameter.BASE_URL" />
+    <meta property="og:title" content="@Parameter.APP_NAME - Powered by Smart LMS"/>
+    <meta property="og:url" content="@Parameter.BASE_URL"/>
     <meta property="og:description" content="Learning Management System">
     <meta property="og:image" content="~/Content/icons/icon-384x384.png">
-    <meta property="og:locale" content="en_GB" />
-    <meta property="og:locale:alternate" content="pt_BR" />
+    <meta property="og:locale" content="en_GB"/>
+    <meta property="og:locale:alternate" content="pt_BR"/>
 
-    <link rel="apple-touch-icon" sizes="72x72" href="~/Content/icons/icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="96x96" href="~/Content/icons/icon-96x96.png">
-    <link rel="apple-touch-icon" sizes="128x128" href="~/Content/icons/icon-128x128.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="~/Content/icons/icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="~/Content/icons/icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="~/Content/icons/icon-192x192.png">
-    <link rel="apple-touch-icon" sizes="384x384" href="~/Content/icons/icon-384x384.png">
-    <link rel="apple-touch-icon" sizes="512x512" href="~/Content/icons/icon-512x512.png">
-    <link rel="icon" type="image/png" sizes="72x72" href="~/Content/icons/icon-72x72.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="~/Content/icons/icon-96x96.png">
-    <link rel="icon" type="image/png" sizes="128x128" href="~/Content/icons/icon-128x128.png">
-    <link rel="icon" type="image/png" sizes="144x144" href="~/Content/icons/icon-144x144.png">
-    <link rel="icon" type="image/png" sizes="152x152" href="~/Content/icons/icon-152x152.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="~/Content/icons/icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="384x384" href="~/Content/icons/icon-384x384.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="~/Content/icons/icon-512x512.png">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="~/Content/icons/icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/Content/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/Content/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/Content/icons/favicon-16x16.png">
+    <link rel="manifest" href="~/Content/icons/site.webmanifest">
+    <link rel="mask-icon" href="~/Content/icons/safari-pinned-tab.svg" color="#7f1887">
+    <meta name="msapplication-TileColor" content="#7f1887">
+    <meta name="theme-color" content="#7f1887">
 
     <script src="~/Scripts/pace/pace.min.js"></script>
     @{
-        string actionName = ViewContext.RouteData.Values["action"].ToString();
-        string controllerName = ViewContext.RouteData.Values["controller"].ToString();
+        var actionName = ViewContext.RouteData.Values["action"].ToString();
+        var controllerName = ViewContext.RouteData.Values["controller"].ToString();
     }
     @if (actionName == "Index" && controllerName == "Home")
     {
-        <link href="~/content/pace/green-loading-bar.css" rel="stylesheet" />
+        <link href="~/content/pace/green-loading-bar.css" rel="stylesheet"/>
     }
     else
     {
-        <link href="~/content/pace/green-minimal.css" rel="stylesheet" />
+        <link href="~/content/pace/green-minimal.css" rel="stylesheet"/>
     }
     <script>
         var SmartLMS = {};
@@ -68,93 +47,95 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/csscustom")
     @Scripts.Render("~/bundles/modernizr")
-    @RenderSection("styles", required: false)
-    <base href="@HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")" />
+    @RenderSection("styles", false)
+    <base href="@HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")"/>
 </head>
 <body>
 
-    @Html.Action("Header", "User")
-    <div class="sidebar-container">
-        <div class="container">
-            @RenderBody()
+@Html.Action("Header", "User")
+<div class="sidebar-container">
+    <div class="container">
+        @RenderBody()
 
+    </div>
+</div>
+
+<footer class="footer footer-black">
+    <div class="container">
+        <div class="col-sm-3">
+            <nav class="pull-left">
+                <ul>
+                    <li>
+                        Smart 2.0 - LMS
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-sm-9">
+            <div class="copyright pull-right">
+                © 2016, @Resource.MadeWithLoveMessage <i class="fa fa-heart heart"></i> @Resource.MadeBy <a href="http://www.github.com/rcarubbi" target="_blank">Raphael Carubbi</a>
+            </div>
         </div>
     </div>
+</footer>
 
-    <footer class="footer footer-black">
-        <div class="container">
-            <div class="col-sm-3">
-                <nav class="pull-left">
-                    <ul>
-                        <li>
-                            Smart 2.0 - LMS
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="col-sm-9">
-                <div class="copyright pull-right">
-                    © 2016, @Resource.MadeWithLoveMessage <i class="fa fa-heart heart"></i> @Resource.MadeBy <a href="http://www.github.com/rcarubbi" target="_blank">Raphael Carubbi</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/data")
-    @Scripts.Render("~/bundles/bootstrap")
-    <script>
-        SmartLMS.LoggedUserId = '@ViewBag.LoggedUserId';
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/data")
+@Scripts.Render("~/bundles/bootstrap")
+<script>
+    SmartLMS.LoggedUserId = '@ViewBag.LoggedUserId';
 
 
-        (function () {
-            var $private = {};
+    (function() {
+        var $private = {};
 
-            $(function () {
-                $("#talk-to-us-form").on("submit", $private.SendTalkToUs);
-            });
+        $(function() {
+            $("#talk-to-us-form").on("submit", $private.SendTalkToUs);
+        });
 
-            $private.SendTalkToUs = function (e) {
-                e.preventDefault();
-                $.validator.unobtrusive.parse($(this));
+        $private.SendTalkToUs = function(e) {
+            e.preventDefault();
+            $.validator.unobtrusive.parse($(this));
 
-                if ($(this).valid()) {
-                    var sendMessageOriginalText = $("#talk-to-us-send-button").text();
-                    var sending = $("<img src='@Url.Content("~/Content/Img/loading-white.gif")' style='width:17px'><span> @Resource.Sending</span>");
-                    $("#talk-to-us-send-button").html(sending);
-                    $("#talk-to-us-send-button").prop('disabled', true);
-                    $.ajax({
-                        url: this.action,
-                        type: this.method,
-                        data: $(this).serialize(),
-                        success: function(result) {
-                            if (result.Success) {
-                                SmartLMS.App.toastr['success']('@Resource.TalkToUsMessageSent',
-                                    '@Resource.TalkToUsToastrTitle');
-                            } else {
-                                SmartLMS.App.toastr['error']('@Resource.TalkToUsErrorMessage',
+            if ($(this).valid()) {
+                var sendMessageOriginalText = $("#talk-to-us-send-button").text();
+                var sending =
+                    $(
+                        "<img src='@Url.Content("~/Content/Img/loading-white.gif")' style='width:17px'><span> @Resource.Sending</span>");
+                $("#talk-to-us-send-button").html(sending);
+                $("#talk-to-us-send-button").prop('disabled', true);
+                $.ajax({
+                    url: this.action,
+                    type: this.method,
+                    data: $(this).serialize(),
+                    success: function(result) {
+                        if (result.Success) {
+                            SmartLMS.App.toastr['success']('@Resource.TalkToUsMessageSent',
                                 '@Resource.TalkToUsToastrTitle');
-                            }
-
-                            $("#talk-to-us-name-textbox").val("");
-                            $("#talk-to-us-email-textbox").val("");
-                            $("#talk-to-us-messaeg-textbox").val("");
-                            $("#talk-to-us-send-button").text(sendMessageOriginalText);
-                            $("#talk-to-us-send-button").prop('disabled', false);
+                        } else {
+                            SmartLMS.App.toastr['error']('@Resource.TalkToUsErrorMessage',
+                                '@Resource.TalkToUsToastrTitle');
                         }
-                    });
-                }
-            };
-        }());
 
-    </script>
-    @RenderSection("scripts", required: false)
+                        $("#talk-to-us-name-textbox").val("");
+                        $("#talk-to-us-email-textbox").val("");
+                        $("#talk-to-us-messaeg-textbox").val("");
+                        $("#talk-to-us-send-button").text(sendMessageOriginalText);
+                        $("#talk-to-us-send-button").prop('disabled', false);
+                    }
+                });
+            }
+        };
+    }());
 
-    @Html.Partial("_Alert")
-    @Html.Partial("_About")
-    @Html.Partial("_TalkToUs", new TalkToUsViewModel())
+</script>
+@RenderSection("scripts", false)
+
+@Html.Partial("_Alert")
+@Html.Partial("_About")
+@Html.Partial("_TalkToUs", new TalkToUsViewModel())
 
 </body>
 </html>

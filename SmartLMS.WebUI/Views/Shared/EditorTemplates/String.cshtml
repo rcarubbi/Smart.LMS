@@ -1,6 +1,4 @@
-﻿@using System.ComponentModel.DataAnnotations;
-
-@model String
+﻿@model string
 
 @{
     var name = ViewData.TemplateInfo.HtmlFieldPrefix;
@@ -10,6 +8,3 @@
 }
 
 @Html.TextBoxFor(m => m, htmlAttributes)
-    
- 
-

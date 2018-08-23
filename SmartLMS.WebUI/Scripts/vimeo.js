@@ -1,7 +1,7 @@
-﻿SmartLMS.Vimeo = (function (Vimeo) {
+﻿SmartLMS.Vimeo = (function(Vimeo) {
     var $private = {}, $public = {};
 
-    $public.initialize = function (classId, updateProgressUrl, watchedSeconds) {
+    $public.initialize = function(classId, updateProgressUrl, watchedSeconds) {
         $private.progress = [];
         $private.classId = classId;
         $private.updateProgressUrl = updateProgressUrl;
@@ -9,32 +9,32 @@
 
         var player = new Vimeo.Player("videoFrame");
 
-        player.on("play", function () {
-            if ($private.pendingSeektoTime > 0) {
-                player.setCurrentTime($private.pendingSeektoTime);
-                $private.pendingSeektoTime = 0;
-            }
+        player.on("play",
+            function() {
+                if ($private.pendingSeektoTime > 0) {
+                    player.setCurrentTime($private.pendingSeektoTime);
+                    $private.pendingSeektoTime = 0;
+                }
 
-            setInterval($private.updateProgress, 5000);
-        });
+                setInterval($private.updateProgress, 5000);
+            });
 
         player.on("ended", $private.vimeoEndedEvent);
         player.on("timeupdate", $private.vimeoPlayProgressEvent);
         player.on("pause", $private.vimeoPauseEvent);
         player.ready();
-    }
+    };
 
 
-
-    $private.vimeoPauseEvent = function (data) {
+    $private.vimeoPauseEvent = function(data) {
         $private.updateProgress();
-    }
+    };
 
-    $private.vimeoEndedEvent = function (data) {
+    $private.vimeoEndedEvent = function(data) {
         $private.updateProgress();
-    }
+    };
 
-    $private.updateProgress = function () {
+    $private.updateProgress = function() {
         if ($private.lastSent === $private.lastUpdate) {
             return;
         }
@@ -61,14 +61,14 @@
 
     };
 
-    $private.updateProgressBar = function (watchedSeconds, percentual) {
+    $private.updateProgressBar = function(watchedSeconds, percentual) {
         $private.pendingSeektoTime = watchedSeconds;
         $(".fa.fa-laptop.active").parent().parent().find(".progress-bar")
             .css("width", (percentual * 100) + "%");
         $(".fa.fa-laptop.active").parent().parent().find(".sr-only").text((percentual * 100) + "% done");
-    }
+    };
 
-    $private.vimeoPlayProgressEvent = function (data) {
+    $private.vimeoPlayProgressEvent = function(data) {
         var currentPercent = Math.ceil(data.percent * 100);
         if ($private.progress.indexOf(currentPercent) !== -1) {
             return;

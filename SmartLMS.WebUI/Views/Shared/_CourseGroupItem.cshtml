@@ -1,8 +1,8 @@
-﻿@model SmartLMS.WebUI.Models.CourseViewModel
+﻿@model CourseViewModel
 
 <div class="item @Html.ViewData["activeItemCSSClass"]">
     <div class="col-md-3 col-sm-4 col-xs-12">
-        <a href="@Url.Action("Index", "Class", new { Id = Model.Id })">
+        <a href="@Url.Action("Index", "Class", new {Model.Id})">
             <figure class="cap-bot">
                 <img src="~/Content/img/courses/@(Model.Image ?? "no-image.png")" class="img-responsive">
                 <figcaption>

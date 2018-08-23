@@ -1,11 +1,13 @@
 ﻿@using SmartLMS.Domain.Resources
-@model SmartLMS.WebUI.Models.SubjectViewModel
+@model SubjectViewModel
 
 <div class="col-md-12">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <a href="@Url.Action("Index", "Course", new { Id = Model.Id })">
-                <h3 class="panel-title text-white"><i class="fa fa-map text-white"></i> @(Model.Name)</h3>
+            <a href="@Url.Action("Index", "Course", new {Model.Id})">
+                <h3 class="panel-title text-white">
+                    <i class="fa fa-map text-white"></i> @(Model.Name)
+                </h3>
             </a>
         </div>
         <div class="panel-body">
@@ -16,7 +18,7 @@
                         <div class="carousel slide row" data-ride="carousel" data-type="multi" data-interval="2000" id="carousel-@Model.KnowledgeAreaId-@Model.Order">
                             <div class="carousel-inner">
                                 @{
-                                    bool first = true;
+                                    var first = true;
                                     Html.ViewData.Add(new KeyValuePair<string, object>("activeItemCSSClass", "active"));
                                 }
                                 @foreach (var course in Model.Courses)
@@ -30,15 +32,20 @@
                                         Html.ViewData["activeItemCSSClass"] = "";
                                     }
                                     @Html.Partial("_CourseGroupItem", course, Html.ViewData)
-
                                 }
                             </div>
                         </div>
-                        <a class="left carousel-control" href="#carousel-@Model.KnowledgeAreaId-@Model.Order" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
-                        <a class="right carousel-control" href="#carousel-@Model.KnowledgeAreaId-@Model.Order" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                        <a class="left carousel-control" href="#carousel-@Model.KnowledgeAreaId-@Model.Order" data-slide="prev">
+                            <i class="glyphicon glyphicon-chevron-left"></i>
+                        </a>
+                        <a class="right carousel-control" href="#carousel-@Model.KnowledgeAreaId-@Model.Order" data-slide="next">
+                            <i class="glyphicon glyphicon-chevron-right"></i>
+                        </a>
                     </div>
                 </div>
-                <a class="btn btn-simple btn-primary pull-right" href="@Url.Action("Index", "Course", new { Id = Model.Id })">@Resource.SeeFullIndex <span class="label label-info">@Model.Courses.Count()</span></a>
+                <a class="btn btn-simple btn-primary pull-right" href="@Url.Action("Index", "Course", new {Model.Id})">
+                    @Resource.SeeFullIndex <span class="label label-info">@Model.Courses.Count()</span>
+                </a>
             }
             else
             {

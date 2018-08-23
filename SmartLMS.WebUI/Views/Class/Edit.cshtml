@@ -14,65 +14,65 @@
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.Id)
-          
+
             <div class="form-horizontal">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Name, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Order, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Order, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Order, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Order, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.DeliveryDays, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.DeliveryDays, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.DeliveryDays, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.DeliveryDays, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.DeliveryDays, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.DeliveryDays, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.CourseId, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.CourseId, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.CourseId, ViewBag.Courses as SelectList, Resource.SelectCourse, new { @class = "form-control dropdownjs" })
-                        @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.CourseId, ViewBag.Courses as SelectList, Resource.SelectCourse, new {@class = "form-control dropdownjs"})
+                        @Html.ValidationMessageFor(model => model.CourseId, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Active, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Active, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
                         <div class="checkbox">
                             @Html.EditorFor(model => model.Active)
-                            @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.Active, "", new {@class = "text-danger"})
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.TeacherId, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.TeacherId, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.TeacherId, ViewBag.Teachers as SelectList, Resource.SelectTeacher, new { @class = "form-control dropdownjs" })
-                        @Html.ValidationMessageFor(model => model.TeacherId, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.TeacherId, ViewBag.Teachers as SelectList, Resource.SelectTeacher, new {@class = "form-control dropdownjs"})
+                        @Html.ValidationMessageFor(model => model.TeacherId, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Content, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Content, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Content, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Content, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ContentType, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.ContentType, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.ContentType, ViewBag.ContentTypes as SelectList, Resource.SelectContentType, new { @class = "form-control dropdownjs" })
-                        @Html.ValidationMessageFor(model => model.ContentType, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.ContentType, ViewBag.ContentTypes as SelectList, Resource.SelectContentType, new {@class = "form-control dropdownjs"})
+                        @Html.ValidationMessageFor(model => model.ContentType, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
@@ -87,14 +87,14 @@
         }
         <div class="form-horizontal">
             <div class="form-group">
-                @Html.LabelFor(model => model.Files, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.Files, new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
                     <div class="jumbotron jumbotron-upload">
                         <form action="@Url.Action("SaveSupportMaterial")" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneForm" style="background: none; border: none;">
-                             @Html.HiddenFor(x => x.Id)
-                             <div class="fallback">
-                                <input name="file" type="file" />
-                                <input type="submit" value="@Resource.SendButton" />
+                            @Html.HiddenFor(x => x.Id)
+                            <div class="fallback">
+                                <input name="file" type="file"/>
+                                <input type="submit" value="@Resource.SendButton"/>
                             </div>
                         </form>
                     </div>
@@ -104,25 +104,32 @@
 
     </div>
 </div>
- <div style="display:none" id="dz-template-preview">
+<div style="display: none" id="dz-template-preview">
     <div class="dz-preview dz-file-preview">
         <div class="dz-details">
             <div class="dz-filename">
                 <span data-dz-name></span>
             </div>
             <div class="dz-size" data-dz-size></div>
-            <img data-dz-thumbnail />
+            <img data-dz-thumbnail/>
         </div>
         <div class="dz-progress">
             <div class="progress progress-line-primary">
                 <div class="dz-upload progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress></div>
             </div>
         </div>
-        <div class="dz-success-mark"><span>✔</span></div>
-        <div class="dz-error-mark"><span>✘</span></div>
-        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+        <div class="dz-success-mark">
+            <span>✔</span>
+        </div>
+        <div class="dz-error-mark">
+            <span>✘</span>
+        </div>
+        <div class="dz-error-message">
+            <span data-dz-errormessage></span>
+        </div>
     </div>
 </div>
+
 @section styles {
     @Styles.Render("~/Content/dropzone/dropZoneStyles")
 }
@@ -131,22 +138,22 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/dropzone")
     <script>
-        (function () {
+        (function() {
             var $private = {};
 
             Dropzone.options.dropzoneForm = {
-                init: function () {
-                    this.on("removedfile", function (data) {
-                        var id = "";
-                        if (data.xhr) {
-                            var res = JSON.parse(data.xhr.response);
-                            id = res.Message;
-                        }
-                        else {
-                            id = data.name;
-                        }
-                        $private.deleteSupporMaterial('@Model.Id.ToString()', id);
-                    });
+                init: function() {
+                    this.on("removedfile",
+                        function(data) {
+                            var id = "";
+                            if (data.xhr) {
+                                var res = JSON.parse(data.xhr.response);
+                                id = res.Message;
+                            } else {
+                                id = data.name;
+                            }
+                            $private.deleteSupporMaterial('@Model.Id.ToString()', id);
+                        });
 
                     $private.loadSupportMaterial('@Model.Id.ToString()', this);
                 },
@@ -158,7 +165,7 @@
                 dictCancelUpload: "@Resource.CancelFileButton"
             };
 
-            $private.deleteSupporMaterial = function (id, fileName) {
+            $private.deleteSupporMaterial = function(id, fileName) {
                 $.ajax({
                     type: "POST",
                     url: SmartLMS.api + "Class/DeleteSupportMaterial",
@@ -168,25 +175,26 @@
                 });
             };
 
-            $private.loadSupportMaterial = function (classId, dropzoneForm) {
+            $private.loadSupportMaterial = function(classId, dropzoneForm) {
                 $.ajax({
                     type: "POST",
                     url: SmartLMS.api + "Class/ListSupportMaterial",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({ classId }),
-                    success: function (data) {
-                        $.each(data.Files, function (index, item) {
-                            var file = {
-                                name: item.Name,
-                                size: item.Size,
-                                accepted: true,
-                                status: Dropzone.ADDED
-                            };
-                            dropzoneForm.emit("addedfile", file);
-                            dropzoneForm.emit("complete", file);
-                            dropzoneForm.files.push(file);
-                        });
+                    success: function(data) {
+                        $.each(data.Files,
+                            function(index, item) {
+                                var file = {
+                                    name: item.Name,
+                                    size: item.Size,
+                                    accepted: true,
+                                    status: Dropzone.ADDED
+                                };
+                                dropzoneForm.emit("addedfile", file);
+                                dropzoneForm.emit("complete", file);
+                                dropzoneForm.files.push(file);
+                            });
                     }
                 });
             };

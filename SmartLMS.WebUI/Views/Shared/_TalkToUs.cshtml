@@ -1,5 +1,5 @@
 ﻿@using SmartLMS.Domain.Resources
-@model SmartLMS.WebUI.Models.TalkToUsViewModel
+@model TalkToUsViewModel
 <div class="modal fade" id="talk-to-us" tabindex="-1" role="dialog" aria-labelledby="@Resource.TalkToUsTitle" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -9,7 +9,7 @@
                 </button>
                 <h4 class="modal-title">@Resource.TalkToUsTitle</h4>
             </div>
-            @using (Html.BeginForm("TalkToUs", "Home", null, FormMethod.Post, new { id = "talk-to-us-form" }))
+            @using (Html.BeginForm("TalkToUs", "Home", null, FormMethod.Post, new {id = "talk-to-us-form"}))
             {
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
@@ -19,8 +19,8 @@
                         </span>
                         <div class="form-group label-floating">
                             <label class="control-label">@Resource.TalkToUsEmailLabel</label>
-                            @Html.TextBoxFor(x => x.Email, new { @class = "form-control", id = "talk-to-us-email-textbox", autocomplete = "email" })
-                            @Html.ValidationMessageFor(x => x.Email, string.Empty, new { @class = "text-danger" })
+                            @Html.TextBoxFor(x => x.Email, new {@class = "form-control", id = "talk-to-us-email-textbox", autocomplete = "email"})
+                            @Html.ValidationMessageFor(x => x.Email, string.Empty, new {@class = "text-danger"})
                         </div>
                     </div>
                     <div class="input-group">
@@ -29,16 +29,16 @@
                         </span>
                         <div class="form-group label-floating">
                             <label class="control-label">@Resource.TalkToUsNameLabel</label>
-                            @Html.TextBoxFor(x => x.Name, new { @class = "form-control", id = "talk-to-us-name-textbox", autocomplete = "name" })
-                            @Html.ValidationMessageFor(x => x.Name, string.Empty, new { @class = "text-danger" })
+                            @Html.TextBoxFor(x => x.Name, new {@class = "form-control", id = "talk-to-us-name-textbox", autocomplete = "name"})
+                            @Html.ValidationMessageFor(x => x.Name, string.Empty, new {@class = "text-danger"})
                         </div>
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="material-icons">message</i>
                         </span>
-                        @Html.TextAreaFor(model => model.Message, new { @class = "form-control", placeholder = Resource.TalkToUsMessagePlaceholder, rows = "5", id= "talk-to-us-message-textbox" })
-                        @Html.ValidationMessageFor(x => x.Message, string.Empty, new { @class = "text-danger" })
+                        @Html.TextAreaFor(model => model.Message, new {@class = "form-control", placeholder = Resource.TalkToUsMessagePlaceholder, rows = "5", id = "talk-to-us-message-textbox"})
+                        @Html.ValidationMessageFor(x => x.Message, string.Empty, new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="modal-footer">

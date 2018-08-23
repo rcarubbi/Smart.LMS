@@ -15,46 +15,52 @@
             <h3 class="panel-title">@Resource.SeeOtherKnowledgeAreas</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
-           
-            @Html.DropDownList("otherKnowledgeAreas", ViewBag.OtherKnowledgeAreas as SelectList, Resource.SelectKnowledgeArea, new { @class= "form-control dropdownjs" })
+
+            @Html.DropDownList("otherKnowledgeAreas", ViewBag.OtherKnowledgeAreas as SelectList, Resource.SelectKnowledgeArea, new {@class = "form-control dropdownjs"})
         </div>
     </div>
- </div>
+</div>
+
 @section scripts {
     <script>
-        (function () {
-            $(function () {
-                var activeOption = $('<option>', {
-                    value: '@Model.Id',
-                    text: '@Html.Raw(Model.Name)'
-                });
-
-                $("#otherKnowledgeAreas").on("dropdownjs.change", function () {
-                    var selectedItem = $(this).find("option:selected");
-                    var id = selectedItem.val();
-                    var text = selectedItem.text();
-                    if (id !== "")
+        (function() {
+            $(function() {
+                var activeOption = $('<option>',
                     {
-                        $(this).append(activeOption);
-                        activeOption = $('<option>', {
-                            value: id,
-                            text: text
-                        });
+                        value: '@Model.Id',
+                        text: '@Html.Raw(Model.Name)'
+                    });
 
-                        selectedItem.remove();
-                        $(this).dropdownjs();
-
-                        $("#indice-area-container").fadeOut("fast", null, function () {
-                            $("#indice-area-container").load(SmartLMS.api + "Subject/KnowledgeAreaPanel/" + id, null,
-                                function () {
-                                    SmartLMS.App.initializeCarouselMulti();
-                                    $("#indice-area-container").fadeIn();
-                                    $.material.init();
-                                    $('[data-toggle="tooltip"]').tooltip();
+                $("#otherKnowledgeAreas").on("dropdownjs.change",
+                    function() {
+                        var selectedItem = $(this).find("option:selected");
+                        var id = selectedItem.val();
+                        var text = selectedItem.text();
+                        if (id !== "") {
+                            $(this).append(activeOption);
+                            activeOption = $('<option>',
+                                {
+                                    value: id,
+                                    text: text
                                 });
-                        });
-                    }
-                });
+
+                            selectedItem.remove();
+                            $(this).dropdownjs();
+
+                            $("#indice-area-container").fadeOut("fast",
+                                null,
+                                function() {
+                                    $("#indice-area-container").load(SmartLMS.api + "Subject/KnowledgeAreaPanel/" + id,
+                                        null,
+                                        function() {
+                                            SmartLMS.App.initializeCarouselMulti();
+                                            $("#indice-area-container").fadeIn();
+                                            $.material.init();
+                                            $('[data-toggle="tooltip"]').tooltip();
+                                        });
+                                });
+                        }
+                    });
             });
         }());
 

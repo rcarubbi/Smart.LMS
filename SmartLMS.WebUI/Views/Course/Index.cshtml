@@ -1,6 +1,5 @@
-﻿@using SmartLMS.Domain.Entities
-@using SmartLMS.Domain.Resources
-@model SmartLMS.WebUI.Models.SubjectViewModel
+﻿@using SmartLMS.Domain.Resources
+@model SubjectViewModel
 @{
     ViewBag.Title = Resource.SubjectIndex + " - " + Model.Name;
 }
@@ -16,47 +15,53 @@
             <h3 class="panel-title">@Resource.SeeOtherSubjects</h3>
         </div>
         <div class="panel-body panel-body-no-margin">
-            @Html.DropDownList("otherSubjects", ViewBag.OtherSubjects as SelectList, Resource.SelectSubject, new { @class= "form-control dropdownjs" })
+            @Html.DropDownList("otherSubjects", ViewBag.OtherSubjects as SelectList, Resource.SelectSubject, new {@class = "form-control dropdownjs"})
         </div>
     </div>
- </div>
+</div>
+
 @section scripts {
     <script>
-        (function () {
-            $(function () {
-                var activeOption = $('<option>', {
-                    value: '@Model.Id',
-                    text: '@Html.Raw(Model.Name)'
-                });
-
-                $("#otherSubjects").on("dropdownjs.change", function () {
-                    var selectedItem = $(this).find("option:selected");
-                    var id = selectedItem.val();
-                    var text = selectedItem.text();
-                    if (id !== "")
+        (function() {
+            $(function() {
+                var activeOption = $('<option>',
                     {
-                        $(this).append(activeOption);
-                        activeOption = $('<option>', {
-                            value: id,
-                            text: text
-                        });
+                        value: '@Model.Id',
+                        text: '@Html.Raw(Model.Name)'
+                    });
 
-                        selectedItem.remove();
-                        $(this).dropdownjs();
-
-                        $("#subject-index-container").fadeOut("fast", null, function () {
-
-                            $("#subject-index-container").load(SmartLMS.api + "Course/SubjectIndex/" + id, null,
-                                function () {
-                                    $("#subject-index-container").fadeIn();
-                                    $.material.init();
-                                    $('[data-toggle="tooltip"]').tooltip();
+                $("#otherSubjects").on("dropdownjs.change",
+                    function() {
+                        var selectedItem = $(this).find("option:selected");
+                        var id = selectedItem.val();
+                        var text = selectedItem.text();
+                        if (id !== "") {
+                            $(this).append(activeOption);
+                            activeOption = $('<option>',
+                                {
+                                    value: id,
+                                    text: text
                                 });
-                        });
-                    }
-                });
+
+                            selectedItem.remove();
+                            $(this).dropdownjs();
+
+                            $("#subject-index-container").fadeOut("fast",
+                                null,
+                                function() {
+
+                                    $("#subject-index-container").load(SmartLMS.api + "Course/SubjectIndex/" + id,
+                                        null,
+                                        function() {
+                                            $("#subject-index-container").fadeIn();
+                                            $.material.init();
+                                            $('[data-toggle="tooltip"]').tooltip();
+                                        });
+                                });
+                        }
+                    });
             });
         }());
 
-    </script>    
+    </script>
 }

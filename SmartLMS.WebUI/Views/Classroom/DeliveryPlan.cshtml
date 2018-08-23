@@ -42,9 +42,8 @@
 </div>
 
 
-
 @section scripts {
-<script type="text/x-handlebars-template" id="delivery-plan-history-template">
+    <script type="text/x-handlebars-template" id="delivery-plan-history-template">
     {{#each Classes}}
     <div class="list-group-item list-group-item-sm">
         <div class="row-action-primary">
@@ -67,7 +66,7 @@
         SmartLMS.DeliveryPlanProxy = (function() {
             $public = {}, $private = {};
 
-            $public.search = function (deliveryPlanStartDate, classroomId) {
+            $public.search = function(deliveryPlanStartDate, classroomId) {
                 return $.ajax({
                     type: "POST",
                     url: SmartLMS.api + "Classroom/DeliveryPlanHistory",
@@ -97,7 +96,7 @@
 
             $private.refreshResults = function(data) {
                 $("#delivery-plan-history-results").html($private.DeliveryPlanHistoryTemplate({ Classes: data }));
-            }
+            };
 
         }(SmartLMS.DeliveryPlanProxy));
     </script>

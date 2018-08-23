@@ -1,16 +1,16 @@
-﻿@using SmartLMS.Domain.Entities
-@using SmartLMS.Domain.Resources
-@model SmartLMS.WebUI.Models.SubjectViewModel
+﻿@using SmartLMS.Domain.Resources
+@model SubjectViewModel
 <div class="card">
     <div class="content">
-        <h3 class="text-primary index-title"><i class="fa fa-map text-primary"></i> @Resource.SubjectName @Model.Name</h3>
+        <h3 class="text-primary index-title">
+            <i class="fa fa-map text-primary"></i> @Resource.SubjectName @Model.Name</h3>
         <p>
             @Resource.SelectOneSubjectIndexMessage
         </p>
         <div class="list-group">
             @foreach (var course in Model.Courses)
             {
-                <a href="@Url.Action("Index", "Class", new { Id = course.Id })" class="link-group-item">
+                <a href="@Url.Action("Index", "Class", new {course.Id})" class="link-group-item">
 
                     <div class="list-group-item">
                         <div class="row-action-primary">
@@ -18,15 +18,16 @@
                         </div>
                         <div class="row-content">
                             <h4 class="list-group-item-heading">@course.Name</h4>
-                            <p class="list-group-item-text">@course.Classes.Count() @(course.Classes.Count() > 1? Resource.ClassPlural : Resource.ClassName)</p>
-                            <p><label>Teacher: </label> @course.TeacherInChargeName</p>
+                            <p class="list-group-item-text">@course.Classes.Count() @(course.Classes.Count() > 1 ? Resource.ClassPlural : Resource.ClassName)</p>
+                            <p>
+                                <label>Teacher: </label> @course.TeacherInChargeName</p>
                         </div>
                     </div>
                 </a>
-                    <div class="list-group-separator"></div>
+                <div class="list-group-separator"></div>
             }
         </div>
-        <a href="@Url.Action("Index", "Subject", new { Id = Model.KnowledgeAreaId })" class="btn btn-primary btn-simple pull-right">
+        <a href="@Url.Action("Index", "Subject", new {Id = Model.KnowledgeAreaId})" class="btn btn-primary btn-simple pull-right">
             <i class="material-icons">reply</i> @Resource.BackToIndex
         </a>
     </div>

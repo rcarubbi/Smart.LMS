@@ -1,8 +1,8 @@
 ﻿@using SmartLMS.Domain.Resources
-@model Carubbi.GenericRepository.PagedListResult<SmartLMS.WebUI.Models.AccessViewModel>
+@using SmartLMS.Domain.Services
+@model Carubbi.GenericRepository.PagedListResult<AccessViewModel>
 @{
     ViewBag.Title = Resource.AccessHistoryPageTitle;
-   
 }
 <div class="panel panel-info">
     <div class="panel-heading">
@@ -13,19 +13,19 @@
             <div class="col-md-4">
                 <div class="form-group label-static is-empty">
                     <label class="control-label">@Resource.StartDateLabel</label>
-                    <input class="datepicker form-control" type="text" id="startDate" value="@DateTime.Now.AddMonths(-1).ToShortDateString()" />
+                    <input class="datepicker form-control" type="text" id="startDate" value="@DateTime.Now.AddMonths(-1).ToShortDateString()"/>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group label-static is-empty">
                     <label class="control-label">@Resource.EndDateLabel</label>
-                    <input class="datepicker form-control" type="text" id="endDate" value="@DateTime.Now.ToShortDateString()" />
+                    <input class="datepicker form-control" type="text" id="endDate" value="@DateTime.Now.ToShortDateString()"/>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group label-static is-empty">
                     <label for="AccessType" class="control-label">@Resource.AccessTypeLabel</label>
-                    @Html.DropDownList("AccessType", ViewBag.AccessTypes as SelectList, new { @class = "form-control dropdownjs" })
+                    @Html.DropDownList("AccessType", ViewBag.AccessTypes as SelectList, new {@class = "form-control dropdownjs"})
                 </div>
             </div>
             <div class="text-right">
@@ -43,12 +43,11 @@
             <div id="result-container" class="list-group">
                 @foreach (var item in Model.Entities)
                 {
-
                     <div class="list-group-item list-group-item-sm">
 
-                        @if (item.AccessType == SmartLMS.Domain.Services.AccessType.Class)
+                        @if (item.AccessType == AccessType.Class)
                         {
-                            <a href="@Url.Action("Watch","Class", new { Id = item.ContentId })" class='link-group-item'>
+                            <a href="@Url.Action("Watch", "Class", new {Id = item.ContentId})" class='link-group-item'>
                                 <div class="row-action-primary">
                                     <i class="fa fa-laptop"></i>
                                 </div>
@@ -66,7 +65,7 @@
                         }
                         else
                         {
-                            <a href="@Url.Action("Download","Class", new { Id = item.ContentId })" class='link-group-item'>
+                            <a href="@Url.Action("Download", "Class", new {Id = item.ContentId})" class='link-group-item'>
                                 <div class="row-action-primary">
                                     <i class="fa fa-file"></i>
                                 </div>

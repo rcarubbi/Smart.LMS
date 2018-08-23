@@ -1,7 +1,5 @@
-﻿@using SmartLMS.Domain.Entities
-@using SmartLMS.Domain.Entities.Content
-@using SmartLMS.Domain.Resources
-@model IEnumerable<Course>
+﻿@using SmartLMS.Domain.Resources
+@model IEnumerable<SmartLMS.Domain.Entities.Content.Course>
 @{
     ViewBag.Title = Resource.MyCoursesTitle;
 }
@@ -14,15 +12,15 @@
             <div class="list-group">
                 @foreach (var course in Model)
                 {
-                    <a href="@Url.Action("Index", "Class", new { course.Id })" class="link-group-item">
+                    <a href="@Url.Action("Index", "Class", new {course.Id})" class="link-group-item">
                         <div class="list-group-item">
                             <div class="row-action-primary">
                                 <i class="fa fa-graduation-cap"></i>
                             </div>
                             <div class="row-content">
                                 <h4 class="list-group-item-heading">@course.Name</h4>
-                                <p class="list-group-item-text">@course.Classes.Count() @(course.Classes.Count() > 1 ? Resource.ClassPlural: Resource.ClassName)</p>
-                             
+                                <p class="list-group-item-text">@course.Classes.Count() @(course.Classes.Count() > 1 ? Resource.ClassPlural : Resource.ClassName)</p>
+
                             </div>
                         </div>
                     </a>
@@ -32,4 +30,3 @@
         </div>
     </div>
 </div>
-

@@ -1,5 +1,6 @@
 ﻿@using SmartLMS.Domain.Resources
-@{ var maxPage = Math.Ceiling(Model.Count / 8M);
+@{
+    var maxPage = Math.Ceiling(Model.Count / 8M);
     if (maxPage > 5)
     {
         maxPage = 5;
@@ -9,16 +10,23 @@
     <ul class="pagination pagination-primary">
 
         <li>
-            <a class="pagination-previous" @if (!Model.HasPrevious) { <text> style="display:none" </text>      } href="javascript:void(0);">@Html.Raw(Resource.PreviousPage)</a>
+            <a class="pagination-previous"
+               @if (!Model.HasPrevious)
+               {
+                   <text> style="display: none" </text>
+               } href="javascript:void(0);">
+                @Html.Raw(Resource.PreviousPage)</a>
         </li>
 
-        @for (int i = 1; i <= maxPage; i++)
+        @for (var i = 1; i <= maxPage; i++)
         {
-            <li class="@(i == 1? "active" : string.Empty)">
+            <li class="@(i == 1 ? "active" : string.Empty)">
                 <a href="javascript:void(0);" class="pagination-page">@i</a>
             </li>
         }
-        <li><a class="pagination-next" style="@(!Model.HasNext? "display:none;": string.Empty)" href="javascript:void(0);">@Html.Raw(Resource.NextPage)</a></li>
+        <li>
+            <a class="pagination-next" style="@(!Model.HasNext ? "display:none;" : string.Empty)" href="javascript:void(0);">@Html.Raw(Resource.NextPage)</a>
+        </li>
     </ul>
 </div>
 

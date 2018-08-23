@@ -70,7 +70,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About Gnatta Trainning Tool....
+        ///   Looks up a localized string similar to About Your Company Training....
         /// </summary>
         public static string AboutText {
             get {
@@ -79,7 +79,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About Gnatta Trainning Tool.
+        ///   Looks up a localized string similar to About Your Company Training.
         /// </summary>
         public static string AboutTitle {
             get {
@@ -692,11 +692,11 @@ namespace SmartLMS.Domain.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;div&gt;
-        ///Hi {username}, your Gnatta Training Tool credendials are:
+        ///Hi {username}, your Your Company Training credendials are:
         ///&lt;/div&gt;
         ///&lt;div&gt;Login: {login}&lt;/div&gt;&lt;div&gt;Password: {password}.&lt;/div&gt;
         ///&lt;div&gt;Access the platform by the following link &lt;a href=&apos;{link}&apos;&gt;here&lt;/a&gt;.&lt;/div&gt;
-        ///&lt;div&gt;Regards, Gnatta Training Tool Team&lt;/div&gt;.
+        ///&lt;div&gt;Regards, Your Company Training Team&lt;/div&gt;.
         /// </summary>
         public static string CreatingUserNotificationEmailBody {
             get {
@@ -705,7 +705,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Welcome to Gnatta Training Tool.
+        ///   Looks up a localized string similar to Welcome to Your Company Training.
         /// </summary>
         public static string CreatingUserNotificationEmailSubject {
             get {
@@ -858,7 +858,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hi {username}, how are you? &lt;br /&gt; The class &lt;a href=&apos;{link}/Class/Watch/{classId}&apos;&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href=&apos;{link}/Class/Index/{courseId}&apos;&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Gnatta Training Tool Team.
+        ///   Looks up a localized string similar to Hi {username}, how are you? &lt;br /&gt; The class &lt;a href=&apos;{link}/Class/Watch/{classId}&apos;&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href=&apos;{link}/Class/Index/{courseId}&apos;&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Your Company Training Team.
         /// </summary>
         public static string DeliveredClassNotificationEmailBody {
             get {
@@ -867,7 +867,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gnatta Training Tool - New available class.
+        ///   Looks up a localized string similar to Your Company Training - New available class.
         /// </summary>
         public static string DeliveredClassNotificationEmailSubject {
             get {
@@ -1533,7 +1533,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div&gt;Hi {username}, your Gnatta Training Tool credendials are:&lt;/div&gt;
+        ///   Looks up a localized string similar to &lt;div&gt;Hi {username}, your Your Company Training credendials are:&lt;/div&gt;
         ///&lt;div&gt;
         ///Login: {login}.
         ///&lt;/div&gt;
@@ -1544,7 +1544,7 @@ namespace SmartLMS.Domain.Resources {
         ///Access the platform by the following link &lt;a href=&apos;{link}&apos;&gt;here&lt;/a&gt;.
         ///&lt;/div&gt;
         ///&lt;div&gt;
-        ///Regards, Gnatta Training Tool Team
+        ///Regards, Your Company Training Team
         ///&lt;/div&gt;.
         /// </summary>
         public static string PasswordRecoveryEmailBody {
@@ -1554,7 +1554,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gnatta Training Tool - Password Recovery.
+        ///   Looks up a localized string similar to Your Company Training - Password Recovery.
         /// </summary>
         public static string PasswordRecoveryEmailSubject {
             get {
@@ -2058,7 +2058,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div&gt;&lt;h1&gt;Talk to us - Gnatta Trainning Tool&lt;/h1&gt;
+        ///   Looks up a localized string similar to &lt;div&gt;&lt;h1&gt;Talk to us - Your Company Training&lt;/h1&gt;
         ///&lt;dl&gt;
         ///&lt;dt&gt;Name:&lt;/dt&gt;
         /// &lt;dd&gt;{name}&lt;/dd&gt;
@@ -2085,7 +2085,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gnatta Training Tool - Talk to Us.
+        ///   Looks up a localized string similar to Your Company Training - Talk to Us.
         /// </summary>
         public static string TalkToUsEmailSubject {
             get {
@@ -2319,7 +2319,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Welcome to Gnatta Training Tool! Have a productive study!.
+        ///   Looks up a localized string similar to Welcome to Your Company Training! Have a productive study!.
         /// </summary>
         public static string WelcomeNoticeMessage {
             get {

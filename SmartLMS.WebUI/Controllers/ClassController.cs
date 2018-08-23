@@ -1,25 +1,22 @@
-﻿using Carubbi.Utils.Data;
-using Humanizer.DateTimeHumanizeStrategy;
-using SmartLMS.Domain;
-using SmartLMS.Domain.Entities;
-using SmartLMS.Domain.Entities.Content;
-using SmartLMS.Domain.Entities.History;
-using SmartLMS.Domain.Repositories;
-using SmartLMS.WebUI.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Transactions;
 using System.Web.Mvc;
-using System.Web.Security;
 using Carubbi.Extensions;
 using Carubbi.Mailer.Implementation;
+using Humanizer.DateTimeHumanizeStrategy;
+using SmartLMS.Domain;
+using SmartLMS.Domain.Entities;
+using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.Delivery;
+using SmartLMS.Domain.Entities.History;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Resources;
-using WebGrease.Css.Extensions;
+using SmartLMS.WebUI.Models;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -29,7 +26,6 @@ namespace SmartLMS.WebUI.Controllers
         public ClassController(IContext context)
             : base(context)
         {
-
         }
 
         [HttpPost]
@@ -48,12 +44,11 @@ namespace SmartLMS.WebUI.Controllers
             var classRepository = new ClassRepository(_context);
             var classAccessRepository = new ClassAccessRepository(_context);
             var classInfo = classRepository.GetClass(id, _loggedUser.Id, GetUserRole(_loggedUser));
-            
+
             if (classInfo.Available && classInfo.Class.Active)
             {
                 if (GetUserRole(_loggedUser) == Role.Student)
-                {
-                    classAccessRepository.CreateAccess(new ClassAccess()
+                    classAccessRepository.CreateAccess(new ClassAccess
                     {
                         Class = classInfo.Class,
                         User = _loggedUser,
@@ -61,7 +56,6 @@ namespace SmartLMS.WebUI.Controllers
                         Percentual = classInfo.Percentual,
                         WatchedSeconds = classInfo.WatchedSeconds
                     });
-                }
 
                 return View(ClassViewModel.FromEntityWithFiles(classInfo));
             }
@@ -70,7 +64,6 @@ namespace SmartLMS.WebUI.Controllers
             TempData["MessageTitle"] = Resource.WarningToastrTitle;
             TempData["Message"] = Resource.NotAllowedWatchClassToastrMessage;
             return RedirectToAction("Index", "Home");
-
         }
 
         [AllowAnonymous]
@@ -91,7 +84,7 @@ namespace SmartLMS.WebUI.Controllers
 
             ViewBag.OtherCourses = new SelectList(courseIndex.Course.Subject.Courses
                 .Where(c => c.Active)
-                .Except(new List<Course> { courseIndex.Course }), "Id", "Name");
+                .Except(new List<Course> {courseIndex.Course}), "Id", "Name");
 
             return View(viewModel);
         }
@@ -116,20 +109,22 @@ namespace SmartLMS.WebUI.Controllers
         }
 
 
-      
-
         [ChildActionOnly]
         public ActionResult NewClassesPanel()
         {
             var classRepository = new ClassRepository(_context);
-            return PartialView("_NewClassesPanel", ClassViewModel.FromEntityList(classRepository.ListLastDeliveredClasses(_loggedUser.Id), new DefaultDateTimeHumanizeStrategy()));
+            return PartialView("_NewClassesPanel",
+                ClassViewModel.FromEntityList(classRepository.ListLastDeliveredClasses(_loggedUser.Id),
+                    new DefaultDateTimeHumanizeStrategy()));
         }
 
         [ChildActionOnly]
         public ActionResult LastClassesPanel()
         {
             var classAccessRepository = new ClassAccessRepository(_context);
-            return PartialView("_LastClassesPanel", ClassAccessViewModel.FromEntityList(classAccessRepository.ListLastAccesses(_loggedUser.Id), new DefaultDateTimeHumanizeStrategy()));
+            return PartialView("_LastClassesPanel",
+                ClassAccessViewModel.FromEntityList(classAccessRepository.ListLastAccesses(_loggedUser.Id),
+                    new DefaultDateTimeHumanizeStrategy()));
         }
 
         [HttpPost]
@@ -140,18 +135,20 @@ namespace SmartLMS.WebUI.Controllers
             var humanizer = new DefaultDateTimeHumanizeStrategy();
             var comments = classInfo.Class.Comments
                 .OrderByDescending(x => x.DateTime)
-                .Skip(((page - 1) * 10))
+                .Skip((page - 1) * 10)
                 .Take(10)
                 .ToList();
 
-            return Json(CommentViewModel.FromEntityList(comments, humanizer, _loggedUser.Id), JsonRequestBehavior.AllowGet);
+            return Json(CommentViewModel.FromEntityList(comments, humanizer, _loggedUser.Id),
+                JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Comment(FormCollection formData)
         {
-            if (string.IsNullOrEmpty(formData["CommentText"])) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (string.IsNullOrEmpty(formData["CommentText"]))
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
 
             var comment = new CommentViewModel
@@ -167,11 +164,9 @@ namespace SmartLMS.WebUI.Controllers
             _context.Save(_loggedUser);
 
             return new HttpStatusCodeResult(HttpStatusCode.OK);
-
         }
 
         [HttpPost]
-
         public ActionResult DeleteComment(long commentId)
         {
             var classRepository = new ClassRepository(_context);
@@ -183,7 +178,6 @@ namespace SmartLMS.WebUI.Controllers
         [AllowAnonymous]
         public ActionResult Download(Guid id)
         {
-
             var classRepository = new ClassRepository(_context);
             var file = classRepository.GetFile(id);
 
@@ -191,21 +185,20 @@ namespace SmartLMS.WebUI.Controllers
             if (classAvailable)
             {
                 classRepository.SaveAccess(file, _loggedUser);
-                return File(Url.Content("~/" + Parameter.FILE_STORAGE + "/" + file.Class.Id + "/" + file.PhysicalPath), "application/octet-stream", file.PhysicalPath);
+                return File(Url.Content("~/" + Parameter.FILE_STORAGE + "/" + file.Class.Id + "/" + file.PhysicalPath),
+                    "application/octet-stream", file.PhysicalPath);
             }
-            else
-            {
-                TempData["MessageType"] = "error";
-                TempData["MessageTitle"] = Resource.SupportMaterialDownloadToastrTitle;
-                TempData["Message"] = Resource.WithoutPermissionDownloadToastrMessage;
-                return RedirectToAction("Index", "Home");
-            }
+
+            TempData["MessageType"] = "error";
+            TempData["MessageTitle"] = Resource.SupportMaterialDownloadToastrTitle;
+            TempData["Message"] = Resource.WithoutPermissionDownloadToastrMessage;
+            return RedirectToAction("Index", "Home");
         }
 
         [Authorize(Roles = "Admin")]
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
-            ViewBag.SearchFields = new SelectList(new string[] { "Name", "Subject", "Knowledge Area", "Course", "Id" });
+            ViewBag.SearchFields = new SelectList(new[] {"Name", "Subject", "Knowledge Area", "Course", "Id"});
             var classRepository = new ClassRepository(_context);
             return View(ClassViewModel.FromEntityList(classRepository.Search(term, searchFieldName, page)));
         }
@@ -247,11 +240,10 @@ namespace SmartLMS.WebUI.Controllers
             var userRepository = new UserRepository(_context);
 
             if (ModelState.IsValid)
-            {
                 try
                 {
                     var course = courseRepository.GetById(viewModel.CourseId);
-                    var teacher = (Teacher)userRepository.GetById(viewModel.TeacherId);
+                    var teacher = (Teacher) userRepository.GetById(viewModel.TeacherId);
                     var classRepository = new ClassRepository(_context);
                     classRepository.Create(ClassViewModel.ToEntity(viewModel, course, teacher));
 
@@ -270,7 +262,6 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
-            }
 
             const ContentType classType = ContentType.Vimeo;
             ViewBag.ContentTypes = new SelectList(classType.ToDataSource<ContentType>(), "Key", "Value");
@@ -301,10 +292,7 @@ namespace SmartLMS.WebUI.Controllers
 
         private async Task SyncAccessesAsync(IList<Classroom> classrooms)
         {
-            foreach (var classroom in classrooms)
-            {
-                await classroom.SyncAccessesAsync(_context, new SmtpSender());
-            } 
+            foreach (var classroom in classrooms) await classroom.SyncAccessesAsync(_context, new SmtpSender());
         }
 
         [Authorize(Roles = "Admin, Teacher")]
@@ -318,7 +306,7 @@ namespace SmartLMS.WebUI.Controllers
                 var classRepository = new ClassRepository(_context);
                 var klass = classRepository.GetById(new Guid(id));
 
-                klass.Files.Add(new File()
+                klass.Files.Add(new File
                 {
                     PhysicalPath = uploadResult.Message,
                     CreatedAt = DateTime.Now,
@@ -351,6 +339,7 @@ namespace SmartLMS.WebUI.Controllers
 
                 tx.Complete();
             }
+
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
@@ -363,32 +352,27 @@ namespace SmartLMS.WebUI.Controllers
             var uploader = new SupportMaterialUploader(classId);
 
             foreach (var item in klass.Files)
-            {
                 files.Add(new
                 {
                     item.Name,
                     Size = uploader.GetFileInfo(item.PhysicalPath).Length
                 });
-            }
 
-            return Json(new { Files = files });
+            return Json(new {Files = files});
         }
 
 
         [Authorize(Roles = "Admin, Teacher")]
         public ActionResult Edit(Guid id)
         {
-           
             var classRepository = new ClassRepository(_context);
             var klass = classRepository.GetById(id);
             var userRole = GetUserRole(_loggedUser);
 
             if ((Role.Teacher != userRole ||
-                 (klass.Teacher.Id != _loggedUser.Id && klass.Course.TeacherInCharge.Id != _loggedUser.Id)) &&
+                 klass.Teacher.Id != _loggedUser.Id && klass.Course.TeacherInCharge.Id != _loggedUser.Id) &&
                 userRole != Role.Admin)
-            {
                 return RedirectToAction("Index", "Home");
-            }
 
 
             var courseRepository = new CourseRepository(_context);
@@ -409,31 +393,27 @@ namespace SmartLMS.WebUI.Controllers
         [HttpPost]
         public ActionResult Edit(Guid id, ClassViewModel viewModel)
         {
-           
             var userRole = GetUserRole(_loggedUser);
             var courseRepository = new CourseRepository(_context);
             var course = courseRepository.GetById(viewModel.CourseId);
             if ((Role.Teacher != userRole ||
-                 (viewModel.TeacherId != _loggedUser.Id && course.TeacherInCharge.Id != _loggedUser.Id)) &&
+                 viewModel.TeacherId != _loggedUser.Id && course.TeacherInCharge.Id != _loggedUser.Id) &&
                 userRole != Role.Admin)
-            {
                 return RedirectToAction("Index", "Home");
-            }
 
             var userRepository = new UserRepository(_context);
 
             if (ModelState.IsValid)
-            {
                 try
                 {
-                    var teacher = (Teacher)userRepository.GetById(viewModel.TeacherId);
+                    var teacher = (Teacher) userRepository.GetById(viewModel.TeacherId);
                     var classRepository = new ClassRepository(_context);
                     classRepository.Update(ClassViewModel.ToEntity(viewModel, course, teacher));
                     _context.Save(_loggedUser);
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = "Class updated";
-                 
+
                     return Redirect(TempData["BackURL"].ToString());
                 }
                 catch (Exception ex)
@@ -442,7 +422,6 @@ namespace SmartLMS.WebUI.Controllers
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
                     TempData["Message"] = ex.Message;
                 }
-            }
 
             var activeCourses = courseRepository.ListActiveCourses();
             ViewBag.Courses = new SelectList(activeCourses, "Id", "Name");
@@ -466,16 +445,14 @@ namespace SmartLMS.WebUI.Controllers
 
             using (var tx = new TransactionScope())
             {
-                foreach (var file in klass.Files)
-                {
-                    uploader.DeleteFile(file.PhysicalPath);
-                }
+                foreach (var file in klass.Files) uploader.DeleteFile(file.PhysicalPath);
 
                 classRepository.Delete(klass.Id);
                 _context.Save(_loggedUser);
 
                 tx.Complete();
             }
+
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }

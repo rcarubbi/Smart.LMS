@@ -1,27 +1,33 @@
 ﻿@using SmartLMS.Domain.Resources
-@model IEnumerable<SmartLMS.WebUI.Models.ClassViewModel>
+@model IEnumerable<ClassViewModel>
 <div class="list-group">
     @foreach (var klass in Model)
     {
         if (klass.Available)
         {
-            @:<a href="@Url.Action("Watch", "Class", new { Id = klass.Id })" class="link-group-item">
-            }
-            <div class="list-group-item">
-                <div class="row-action-primary" @if (!klass.Available) { <text> data-toggle="tooltip" data-placement="right" data-container="body" data-original-title="@Resource.NoAccessToClassMessage" </text> }>
-                    <i class="fa fa-laptop"></i>
-                </div>
-                <div class="row-content">
+            @:<a href="@Url.Action("Watch", "Class", new {klass.Id})" class="link-group-item">
+        }
+        <div class="list-group-item">
+            <div class="row-action-primary"
+                 @if (!klass.Available)
+                 {
+                     <text> data-toggle="tooltip" data-placement="right" data-container="body" data-original-title="@Resource.NoAccessToClassMessage" </text>
+                 }>
+                <i class="fa fa-laptop"></i>
+            </div>
+            <div class="row-content">
 
-                    @if (!klass.Available)
-                    {
-                        <label class="pull-right label label-default"><i class="fa fa-lock"></i></label>
-                    }
-                    <h5 class="class-name">
-                        @klass.Name
+                @if (!klass.Available)
+                {
+                    <label class="pull-right label label-default">
+                        <i class="fa fa-lock"></i>
+                    </label>
+                }
+                <h5 class="class-name">
+                    @klass.Name
                     @if (klass.Editable)
                     {
-                        <a href="@Url.Action("Edit", "Class", new { Id = klass.Id })">
+                        <a href="@Url.Action("Edit", "Class", new {klass.Id})">
                             <i class="fa fa-pencil"></i>
                         </a>
                     }
@@ -39,8 +45,8 @@
         </div>
         if (klass.Available)
         {
-        @:</a>
+            @:</a>
+        }
+        <div class="list-group-separator"></div>
     }
-    <div class="list-group-separator"></div>
-}
 </div>

@@ -1,8 +1,8 @@
-﻿SmartLMS.ClassroomProxy = (function () {
+﻿SmartLMS.ClassroomProxy = (function() {
     $public = {}, $private = {};
 
 
-    $public.search = function (term, searchFieldname, page) {
+    $public.search = function(term, searchFieldname, page) {
         return $.ajax({
             type: "POST",
             url: SmartLMS.api + "Classroom/Search",
@@ -12,7 +12,7 @@
         });
     };
 
-    $public.listStudents = function (id) {
+    $public.listStudents = function(id) {
         return $.ajax({
             type: "POST",
             url: SmartLMS.api + "Classroom/ListStudents",
@@ -22,7 +22,7 @@
         });
     };
 
-    $public.listCourses = function (id) {
+    $public.listCourses = function(id) {
         return $.ajax({
             type: "POST",
             url: SmartLMS.api + "Classroom/ListCourses",
@@ -32,7 +32,7 @@
         });
     };
 
-    $public.delete = function (id) {
+    $public.delete = function(id) {
         return $.ajax({
             type: "POST",
             url: SmartLMS.api + "Classroom/Delete",

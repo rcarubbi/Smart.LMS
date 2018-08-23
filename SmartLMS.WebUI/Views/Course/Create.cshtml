@@ -12,13 +12,13 @@
     <div class="panel-body">
         <div class="form-horizontal">
             <div class="form-group">
-                @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.Image, new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
                     <div class="jumbotron jumbotron-upload">
                         <form action="@Url.Action("SaveImage")" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneForm" style="background: none; border: none;">
                             <div class="fallback">
-                                <input name="file" type="file" />
-                                <input type="submit" value="@Resource.SendButton" />
+                                <input name="file" type="file"/>
+                                <input type="submit" value="@Resource.SendButton"/>
                             </div>
                         </form>
                     </div>
@@ -30,47 +30,51 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.Image)
             <div class="form-horizontal">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Name, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Order, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Order, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Order, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Order, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.SubjectId, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.SubjectId, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
                         <div class="row">
                             <div class="col-xs-10">
-                                @Html.DropDownListFor(model => model.SubjectId, ViewBag.Subjects as SelectList, Resource.SelectSubject, new { @class = "form-control dropdownjs" })
+                                @Html.DropDownListFor(model => model.SubjectId, ViewBag.Subjects as SelectList, Resource.SelectSubject, new {@class = "form-control dropdownjs"})
                             </div>
                             <div class="col-xs-1">
-                                <a href="@Url.Action("Create", "Subject")" class="btn btn-sm btn-info"><i class="fa fa-plus" style="font-size: 10px; top: 0px; left: 1px;"></i> <i class="fa fa-map"></i> </a>
+                                <a href="@Url.Action("Create", "Subject")" class="btn btn-sm btn-info">
+                                    <i class="fa fa-plus" style="font-size: 10px; left: 1px; top: 0px;"></i> <i class="fa fa-map"></i>
+                                </a>
                             </div>
                         </div>
-                        @Html.ValidationMessageFor(model => model.SubjectId, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.SubjectId, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.TeacherInChargeId, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.TeacherInChargeId, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
                         <div class="row">
                             <div class="col-xs-10">
-                                @Html.DropDownListFor(model => model.TeacherInChargeId, ViewBag.Teachers as SelectList, Resource.SelectTeacher, new { @class = "form-control dropdownjs" })
+                                @Html.DropDownListFor(model => model.TeacherInChargeId, ViewBag.Teachers as SelectList, Resource.SelectTeacher, new {@class = "form-control dropdownjs"})
                             </div>
                             <div class="col-xs-1">
-                                <a href="@Url.Action("Create", "Teacher")" class="btn btn-sm btn-info"> <i class="material-icons">person_add</i> </a>
+                                <a href="@Url.Action("Create", "Teacher")" class="btn btn-sm btn-info">
+                                    <i class="material-icons">person_add</i>
+                                </a>
                             </div>
                         </div>
-                        @Html.ValidationMessageFor(model => model.TeacherInChargeId, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.TeacherInChargeId, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
@@ -87,25 +91,32 @@
 
     </div>
 </div>
-<div style="display:none" id="dz-template-preview">
+<div style="display: none" id="dz-template-preview">
     <div class="dz-preview dz-file-preview">
         <div class="dz-details">
             <div class="dz-filename">
                 <span data-dz-name></span>
             </div>
             <div class="dz-size" data-dz-size></div>
-            <img data-dz-thumbnail />
+            <img data-dz-thumbnail/>
         </div>
         <div class="dz-progress">
             <div class="progress progress-line-primary">
                 <div class="dz-upload progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress></div>
             </div>
         </div>
-        <div class="dz-success-mark"><span>✔</span></div>
-        <div class="dz-error-mark"><span>✘</span></div>
-        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+        <div class="dz-success-mark">
+            <span>✔</span>
+        </div>
+        <div class="dz-error-mark">
+            <span>✘</span>
+        </div>
+        <div class="dz-error-message">
+            <span data-dz-errormessage></span>
+        </div>
     </div>
 </div>
+
 @section styles {
     @Styles.Render("~/Content/dropzone/dropZoneStyles")
 }
@@ -114,32 +125,33 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/dropzone")
     <script>
-        (function () {
+        (function() {
             var $private = {};
 
             Dropzone.options.dropzoneForm = {
                 maxFiles: 1,
 
-                init: function () {
-                    this.on("complete", function (data) {
-                        if (data.xhr != null) {
-                            var res = JSON.parse(data.xhr.responseText);
-                            $("input[name='Image']").val(res.Message);
-                        }
-                    });
-                    this.on("removedfile", function (data) {
-                        var id = "";
-                        if (data.xhr) {
-                            var res = JSON.parse(data.xhr.response);
-                            id = res.Message
-                        }
-                        else {
-                            id = data.name;
-                        }
+                init: function() {
+                    this.on("complete",
+                        function(data) {
+                            if (data.xhr != null) {
+                                var res = JSON.parse(data.xhr.responseText);
+                                $("input[name='Image']").val(res.Message);
+                            }
+                        });
+                    this.on("removedfile",
+                        function(data) {
+                            var id = "";
+                            if (data.xhr) {
+                                var res = JSON.parse(data.xhr.response);
+                                id = res.Message;
+                            } else {
+                                id = data.name;
+                            }
 
-                        $private.deleteImage(id);
-                        $("input[name='Image']").val("");
-                    });
+                            $private.deleteImage(id);
+                            $("input[name='Image']").val("");
+                        });
                 },
                 previewTemplate: $("#dz-template-preview").html(),
                 dictDefaultMessage: "@Resource.DragAndDropImageMessage",
@@ -149,7 +161,7 @@
                 dictCancelUpload: "@Resource.CancelImageButton"
             };
 
-            $private.deleteImage = function (imageName) {
+            $private.deleteImage = function(imageName) {
 
                 $.ajax({
                     type: "POST",

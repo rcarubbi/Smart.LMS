@@ -1,11 +1,8 @@
-﻿@using SmartLMS.Domain.Entities
-@using System.Linq
-@using SmartLMS.Domain.Resources
+﻿@using SmartLMS.Domain.Resources
 @model IEnumerable<SmartLMS.Domain.Entities.Delivery.Classroom>
 
 @{
     ViewBag.Title = Resource.ClassroomPlural;
-
 }
 
 <div class="col-md-12">
@@ -27,7 +24,7 @@
                                     <div class="col-md-4">
                                         <p class="list-group-item-text">@classroom.Courses.Count() @(classroom.Courses.Count() > 1 ? Resource.CoursePlural : Resource.CourseName)</p>
                                         <p class="list-group-item-text">@classroom.DeliveryPlans.Count() @(classroom.DeliveryPlans.Count() > 1 ? Resource.DeliveryPlanPlural : Resource.DeliveryPlanName)</p>
-                                        <p class="list-group-item-text">@classroom.DeliveryPlans.SelectMany(dp => dp.Students).Count() @(classroom.DeliveryPlans.SelectMany(dp => dp.Students).Count() > 1? Resource.StudentName : Resource.StudentPlural) </p>
+                                        <p class="list-group-item-text">@classroom.DeliveryPlans.SelectMany(dp => dp.Students).Count() @(classroom.DeliveryPlans.SelectMany(dp => dp.Students).Count() > 1 ? Resource.StudentName : Resource.StudentPlural) </p>
                                     </div>
                                     <div class="col-md-4">
                                         <div href="javascript:void(0);" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin: 0px;">
@@ -37,7 +34,7 @@
                                             <a href="javascript:void(0);" class="btn btn-warning btn-sm show-students-button" data-id="@classroom.Id " data-name="@classroom.Name" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.StudentPlural">
                                                 <i class="material-icons">group</i>
                                             </a>
-                                            <a href="@Url.Action("DeliveryPlan", new { ClassroomId = classroom.Id })" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.DeliveryPlanName">
+                                            <a href="@Url.Action("DeliveryPlan", new {ClassroomId = classroom.Id})" class="btn btn-info btn-sm " data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@Resource.DeliveryPlanName">
                                                 <i class="fa fa-calendar delivery-plan-button"></i>
                                             </a>
                                         </div>
@@ -61,21 +58,21 @@
 @section scripts {
     <script src="~/Scripts/classroomProxy.js"></script>
     <script>
-        (function (proxy) {
+        (function(proxy) {
             var $private = {}, $public = {};
 
-            $(function () {
- 
+            $(function() {
+
                 $private.ClassroomStudentsTemplate = Handlebars.compile($("#classroom-students-template").html());
                 $private.ClassroomCourseTemplate = Handlebars.compile($("#classroom-courses-template").html());
 
                 $(document).on("click", ".show-courses-button", $private.loadCourses);
                 $(document).on("click", ".show-students-button", $private.loadStudents);
- 
+
             });
 
 
-            $private.loadStudents = function (e) {
+            $private.loadStudents = function(e) {
                 e.preventDefault();
 
                 var classroom = {
@@ -88,12 +85,12 @@
 
             };
 
-            $private.showStudents = function (data) {
+            $private.showStudents = function(data) {
                 $("#students-container").html($private.ClassroomStudentsTemplate(data));
                 $("#students-list").modal();
             };
 
-            $private.loadCourses = function (e) {
+            $private.loadCourses = function(e) {
                 e.preventDefault();
 
                 var classroom = {
@@ -104,12 +101,11 @@
                 proxy.listCourses(classroom.id).done($private.showCourses);
             };
 
-            $private.showCourses = function (data) {
+            $private.showCourses = function(data) {
                 $("#courses-container").html($private.ClassroomCourseTemplate(data));
                 $("#courses-list").modal();
             };
 
-            
 
         }(SmartLMS.ClassroomProxy));
     </script>

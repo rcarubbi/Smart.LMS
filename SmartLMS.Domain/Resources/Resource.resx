@@ -121,10 +121,10 @@
     <value>About</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>About Gnatta Trainning Tool...</value>
+    <value>About Your Company Training...</value>
   </data>
   <data name="AboutTitle" xml:space="preserve">
-    <value>About Gnatta Trainning Tool</value>
+    <value>About Your Company Training</value>
   </data>
   <data name="AccessHistoryMenuItem" xml:space="preserve">
     <value>Access History</value>
@@ -203,20 +203,20 @@
   </data>
   <data name="CreatingUserNotificationEmailBody" xml:space="preserve">
     <value>&lt;div&gt;
-Hi {username}, your Gnatta Training Tool credendials are:
+Hi {username}, your Your Company Training credendials are:
 &lt;/div&gt;
 &lt;div&gt;Login: {login}&lt;/div&gt;&lt;div&gt;Password: {password}.&lt;/div&gt;
 &lt;div&gt;Access the platform by the following link &lt;a href='{link}'&gt;here&lt;/a&gt;.&lt;/div&gt;
-&lt;div&gt;Regards, Gnatta Training Tool Team&lt;/div&gt;</value>
+&lt;div&gt;Regards, Your Company Training Team&lt;/div&gt;</value>
   </data>
   <data name="CreatingUserNotificationEmailSubject" xml:space="preserve">
-    <value>Welcome to Gnatta Training Tool</value>
+    <value>Welcome to Your Company Training</value>
   </data>
   <data name="DeliveredClassNotificationEmailBody" xml:space="preserve">
-    <value>Hi {username}, how are you? &lt;br /&gt; The class &lt;a href='{link}/Class/Watch/{classId}'&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href='{link}/Class/Index/{courseId}'&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Gnatta Training Tool Team</value>
+    <value>Hi {username}, how are you? &lt;br /&gt; The class &lt;a href='{link}/Class/Watch/{classId}'&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href='{link}/Class/Index/{courseId}'&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Your Company Training Team</value>
   </data>
   <data name="DeliveredClassNotificationEmailSubject" xml:space="preserve">
-    <value>Gnatta Training Tool - New available class</value>
+    <value>Your Company Training - New available class</value>
   </data>
   <data name="FileName" xml:space="preserve">
     <value>Support Material</value>
@@ -270,7 +270,7 @@ Hi {username}, your Gnatta Training Tool credendials are:
     <value>Notification</value>
   </data>
   <data name="PasswordRecoveryEmailBody" xml:space="preserve">
-    <value>&lt;div&gt;Hi {username}, your Gnatta Training Tool credendials are:&lt;/div&gt;
+    <value>&lt;div&gt;Hi {username}, your Your Company Training credendials are:&lt;/div&gt;
 &lt;div&gt;
 Login: {login}.
 &lt;/div&gt;
@@ -281,11 +281,11 @@ Password: {password}
 Access the platform by the following link &lt;a href='{link}'&gt;here&lt;/a&gt;.
 &lt;/div&gt;
 &lt;div&gt;
-Regards, Gnatta Training Tool Team
+Regards, Your Company Training Team
 &lt;/div&gt;</value>
   </data>
   <data name="PasswordRecoveryEmailSubject" xml:space="preserve">
-    <value>Gnatta Training Tool - Password Recovery</value>
+    <value>Your Company Training - Password Recovery</value>
   </data>
   <data name="PasswordUpdatedNoticeMessage" xml:space="preserve">
     <value>Your password has been updated</value>
@@ -360,7 +360,7 @@ Regards, Gnatta Training Tool Team
     <value>Support Material download</value>
   </data>
   <data name="TalkToUsEmailBody" xml:space="preserve">
-    <value>&lt;div&gt;&lt;h1&gt;Talk to us - Gnatta Trainning Tool&lt;/h1&gt;
+    <value>&lt;div&gt;&lt;h1&gt;Talk to us - Your Company Training&lt;/h1&gt;
 &lt;dl&gt;
 &lt;dt&gt;Name:&lt;/dt&gt;
  &lt;dd&gt;{name}&lt;/dd&gt;
@@ -372,7 +372,7 @@ Regards, Gnatta Training Tool Team
 &lt;/div&gt;</value>
   </data>
   <data name="TalkToUsEmailSubject" xml:space="preserve">
-    <value>Gnatta Training Tool - Talk to Us</value>
+    <value>Your Company Training - Talk to Us</value>
   </data>
   <data name="TeacherAddedToastrMessage" xml:space="preserve">
     <value>Teacher added</value>
@@ -405,7 +405,7 @@ Regards, Gnatta Training Tool Team
     <value>Last watched classes</value>
   </data>
   <data name="WelcomeNoticeMessage" xml:space="preserve">
-    <value>Welcome to Gnatta Training Tool! Have a productive study!</value>
+    <value>Welcome to Your Company Training! Have a productive study!</value>
   </data>
   <data name="WithoutPermissionDownloadToastrMessage" xml:space="preserve">
     <value>You don't have permission to download this material</value>

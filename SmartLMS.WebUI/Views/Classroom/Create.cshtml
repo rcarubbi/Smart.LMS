@@ -1,5 +1,5 @@
 ﻿@using SmartLMS.Domain.Resources
-@model SmartLMS.WebUI.Models.ClassroomViewModel
+@model ClassroomViewModel
 
 @{
     ViewBag.Title = Resource.CreateClassroomPageTitle;
@@ -15,22 +15,22 @@
             @Html.AntiForgeryToken()
 
             <div class="form-horizontal">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.Name, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.CourseIds, new { @class = "control-label col-md-2"})
+                    @Html.LabelFor(model => model.CourseIds, new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.CourseIds, ViewBag.Courses as SelectList, new { @class="multiselect" , multiple = "multiple", data_multiselect_filter= false, data_multiselect_group = false })
-                        @Html.ValidationMessageFor(model => model.CourseIds, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.CourseIds, ViewBag.Courses as SelectList, new {@class = "multiselect", multiple = "multiple", data_multiselect_filter = false, data_multiselect_group = false})
+                        @Html.ValidationMessageFor(model => model.CourseIds, "", new {@class = "text-danger"})
                     </div>
                 </div>
-             
+
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button type="submit" class="btn btn-success btn-sm">
@@ -49,11 +49,11 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        $(function () {
+        $(function() {
             $("ul.multiselect-container").sortable({
                 delay: 150,
                 group: 'courses',
-                onDragStart: function ($item, container, _super) {
+                onDragStart: function($item, container, _super) {
                     var offset = $item.offset(),
                         pointer = container.rootGroup.pointer;
 
@@ -64,28 +64,26 @@
 
                     _super($item, container);
                 },
-                onDrag: function ($item, position) {
+                onDrag: function($item, position) {
                     $item.css({
                         left: position.left - adjustment.left,
-                        top: position.top - adjustment.top 
+                        top: position.top - adjustment.top
                     });
                 },
-                onDrop: function ($item, container, _super) {
+                onDrop: function($item, container, _super) {
                     var options = $("select.multiselect").find("option");
                     var option = $("select.multiselect").find("option[value='" + $item.find("input").val() + "']");
                     var newIndex = $item.index();
                     var oldIndex = option.index();
                     if (oldIndex > newIndex) {
                         $(options[oldIndex]).insertBefore($(options[newIndex]));
-                    }
-                    else
-                    {
+                    } else {
                         $(options[oldIndex]).insertAfter($(options[newIndex]));
                     }
                     _super($item, container);
                 }
             });
         });
-        
+
     </script>
 }

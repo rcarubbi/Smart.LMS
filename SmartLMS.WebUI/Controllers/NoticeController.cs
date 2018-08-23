@@ -1,15 +1,14 @@
-﻿using Carubbi.Utils.Data;
-using Carubbi.Utils.DataTypes;
-using Humanizer.DateTimeHumanizeStrategy;
-using SmartLMS.WebUI.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using Carubbi.Extensions;
+using Carubbi.Utils.DataTypes;
+using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Domain;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Services;
+using SmartLMS.WebUI.Models;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -19,8 +18,6 @@ namespace SmartLMS.WebUI.Controllers
         public NoticeController(IContext context)
             : base(context)
         {
-
-
         }
 
 
@@ -66,8 +63,8 @@ namespace SmartLMS.WebUI.Controllers
                 EndDate = DateTime.Now
             };
             var historyService = new HistoryService(_context, new DefaultDateTimeHumanizeStrategy());
-            return View(NoticeViewModel.FromEntityList(historyService.SearchNotices(range, 1, _loggedUser.Id, NoticeType.All)));
-
+            return View(
+                NoticeViewModel.FromEntityList(historyService.SearchNotices(range, 1, _loggedUser.Id, NoticeType.All)));
         }
 
         public ActionResult Send()
@@ -77,7 +74,8 @@ namespace SmartLMS.WebUI.Controllers
             return View();
         }
 
-        public ActionResult ListNoticeHistory(DateTime? startDate, DateTime? endDate, NoticeType noticeType = NoticeType.All, int page = 1)
+        public ActionResult ListNoticeHistory(DateTime? startDate, DateTime? endDate,
+            NoticeType noticeType = NoticeType.All, int page = 1)
         {
             var range = new DateRange
             {
@@ -86,7 +84,9 @@ namespace SmartLMS.WebUI.Controllers
             };
 
             var historyService = new HistoryService(_context, new DefaultDateTimeHumanizeStrategy());
-            return Json(NoticeViewModel.FromEntityList(historyService.SearchNotices(range, page, _loggedUser.Id, noticeType)), JsonRequestBehavior.AllowGet);
+            return Json(
+                NoticeViewModel.FromEntityList(historyService.SearchNotices(range, page, _loggedUser.Id, noticeType)),
+                JsonRequestBehavior.AllowGet);
         }
     }
 }

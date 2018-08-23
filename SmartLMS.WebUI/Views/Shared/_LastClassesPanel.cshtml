@@ -1,8 +1,9 @@
-﻿@model IEnumerable<SmartLMS.WebUI.Models.ClassAccessViewModel>
+﻿@using SmartLMS.Domain.Resources
+@model IEnumerable<ClassAccessViewModel>
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title">@SmartLMS.Domain.Resources.Resource.WatchedClassesTitle</h3>
+        <h3 class="panel-title">@Resource.WatchedClassesTitle</h3>
     </div>
     <div class="panel-body scroll-panel">
         <div class="bs-component">
@@ -11,19 +12,19 @@
                 {
                     foreach (var item in Model)
                     {
-                    <div class="list-group-item list-group-item-sm">
-                        <a href="@Url.Action("Watch", "Class", new { Id = item.ClassId })" class='link-group-item'>
-                            <div class="row-action-primary">
-                                <i class="fa fa-laptop"></i>
-                            </div>
-                            <div class="row-content">
-                                <h5 class="list-group-item-heading">@item.ClassName</h5>
-                                <p class="list-group-item-text">@item.CourseName</p>
-                                <div class="footer-content">@item.DateTimeDescription</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="list-group-separator list-group-separator-sm"></div>
+                        <div class="list-group-item list-group-item-sm">
+                            <a href="@Url.Action("Watch", "Class", new {Id = item.ClassId})" class='link-group-item'>
+                                <div class="row-action-primary">
+                                    <i class="fa fa-laptop"></i>
+                                </div>
+                                <div class="row-content">
+                                    <h5 class="list-group-item-heading">@item.ClassName</h5>
+                                    <p class="list-group-item-text">@item.CourseName</p>
+                                    <div class="footer-content">@item.DateTimeDescription</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group-separator list-group-separator-sm"></div>
                     }
                 }
                 else

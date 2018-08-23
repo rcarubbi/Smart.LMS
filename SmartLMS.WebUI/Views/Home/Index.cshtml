@@ -1,8 +1,7 @@
 ﻿@using SmartLMS.Domain.Resources
-@model IEnumerable<SmartLMS.WebUI.Models.KnowledgeAreaViewModel>
+@model IEnumerable<KnowledgeAreaViewModel>
 @{
     ViewBag.Title = "Home";
-
 }
 
 @if (Model.Any())
@@ -51,7 +50,9 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <h6 class="text-primary"><strong>@Resource.CheckCoursesBySubjectMessage</strong></h6>
+                        <h6 class="text-primary">
+                            <strong>@Resource.CheckCoursesBySubjectMessage</strong>
+                        </h6>
                     </div>
                 </div>
             </div>
@@ -65,7 +66,6 @@
                 }
                 @foreach (var item in Model)
                 {
-
                     <div id="knowledge-area-@item.Order" class="tab-pane fade @(firstLine ? "in active" : "")">
                         @Html.Partial("_KnowledgeAreaPanel", item)
                     </div>
@@ -87,7 +87,8 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="content">
-                    <h4 class="text-primary"><i class="fa fa-exclamation-circle"></i> @Resource.QuickPanelsMessage</h4>
+                    <h4 class="text-primary">
+                        <i class="fa fa-exclamation-circle"></i> @Resource.QuickPanelsMessage</h4>
                 </div>
             </div>
         </div>
@@ -108,10 +109,10 @@
     @if (Model.Any())
     {
         <script>
-            SmartLMS.HomeControllerProxy = (function () {
+            SmartLMS.HomeControllerProxy = (function() {
                 var $private = {}, $public = {};
 
-                $public.contextualSearch = function (term, page) {
+                $public.contextualSearch = function(term, page) {
                     return $.ajax({
                         type: "POST",
                         url: SmartLMS.api + "Home/PagedContextualSearch",
@@ -122,7 +123,7 @@
                 };
 
 
-                $public.visualizeNotice = function (noticeId, userId) {
+                $public.visualizeNotice = function(noticeId, userId) {
                     return $.ajax({
                         type: "POST",
                         url: SmartLMS.api + "Notice/Visualize",
@@ -134,10 +135,10 @@
 
                 return $public;
             }());
-            (function (proxy) {
+            (function(proxy) {
                 var $private = {}, contextualSearch = {};
 
-                $(function () {
+                $(function() {
                     $("#contextual-search-button").on("click", $private.searchTerm);
                     $("#search-results-container")
                         .on("click", ".contextual-search-pagination-next", $private.goToNextPage);
@@ -159,45 +160,45 @@
                         $private.noticeTemplate = Handlebars.compile($("#notice-template").html());
                 });
 
-                $private.searchTerm = function () {
+                $private.searchTerm = function() {
                     contextualSearch.CurrentPage = 1;
                     contextualSearch.Term = $("#q").val();
 
                     $private.search();
                 };
 
-                $private.search = function () {
+                $private.search = function() {
                     $("#search-results-container").slideUp();
                     proxy.contextualSearch(contextualSearch.Term, contextualSearch.CurrentPage)
                         .done($private.showResults)
-                        .fail(function () { console.log("Error"); });
+                        .fail(function() { console.log("Error"); });
                 };
 
 
-                $private.refreshPage = function () {
+                $private.refreshPage = function() {
 
                     proxy.contextualSearch(contextualSearch.Term, contextualSearch.CurrentPage)
                         .done($private.refreshResults)
-                        .fail(function () { console.log("Error"); });
+                        .fail(function() { console.log("Error"); });
                 };
 
-                $private.goToNextPage = function () {
+                $private.goToNextPage = function() {
                     contextualSearch.CurrentPage++;
                     $private.refreshPage();
                 };
 
-                $private.goToPage = function () {
+                $private.goToPage = function() {
                     var pagina = $(this).text();
                     contextualSearch.CurrentPage = pagina;
                     $private.refreshPage();
                 };
 
-                $private.goToPreviousPage = function () {
+                $private.goToPreviousPage = function() {
                     contextualSearch.CurrentPage--;
                     $private.refreshPage();
                 };
 
-                $private.getMinPage = function (pageCount, pageIndex) {
+                $private.getMinPage = function(pageCount, pageIndex) {
                     pageIndex = parseInt(pageIndex);
                     if (pageIndex < 4) {
                         return 1;
@@ -208,7 +209,7 @@
                     }
                 };
 
-                $private.getMaxPage = function (pageCount, pageIndex) {
+                $private.getMaxPage = function(pageCount, pageIndex) {
                     pageIndex = parseInt(pageIndex);
                     if (pageIndex < 4) {
                         if (pageCount < 6) {
@@ -223,7 +224,7 @@
                     }
                 };
 
-                $private.showResults = function (data) {
+                $private.showResults = function(data) {
                     $("#search-results-container").html($private.searchResultsTemplate(
                         {
                             searchResults: data.results.Entities,
@@ -238,7 +239,7 @@
                     $("#search-results-container").slideDown();
                 };
 
-                $private.refreshResults = function (data) {
+                $private.refreshResults = function(data) {
                     $("#search-results-container").html($private.searchResultsTemplate(
                         {
                             searchResults: data.results.Entities,
@@ -253,18 +254,18 @@
 
                 };
 
-                $private.visualizeNotice = function (e) {
+                $private.visualizeNotice = function(e) {
 
                     var notice = $(e.target).closest(".notice");
                     var noticeId = notice.data("id");
                     notice.fadeOut("slow",
                         null,
-                        function () {
+                        function() {
                             proxy.visualizeNotice(noticeId, SmartLMS.LoggedUserId).done($private.refreshNotices);
                         });
                 };
 
-                $private.refreshNotices = function (data) {
+                $private.refreshNotices = function(data) {
                     var notice = $private.noticeTemplate(data);
                     $(notice).hide().appendTo($("#notice-panel-body")).fadeIn("slow");
 
@@ -274,7 +275,7 @@
     }
     <script src="~/Scripts/addtohomescreen/addtohomescreen.js"></script>
     <script>
-        $(function () {
+        $(function() {
             addToHomescreen({
                 modal: true,
                 detectHomescreen: true
@@ -283,5 +284,3 @@
 
     </script>
 }
-
-

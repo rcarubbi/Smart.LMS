@@ -1,8 +1,7 @@
-﻿
-@if (TempData["Message"] != null)
+﻿@if (TempData["Message"] != null)
 {
     <script>
-        $(function () {
+        $(function() {
             SmartLMS.App.toastr['@TempData["MessageType"]']('@TempData["Message"]', '@TempData["MessageTitle"]');
         });
     </script>

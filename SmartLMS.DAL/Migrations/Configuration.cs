@@ -15,7 +15,7 @@ namespace SmartLMS.DAL.Migrations
 
         protected override void Seed(Context context)
         {
-            var crypto = new SymmetricCrypt(SymmetricCryptProvider.TripleDES) {Key = "Gnatta123"};
+            var crypto = new SymmetricCrypt(SymmetricCryptProvider.TripleDES) {Key = "smart123"};
 
             #region User
 
@@ -24,9 +24,9 @@ namespace SmartLMS.DAL.Migrations
                 {
                     Name = "Admin",
                     Active = true,
-                    Login = "raphael.carubbi@gnatta.com",
-                    Email = "raphael.carubbi@gnatta.com",
-                    Password = crypto.Encrypt("gnatta123"),
+                    Login = "administrator@yourcompany.com",
+                    Email = "administrator@yourcompany.com",
+                    Password = crypto.Encrypt("smart123"),
                     CreatedAt = DateTime.Now
                 });
 
@@ -36,9 +36,9 @@ namespace SmartLMS.DAL.Migrations
                 {
                     Name = "Daemon User",
                     Active = true,
-                    Login = "delivery.agent@gnatta.com",
-                    Email = "raphael.carubbi@gnatta.com",
-                    Password = crypto.Encrypt("gnatta123"),
+                    Login = "delivery.agent@yourcompany.com",
+                    Email = "delivery.agent@yourcompany.com",
+                    Password = crypto.Encrypt("smart123"),
                     CreatedAt = DateTime.Now
                 });
 
@@ -54,14 +54,14 @@ namespace SmartLMS.DAL.Migrations
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.CRYPTO_KEY,
-                        Value = "Gnatta123",
+                        Value = "smart123",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.EMAIL_FROM_KEY,
-                        Value = "noreply@gnatta.com",
+                        Value = "noreply@yourcompany.com",
                         Active = true
                     },
                     new Parameter
@@ -75,14 +75,14 @@ namespace SmartLMS.DAL.Migrations
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.SMTP_PASSWORD_KEY,
-                        Value = "Raphakf@061208",
+                        Value = "",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.SMTP_SERVER_KEY,
-                        Value = "smtp.sendgrid.net",
+                        Value = "localhost",
                         Active = true
                     },
                     new Parameter
@@ -96,21 +96,21 @@ namespace SmartLMS.DAL.Migrations
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.SMTP_USERNAME_KEY,
-                        Value = "azure_d08666407d19762964414c4da144d677@azure.com",
+                        Value = "",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.APP_NAME_KEY,
-                        Value = "Gnatta Training Tool",
+                        Value = "Your Company Training",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.SMTP_USE_DEFAULT_CREDENTIALS_KEY,
-                        Value = "false",
+                        Value = "true",
                         Active = true
                     },
                     new Parameter
@@ -131,21 +131,21 @@ namespace SmartLMS.DAL.Migrations
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.TALK_TO_US_RECEIVER_EMAIL_KEY,
-                        Value = "raphael.carubbi@gnatta.com",
+                        Value = "talk-to-us@yourcompany.com",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.DAEMON_USER_KEY,
-                        Value = "delivery.agent@gnatta.com",
+                        Value = "delivery.agent@yourcompany.com",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.BASE_URL_KEY,
-                        Value = "http://smartlmsgnatta.azurewebsites.net",
+                        Value = "http://localhost:21114",
                         Active = true
                     });
 

@@ -239,14 +239,15 @@
     <Content Include="Content\datepicker\datepicker.css" />
     <Content Include="Content\dropzone\basic.css" />
     <Content Include="Content\dropzone\dropzone.css" />
-    <Content Include="Content\icons\icon-128x128.png" />
-    <Content Include="Content\icons\icon-144x144.png" />
-    <Content Include="Content\icons\icon-152x152.png" />
-    <Content Include="Content\icons\icon-192x192.png" />
-    <Content Include="Content\icons\icon-384x384.png" />
-    <Content Include="Content\icons\icon-512x512.png" />
-    <Content Include="Content\icons\icon-72x72.png" />
-    <Content Include="Content\icons\icon-96x96.png" />
+    <Content Include="Content\icons\android-chrome-192x192.png" />
+    <Content Include="Content\icons\android-chrome-256x256.png" />
+    <Content Include="Content\icons\apple-touch-icon.png" />
+    <Content Include="Content\icons\browserconfig.xml" />
+    <Content Include="Content\icons\favicon-16x16.png" />
+    <Content Include="Content\icons\favicon-32x32.png" />
+    <Content Include="favicon.ico" />
+    <Content Include="Content\icons\mstile-150x150.png" />
+    <Content Include="Content\icons\safari-pinned-tab.svg" />
     <Content Include="Content\img\action-icon-android.png" />
     <Content Include="Content\img\action-icon-ios6.png" />
     <Content Include="Content\img\action-icon-ios7.png" />
@@ -267,7 +268,6 @@
     <Content Include="Content\img\loading-white.gif" />
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\img\courses\no-image.png" />
-    <Content Include="Content\img\smart.png" />
     <Content Include="Content\jquery.dropdown\jquery.dropdown.css" />
     <Content Include="Content\listgroup.css" />
     <Content Include="Content\material-design\bootstrap-material-design.css" />
@@ -325,9 +325,7 @@
     <Content Include="Content\material-design\ripples.css.map" />
     <Content Include="Content\material-design\ripples.min.css.map" />
     <Content Include="Content\material-kit\material-kit.css.map" />
-    <Content Include="manifest.json" />
-    <None Include="Properties\PublishProfiles\smartlmsgnatta - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\smartlmsgnatta - Web Deploy.pubxml" />
+    <Content Include="Content\icons\site.webmanifest" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\classroomProxy.js" />
     <Content Include="Scripts\dropzone\dropzone.js" />
@@ -373,7 +371,6 @@
     <Content Include="Scripts\youtube.js" />
     <Content Include="Scripts\vimeo.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="smartlms-sw.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -454,7 +451,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\apoio\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -463,7 +459,6 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartLMS.DAL\SmartLMS.DAL.csproj">
