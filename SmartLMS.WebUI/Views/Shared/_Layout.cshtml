@@ -1,4 +1,5 @@
-﻿@using SmartLMS.Domain.Entities
+﻿@using System.Configuration
+@using SmartLMS.Domain.Entities
 @using SmartLMS.Domain.Resources
 <!DOCTYPE html>
 <html>
@@ -21,9 +22,9 @@
     <link rel="icon" type="image/png" sizes="32x32" href="~/Content/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="~/Content/icons/favicon-16x16.png">
     <link rel="manifest" href="~/Content/icons/site.webmanifest">
-    <link rel="mask-icon" href="~/Content/icons/safari-pinned-tab.svg" color="#7f1887">
-    <meta name="msapplication-TileColor" content="#7f1887">
-    <meta name="theme-color" content="#7f1887">
+    <link rel="mask-icon" href="~/Content/icons/safari-pinned-tab.svg" color="@ConfigurationManager.AppSettings["ThemeColor"]">
+    <meta name="msapplication-TileColor" content="@ConfigurationManager.AppSettings["ThemeColor"]">
+    <meta name="theme-color" content="@ConfigurationManager.AppSettings["ThemeColor"]">
 
     <script src="~/Scripts/pace/pace.min.js"></script>
     @{

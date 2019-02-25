@@ -77,7 +77,7 @@ select[data-dropdownjs][disabled] + .dropdownjs > input[readonly] { cursor: defa
 
 .dropdownjs > ul > li.selected,
 .dropdownjs > ul > li:active {
-    background-color: RGB(127, 63, 152);
+    background-color: #ThemeColor#;
     color: white;
 }
 

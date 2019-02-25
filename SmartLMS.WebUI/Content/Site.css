@@ -78,14 +78,16 @@ h2 { font-size: 2.2em; }
 }
 
 .popover, .tooltip-inner {
-    background-color: rgba(127, 63, 152, 0.9);
+    background-color: #ThemeColor0.9Transparency#;
     color: white;
 }
 
-.tooltip.right .tooltip-arrow { border-right-color: rgb(127, 63, 152); }
+.tooltip.right .tooltip-arrow {
+    border-right-color: #ThemeColor#;
+}
 
 
-.tooltip.top .tooltip-arrow { border-top-color: rgb(127, 63, 152); }
+.tooltip.top .tooltip-arrow { border-top-color: #ThemeColor#; }
 
 .notice-type { margin-bottom: 10px; }
 

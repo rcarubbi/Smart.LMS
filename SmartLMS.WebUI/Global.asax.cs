@@ -16,8 +16,9 @@ namespace SmartLMS.WebUI
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleTable.EnableOptimizations = true;
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
+           
             using (var context = new Context())
             {
                 Parameter.LoadParameters(context);

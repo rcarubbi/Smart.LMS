@@ -1,4 +1,5 @@
 ﻿using System.Web.Optimization;
+using SmartLMS.WebUI.App_Start.StyleTransformations;
 
 namespace SmartLMS.WebUI
 {
@@ -56,15 +57,16 @@ namespace SmartLMS.WebUI
                 "~/Content/themes/notheme/jquery-ui.structure.css",
                 "~/Content/addtohomescreen/addtohomescreen.css"
             ));
-
-            bundles.Add(new StyleBundle("~/Content/csscustom").Include(
+            var cssCustom = new StyleBundle("~/Content/csscustom").Include(
                 "~/Content/material-kit/material-kit.css",
                 "~/Content/toastr/toastr.min.css",
                 "~/Content/jquery.dropdown/jquery.dropdown.css",
                 "~/Content/multi-carousel.css",
                 "~/Content/figure-caption.css",
                 "~/Content/listgroup.css",
-                "~/Content/Site.css"));
+                "~/Content/Site.css");
+            cssCustom.Transforms.Add(new CssVariableReplacer());
+            bundles.Add(cssCustom);
 
             // dropZone styles
             bundles.Add(new StyleBundle("~/Content/dropzone/dropZoneStyles").Include(
