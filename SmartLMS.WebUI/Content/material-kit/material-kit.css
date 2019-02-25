@@ -237,7 +237,7 @@ a, a:hover, a:focus {
 
             .btn.btn-primary,
             .navbar .navbar-nav > li > a.btn.btn-primary {
-                box-shadow: 0 2px 2px 0 rgba(112, 56, 134, 0.14), 0 3px 1px -2px rgba(127, 63, 152, 0.2), 0 1px 5px 0 rgba(142, 70, 170, 0.12);
+                box-shadow: 0 2px 2px 0 #ThemeColor0.14Transparency#, 0 3px 1px -2px #ThemeColor0.2Transparency#, 0 1px 5px 0 #ThemeColor0.12Transparency#;
             }
 
                 .btn.btn-primary, .btn.btn-primary:hover, .btn.btn-primary:focus, .btn.btn-primary:active, .btn.btn-primary.active, .btn.btn-primary:active:focus, .btn.btn-primary:active:hover, .btn.btn-primary.active:focus, .btn.btn-primary.active:hover, .open > .btn.btn-primary.dropdown-toggle, .open > .btn.btn-primary.dropdown-toggle:focus, .open > .btn.btn-primary.dropdown-toggle:hover,
@@ -1114,7 +1114,7 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
 }
 
 .togglebutton label input[type=checkbox]:checked + .toggle {
-    background-color: rgba(127, 63, 152, 0.7);
+    background-color: #ThemeColor0.7Transparency#;
 }
 
     .togglebutton label input[type=checkbox]:checked + .toggle:after {
@@ -1122,7 +1122,7 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
     }
 
     .togglebutton label input[type=checkbox]:checked + .toggle:active:after {
-        box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(127, 63, 152, 0.1);
+        box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px #ThemeColor0.1Transparency#;
     }
 
 .radio label {
@@ -1998,7 +1998,7 @@ select.form-control {
     .pagination > .active > span:hover {
         background-color: #ThemeColor#;
         border-color: #ThemeColor#;
-        box-shadow: 0 4px 5px 0 rgba(112, 56, 134, 0.14), 0 1px 10px 0 rgba(127, 63, 152, 0.12), 0 2px 4px -1px rgba(142, 70, 170, 0.2);
+        box-shadow: 0 4px 5px 0 #ThemeColor0.14Transparency#, 0 1px 10px 0 #ThemeColor0.12Transparency#, 0 2px 4px -1px #ThemeColor0.2Transparency#;
         color: #FFFFFF;
     }
 
@@ -2072,7 +2072,7 @@ select.form-control {
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
     background-color: #ThemeColor#;
-    box-shadow: 0 16px 26px -10px rgba(127, 63, 152, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(112, 56, 134, 0.2);
+    box-shadow: 0 16px 26px -10px #ThemeColor0.5Transparency#, 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #ThemeColor0.2Transparency#;
     color: #FFFFFF;
 }
 
@@ -3246,7 +3246,7 @@ h2.title {
     }
 
     .card .header-primary {
-        background: linear-gradient(60deg, #a820b2, #56105c);
+        background: linear-gradient(60deg, #ThemeColorBrighter20#, #ThemeColorDarker20#);
     }
 
     .card .header-info {

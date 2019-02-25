@@ -249,6 +249,8 @@
     <Content Include="Content\icons\apple-touch-icon.png" />
     <Content Include="Content\icons\favicon-16x16.png" />
     <Content Include="Content\icons\favicon-32x32.png" />
+    <Content Include="Content\animated-spinner\inverted-animated-spinner.css" />
+    <Content Include="Content\animated-spinner\animated-spinner.css" />
     <Content Include="favicon.ico" />
     <Content Include="Content\icons\mstile-150x150.png" />
     <Content Include="Content\icons\safari-pinned-tab.svg" />
@@ -268,8 +270,6 @@
     <Content Include="Content\img\arrow-left.png" />
     <Content Include="Content\img\arrow-right.cur" />
     <Content Include="Content\img\arrow-right.png" />
-    <Content Include="Content\img\loading-green.gif" />
-    <Content Include="Content\img\loading-white.gif" />
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\img\courses\no-image.png" />
     <Content Include="Content\jquery.dropdown\jquery.dropdown.css" />
@@ -280,8 +280,8 @@
     <Content Include="Content\material-design\ripples.min.css" />
     <Content Include="Content\material-kit\material-kit.css" />
     <Content Include="Content\multi-carousel.css" />
-    <Content Include="Content\pace\green-loading-bar.css" />
-    <Content Include="Content\pace\green-minimal.css" />
+    <Content Include="Content\pace\loading-bar.css" />
+    <Content Include="Content\pace\minimal.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />

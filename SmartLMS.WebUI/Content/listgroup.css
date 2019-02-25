@@ -49,7 +49,9 @@
     text-align: center;
 }
 
-.list-group .list-group-item .row-action-primary i.active { background: #7F3F98; }
+    .list-group .list-group-item .row-action-primary i.active {
+        background: #ThemeColor#;
+    }
 
 .list-group .list-group-item .row-picture label,
 .list-group .list-group-item .row-action-primary label {
@@ -137,7 +139,9 @@
 
 
 
-.link-group-item:hover i.fa { background: #7F3F98 !important; }
+.link-group-item:hover i.fa {
+    background: #ThemeColor# !important;
+}
 
 
 .list-group-item-sm .row-action-primary i, .list-group-item-sm .row-picture i {

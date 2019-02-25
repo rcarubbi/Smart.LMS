@@ -64,9 +64,20 @@ namespace SmartLMS.WebUI
                 "~/Content/multi-carousel.css",
                 "~/Content/figure-caption.css",
                 "~/Content/listgroup.css",
+                "~/Content/animated-spinner/animated-spinner.css",
+                "~/Content/animated-spinner/inverted-animated-spinner.css",
                 "~/Content/Site.css");
+
             cssCustom.Transforms.Add(new CssVariableReplacer());
             bundles.Add(cssCustom);
+
+            var loadingBar = new StyleBundle("~/Content/loadingbar").Include("~/content/pace/loading-bar.css");
+            loadingBar.Transforms.Add(new CssVariableReplacer());
+            bundles.Add(loadingBar);
+
+            var loadingMinimal = new StyleBundle("~/Content/loadingminimal").Include("~/content/pace/minimal.css");
+            loadingMinimal.Transforms.Add(new CssVariableReplacer());
+            bundles.Add(loadingMinimal);
 
             // dropZone styles
             bundles.Add(new StyleBundle("~/Content/dropzone/dropZoneStyles").Include(

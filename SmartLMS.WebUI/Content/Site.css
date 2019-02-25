@@ -111,7 +111,9 @@ body {
     color: white;
 }
 
-.index-title { border-bottom: 3px solid #7F3F98; }
+.index-title {
+    border-bottom: 3px solid #ThemeColor#;
+}
 
 .panel {
     border: 0;
@@ -130,7 +132,9 @@ body {
 
 .nav-pills > li.active i, .nav-pills > li.active p { color: white; }
 
-.progress.progress-line-primary { background: rgba(127, 63, 152, 0.2); }
+.progress.progress-line-primary {
+    background: #ThemeColor0.2Transparency#;
+}
 
 @media (min-width: 992px) {
     .carousel-control { width: 5% !important; }
@@ -170,7 +174,7 @@ body {
 .text-white { color: white; }
 
 .ui-menu {
-    background-color: rgba(127, 63, 152, 0.9);
+    background-color: #ThemeColor0.9Transparency#;
     color: white;
 }
 
@@ -364,12 +368,10 @@ body.dragging, body.dragging * { cursor: move !important; }
     /** Define arrowhead **/
 }
 
-#pre-loader-loading { background: url(../Content/img/loading-green.gif) no-repeat -9999px -9999px; }
-
 
 .jumbotron-upload {
     background-color: #f0f0f0;
-    color: #7F3F98 !important;
+    color: #ThemeColor# !important;
     margin: 0px;
     padding: 10px 0px 10px 0px !important;
 }

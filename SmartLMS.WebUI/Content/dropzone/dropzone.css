@@ -35,16 +35,16 @@
 
 .dropzone.dz-started .dz-message { display: none; }
 
-.dropzone .dz-preview,
-.dropzone-previews .dz-preview {
-    background: #7F3F98;
-    border: 1px solid #7F3F98;
-    display: inline-block;
-    margin: -32px 10px -32px 10px;
-    padding: 6px 6px 6px 6px;
-    position: relative;
-    vertical-align: top;
-}
+    .dropzone .dz-preview,
+    .dropzone-previews .dz-preview {
+        background: #ThemeColor#;
+        border: 1px solid #ThemeColor#;
+        display: inline-block;
+        margin: -32px 10px -32px 10px;
+        padding: 6px 6px 6px 6px;
+        position: relative;
+        vertical-align: top;
+    }
 
 .dropzone .dz-preview.dz-file-preview [data-dz-thumbnail],
 .dropzone-previews .dz-preview.dz-file-preview [data-dz-thumbnail] { display: none; }

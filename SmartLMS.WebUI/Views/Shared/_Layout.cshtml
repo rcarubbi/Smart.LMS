@@ -4,19 +4,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="x-ua-compatible" content="IE=10">
     <title>@Parameter.APP_NAME - @ViewBag.Title</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
     <meta name="description" content="Learning Management System">
-    <meta property="og:title" content="@Parameter.APP_NAME - Powered by Smart LMS"/>
-    <meta property="og:url" content="@Parameter.BASE_URL"/>
+    <meta property="og:title" content="@Parameter.APP_NAME - Powered by Smart LMS" />
+    <meta property="og:url" content="@Parameter.BASE_URL" />
     <meta property="og:description" content="Learning Management System">
     <meta property="og:image" content="~/Content/icons/icon-384x384.png">
-    <meta property="og:locale" content="en_GB"/>
-    <meta property="og:locale:alternate" content="pt_BR"/>
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:locale:alternate" content="pt_BR" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="~/Content/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="~/Content/icons/favicon-32x32.png">
@@ -33,11 +33,11 @@
     }
     @if (actionName == "Index" && controllerName == "Home")
     {
-        <link href="~/content/pace/green-loading-bar.css" rel="stylesheet"/>
+        @Styles.Render("~/Content/loadingbar");
     }
     else
     {
-        <link href="~/content/pace/green-minimal.css" rel="stylesheet"/>
+        @Styles.Render("~/Content/loadingminimal");
     }
     <script>
         var SmartLMS = {};
@@ -49,43 +49,43 @@
     @Styles.Render("~/Content/csscustom")
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("styles", false)
-    <base href="@HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")"/>
+    <base href="@HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")" />
 </head>
 <body>
 
-@Html.Action("Header", "User")
-<div class="sidebar-container">
-    <div class="container">
-        @RenderBody()
+    @Html.Action("Header", "User")
+    <div class="sidebar-container">
+        <div class="container">
+            @RenderBody()
 
-    </div>
-</div>
-
-<footer class="footer footer-black">
-    <div class="container">
-        <div class="col-sm-3">
-            <nav class="pull-left">
-                <ul>
-                    <li>
-                        Smart 2.0 - LMS
-                    </li>
-                </ul>
-            </nav>
         </div>
-        <div class="col-sm-9">
-            <div class="copyright pull-right">
-                © 2016, @Resource.MadeWithLoveMessage <i class="fa fa-heart heart"></i> @Resource.MadeBy <a href="http://www.github.com/rcarubbi" target="_blank">Raphael Carubbi</a>
+    </div>
+
+    <footer class="footer footer-black">
+        <div class="container">
+            <div class="col-sm-3">
+                <nav class="pull-left">
+                    <ul>
+                        <li>
+                            Smart 2.0 - LMS
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-sm-9">
+                <div class="copyright pull-right">
+                    © 2016, @Resource.MadeWithLoveMessage <i class="fa fa-heart heart"></i> @Resource.MadeBy <a href="http://www.github.com/rcarubbi" target="_blank">Raphael Carubbi</a>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/jqueryui")
-@Scripts.Render("~/bundles/jqueryval")
-@Scripts.Render("~/bundles/data")
-@Scripts.Render("~/bundles/bootstrap")
-<script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/data")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script>
     SmartLMS.LoggedUserId = '@ViewBag.LoggedUserId';
 
 
@@ -104,7 +104,7 @@
                 var sendMessageOriginalText = $("#talk-to-us-send-button").text();
                 var sending =
                     $(
-                        "<img src='@Url.Content("~/Content/Img/loading-white.gif")' style='width:17px'><span> @Resource.Sending</span>");
+                        "<div class=\"inverted-animated-spinner\">Loading...</div><span> @Resource.Sending</span>");
                 $("#talk-to-us-send-button").html(sending);
                 $("#talk-to-us-send-button").prop('disabled', true);
                 $.ajax({
@@ -131,12 +131,12 @@
         };
     }());
 
-</script>
-@RenderSection("scripts", false)
+    </script>
+    @RenderSection("scripts", false)
 
-@Html.Partial("_Alert")
-@Html.Partial("_About")
-@Html.Partial("_TalkToUs", new TalkToUsViewModel())
+    @Html.Partial("_Alert")
+    @Html.Partial("_About")
+    @Html.Partial("_TalkToUs", new TalkToUsViewModel())
 
 </body>
 </html>

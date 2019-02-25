@@ -63,7 +63,6 @@
         </div>
     }
 </div>
-<div id="pre-loader-loading"></div>
 
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -85,7 +84,7 @@
                     var sendOriginalText = $("#login-submit").text();
                     var sending =
                         $(
-                            "<img src='@Url.Content("~/Content/img/loading-green.gif")' style='width:18px'> <span>@Resource.Authenticating</span>");
+                            "<div class=\"animated-spinner\">Loading...</div> <span>@Resource.Authenticating</span>");
                     $("#login-submit").html(sending);
                     $("#login-submit").prop('disabled', true);
                     $.ajax({
