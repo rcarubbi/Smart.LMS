@@ -83,6 +83,14 @@
   <ItemGroup>
     <Compile Include="Attributes\LocalizedDescriptionAttribute.cs" />
     <Compile Include="Attributes\LocalizedDisplayAttribute.cs" />
+    <Compile Include="Entities\Assessment\Answer.cs" />
+    <Compile Include="Entities\Assessment\Assessment.cs" />
+    <Compile Include="Entities\Assessment\ReorderingQuestion.cs" />
+    <Compile Include="Entities\Assessment\Question.cs" />
+    <Compile Include="Entities\Assessment\QuestionAnswer.cs" />
+    <Compile Include="Entities\Assessment\QuestionTypes.cs" />
+    <Compile Include="Entities\Assessment\MultipleChoiceQuestion.cs" />
+    <Compile Include="Entities\Assessment\SingleChoiceQuestion.cs" />
     <Compile Include="Entities\Delivery\Classroom.cs" />
     <Compile Include="Entities\History\FileAccess.cs" />
     <Compile Include="Entities\Delivery\DeliveryPlan.cs" />
@@ -107,7 +115,7 @@
     <Compile Include="Entities\Content\ContentType.cs" />
     <Compile Include="Entities\Delivery\ClassDeliveryPlan.cs" />
     <Compile Include="Entities\UserAccess\User.cs" />
-    <Compile Include="IContexto.cs" />
+    <Compile Include="IContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ClassInfo.cs" />
     <Compile Include="Repositories\CourseIndex.cs" />

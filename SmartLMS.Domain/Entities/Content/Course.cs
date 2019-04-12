@@ -15,6 +15,8 @@ namespace SmartLMS.Domain.Entities.Content
         public virtual Subject Subject { get; set; }
         public virtual ICollection<File> Files { get; set; }
 
+        public virtual ICollection<Assessment.Assessment> AvailableAssessments { get; set; }
+
         public virtual ICollection<ClassroomCourse> Classrooms { get; set; }
 
         public string Name { get; set; }
