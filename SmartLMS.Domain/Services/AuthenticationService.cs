@@ -73,15 +73,15 @@ namespace SmartLMS.Domain.Services
             updatedUser.CreatedAt = user.CreatedAt;
 
 
-            var analyzer = new DiffAnalyzer(1);
-            var differences = analyzer.Compare(_context.UnProxy(user), updatedUser, a => a.State == DiffState.Modified);
+            var analyzer = new DiffAnalyzer();
+            var differences = analyzer.Compare(_context.UnProxy(user), updatedUser).Where(a => a.State == DiffState.Modified);
 
 
             var diffText = new StringBuilder($"{Resource.PersonalInfoUpdatedTitle}:{Environment.NewLine}<br />");
             foreach (var item in differences)
-                diffText.AppendLine(item.PropertyName == "Password"
+                diffText.AppendLine(item.BreadCrumb == "Root.Password"
                     ? $"- {Resource.PasswordUpdatedNoticeMessage} <br />"
-                    : $"- {item.PropertyName} {Resource.PersonalInfoUpdatedFrom} {item.OldValue} {Resource.PersonalInfoUpdatedTo} {item.NewValue}<br />");
+                    : $"- {item.BreadCrumb} {Resource.PersonalInfoUpdatedFrom} {item.PreviousValue} {Resource.PersonalInfoUpdatedTo} {item.CurrentValue}<br />");
 
             var updatingNotice = new Notice
             {
