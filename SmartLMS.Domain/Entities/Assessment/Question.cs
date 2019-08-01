@@ -2,7 +2,7 @@
 
 namespace SmartLMS.Domain.Entities.Assessment
 {
-    public abstract class Question
+    public abstract class Question : Entity
     {
         public QuestionTypes Type { get; set; }
 
