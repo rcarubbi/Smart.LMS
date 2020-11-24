@@ -71,7 +71,7 @@ namespace SmartLMS.Domain.Entities.Delivery
             context.GetList<Notice>().Add(new Notice
             {
                 Text =
-                    $@"New <a href='Class/Watch/{classDeliveryPlan.ClassId}'>{Resource.ClassName} {classDeliveryPlan.Class.Name}</a> available! <br />
+                    $@"{Resource.New} <a href='Class/Watch/{classDeliveryPlan.ClassId}'>{Resource.ClassName} {classDeliveryPlan.Class.Name}</a> {Resource.Available}! <br />
                                <a href='Class/Index/{classDeliveryPlan.Class.Course.Id}'>{Resource.CourseName} {classDeliveryPlan.Class.Course.Name}</a> <br />",
                 DateTime = DateTime.Now,
                 DeliveryPlan = this

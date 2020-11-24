@@ -6,7 +6,7 @@
             <i class="fa fa-graduation-cap text-primary"></i> @Resource.CourseName @Model.Name
         </h3>
         <h4>
-            <strong>Teacher in charge:</strong> @Model.TeacherInChargeName</h4>
+            <strong>@Resource.TeacherInChargeTitle:</strong> @Model.TeacherInChargeName</h4>
         @Html.Partial("_ClassList", Model.Classes)
         <a href="@Url.Action("Index", "Course", new {Id = Model.SubjectId})" class="btn btn-primary btn-simple pull-right">
             <i class="material-icons">reply</i> @Resource.BackToIndex

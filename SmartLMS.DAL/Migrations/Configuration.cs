@@ -22,10 +22,10 @@ namespace SmartLMS.DAL.Migrations
             context.Set<User>().AddOrUpdate(u => u.Name,
                 new Admin
                 {
-                    Name = "Admin",
+                    Name = "Administrador",
                     Active = true,
-                    Login = "administrator@yourcompany.com",
-                    Email = "administrator@yourcompany.com",
+                    Login = "coletivotarab@gmail.com",
+                    Email = "coletivotarab@gmail.com",
                     Password = crypto.Encrypt("smart123"),
                     CreatedAt = DateTime.Now
                 });
@@ -36,8 +36,8 @@ namespace SmartLMS.DAL.Migrations
                 {
                     Name = "Daemon User",
                     Active = true,
-                    Login = "delivery.agent@yourcompany.com",
-                    Email = "delivery.agent@yourcompany.com",
+                    Login = "coletivotarab.noreply@gmail.com",
+                    Email = "coletivotarab.noreply@gmail.com",
                     Password = crypto.Encrypt("smart123"),
                     CreatedAt = DateTime.Now
                 });
@@ -61,7 +61,7 @@ namespace SmartLMS.DAL.Migrations
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.EMAIL_FROM_KEY,
-                        Value = "noreply@yourcompany.com",
+                        Value = "coletivotarab@gmail.com",
                         Active = true
                     },
                     new Parameter
@@ -75,14 +75,14 @@ namespace SmartLMS.DAL.Migrations
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.SMTP_PASSWORD_KEY,
-                        Value = "",
+                        Value = "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",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.SMTP_SERVER_KEY,
-                        Value = "localhost",
+                        Value = "smtp.sendgrid.net",
                         Active = true
                     },
                     new Parameter
@@ -96,21 +96,21 @@ namespace SmartLMS.DAL.Migrations
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.SMTP_USERNAME_KEY,
-                        Value = "",
+                        Value = "apikey",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.APP_NAME_KEY,
-                        Value = "Your Company Training",
+                        Value = "Coletivo Tarab",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.SMTP_USE_DEFAULT_CREDENTIALS_KEY,
-                        Value = "true",
+                        Value = "false",
                         Active = true
                     },
                     new Parameter
@@ -124,28 +124,28 @@ namespace SmartLMS.DAL.Migrations
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.TALK_TO_US_RECEIVER_NAME_KEY,
-                        Value = "Raphael Carubbi Neto",
+                        Value = "Bruna Milani",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.TALK_TO_US_RECEIVER_EMAIL_KEY,
-                        Value = "talk-to-us@yourcompany.com",
+                        Value = "coletivotarab@gmail.com",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.DAEMON_USER_KEY,
-                        Value = "delivery.agent@yourcompany.com",
+                        Value = "coletivotarab.noreply@gmail.com",
                         Active = true
                     },
                     new Parameter
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.BASE_URL_KEY,
-                        Value = "http://localhost:21114",
+                        Value = "http://tarabsmartlms.azurewebsites.net/",
                         Active = true
                     });
 

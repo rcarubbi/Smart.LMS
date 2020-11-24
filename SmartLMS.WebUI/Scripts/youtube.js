@@ -1,7 +1,7 @@
 ﻿SmartLMS.Youtube = (function(Youtube) {
     var $private = {}, $public = {};
 
-    $public.initialize = function(classId, updateProgressUrl, watchedSeconds) {
+    $public.initialize = function(classId, updateProgressUrl, watchedSeconds, origin) {
 
         $private.progress = [];
         $private.pendingSeektoTime = parseFloat(watchedSeconds);
@@ -12,9 +12,13 @@
             {
                 events: {
                     'onStateChange': $private.onPlayerStateChange
-                }
+                },
+                playerVars: { 'origin': origin, 'showinfo': 0, 'rel': 0 },
+                 
             });
     };
+
+    
 
     $private.onPlayerStateChange = function(event) {
         switch (event.data) {

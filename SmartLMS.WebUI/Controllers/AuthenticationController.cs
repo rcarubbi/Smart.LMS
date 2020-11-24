@@ -46,7 +46,7 @@ namespace SmartLMS.WebUI.Controllers
                 return Json(new {Url = url, Authenticated = true}, JsonRequestBehavior.AllowGet);
             }
 
-            ModelState.AddModelError("IvalidUserOrPassword", "Invalid User or password");
+            ModelState.AddModelError("IvalidUserOrPassword", Resource.InvalidUserOrPassword);
 
             return Json(
                 new
@@ -74,12 +74,12 @@ namespace SmartLMS.WebUI.Controllers
                 var notificationService = new NotificationService(_context, sender);
                 await Task.Run(() => notificationService.SendRecoverPasswordNotification(viewModel.Email, password))
                     .ConfigureAwait(false);
-                ViewBag.Message = "We sent an e-mail to you with your password.";
+                ViewBag.Message = Resource.ForgotPasswordMessage;
             }
             else
             {
                 ViewBag.Message = "";
-                ModelState.AddModelError("EmailNaoEncontrado", "E-mail not found");
+                ModelState.AddModelError("EmailNaoEncontrado", Resource.EmailNotFound);
             }
 
             return View(viewModel);

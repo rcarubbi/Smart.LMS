@@ -19,7 +19,7 @@ namespace SmartLMS.Domain.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resource {
@@ -70,7 +70,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About Your Company Training....
+        ///   Looks up a localized string similar to Through the research of Multi-instrumentalist, Composer and Arranger Mario Aphonso III with the music of the world, a musical journey begins that connects strands and cultures through modal music from the Middle East, Turkey, Mediterranean and Balkans, to the Arab world and music Brazilian instrumental. Within the study of theory, the practice of traditional repertoire and language are fundamental to a rich and complete experience. The need to share this research with musicians and friends has become a very [rest of string was truncated]&quot;;.
         /// </summary>
         public static string AboutText {
             get {
@@ -174,6 +174,15 @@ namespace SmartLMS.Domain.Resources {
         public static string Authenticating {
             get {
                 return ResourceManager.GetString("Authenticating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to available.
+        /// </summary>
+        public static string Available {
+            get {
+                return ResourceManager.GetString("Available", resourceCulture);
             }
         }
         
@@ -948,6 +957,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to E-mail not found.
+        /// </summary>
+        public static string EmailNotFound {
+            get {
+                return ResourceManager.GetString("EmailNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email required.
         /// </summary>
         public static string EmailRequired {
@@ -1029,6 +1047,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to We sent an e-mail to you with your password..
+        /// </summary>
+        public static string ForgotPasswordMessage {
+            get {
+                return ResourceManager.GetString("ForgotPasswordMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Forgot your password?.
         /// </summary>
         public static string ForgotPasswordTitle {
@@ -1043,6 +1070,15 @@ namespace SmartLMS.Domain.Resources {
         public static string InvalidLogin {
             get {
                 return ResourceManager.GetString("InvalidLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid User or password.
+        /// </summary>
+        public static string InvalidUserOrPassword {
+            get {
+                return ResourceManager.GetString("InvalidUserOrPassword", resourceCulture);
             }
         }
         
@@ -1214,6 +1250,15 @@ namespace SmartLMS.Domain.Resources {
         public static string MyCoursesTitle {
             get {
                 return ResourceManager.GetString("MyCoursesTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New.
+        /// </summary>
+        public static string New {
+            get {
+                return ResourceManager.GetString("New", resourceCulture);
             }
         }
         
@@ -2207,6 +2252,15 @@ namespace SmartLMS.Domain.Resources {
         public static string TeacherInChargeException {
             get {
                 return ResourceManager.GetString("TeacherInChargeException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teacher in charge.
+        /// </summary>
+        public static string TeacherInChargeTitle {
+            get {
+                return ResourceManager.GetString("TeacherInChargeTitle", resourceCulture);
             }
         }
         

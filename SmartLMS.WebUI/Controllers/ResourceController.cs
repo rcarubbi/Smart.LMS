@@ -44,8 +44,8 @@ namespace SmartLMS.WebUI.Controllers
                    },
                     new Icon
                     {
-                        sizes = "256x256",
-                        src = "/Content/icons/android-chrome-256x256.png",
+                        sizes = "384x384",
+                        src = "/Content/icons/android-chrome-384x384.png",
                         type = "image/png",
                     },
                 },

@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Raphael\AppData\Local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Raphael\AppData\Local\JetBrains\Rider2020.2\resharper-host\Local\Transient\Rider\v202\SolutionCaches\_SmartLMS.640126122.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Raphael\source\repos\rcarubbi\Smart.LMS" t="IncludeFlat">
+      <e p="1. UI" t="Include" />
+      <e p="2. Domain" t="Include" />
+      <e p="3. DataAccess" t="Include" />
+      <e p="4. Infrastructure" t="Include" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="SmartLMS.ContentDeliveryAgent" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ContentDeliveryJob.cs" t="Include" />
+        <e p="ContentDeliveryService.cs" t="Include" />
+        <e p="job_scheduling_data_2_0.xsd" t="Include" />
+        <e p="NLog.config" t="Include" />
+        <e p="NLog.xsd" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Resources" t="Include" />
+        <e p="SmartLMS.ContentDeliveryAgent.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SmartLMS.DAL" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Context.cs" t="Include" />
+        <e p="Mapping" t="Include">
+          <e p="ClassAccessConfiguration.cs" t="Include" />
+          <e p="ClassConfiguration.cs" t="Include" />
+          <e p="ClassDeliveryPlanConfiguration.cs" t="Include" />
+          <e p="ClassroomConfiguration.cs" t="Include" />
+          <e p="ClassroomCourseConfiguration.cs" t="Include" />
+          <e p="CourseConfiguration.cs" t="Include" />
+          <e p="FileAccessConfiguration.cs" t="Include" />
+          <e p="FileConfiguration.cs" t="Include" />
+          <e p="KnowledgeAreaConfiguration.cs" t="Include" />
+          <e p="NoticeConfiguration.cs" t="Include" />
+          <e p="StudentConfiguration.cs" t="Include" />
+          <e p="SubjectConfiguration.cs" t="Include" />
+          <e p="UserConfiguration.cs" t="Include" />
+          <e p="UserNoticeConfiguration.cs" t="Include" />
+        </e>
+        <e p="Migrations" t="Include">
+          <e p="201908012229015_Initial-Migration.cs" t="Include" />
+          <e p="201908012229015_Initial-Migration.Designer.cs" t="Include" />
+          <e p="201908012229015_Initial-Migration.resx" t="Include" />
+          <e p="Configuration.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="SmartLMS.DAL.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SmartLMS.Domain" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="Attributes" t="Include">
+          <e p="LocalizedDescriptionAttribute.cs" t="Include" />
+          <e p="LocalizedDisplayAttribute.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Entities" t="Include">
+          <e p="Assessment" t="Include">
+            <e p="Answer.cs" t="Include" />
+            <e p="Assessment.cs" t="Include" />
+            <e p="MultipleChoiceQuestion.cs" t="Include" />
+            <e p="Question.cs" t="Include" />
+            <e p="QuestionAnswer.cs" t="Include" />
+            <e p="QuestionTypes.cs" t="Include" />
+            <e p="ReorderingQuestion.cs" t="Include" />
+            <e p="SingleChoiceQuestion.cs" t="Include" />
+          </e>
+          <e p="Communication" t="Include">
+            <e p="Comment.cs" t="Include" />
+            <e p="Notice.cs" t="Include" />
+            <e p="UserNotice.cs" t="Include" />
+          </e>
+          <e p="Content" t="Include">
+            <e p="Class.cs" t="Include" />
+            <e p="ContentType.cs" t="Include" />
+            <e p="Course.cs" t="Include" />
+            <e p="File.cs" t="Include" />
+            <e p="KnowledgeArea.cs" t="Include" />
+            <e p="Subject.cs" t="Include" />
+          </e>
+          <e p="Delivery" t="Include">
+            <e p="ClassDeliveryPlan.cs" t="Include" />
+            <e p="Classroom.cs" t="Include" />
+            <e p="ClassroomCourse.cs" t="Include" />
+            <e p="DeliveryPlan.cs" t="Include" />
+          </e>
+          <e p="Entity.cs" t="Include" />
+          <e p="History" t="Include">
+            <e p="ClassAccess.cs" t="Include" />
+            <e p="FileAccess.cs" t="Include" />
+            <e p="Log.cs" t="Include" />
+          </e>
+          <e p="ISearchResult.cs" t="Include" />
+          <e p="Parameter.cs" t="Include" />
+          <e p="UserAccess" t="Include">
+            <e p="Admin.cs" t="Include" />
+            <e p="Role.cs" t="Include" />
+            <e p="Student.cs" t="Include" />
+            <e p="Teacher.cs" t="Include" />
+            <e p="User.cs" t="Include" />
+          </e>
+        </e>
+        <e p="IContext.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Repositories" t="Include">
+          <e p="ClassAccessRepository.cs" t="Include" />
+          <e p="ClassInfo.cs" t="Include" />
+          <e p="ClassRepository.cs" t="Include" />
+          <e p="ClassroomRepository.cs" t="Include" />
+          <e p="CourseIndex.cs" t="Include" />
+          <e p="CourseRepository.cs" t="Include" />
+          <e p="KnowledgeAreaRepository.cs" t="Include" />
+          <e p="NoticeRepository.cs" t="Include" />
+          <e p="ParameterRepository.cs" t="Include" />
+          <e p="SubjectRepository.cs" t="Include" />
+          <e p="UserRepository.cs" t="Include" />
+        </e>
+        <e p="Resources" t="Include">
+          <e p="Resource.Designer.cs" t="Include" />
+          <e p="Resource.pt-BR.Designer.cs" t="Include" />
+          <e p="Resource.pt-BR.resx" t="Include" />
+          <e p="Resource.resx" t="Include" />
+        </e>
+        <e p="Services" t="Include">
+          <e p="AccessInfo.cs" t="Include" />
+          <e p="AccessType.cs" t="Include" />
+          <e p="AuthenticationService.cs" t="Include" />
+          <e p="ContextualSearchService.cs" t="Include" />
+          <e p="HistoryService.cs" t="Include" />
+          <e p="NoticeInfo.cs" t="Include" />
+          <e p="NoticeType.cs" t="Include" />
+          <e p="NotificationService.cs" t="Include" />
+          <e p="ResultType.cs" t="Include" />
+          <e p="SearchResult.cs" t="Include" />
+        </e>
+        <e p="SmartLMS.Domain.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SmartLMS.sln" t="IncludeFlat" />
+      <e p="SmartLMS.WebUI" t="IncludeRecursive">
+        <e p="ActionResults" t="Include">
+          <e p="XmlActionResult.cs" t="Include" />
+        </e>
+        <e p="App_Data" t="Include" />
+        <e p="App_Readme" t="Include">
+          <e p="Handlebarsjs_LICENSE" t="Include" />
+          <e p="Handlebarsjs_README.md" t="Include" />
+        </e>
+        <e p="App_Start" t="Include">
+          <e p="BundleConfig.cs" t="Include" />
+          <e p="FilterConfig.cs" t="Include" />
+          <e p="RouteConfig.cs" t="Include" />
+          <e p="StructuremapMvc.cs" t="Include" />
+          <e p="StructuremapWebApi.cs" t="Include" />
+          <e p="StyleTransformations" t="Include">
+            <e p="CssVariableReplacer.cs" t="Include" />
+          </e>
+          <e p="WebApiConfig.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Content" t="Include">
+          <e p="addtohomescreen" t="Include">
+            <e p="addtohomescreen.css" t="Include" />
+          </e>
+          <e p="animated-spinner" t="Include">
+            <e p="animated-spinner.css" t="Include" />
+            <e p="inverted-animated-spinner.css" t="Include" />
+          </e>
+          <e p="bootstrap-multiselect" t="Include">
+            <e p="bootstrap-multiselect.css" t="Include" />
+          </e>
+          <e p="bootstrap.css" t="Include" />
+          <e p="bootstrap.min.css" t="Include" />
+          <e p="datepicker" t="Include">
+            <e p="datepicker.css" t="Include" />
+          </e>
+          <e p="dropzone" t="Include">
+            <e p="basic.css" t="Include" />
+            <e p="dropzone.css" t="Include" />
+          </e>
+          <e p="figure-caption.css" t="Include" />
+          <e p="font-awesome.css" t="Include" />
+          <e p="font-awesome.min.css" t="Include" />
+          <e p="icons" t="Include">
+            <e p="android-chrome-192x192.png" t="Include" />
+            <e p="android-chrome-256x256.png" t="Include" />
+            <e p="apple-touch-icon.png" t="Include" />
+            <e p="favicon-16x16.png" t="Include" />
+            <e p="favicon-32x32.png" t="Include" />
+            <e p="mstile-150x150.png" t="Include" />
+            <e p="safari-pinned-tab.svg" t="Include" />
+          </e>
+          <e p="img" t="Include">
+            <e p="action-icon-android.png" t="Include" />
+            <e p="action-icon-ios6.png" t="Include" />
+            <e p="action-icon-ios7.png" t="Include" />
+            <e p="arrow-left.cur" t="Include" />
+            <e p="arrow-left.png" t="Include" />
+            <e p="arrow-right.cur" t="Include" />
+            <e p="arrow-right.png" t="Include" />
+            <e p="courses" t="Include">
+              <e p="no-image.png" t="Include" />
+            </e>
+            <e p="icon-152x152.png" t="Include" />
+            <e p="icon-16x16.png" t="Include" />
+            <e p="icon-196x196.png" t="Include" />
+            <e p="icon.svg" t="Include" />
+            <e p="logo.png" t="Include" />
+            <e p="spritemap.png" t="Include" />
+            <e p="spritemap@2x.png" t="Include" />
+          </e>
+          <e p="jquery.dropdown" t="Include">
+            <e p="jquery.dropdown.css" t="Include" />
+          </e>
+          <e p="listgroup.css" t="Include" />
+          <e p="material-design" t="Include">
+            <e p="bootstrap-material-design.css" t="Include" />
+            <e p="bootstrap-material-design.css.map" t="Include" />
+            <e p="bootstrap-material-design.min.css" t="Include" />
+            <e p="bootstrap-material-design.min.css.map" t="Include" />
+            <e p="ripples.css" t="Include" />
+            <e p="ripples.css.map" t="Include" />
+            <e p="ripples.min.css" t="Include" />
+            <e p="ripples.min.css.map" t="Include" />
+          </e>
+          <e p="material-kit" t="Include">
+            <e p="material-kit.css" t="Include" />
+            <e p="material-kit.css.map" t="Include" />
+          </e>
+          <e p="multi-carousel.css" t="Include" />
+          <e p="pace" t="Include">
+            <e p="loading-bar.css" t="Include" />
+            <e p="minimal.css" t="Include" />
+          </e>
+          <e p="Site.css" t="Include" />
+          <e p="themes" t="Include">
+            <e p="base" t="Include">
+              <e p="images" t="Include">
+                <e p="ui-bg_flat_0_aaaaaa_40x100.png" t="Include" />
+                <e p="ui-bg_flat_75_ffffff_40x100.png" t="Include" />
+                <e p="ui-bg_glass_55_fbf9ee_1x400.png" t="Include" />
+                <e p="ui-bg_glass_65_ffffff_1x400.png" t="Include" />
+                <e p="ui-bg_glass_75_dadada_1x400.png" t="Include" />
+                <e p="ui-bg_glass_75_e6e6e6_1x400.png" t="Include" />
+                <e p="ui-bg_glass_95_fef1ec_1x400.png" t="Include" />
+                <e p="ui-bg_highlight-soft_75_cccccc_1x100.png" t="Include" />
+                <e p="ui-icons_222222_256x240.png" t="Include" />
+                <e p="ui-icons_2e83ff_256x240.png" t="Include" />
+                <e p="ui-icons_444444_256x240.png" t="Include" />
+                <e p="ui-icons_454545_256x240.png" t="Include" />
+                <e p="ui-icons_555555_256x240.png" t="Include" />
+                <e p="ui-icons_777620_256x240.png" t="Include" />
+                <e p="ui-icons_777777_256x240.png" t="Include" />
+                <e p="ui-icons_888888_256x240.png" t="Include" />
+                <e p="ui-icons_cc0000_256x240.png" t="Include" />
+                <e p="ui-icons_cd0a0a_256x240.png" t="Include" />
+                <e p="ui-icons_ffffff_256x240.png" t="Include" />
+              </e>
+              <e p="jquery-ui.css" t="Include" />
+            </e>
+            <e p="notheme" t="Include">
+              <e p="jquery-ui.css" t="Include" />
+              <e p="jquery-ui.min.css" t="Include" />
+              <e p="jquery-ui.structure.css" t="Include" />
+              <e p="jquery-ui.structure.min.css" t="Include" />
+            </e>
+          </e>
+          <e p="toastr" t="Include">
+            <e p="toastr.min.css" t="Include" />
+          </e>
+        </e>
+        <e p="Controllers" t="Include">
+          <e p="AuthenticationController.cs" t="Include" />
+          <e p="BaseController.cs" t="Include" />
+          <e p="ClassController.cs" t="Include" />
+          <e p="ClassroomController.cs" t="Include" />
+          <e p="CourseController.cs" t="Include" />
+          <e p="HomeController.cs" t="Include" />
+          <e p="ImageUploader.cs" t="Include" />
+          <e p="KnowledgeAreaController.cs" t="Include" />
+          <e p="NoticeController.cs" t="Include" />
+          <e p="ResourceController.cs" t="Include" />
+          <e p="StudentController.cs" t="Include" />
+          <e p="SubjectController.cs" t="Include" />
+          <e p="SupportMaterialUploader.cs" t="Include" />
+          <e p="TeacherController.cs" t="Include" />
+          <e p="UserController.cs" t="Include" />
+        </e>
+        <e p="DependencyResolution" t="Include">
+          <e p="ControllerConvention.cs" t="Include" />
+          <e p="DefaultRegistry.cs" t="Include" />
+          <e p="IoC.cs" t="Include" />
+          <e p="StructureMapDependencyScope.cs" t="Include" />
+          <e p="StructureMapScopeModule.cs" t="Include" />
+          <e p="StructureMapWebApiDependencyResolver.cs" t="Include" />
+          <e p="StructureMapWebApiDependencyScope.cs" t="Include" />
+        </e>
+        <e p="favicon.ico" t="Include" />
+        <e p="fonts" t="Include">
+          <e p="fontawesome-webfont.eot" t="Include" />
+          <e p="fontawesome-webfont.svg" t="Include" />
+          <e p="fontawesome-webfont.ttf" t="Include" />
+          <e p="fontawesome-webfont.woff" t="Include" />
+          <e p="fontawesome-webfont.woff2" t="Include" />
+          <e p="FontAwesome.otf" t="Include" />
+          <e p="glyphicons-halflings-regular.eot" t="Include" />
+          <e p="glyphicons-halflings-regular.svg" t="Include" />
+          <e p="glyphicons-halflings-regular.ttf" t="Include" />
+          <e p="glyphicons-halflings-regular.woff" t="Include" />
+        </e>
+        <e p="Global.asax" t="Include" />
+        <e p="Global.asax.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="AccessViewModel.cs" t="Include" />
+          <e p="BrowserConfigModels.cs" t="Include" />
+          <e p="ChangePasswordViewModel.cs" t="Include" />
+          <e p="ClassAccessViewModel.cs" t="Include" />
+          <e p="ClassDeliveryPlanViewModel.cs" t="Include" />
+          <e p="ClassroomViewModel.cs" t="Include" />
+          <e p="ClassViewModel.cs" t="Include" />
+          <e p="CommentViewModel.cs" t="Include" />
+          <e p="CourseViewModel.cs" t="Include" />
+          <e p="FileViewModel.cs" t="Include" />
+          <e p="ForgotPasswordViewModel.cs" t="Include" />
+          <e p="HeaderViewModel.cs" t="Include" />
+          <e p="KnowledgeAreaViewModel.cs" t="Include" />
+          <e p="LoginViewModel.cs" t="Include" />
+          <e p="NoticeViewModel.cs" t="Include" />
+          <e p="SendNoticeViewModel.cs" t="Include" />
+          <e p="SubjectViewModel.cs" t="Include" />
+          <e p="TalkToUsViewModel.cs" t="Include" />
+          <e p="UserViewModel.cs" t="Include" />
+          <e p="WebManifestModels.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Providers" t="Include">
+          <e p="RoleProvider.cs" t="Include" />
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="_references.js" t="Include" />
+          <e p="addtohomescreen" t="Include">
+            <e p="addtohomescreen.js" t="Include" />
+          </e>
+          <e p="app.js" t="Include" />
+          <e p="bootstrap-datepicker" t="Include">
+            <e p="bootstrap-datepicker.js" t="Include" />
+          </e>
+          <e p="bootstrap-multiselect" t="Include">
+            <e p="bootstrap-multiselect.js" t="Include" />
+          </e>
+          <e p="bootstrap.js" t="Include" />
+          <e p="bootstrap.min.js" t="Include" />
+          <e p="classroomProxy.js" t="Include" />
+          <e p="dropzone" t="Include">
+            <e p="dropzone.js" t="Include" />
+          </e>
+          <e p="handlebars.amd.js" t="Include" />
+          <e p="handlebars.amd.min.js" t="Include" />
+          <e p="handlebars.js" t="Include" />
+          <e p="handlebars.min.js" t="Include" />
+          <e p="handlebars.runtime.amd.js" t="Include" />
+          <e p="handlebars.runtime.amd.min.js" t="Include" />
+          <e p="handlebars.runtime.js" t="Include" />
+          <e p="handlebars.runtime.min.js" t="Include" />
+          <e p="jquery-1.10.2.intellisense.js" t="Include" />
+          <e p="jquery-1.12.4-vsdoc.js" t="Include" />
+          <e p="jquery-1.12.4.js" t="Include" />
+          <e p="jquery-1.12.4.min.js" t="Include" />
+          <e p="jquery-1.12.4.min.map" t="Include" />
+          <e p="jquery-ui-1.12.0.js" t="Include" />
+          <e p="jquery-ui-1.12.0.min.js" t="Include" />
+          <e p="jquery.dropdown" t="Include">
+            <e p="jquery.dropdown.js" t="Include" />
+          </e>
+          <e p="jQuery.mask" t="Include">
+            <e p="jquery.mask.js" t="Include" />
+          </e>
+          <e p="jquery.sortable" t="Include">
+            <e p="jquery.sortable.js" t="Include" />
+          </e>
+          <e p="jquery.touchSwipe" t="Include">
+            <e p="jquery.touchSwipe.js" t="Include" />
+            <e p="jquery.touchSwipe.min.js" t="Include" />
+          </e>
+          <e p="jquery.unobtrusive-ajax.js" t="Include" />
+          <e p="jquery.unobtrusive-ajax.min.js" t="Include" />
+          <e p="jquery.validate-vsdoc.js" t="Include" />
+          <e p="jquery.validate.js" t="Include" />
+          <e p="jquery.validate.min.js" t="Include" />
+          <e p="jquery.validate.unobtrusive.js" t="Include" />
+          <e p="jquery.validate.unobtrusive.min.js" t="Include" />
+          <e p="material-design" t="Include">
+            <e p="material.js" t="Include" />
+            <e p="ripples.js" t="Include" />
+          </e>
+          <e p="material-kit" t="Include">
+            <e p="material-kit.js" t="Include" />
+            <e p="material.min.js" t="Include" />
+            <e p="nouislider.min.js" t="Include" />
+          </e>
+          <e p="modernizr-2.6.2.js" t="Include" />
+          <e p="momentjs" t="Include">
+            <e p="moment-with-locales.js" t="Include" />
+          </e>
+          <e p="pace" t="Include">
+            <e p="pace.min.js" t="Include" />
+          </e>
+          <e p="pagination.js" t="Include" />
+          <e p="respond.js" t="Include" />
+          <e p="respond.min.js" t="Include" />
+          <e p="slimscroll" t="Include">
+            <e p="jquery.slimscroll.min.js" t="Include" />
+          </e>
+          <e p="toastr" t="Include">
+            <e p="toastr.min.js" t="Include" />
+          </e>
+          <e p="vimeo.js" t="Include" />
+          <e p="youtube.js" t="Include" />
+        </e>
+        <e p="SmartLMS.WebUI.csproj" t="IncludeRecursive" />
+        <e p="Views" t="Include">
+          <e p="_ViewStart.cshtml" t="Include" />
+          <e p="Authentication" t="Include">
+            <e p="_Layout.cshtml" t="Include" />
+            <e p="ChangePassword.cshtml" t="Include" />
+            <e p="ForgotPassword.cshtml" t="Include" />
+            <e p="Login.cshtml" t="Include" />
+          </e>
+          <e p="Class" t="Include">
+            <e p="_CommentForm.cshtml" t="Include" />
+            <e p="Create.cshtml" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="IndexAdmin.cshtml" t="Include" />
+            <e p="Watch.cshtml" t="Include" />
+          </e>
+          <e p="Classroom" t="Include">
+            <e p="_CoursesListModal.cshtml" t="Include" />
+            <e p="_DeliveryPlanHistory.cshtml" t="Include" />
+            <e p="_StudentsListModal.cshtml" t="Include" />
+            <e p="Create.cshtml" t="Include" />
+            <e p="DeliveryPlan.cshtml" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="IndexAdmin.cshtml" t="Include" />
+          </e>
+          <e p="Course" t="Include">
+            <e p="Create.cshtml" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="IndexAdmin.cshtml" t="Include" />
+            <e p="TeacherIndex.cshtml" t="Include" />
+          </e>
+          <e p="Home" t="Include">
+            <e p="Index.cshtml" t="Include" />
+          </e>
+          <e p="KnowledgeArea" t="Include">
+            <e p="Create.cshtml" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="IndexAdmin.cshtml" t="Include" />
+          </e>
+          <e p="Notice" t="Include">
+            <e p="Index.cshtml" t="Include" />
+            <e p="Send.cshtml" t="Include" />
+          </e>
+          <e p="Resource" t="Include" />
+          <e p="Shared" t="Include">
+            <e p="_About.cshtml" t="Include" />
+            <e p="_Alert.cshtml" t="Include" />
+            <e p="_ClassList.cshtml" t="Include" />
+            <e p="_ClassListSmall.cshtml" t="Include" />
+            <e p="_ContextualSearch.cshtml" t="Include" />
+            <e p="_CourseGroupItem.cshtml" t="Include" />
+            <e p="_CoursePanel.cshtml" t="Include" />
+            <e p="_KnowledgeAreaPanel.cshtml" t="Include" />
+            <e p="_LastClassesPanel.cshtml" t="Include" />
+            <e p="_Layout.cshtml" t="Include" />
+            <e p="_MyCoursesPanel.cshtml" t="Include" />
+            <e p="_NewClassesPanel.cshtml" t="Include" />
+            <e p="_NoticePanel.cshtml" t="Include" />
+            <e p="_Pagination.cshtml" t="Include" />
+            <e p="_SubjectIndex.cshtml" t="Include" />
+            <e p="_SubjectPanel.cshtml" t="Include" />
+            <e p="_TalkToUs.cshtml" t="Include" />
+            <e p="_ValidationErrors.cshtml" t="Include" />
+            <e p="DisplayTemplates" t="Include">
+              <e p="Boolean.cshtml" t="Include" />
+            </e>
+            <e p="EditorTemplates" t="Include">
+              <e p="Boolean.cshtml" t="Include" />
+              <e p="Password.cshtml" t="Include" />
+              <e p="String.cshtml" t="Include" />
+            </e>
+            <e p="Error.cshtml" t="Include" />
+          </e>
+          <e p="Student" t="Include">
+            <e p="Create.cshtml" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="IndexAdmin.cshtml" t="Include" />
+          </e>
+          <e p="Subject" t="Include">
+            <e p="Create.cshtml" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="IndexAdmin.cshtml" t="Include" />
+          </e>
+          <e p="Teacher" t="Include">
+            <e p="Create.cshtml" t="Include" />
+            <e p="Edit.cshtml" t="Include" />
+            <e p="IndexAdmin.cshtml" t="Include" />
+            <e p="StudentsAccessHistory.cshtml" t="Include" />
+          </e>
+          <e p="User" t="Include">
+            <e p="_AdminHeader.cshtml" t="Include" />
+            <e p="_Login.cshtml" t="Include" />
+            <e p="_StudentHeader.cshtml" t="Include" />
+            <e p="_TeacherHeader.cshtml" t="Include" />
+            <e p="AccessHistory.cshtml" t="Include" />
+          </e>
+          <e p="Web.config" t="Include" />
+        </e>
+        <e p="Web.config" t="Include" />
+        <e p="Web.Debug.config" t="Include" />
+        <e p="Web.Release.config" t="Include" />
+      </e>
+    </e>
+  </component>
+</project>

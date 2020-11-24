@@ -121,7 +121,16 @@
     <value>About</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>About Your Company Training...</value>
+    <value>Through the research of Multi-instrumentalist, Composer and Arranger Mario Aphonso III with the music of the world, a musical journey begins that connects strands and cultures through modal music from the Middle East, Turkey, Mediterranean and Balkans, to the Arab world and music Brazilian instrumental. Within the study of theory, the practice of traditional repertoire and language are fundamental to a rich and complete experience. The need to share this research with musicians and friends has become a very enriching possibility. With the aim of creating bridges between cultures and establishing a poetic and artistic dialogue, the essence of Coletivo Tarab was born.
+
+Aiming to study, research and creativity through art, poetry, music and oriental dance, since 2010, this group has been responsible for artistic development and creation of fundamental groups in the World Music Paulistana Brasileira scene, in addition to a scenario of international meetings with renowned artists which promoted workshops, research, concerts and studies with collaborating students and musicians.
+
+
+Coordination of Mario Aphonso III, Ian Nain and Bruna Milani.
+
+
+
+Website: www.coletivotarab.com.br</value>
   </data>
   <data name="AboutTitle" xml:space="preserve">
     <value>About Your Company Training</value>
@@ -892,5 +901,23 @@ Regards, Your Company Training Team
   </data>
   <data name="ChangeLanguageMenuItem" xml:space="preserve">
     <value>Change Language</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>available</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="TeacherInChargeTitle" xml:space="preserve">
+    <value>Teacher in charge</value>
+  </data>
+  <data name="EmailNotFound" xml:space="preserve">
+    <value>E-mail not found</value>
+  </data>
+  <data name="ForgotPasswordMessage" xml:space="preserve">
+    <value>We sent an e-mail to you with your password.</value>
+  </data>
+  <data name="InvalidUserOrPassword" xml:space="preserve">
+    <value>Invalid User or password</value>
   </data>
 </root>

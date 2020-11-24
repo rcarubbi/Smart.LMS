@@ -212,8 +212,9 @@ SmartLMS.App = (function() {
 
     $(function() {
         $private.Notifications = [];
-        moment.locale("en-gb");
-
+        // TODO: suportar multi culturas
+        moment.locale("pt-br");
+         
         $.each($("input[data-autocomplete]"), $private.createAutoComplete);
         $private.initializeDropdownJs();
         $private.initializeToastr();
@@ -221,7 +222,7 @@ SmartLMS.App = (function() {
         $public.initializeSlimControl(false);
         $private.initializeMultiselect();
         $(window).on("resize", $private.resizeSlimControl);
-
+ 
         $(document).ajaxError(function(event, xhr, options, thrownError) {
             var error = $(xhr.responseText).filter("span").find("h2 > i").text();
             if (error !== "") {

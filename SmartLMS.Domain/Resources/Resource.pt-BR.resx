@@ -121,10 +121,19 @@
     <value>Sobre</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Sobre o Your Company Training</value>
+    <value>Através da pesquisa do Multi-instrumentista, Compositor e Arranjador Mario Aphonso III com a música do mundo, se inicia uma jornada musical que conecta vertentes e culturas passando pela música modal do Oriente Médio, Turquia, Mediterrâneo e Balkans, ao mundo árabe e a música instrumental Brasileira. Dentro do estudo da teoria, a prática do repertório tradicional e a linguagem são fundamentais para uma vivência rica e completa. A necessidade de partilhamento dessa pesquisa com os músicos e amigos se tornou uma possibilidade muito enriquecedora. Com o objetivo de criar pontes entre culturas e estabelecer um diálogo poético e artístico, nasceu a essência do Coletivo Tarab.
+
+Visando o estudo, pesquisa e criatividade através da arte, poesia, música e dança oriental, desde 2010, esse núcleo foi responsável pelo desenvolvimento artístico e criação de grupos fundamentais na cena World Music Paulistana Brasileira, além de um cenário de encontros internacionais com artistas renomados que promoveram workshops, pesquisas, concertos e estudos com os alunos e músicos colaboradores.
+
+
+Coordenação de Mario Aphonso III, Ian Nain e Bruna Milani.
+
+
+
+Site: www.coletivotarab.com.br</value>
   </data>
   <data name="AboutTitle" xml:space="preserve">
-    <value>Sobre o Your Company Training</value>
+    <value>Sobre o Coletivo Tarab</value>
   </data>
   <data name="AccessHistoryMenuItem" xml:space="preserve">
     <value>Acessos</value>
@@ -203,20 +212,20 @@
   </data>
   <data name="CreatingUserNotificationEmailBody" xml:space="preserve">
     <value>&lt;div&gt;
-Olá {username}, suas credenciais do Your Company Training são:
+Olá {username}, suas credenciais do Coletivo Tarab são:
 &lt;/div&gt;
 &lt;div&gt;Login: {login}&lt;/div&gt;&lt;div&gt;Senha: {password}.&lt;/div&gt;
 &lt;div&gt;Acesse a plataforma clicando &lt;a href='{link}'&gt;aqui&lt;/a&gt;.&lt;/div&gt;
-&lt;div&gt;Atenciosamente, Time Your Company Training&lt;/div&gt;</value>
+&lt;div&gt;Atenciosamente, Coletivo Tarab&lt;/div&gt;</value>
   </data>
   <data name="CreatingUserNotificationEmailSubject" xml:space="preserve">
-    <value>Bem-vindo ao Your Company Training</value>
+    <value>Bem-vindo ao Coletivo Tarab</value>
   </data>
   <data name="DeliveredClassNotificationEmailBody" xml:space="preserve">
-    <value>Hi {username}, how are you? &lt;br /&gt; The class &lt;a href='{link}/Class/Watch/{classId}'&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href='{link}/Class/Index/{courseId}'&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Bons estudos! &lt;br /&gt;&lt;br /&gt; Time Your Company Training</value>
+    <value>Olá {username}, como vai? &lt;br /&gt; A aula &lt;a href='{link}/Class/Watch/{classId}'&gt;{classname}&lt;/a&gt; já está disponível no curso &lt;a href='{link}/Class/Index/{courseId}'&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Bons estudos! &lt;br /&gt;&lt;br /&gt; Coletivo Tarab</value>
   </data>
   <data name="DeliveredClassNotificationEmailSubject" xml:space="preserve">
-    <value>Your Company Training - Nova aula disponível!</value>
+    <value>Coletivo Tarab - Nova aula disponível!</value>
   </data>
   <data name="FileName" xml:space="preserve">
     <value>Material de Apoio</value>
@@ -270,7 +279,7 @@ Olá {username}, suas credenciais do Your Company Training são:
     <value>Notificação</value>
   </data>
   <data name="PasswordRecoveryEmailBody" xml:space="preserve">
-    <value>&lt;div&gt;Olá {username}, suas credenciais do Your Company Training são:&lt;/div&gt;
+    <value>&lt;div&gt;Olá {username}, suas credenciais do Coletivo Tarab são:&lt;/div&gt;
 &lt;div&gt;
 Login: {login}.
 &lt;/div&gt;
@@ -281,11 +290,11 @@ Senha: {password}
 Acesse a plataforma clicando &lt;a href='{link}'&gt;aqui&lt;/a&gt;.
 &lt;/div&gt;
 &lt;div&gt;
-Atenciosamente, Time Your Company Training
+Atenciosamente, Coletivo Tarab
 &lt;/div&gt;</value>
   </data>
   <data name="PasswordRecoveryEmailSubject" xml:space="preserve">
-    <value>Your Company Training - Recuperação de Senha</value>
+    <value>Coletivo Tarab - Recuperação de Senha</value>
   </data>
   <data name="PasswordUpdatedNoticeMessage" xml:space="preserve">
     <value>Sua senha foi atualizada</value>
@@ -360,7 +369,7 @@ Atenciosamente, Time Your Company Training
     <value>Download de Material de Apoio</value>
   </data>
   <data name="TalkToUsEmailBody" xml:space="preserve">
-    <value>&lt;div&gt;&lt;h1&gt;Fale conosco - Your Company Training&lt;/h1&gt;
+    <value>&lt;div&gt;&lt;h1&gt;Fale conosco - Coletivo Tarab&lt;/h1&gt;
 &lt;dl&gt;
 &lt;dt&gt;Nome:&lt;/dt&gt;
  &lt;dd&gt;{name}&lt;/dd&gt;
@@ -372,7 +381,7 @@ Atenciosamente, Time Your Company Training
 &lt;/div&gt;</value>
   </data>
   <data name="TalkToUsEmailSubject" xml:space="preserve">
-    <value>Your Company Training - Fale Conosco</value>
+    <value>Coletivo Tarab - Fale Conosco</value>
   </data>
   <data name="TeacherAddedToastrMessage" xml:space="preserve">
     <value>Professor adicionado</value>
@@ -405,7 +414,7 @@ Atenciosamente, Time Your Company Training
     <value>Últimas aulas assistidas</value>
   </data>
   <data name="WelcomeNoticeMessage" xml:space="preserve">
-    <value>Bem-vindo ao Your Company Training, Bons Estudos!</value>
+    <value>Bem-vindo ao Coletivo Tarab, Bons Estudos!</value>
   </data>
   <data name="WithoutPermissionDownloadToastrMessage" xml:space="preserve">
     <value>Você não tem permissão para baixar este material</value>
@@ -876,9 +885,36 @@ Atenciosamente, Time Your Company Training
     <value>Tipo de Aula</value>
   </data>
   <data name="MessageRequired" xml:space="preserve">
-    <value>Type your message</value>
+    <value>Digite sua mensagem</value>
   </data>
   <data name="ChangeLanguageMenuItem" xml:space="preserve">
     <value>Mudar Idioma</value>
+  </data>
+  <data name="NoticeMessagePlaceholder" xml:space="preserve">
+    <value>Digite sua mensagem aqui</value>
+  </data>
+  <data name="SendNoticeInformation" xml:space="preserve">
+    <value>Envie avisos para todos os usuários através deste formulário</value>
+  </data>
+  <data name="SendNoticePageTitle" xml:space="preserve">
+    <value>Avisos Públicos</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>disponível</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Nova</value>
+  </data>
+  <data name="TeacherInChargeTitle" xml:space="preserve">
+    <value>Professor(a) responsável</value>
+  </data>
+  <data name="EmailNotFound" xml:space="preserve">
+    <value>Email não encontrado</value>
+  </data>
+  <data name="ForgotPasswordMessage" xml:space="preserve">
+    <value>Nós enviamos um e-mail para você com a sua senha</value>
+  </data>
+  <data name="InvalidUserOrPassword" xml:space="preserve">
+    <value>Usuário ou senha inválidos</value>
   </data>
 </root>

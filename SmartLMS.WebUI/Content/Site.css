@@ -26,10 +26,11 @@ body { overflow: hidden; }
     width: 55px;
 }
 
-#logo img {
-    left: 8px;
+ #logo img {
+    left: -1px;
     position: absolute;
-    top: 7px;
+    top: 0px;
+    zoom: 140%;
 }
 
 .navbar .navbar-brand { text-transform: uppercase; }
