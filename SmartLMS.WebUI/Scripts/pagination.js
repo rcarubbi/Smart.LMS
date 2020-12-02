@@ -31,9 +31,9 @@
         $private.config.onPageChanged($public.CurrentPage).done($public.refreshResults).then(SmartLMS.App.InitControls);
     };
 
-    $private.getMinPage = function(pageCount, pageIndex) {
+    $private.getMinPage = function (pageCount, pageIndex) {
         pageIndex = parseInt(pageIndex);
-        if (pageIndex < 4) {
+        if (pageIndex < 4 || pageCount < 6) {
             return 1;
         } else if (pageIndex > pageCount - 3) {
             return pageCount - 4;

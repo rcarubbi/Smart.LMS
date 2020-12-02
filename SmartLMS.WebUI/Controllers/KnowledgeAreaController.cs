@@ -20,7 +20,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
             var knowledgeAreaRepository = new KnowledgeAreaRepository(_context);
-            ViewBag.SearchFields = new SelectList(new[] {Resource.KnowledgeAreaNameFieldName, "Id"});
+            ViewBag.SearchFields = new SelectList(new[] {Resource.KnowledgeAreaNameFieldName });
             return View(
                 KnowledgeAreaViewModel.FromEntityList(knowledgeAreaRepository.Search(term, searchFieldName, page)));
         }

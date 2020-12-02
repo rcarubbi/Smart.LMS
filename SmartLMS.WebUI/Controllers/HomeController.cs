@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Carubbi.Mailer.Implementation;
+using SmartLMS.Domain;
+using SmartLMS.Domain.Repositories;
+using SmartLMS.Domain.Resources;
+using SmartLMS.Domain.Services;
+using SmartLMS.WebUI.Models;
+using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Carubbi.Mailer.Implementation;
-using SmartLMS.Domain;
-using SmartLMS.Domain.Repositories;
-using SmartLMS.Domain.Services;
-using SmartLMS.WebUI.Models;
 
 namespace SmartLMS.WebUI.Controllers
 {
@@ -73,6 +74,8 @@ namespace SmartLMS.WebUI.Controllers
         {
             var languageCookie = new HttpCookie("languageCookie", culture) {Expires = DateTime.MaxValue};
             Response.Cookies.Add(languageCookie);
+            Resource.ResourceManager.ReleaseAllResources();
+       
             return Redirect(Request.UrlReferrer.ToString());
         }
     }

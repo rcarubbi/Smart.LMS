@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Transactions;
-using Carubbi.GenericRepository;
+﻿using Carubbi.GenericRepository;
 using Carubbi.Mailer.Interfaces;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Resources;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Transactions;
 
 namespace SmartLMS.Domain.Repositories
 {
@@ -102,7 +101,7 @@ namespace SmartLMS.Domain.Repositories
             _context.GetList<Classroom>().Add(newClassroom);
         }
 
-        public async Task UpdateAsync(IMailSender sender, Classroom classroom, string name, bool active,
+        public void Update(IMailSender sender, Classroom classroom, string name, bool active,
             List<Guid> courseIds, List<Guid> studentIds, User loggedUser)
         {
             using (var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -124,7 +123,7 @@ namespace SmartLMS.Domain.Repositories
                 AddNewStudents(sender, classroom, studentIds, loggedUser);
                 _context.Save(loggedUser);
 
-                await classroom.SyncAccessesAsync(_context, sender);
+                classroom.SyncAccesses(_context, sender);
                 _context.Save(loggedUser);
                 tx.Complete();
             }

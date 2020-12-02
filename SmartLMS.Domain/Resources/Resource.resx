@@ -210,6 +210,9 @@ Website: www.coletivotarab.com.br</value>
   <data name="CourseUpdatedToastrMessage" xml:space="preserve">
     <value>Course updated</value>
   </data>
+  <data name="CourseUpdateTitle" xml:space="preserve">
+    <value>Course Update</value>
+  </data>
   <data name="CreatingUserNotificationEmailBody" xml:space="preserve">
     <value>&lt;div&gt;
 Hi {username}, your Your Company Training credendials are:
@@ -822,7 +825,7 @@ Regards, Your Company Training Team
     <value>Subscribed at</value>
   </data>
   <data name="Wallpaper" xml:space="preserve">
-    <value>https://i.ytimg.com/vi/MLX2wLdHrYU/maxresdefault.jpg|http://moore.photos/perch/resources/Adventure%20Images/advbbcmediacitysalfordquays.jpg|https://wallup.net/wp-content/uploads/2015/12/132972-England-landscape-architecture-nature-Tower_Bridge-UK.jpg|https://www.setaswall.com/wp-content/uploads/2018/04/London-UK-Wallpaper-01-1920x1080.jpg|http://avante.biz/wp-content/uploads/Wallpapers-Europe/Wallpapers-Europe-054.jpg|http://www.portoalegre.travel/upload/b/62/629785_london-wallpaper-black-and-white.jpg</value>
+    <value>https://static.wixstatic.com/media/1ea5ec_1bb281895ae941fcbe351ceb04b3227e~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_1bb281895ae941fcbe351ceb04b3227e~mv2.webp|https://static.wixstatic.com/media/1ea5ec_395870f78674481a8f37bc5320920a03~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_395870f78674481a8f37bc5320920a03~mv2.webp|https://static.wixstatic.com/media/1ea5ec_f2bf38a61622476e982b80f75ce556c2~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_f2bf38a61622476e982b80f75ce556c2~mv2.webp|https://static.wixstatic.com/media/1ea5ec_1b5c5e73029245f5a6210245b6e35c49~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_1b5c5e73029245f5a6210245b6e35c49~mv2.webp|https://static.wixstatic.com/media/1ea5ec_d53b770a90bc4d9c8a969f2f686c08f5~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_d53b770a90bc4d9c8a969f2f686c08f5~mv2.webp</value>
   </data>
   <data name="ClassroomName" xml:space="preserve">
     <value>Classroom</value>
@@ -919,5 +922,11 @@ Regards, Your Company Training Team
   </data>
   <data name="InvalidUserOrPassword" xml:space="preserve">
     <value>Invalid User or password</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="ImageFieldName" xml:space="preserve">
+    <value>Image</value>
   </data>
 </root>

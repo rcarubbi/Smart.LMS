@@ -511,6 +511,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Content.
+        /// </summary>
+        public static string Content {
+            get {
+                return ResourceManager.GetString("Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Content management.
         /// </summary>
         public static string ContentManagementSection {
@@ -624,6 +633,15 @@ namespace SmartLMS.Domain.Resources {
         public static string CourseUpdatedToastrMessage {
             get {
                 return ResourceManager.GetString("CourseUpdatedToastrMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Course Update.
+        /// </summary>
+        public static string CourseUpdateTitle {
+            get {
+                return ResourceManager.GetString("CourseUpdateTitle", resourceCulture);
             }
         }
         
@@ -1061,6 +1079,15 @@ namespace SmartLMS.Domain.Resources {
         public static string ForgotPasswordTitle {
             get {
                 return ResourceManager.GetString("ForgotPasswordTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image.
+        /// </summary>
+        public static string ImageFieldName {
+            get {
+                return ResourceManager.GetString("ImageFieldName", resourceCulture);
             }
         }
         
@@ -2346,7 +2373,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://i.ytimg.com/vi/MLX2wLdHrYU/maxresdefault.jpg|http://moore.photos/perch/resources/Adventure%20Images/advbbcmediacitysalfordquays.jpg|https://wallup.net/wp-content/uploads/2015/12/132972-England-landscape-architecture-nature-Tower_Bridge-UK.jpg|https://www.setaswall.com/wp-content/uploads/2018/04/London-UK-Wallpaper-01-1920x1080.jpg|http://avante.biz/wp-content/uploads/Wallpapers-Europe/Wallpapers-Europe-054.jpg|http://www.portoalegre.travel/upload/b/62/629785_london-wallpaper-black-and-white.jpg.
+        ///   Looks up a localized string similar to https://static.wixstatic.com/media/1ea5ec_1bb281895ae941fcbe351ceb04b3227e~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_1bb281895ae941fcbe351ceb04b3227e~mv2.webp|https://static.wixstatic.com/media/1ea5ec_395870f78674481a8f37bc5320920a03~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_395870f78674481a8f37bc5320920a03~mv2.webp|https://static.wixstatic.com/media/1ea5ec_f2bf38a61622476e982b80f75ce556c2~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_f2bf38a6 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Wallpaper {
             get {

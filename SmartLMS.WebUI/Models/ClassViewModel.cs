@@ -20,6 +20,7 @@ namespace SmartLMS.WebUI.Models
         [LocalizedDisplay("TeacherName")]
         public Guid TeacherId { get; set; }
 
+        [LocalizedDisplay("OrderFieldName")]
         [Required] public int Order { get; set; }
 
         [LocalizedDisplay("DaysToDeliverLabel")]
@@ -48,8 +49,12 @@ namespace SmartLMS.WebUI.Models
 
         [LocalizedDisplay("FileName")] public IEnumerable<FileViewModel> Files { get; set; }
 
+
+        [LocalizedDisplay("Content")]
         [Required] public string Content { get; set; }
 
+
+        [LocalizedDisplay("ClassNameFieldName")]
         [Required] public string Name { get; set; }
 
         public string TeacherName { get; set; }

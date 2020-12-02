@@ -39,7 +39,12 @@ namespace SmartLMS.Domain.Entities
             APP_NAME = parameterRepository.GetValueByKey(APP_NAME_KEY);
             FILE_STORAGE = parameterRepository.GetValueByKey(FILE_STORAGE_KEY);
             DAEMON_USER = parameterRepository.GetValueByKey(DAEMON_USER_KEY);
+#if DEBUG
+            BASE_URL = "http://localhost:21114/";
+
+#else
             BASE_URL = parameterRepository.GetValueByKey(BASE_URL_KEY);
+#endif
         }
     }
 }

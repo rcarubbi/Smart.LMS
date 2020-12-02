@@ -198,7 +198,7 @@ namespace SmartLMS.WebUI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
-            ViewBag.SearchFields = new SelectList(new[] {"Name", "Subject", "Knowledge Area", "Course", "Id"});
+            ViewBag.SearchFields = new SelectList(new[] { Resource.ClassNameFieldName, Resource.SubjectName, Resource.KnowledgeAreaName, Resource.CourseName });
             var classRepository = new ClassRepository(_context);
             return View(ClassViewModel.FromEntityList(classRepository.Search(term, searchFieldName, page)));
         }
@@ -234,7 +234,7 @@ namespace SmartLMS.WebUI.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Create(ClassViewModel viewModel)
+        public ActionResult Create(ClassViewModel viewModel)
         {
             var courseRepository = new CourseRepository(_context);
             var userRepository = new UserRepository(_context);
@@ -248,7 +248,7 @@ namespace SmartLMS.WebUI.Controllers
                     classRepository.Create(ClassViewModel.ToEntity(viewModel, course, teacher));
 
                     var affectedClassrooms = ResumeConcludedDeliveryPlans(course);
-                    await SyncAccessesAsync(affectedClassrooms);
+                    SyncAccesses(affectedClassrooms);
 
                     _context.Save(_loggedUser);
                     TempData["MessageType"] = "success";
@@ -290,9 +290,9 @@ namespace SmartLMS.WebUI.Controllers
             return classrooms.ToList();
         }
 
-        private async Task SyncAccessesAsync(IList<Classroom> classrooms)
+        private void SyncAccesses(IList<Classroom> classrooms)
         {
-            foreach (var classroom in classrooms) await classroom.SyncAccessesAsync(_context, new SmtpSender());
+            foreach (var classroom in classrooms) classroom.SyncAccesses(_context, new SmtpSender());
         }
 
         [Authorize(Roles = "Admin, Teacher")]

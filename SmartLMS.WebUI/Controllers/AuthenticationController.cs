@@ -46,7 +46,7 @@ namespace SmartLMS.WebUI.Controllers
                 return Json(new {Url = url, Authenticated = true}, JsonRequestBehavior.AllowGet);
             }
 
-            ModelState.AddModelError("IvalidUserOrPassword", Resource.InvalidUserOrPassword);
+            ModelState.AddModelError("InvalidUserOrPassword", Resource.InvalidUserOrPassword);
 
             return Json(
                 new
@@ -65,6 +65,8 @@ namespace SmartLMS.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel viewModel)
         {
+             
+                
             if (!ModelState.IsValid) return View(viewModel);
             var sender = new SmtpSender();
             var authenticationService = new AuthenticationService(_context, sender);
@@ -72,8 +74,7 @@ namespace SmartLMS.WebUI.Controllers
             if (password != null)
             {
                 var notificationService = new NotificationService(_context, sender);
-                await Task.Run(() => notificationService.SendRecoverPasswordNotification(viewModel.Email, password))
-                    .ConfigureAwait(false);
+                notificationService.SendRecoverPasswordNotification(viewModel.Email, password);
                 ViewBag.Message = Resource.ForgotPasswordMessage;
             }
             else

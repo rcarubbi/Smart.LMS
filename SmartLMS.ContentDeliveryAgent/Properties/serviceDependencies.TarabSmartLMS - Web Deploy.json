@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/carubbidbdev/databases/TarabSmartLMSDbDev",
+      "type": "mssql.azure",
+      "connectionId": "connectionString",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

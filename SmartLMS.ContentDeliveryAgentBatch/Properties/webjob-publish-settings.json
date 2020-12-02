@@ -1,0 +1,6 @@
+﻿{
+  "$schema": "http://schemastore.org/schemas/json/webjob-publish-settings.json",
+  "webJobName": "SmartLMSContentDeliveryAgent",
+  "runMode": "OnDemand",
+  "schedule": "0 0 10 * * *"
+}

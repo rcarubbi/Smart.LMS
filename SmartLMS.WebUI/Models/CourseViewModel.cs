@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Carubbi.GenericRepository;
+using SmartLMS.Domain.Attributes;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.UserAccess;
@@ -13,27 +14,37 @@ namespace SmartLMS.WebUI.Models
     public class CourseViewModel
     {
         [Required(ErrorMessage = "Select a teacher in charge of this course")]
-        [Display(Name = "Teacher in charge")]
+        [LocalizedDisplay("TeacherInChargeTitle")]
         public Guid TeacherInChargeId { get; set; }
 
+
+        [LocalizedDisplay("SubjectName")]
         public string SubjectName { get; set; }
 
         [Required(ErrorMessage = "Select a subject")]
-        [Display(Name = "Subject")]
+        [LocalizedDisplay("SubjectName")]
         public Guid SubjectId { get; set; }
 
+        [LocalizedDisplay("OrderFieldName")]
         [Required] public int Order { get; set; }
 
+
+        [LocalizedDisplay("CourseNameFieldName")]
         [Required] public string Name { get; set; }
 
         public Guid Id { get; set; }
 
+        [LocalizedDisplay("ActiveFieldName")]
         public bool Active { get; set; }
 
+
+        [LocalizedDisplay("KnowledgeAreaName")]
         public string KnowledgeAreaName { get; set; }
 
+        [LocalizedDisplay("CreatedAt")]
         public DateTime CreatedAt { get; set; }
 
+        [LocalizedDisplay("ImageFieldName")]
         public string Image { get; set; }
 
         public string TeacherInChargeName { get; set; }

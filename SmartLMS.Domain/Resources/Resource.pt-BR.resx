@@ -219,7 +219,7 @@ Olá {username}, suas credenciais do Coletivo Tarab são:
 &lt;div&gt;Atenciosamente, Coletivo Tarab&lt;/div&gt;</value>
   </data>
   <data name="CreatingUserNotificationEmailSubject" xml:space="preserve">
-    <value>Bem-vindo ao Coletivo Tarab</value>
+    <value>Bem-vindo(a) ao Coletivo Tarab</value>
   </data>
   <data name="DeliveredClassNotificationEmailBody" xml:space="preserve">
     <value>Olá {username}, como vai? &lt;br /&gt; A aula &lt;a href='{link}/Class/Watch/{classId}'&gt;{classname}&lt;/a&gt; já está disponível no curso &lt;a href='{link}/Class/Index/{courseId}'&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Bons estudos! &lt;br /&gt;&lt;br /&gt; Coletivo Tarab</value>
@@ -384,19 +384,19 @@ Atenciosamente, Coletivo Tarab
     <value>Coletivo Tarab - Fale Conosco</value>
   </data>
   <data name="TeacherAddedToastrMessage" xml:space="preserve">
-    <value>Professor adicionado</value>
+    <value>Professor(a) adicionado(a)</value>
   </data>
   <data name="TeacherAdminMenuItem" xml:space="preserve">
     <value>Professores</value>
   </data>
   <data name="TeacherClassesAssociationException" xml:space="preserve">
-    <value>Este professor tem aulas associadas a ele</value>
+    <value>Este(a) professor(a) tem aulas associadas a ele(a)</value>
   </data>
   <data name="TeacherEmailFieldName" xml:space="preserve">
     <value>Email</value>
   </data>
   <data name="TeacherInChargeException" xml:space="preserve">
-    <value>Este professor é responsável por algum curso</value>
+    <value>Este(a) professor(a) é responsável por algum curso</value>
   </data>
   <data name="TeacherManagementToastrTitle" xml:space="preserve">
     <value>Gerenciamento de Professores</value>
@@ -405,7 +405,7 @@ Atenciosamente, Coletivo Tarab
     <value>Nome</value>
   </data>
   <data name="TeacherUpdatedToastrMessage" xml:space="preserve">
-    <value>Professor alterado</value>
+    <value>Professor(a) alterado(a)</value>
   </data>
   <data name="WarningToastrTitle" xml:space="preserve">
     <value>Aviso</value>
@@ -414,7 +414,7 @@ Atenciosamente, Coletivo Tarab
     <value>Últimas aulas assistidas</value>
   </data>
   <data name="WelcomeNoticeMessage" xml:space="preserve">
-    <value>Bem-vindo ao Coletivo Tarab, Bons Estudos!</value>
+    <value>Bem-vindo(a) ao Coletivo Tarab, Bons Estudos!</value>
   </data>
   <data name="WithoutPermissionDownloadToastrMessage" xml:space="preserve">
     <value>Você não tem permissão para baixar este material</value>
@@ -426,7 +426,7 @@ Atenciosamente, Coletivo Tarab
     <value>Fale Conosco</value>
   </data>
   <data name="TalkToUsMenuItem" xml:space="preserve">
-    <value>Fale conosco</value>
+    <value>Fale Conosco</value>
   </data>
   <data name="ContentManagementSection" xml:space="preserve">
     <value>Gerenciamento de Conteúdo</value>
@@ -459,13 +459,13 @@ Atenciosamente, Coletivo Tarab
     <value>Criado em</value>
   </data>
   <data name="CreateTeacherPageTitle" xml:space="preserve">
-    <value>Criação de Professor</value>
+    <value>Criação de Professor(a)</value>
   </data>
   <data name="DeleteTeacherConfirmationText" xml:space="preserve">
-    <value>Você realmente deseja excluir o professor</value>
+    <value>Você realmente deseja excluir o(a) professor(a)</value>
   </data>
   <data name="DeleteTeacherConfirmationTitle" xml:space="preserve">
-    <value>Exclusão de Professor</value>
+    <value>Exclusão de Professor(a)</value>
   </data>
   <data name="EndDateLabel" xml:space="preserve">
     <value>Data Fim</value>
@@ -477,25 +477,25 @@ Atenciosamente, Coletivo Tarab
     <value>Gerenciamento</value>
   </data>
   <data name="NoTeachers" xml:space="preserve">
-    <value>Nenhum professor encontrado</value>
+    <value>Nenhum(a) professor(a) encontrado(a)</value>
   </data>
   <data name="SearchByLabel" xml:space="preserve">
     <value>Pesquisar por</value>
   </data>
   <data name="StudentAccessMenuItem" xml:space="preserve">
-    <value>Acessos de Aluno</value>
+    <value>Acessos de Aluno(a)</value>
   </data>
   <data name="SubjectManagementPageTitle" xml:space="preserve">
     <value>Gerenciamento de Assuntos</value>
   </data>
   <data name="TeacherDeletedToastrMessage" xml:space="preserve">
-    <value>Professor excluído!</value>
+    <value>Professor(a) excluído(a)!</value>
   </data>
   <data name="TeacherManagementPageTitle" xml:space="preserve">
     <value>Gerenciamento de Professores</value>
   </data>
   <data name="TeacherUpdatePageTitle" xml:space="preserve">
-    <value>Alteração de Professor</value>
+    <value>Alteração de Professor(a)</value>
   </data>
   <data name="DeleteSubjectConfirmationText" xml:space="preserve">
     <value>Você realmente deseja excluir o assunto</value>
@@ -510,22 +510,22 @@ Atenciosamente, Coletivo Tarab
     <value>Assunto excluído!</value>
   </data>
   <data name="CreateStudentPageTitle" xml:space="preserve">
-    <value>Criação de Aluno</value>
+    <value>Criação de Aluno(a)</value>
   </data>
   <data name="CreateSubjectPageTitle" xml:space="preserve">
     <value>Criação de Assunto</value>
   </data>
   <data name="DeleteStudentConfirmationText" xml:space="preserve">
-    <value>Você realmente deseja excluir o aluno</value>
+    <value>Você realmente deseja excluir o(a) aluno(a)</value>
   </data>
   <data name="DeleteStudentConfirmationTitle" xml:space="preserve">
-    <value>Exclusão de Aluno</value>
+    <value>Exclusão de Aluno(a)</value>
   </data>
   <data name="NoStudentsAdmin" xml:space="preserve">
-    <value>Nenhum aluno encontrado</value>
+    <value>Nenhum(a) aluno(a) encontrado(a)</value>
   </data>
   <data name="StudentDeletedToastrMessage" xml:space="preserve">
-    <value>Aluno excluído!</value>
+    <value>Aluno(a) excluído(a)!</value>
   </data>
   <data name="StudentManagementPageTitle" xml:space="preserve">
     <value>Índice de Alunos</value>
@@ -534,7 +534,7 @@ Atenciosamente, Coletivo Tarab
     <value>Gerenciamento de Alunos</value>
   </data>
   <data name="StudentUpdatePageTitle" xml:space="preserve">
-    <value>Alteração de Aluno</value>
+    <value>Alteração de Aluno(a)</value>
   </data>
   <data name="SubjectUpdatePageTitle" xml:space="preserve">
     <value>Atualização de Assunto</value>
@@ -651,7 +651,7 @@ Atenciosamente, Coletivo Tarab
     <value>Fale Conosco</value>
   </data>
   <data name="TeacherName" xml:space="preserve">
-    <value>Professor</value>
+    <value>Professor(a)</value>
   </data>
   <data name="CourseDeletedToastrMessage" xml:space="preserve">
     <value>Curso excluído!</value>
@@ -714,7 +714,7 @@ Atenciosamente, Coletivo Tarab
     <value>O curso só pode ter uma imagem</value>
   </data>
   <data name="SelectTeacher" xml:space="preserve">
-    <value>Selecione um professor</value>
+    <value>Selecione um(a) professor(a)</value>
   </data>
   <data name="StudentPlural" xml:space="preserve">
     <value>Alunos</value>
@@ -822,7 +822,7 @@ Atenciosamente, Coletivo Tarab
     <value>Inscrito em</value>
   </data>
   <data name="Wallpaper" xml:space="preserve">
-    <value>https://i.ytimg.com/vi/MLX2wLdHrYU/maxresdefault.jpg|http://moore.photos/perch/resources/Adventure%20Images/advbbcmediacitysalfordquays.jpg|https://wallup.net/wp-content/uploads/2015/12/132972-England-landscape-architecture-nature-Tower_Bridge-UK.jpg|https://www.setaswall.com/wp-content/uploads/2018/04/London-UK-Wallpaper-01-1920x1080.jpg|http://avante.biz/wp-content/uploads/Wallpapers-Europe/Wallpapers-Europe-054.jpg|http://www.portoalegre.travel/upload/b/62/629785_london-wallpaper-black-and-white.jpg</value>
+    <value>https://static.wixstatic.com/media/1ea5ec_1bb281895ae941fcbe351ceb04b3227e~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_1bb281895ae941fcbe351ceb04b3227e~mv2.webp|https://static.wixstatic.com/media/1ea5ec_395870f78674481a8f37bc5320920a03~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_395870f78674481a8f37bc5320920a03~mv2.webp|https://static.wixstatic.com/media/1ea5ec_f2bf38a61622476e982b80f75ce556c2~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_f2bf38a61622476e982b80f75ce556c2~mv2.webp|https://static.wixstatic.com/media/1ea5ec_1b5c5e73029245f5a6210245b6e35c49~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_1b5c5e73029245f5a6210245b6e35c49~mv2.webp|https://static.wixstatic.com/media/1ea5ec_d53b770a90bc4d9c8a969f2f686c08f5~mv2.jpg/v1/fill/w_1903,h_937,al_c,q_85,usm_0.66_1.00_0.01/1ea5ec_d53b770a90bc4d9c8a969f2f686c08f5~mv2.webp</value>
   </data>
   <data name="ClassroomName" xml:space="preserve">
     <value>Turma</value>
@@ -916,5 +916,14 @@ Atenciosamente, Coletivo Tarab
   </data>
   <data name="InvalidUserOrPassword" xml:space="preserve">
     <value>Usuário ou senha inválidos</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Conteúdo</value>
+  </data>
+  <data name="CourseUpdateTitle" xml:space="preserve">
+    <value>Alteração de Curso</value>
+  </data>
+  <data name="ImageFieldName" xml:space="preserve">
+    <value>Imagem</value>
   </data>
 </root>

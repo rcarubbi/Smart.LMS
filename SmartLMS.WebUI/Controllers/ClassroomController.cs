@@ -36,7 +36,7 @@ namespace SmartLMS.WebUI.Controllers
         public ActionResult IndexAdmin(string term, string searchFieldName, int page = 1)
         {
             var classroomRepository = new ClassroomRepository(_context);
-            ViewBag.SearchFields = new SelectList(new[] {"Name", "Course"});
+            ViewBag.SearchFields = new SelectList(new[] { Resource.ClassroomNameFieldName, Resource.CourseName });
             return View(ClassroomViewModel.FromEntityList(classroomRepository.Search(term, searchFieldName, page)));
         }
 
@@ -69,14 +69,14 @@ namespace SmartLMS.WebUI.Controllers
             var classroom = classroomRepository.GetById(id);
 
             var query = from p in classroom.DeliveryPlans
-                from s in p.Students
-                orderby p.StartDate descending, s.Name
-                select new
-                {
-                    SubscriptionDate = p.StartDate,
-                    s.Name,
-                    s.Id
-                };
+                        from s in p.Students
+                        orderby p.StartDate descending, s.Name
+                        select new
+                        {
+                            SubscriptionDate = p.StartDate,
+                            s.Name,
+                            s.Id
+                        };
 
             return Json(query.ToList());
         }
@@ -157,20 +157,20 @@ namespace SmartLMS.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Edit(Guid id, ClassroomViewModel viewModel)
+        public ActionResult Edit(Guid id, ClassroomViewModel viewModel)
         {
             var classroomRepository = new ClassroomRepository(_context);
             var classroom = classroomRepository.GetById(id);
             if (ModelState.IsValid)
                 try
                 {
-                    await classroomRepository.UpdateAsync(new SmtpSender(),
-                        classroom,
-                        viewModel.Name,
-                        viewModel.Active,
-                        viewModel.CourseIds,
-                        viewModel.StudentIds,
-                        _loggedUser);
+                    classroomRepository.Update(new SmtpSender(),
+                       classroom,
+                       viewModel.Name,
+                       viewModel.Active,
+                       viewModel.CourseIds,
+                       viewModel.StudentIds,
+                       _loggedUser);
 
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ClassroomManagementToastrTitle;

@@ -43,7 +43,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             var userRepository = new UserRepository(_context);
             ViewBag.SearchFields = new SelectList(new[]
-                {Resource.StudentNameFieldName, Resource.StudentEmailFieldName, "Id"});
+                {Resource.StudentNameFieldName, Resource.StudentEmailFieldName });
             return View(UserViewModel.FromEntityList(userRepository.ListStudents(term, searchFieldName, page)));
         }
 

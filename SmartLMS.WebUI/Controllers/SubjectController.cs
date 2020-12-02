@@ -54,7 +54,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             var subjectRepository = new SubjectRepository(_context);
             ViewBag.SearchFields =
-                new SelectList(new[] {Resource.SubjectNameFieldName, Resource.KnowledgeAreaName, "Id"});
+                new SelectList(new[] { Resource.SubjectNameFieldName, Resource.KnowledgeAreaName });
             return View(SubjectViewModel.FromEntityList(subjectRepository.Search(term, searchFieldName, page)));
         }
 
