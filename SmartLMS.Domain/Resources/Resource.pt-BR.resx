@@ -615,7 +615,7 @@ Atenciosamente, Coletivo Tarab
     <value>&amp;lt; anterior</value>
   </data>
   <data name="QuickPanelsMessage" xml:space="preserve">
-    <value>Fique ligado nas novidades através dos painéis de acesso rápido</value>
+    <value>Fique ligado(a) nas novidades através dos painéis de acesso rápido</value>
   </data>
   <data name="SearchBarText" xml:space="preserve">
     <value>O que você quer aprender hoje?</value>
@@ -925,5 +925,14 @@ Atenciosamente, Coletivo Tarab
   </data>
   <data name="ImageFieldName" xml:space="preserve">
     <value>Imagem</value>
+  </data>
+  <data name="DeliveryPlanHistory" xml:space="preserve">
+    <value>Histórico dos planos de entrega</value>
+  </data>
+  <data name="PersonalName" xml:space="preserve">
+    <value>Pessoal</value>
+  </data>
+  <data name="PublicName" xml:space="preserve">
+    <value>Público</value>
   </data>
 </root>

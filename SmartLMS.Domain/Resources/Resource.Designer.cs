@@ -912,6 +912,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delivery Plan History.
+        /// </summary>
+        public static string DeliveryPlanHistory {
+            get {
+                return ResourceManager.GetString("DeliveryPlanHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delivery Plan.
         /// </summary>
         public static string DeliveryPlanName {
@@ -1689,11 +1698,29 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Personal.
+        /// </summary>
+        public static string PersonalName {
+            get {
+                return ResourceManager.GetString("PersonalName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;lt; previous.
         /// </summary>
         public static string PreviousPage {
             get {
                 return ResourceManager.GetString("PreviousPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Public.
+        /// </summary>
+        public static string PublicName {
+            get {
+                return ResourceManager.GetString("PublicName", resourceCulture);
             }
         }
         

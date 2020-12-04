@@ -11,7 +11,7 @@ namespace SmartLMS.WebUI.Models
 {
     public class ClassroomViewModel
     {
-        [Required] public string Name { get; set; }
+        [Required] [LocalizedDisplay("ClassroomNameFieldName")] public string Name { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectCourse")]
         [LocalizedDisplay("CoursePlural")]
@@ -19,6 +19,7 @@ namespace SmartLMS.WebUI.Models
 
         [LocalizedDisplay("StudentPlural")] public List<Guid> StudentIds { get; set; }
 
+        [LocalizedDisplay("ActiveFieldName")]
         public bool Active { get; set; }
 
         public Guid Id { get; set; }

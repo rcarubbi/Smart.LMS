@@ -56,6 +56,7 @@ namespace SmartLMS.Domain.Repositories
             var currentSubject = GetById(subject.Id);
             subject.CreatedAt = currentSubject.CreatedAt;
             subject.Courses = currentSubject.Courses;
+            currentSubject.KnowledgeArea = subject.KnowledgeArea;
             _context.Update(currentSubject, subject);
 
 

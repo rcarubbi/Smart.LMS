@@ -52,7 +52,7 @@ $(document).ready(function() {
         $(".datepicker").datepicker({
             weekStart: 1,
             format: "dd/mm/yyyy",
-            language: "en-GB"
+            language: "pt-BR"
         });
 
 

@@ -145,7 +145,7 @@ namespace SmartLMS.DAL.Migrations
                     {
                         CreatedAt = DateTime.Now,
                         Key = Parameter.BASE_URL_KEY,
-                        Value = "http://tarabsmartlms.azurewebsites.net/",
+                        Value = "http://aulas.coletivotarab.com.br/",
                         Active = true
                     });
 

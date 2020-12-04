@@ -18,50 +18,53 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        @Resource.KnowledgeAreaPlural
-                        <b class="caret"></b>
-                        <div class="ripple-container"></div>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        @foreach (var item in Model.KnowledgeAreas)
-                        {
+                @if (Model.KnowledgeAreas.Count() > 1)
+                {
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            @Resource.KnowledgeAreaPlural
+                            <b class="caret"></b>
+                            <div class="ripple-container"></div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            @foreach (var item in Model.KnowledgeAreas)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Index", "Subject", new { item.Id })">@item.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> @Resource.ManagementAdminMenuItem <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
                             <li>
-                                <a href="@Url.Action("Index", "Subject", new {item.Id})">@item.Name</a>
+                                <a href="@Url.Action("Index", "Classroom")">@Resource.ClassroomsMenuItem</a>
                             </li>
-                        }
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> @Resource.ManagementAdminMenuItem <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="@Url.Action("Index", "Classroom")">@Resource.ClassroomsMenuItem</a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">@Resource.MonitoringMenuSectionMenuDivider</li>
-                        <li>
-                            <a href="@Url.Action("StudentsAccessHistory", "Teacher")">@Resource.StudentAccessMenuItem</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" data-toggle="modal" data-target="#talk-to-us">@Resource.TalkToUsMenuItem</a>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        @Resource.ChangeLanguageMenuItem <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>@Html.ActionLink("Português (Brasil)", "ChangeLanguage", "Home", new {culture = "pt-BR"}, null)</li>
-                        <li>@Html.ActionLink("English (UK)", "ChangeLanguage", "Home", new {culture = "en-GB"}, null)</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" data-toggle="modal" data-target="#about">@Resource.AboutMenuItem</a>
-                </li>
-            </ul>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">@Resource.MonitoringMenuSectionMenuDivider</li>
+                            <li>
+                                <a href="@Url.Action("StudentsAccessHistory", "Teacher")">@Resource.StudentAccessMenuItem</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#talk-to-us">@Resource.TalkToUsMenuItem</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            @Resource.ChangeLanguageMenuItem <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Português (Brasil)", "ChangeLanguage", "Home", new { culture = "pt-BR" }, null)</li>
+                            <li>@Html.ActionLink("English (UK)", "ChangeLanguage", "Home", new { culture = "en-GB" }, null)</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#about">@Resource.AboutMenuItem</a>
+                    </li>
+                </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">

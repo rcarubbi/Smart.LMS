@@ -147,7 +147,7 @@ namespace SmartLMS.WebUI.Controllers
             if (ModelState.IsValid)
                 try
                 {
-                    var knowledgeArea = knowledgeAreaRepository.GetById(id);
+                    var knowledgeArea = knowledgeAreaRepository.GetById(viewModel.KnowledgeAreaId);
                     subjectRepository.Update(SubjectViewModel.ToEntity(viewModel, knowledgeArea));
                     _context.Save(_loggedUser);
 

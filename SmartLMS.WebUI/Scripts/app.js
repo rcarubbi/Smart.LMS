@@ -102,16 +102,16 @@ SmartLMS.App = (function() {
 
     $private.initializeMultiselect = function() {
         $(".multiselect").each(function(index, item) {
-
+            // TODO: Suportar multi-culturas
             $(item).multiselect({
                 enableFiltering: $(item).data("multiselect-filter") == "True",
                 enableClickableOptGroups: $(item).data("multiselect-group") == "True",
                 enableCollapsibleOptGroups: $(item).data("multiselect-group") == "True",
                 enableCaseInsensitiveFiltering: $(item).data("multiselect-filter") == "True",
-                filterPlaceholder: "Search",
-                nonSelectedText: "No items selected",
-                nSelectedText: "selected(s)",
-                allSelectedText: "All",
+                filterPlaceholder: "Pesquisar",
+                nonSelectedText: "Nenhum item selecionado",
+                nSelectedText: "selecionado(s)",
+                allSelectedText: "Todos",
                 buttonClass: "btn btn-default",
                 maxHeight: "400",
                 templates: {

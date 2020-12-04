@@ -5,6 +5,7 @@ using System.Linq;
 using Carubbi.GenericRepository;
 using Humanizer.DateTimeHumanizeStrategy;
 using SmartLMS.Domain.Entities.Communication;
+using SmartLMS.Domain.Resources;
 using SmartLMS.Domain.Services;
 
 namespace SmartLMS.WebUI.Models
@@ -18,7 +19,7 @@ namespace SmartLMS.WebUI.Models
 
         public string ClassroomName { get; set; }
 
-        public string NoticeTypeDescription => NoticeType.ToString();
+        public string NoticeTypeDescription => Resource.ResourceManager.GetString($"{NoticeType}Name");
 
         public NoticeType NoticeType
         {

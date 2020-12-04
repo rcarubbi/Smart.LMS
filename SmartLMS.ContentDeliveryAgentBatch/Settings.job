@@ -16,7 +16,7 @@
 
   //    Runs at 9:30 AM every day
   //    "schedule": "0 30 9 * * *"
-
+        "schedule": "0 0 10 * * *"
   //    Runs at 9:30 AM every week day
   //    "schedule": "0 30 9 * * 1-5"
 }

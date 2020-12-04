@@ -62,7 +62,7 @@ namespace SmartLMS.WebUI.Controllers
         {
             base.Initialize(requestContext);
             var languageCookie = requestContext.HttpContext.Request.Cookies.Get("languageCookie");
-            var currentCulture = new CultureInfo(languageCookie?.Value ?? "en-GB");
+            var currentCulture = new CultureInfo(languageCookie?.Value ?? "pt-BR");
 
            
             CultureInfo.CurrentUICulture = currentCulture;

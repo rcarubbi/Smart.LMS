@@ -97,7 +97,7 @@
                     id: $(this).data("id"),
                     name: $(this).data("name")
                 };
-                $("#courses-list").find(".modal-title").text("@Resource.CoursesInClassroomTitle " + classroom.name);
+                $("#courses-list").find(".modal-title").text("@Html.Raw(HttpUtility.HtmlDecode(Resource.CoursesInClassroomTitle)) " + classroom.name);
                 proxy.listCourses(classroom.id).done($private.showCourses);
             };
 

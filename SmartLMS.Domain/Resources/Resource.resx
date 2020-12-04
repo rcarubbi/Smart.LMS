@@ -929,4 +929,13 @@ Regards, Your Company Training Team
   <data name="ImageFieldName" xml:space="preserve">
     <value>Image</value>
   </data>
+  <data name="DeliveryPlanHistory" xml:space="preserve">
+    <value>Delivery Plan History</value>
+  </data>
+  <data name="PersonalName" xml:space="preserve">
+    <value>Personal</value>
+  </data>
+  <data name="PublicName" xml:space="preserve">
+    <value>Public</value>
+  </data>
 </root>
