@@ -12,6 +12,7 @@ using SmartLMS.WebUI.Models;
 namespace SmartLMS.WebUI.Controllers
 {
     [AllowAnonymous]
+    
     public class AuthenticationController : BaseController
     {
         public AuthenticationController(IContext context)
@@ -96,6 +97,7 @@ namespace SmartLMS.WebUI.Controllers
         [Authorize]
         public ActionResult ChangePassword()
         {
+            ViewBag.FirstAccess = Request.QueryString["firstAccess"] != null;
             var viewModel = new ChangePasswordViewModel();
             return View(viewModel);
         }

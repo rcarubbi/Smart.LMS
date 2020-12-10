@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
+using System.Text;
 using Carubbi.Extensions;
 using Carubbi.Mailer.Interfaces;
 using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.Content;
+using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Resources;
@@ -105,6 +108,30 @@ namespace SmartLMS.Domain.Services
                 .Replace("{link}", Parameter.BASE_URL);
 
             email.Subject = Resource.DeliveredClassNotificationEmailSubject;
+            _sender.Send(email);
+        }
+
+        public void SendDeliveryClassesEmail(ICollection<Class> availableClasses, Student student)
+        {
+            var senderEmail = _context.GetList<Parameter>().Single(x => x.Key == Parameter.EMAIL_FROM_KEY).Value;
+            var emailBody = new StringBuilder();
+            foreach (var availableClass in availableClasses.OrderBy(c => c.Order))
+            {
+                emailBody.AppendLine(Resource.DeliveredClassesNotificationEmailBodyItem.Replace("{classname}", availableClass.Name)
+                .Replace("{classId}", availableClass.Id.ToString())
+                .Replace("{coursename}", availableClass.Course.Name)
+                .Replace("{courseId}", availableClass.Course.Id.ToString())
+                .Replace("{link}", Parameter.BASE_URL));
+            }
+
+            var email = new MailMessage();
+            var receievrMailAddress = new MailAddress(student.Email, student.Name);
+            email.To.Add(receievrMailAddress);
+            email.From = new MailAddress(senderEmail, Parameter.APP_NAME);
+            email.IsBodyHtml = true;
+            email.Body = $"{Resource.DeliveredClassesNotificationEmailHeader.Replace("{username}", student.Name)}{emailBody}{Resource.DeliveredClassesNotificationEmailFooter}";
+
+            email.Subject = Resource.DeliveredClassesNotificationEmailSubject.Replace("{availableClassesCount}", availableClasses.Count.ToString());
             _sender.Send(email);
         }
 

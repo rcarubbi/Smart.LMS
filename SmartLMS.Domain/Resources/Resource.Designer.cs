@@ -70,7 +70,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Through the research of Multi-instrumentalist, Composer and Arranger Mario Aphonso III with the music of the world, a musical journey begins that connects strands and cultures through modal music from the Middle East, Turkey, Mediterranean and Balkans, to the Arab world and music Brazilian instrumental. Within the study of theory, the practice of traditional repertoire and language are fundamental to a rich and complete experience. The need to share this research with musicians and friends has become a very [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;p align=&quot;justify&quot;&gt;Through the research of Multi-instrumentalist, Composer and Arranger Mário Aphonso III with the music of the world, a musical journey begins that connects strands and cultures through modal music from the Middle East, Turkey, the Mediterranean and the Balkans, to the Arab world and music Brazilian instrumental. Within the study of theory, the practice of traditional repertoire and language are fundamental to a rich and complete experience. The need to share this research with musicians an [rest of string was truncated]&quot;;.
         /// </summary>
         public static string AboutText {
             get {
@@ -79,7 +79,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About Your Company Training.
+        ///   Looks up a localized string similar to About Coletivo Tarab.
         /// </summary>
         public static string AboutTitle {
             get {
@@ -885,7 +885,43 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hi {username}, how are you? &lt;br /&gt; The class &lt;a href=&apos;{link}/Class/Watch/{classId}&apos;&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href=&apos;{link}/Class/Index/{courseId}&apos;&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Your Company Training Team.
+        ///   Looks up a localized string similar to &lt;li&gt; &lt;a href=&apos;{link}/Class/Watch/{classId}&apos;&gt;{classname}&lt;/a&gt; is available on the course &lt;a href=&apos;{link}/Class/Index/{courseId}&apos;&gt;{coursename}&lt;/a&gt;&lt;/li&gt;.
+        /// </summary>
+        public static string DeliveredClassesNotificationEmailBodyItem {
+            get {
+                return ResourceManager.GetString("DeliveredClassesNotificationEmailBodyItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;/ul&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Coletivo Tarab.
+        /// </summary>
+        public static string DeliveredClassesNotificationEmailFooter {
+            get {
+                return ResourceManager.GetString("DeliveredClassesNotificationEmailFooter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hi {username}, how are you? &lt;br /&gt;You have access to the following classes: &lt;/br&gt; &lt;ul&gt;.
+        /// </summary>
+        public static string DeliveredClassesNotificationEmailHeader {
+            get {
+                return ResourceManager.GetString("DeliveredClassesNotificationEmailHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coletivo Tarab - You have {availableClassesCount} available classes.
+        /// </summary>
+        public static string DeliveredClassesNotificationEmailSubject {
+            get {
+                return ResourceManager.GetString("DeliveredClassesNotificationEmailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hi {username}, how are you? &lt;br /&gt; The class &lt;a href=&apos;{link}/Class/Watch/{classId}&apos;&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href=&apos;{link}/Class/Index/{courseId}&apos;&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Coletivo Tarab.
         /// </summary>
         public static string DeliveredClassNotificationEmailBody {
             get {
@@ -894,7 +930,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your Company Training - New available class.
+        ///   Looks up a localized string similar to Coletivo Tarab - New available class.
         /// </summary>
         public static string DeliveredClassNotificationEmailSubject {
             get {
@@ -1052,6 +1088,15 @@ namespace SmartLMS.Domain.Resources {
         public static string FilterButton {
             get {
                 return ResourceManager.GetString("FilterButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please change your password in the first access to proceed.
+        /// </summary>
+        public static string FirstAccessInformaton {
+            get {
+                return ResourceManager.GetString("FirstAccessInformaton", resourceCulture);
             }
         }
         

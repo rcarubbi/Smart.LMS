@@ -68,14 +68,21 @@ namespace SmartLMS.WebUI
                 "~/Content/animated-spinner/inverted-animated-spinner.css",
                 "~/Content/Site.css");
 
+            var loadingBar = new StyleBundle("~/Content/loadingbar").Include("~/content/pace/loading-bar.css");
+            var loadingMinimal = new StyleBundle("~/Content/loadingminimal").Include("~/content/pace/minimal.css");
+
+#if DEBUG
+            cssCustom.Transforms.Clear();
+            loadingBar.Transforms.Clear();
+            loadingMinimal.Transforms.Clear();
+#endif
+
             cssCustom.Transforms.Add(new CssVariableReplacer());
             bundles.Add(cssCustom);
-
-            var loadingBar = new StyleBundle("~/Content/loadingbar").Include("~/content/pace/loading-bar.css");
+           
             loadingBar.Transforms.Add(new CssVariableReplacer());
             bundles.Add(loadingBar);
-
-            var loadingMinimal = new StyleBundle("~/Content/loadingminimal").Include("~/content/pace/minimal.css");
+            
             loadingMinimal.Transforms.Add(new CssVariableReplacer());
             bundles.Add(loadingMinimal);
 

@@ -31,8 +31,8 @@ namespace SmartLMS.WebUI.Controllers
         {
             var model = new WebManifestModel
             {
-                name = "Smart LMS",
-                short_name = "Smart LMS",
+                name = "Coletivo Tarab powered by Smart LMS",
+                short_name = "Coletivo Tarab",
                 background_color = ConfigurationManager.AppSettings["ThemeColor"],
                 icons = new List<Icon>
                 {

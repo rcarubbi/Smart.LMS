@@ -24,7 +24,7 @@ namespace SmartLMS.Domain.Services
             _humanizer = humanizer;
         }
 
-        public PagedListResult<AccessInfo> SearchAccess(DateRange range, int page, Guid userId, AccessType accessType)
+        public PagedListResult<AccessInfo> SearchAccess(DateRange range, int page, Guid? userId, AccessType accessType)
         {
             var list = _context.GetList<ClassAccess>()
                 .Where(a =>
@@ -33,8 +33,7 @@ namespace SmartLMS.Domain.Services
                                                                                range.EndDate.HasValue && range.EndDate
                                                                                                           .Value >=
                                                                                                       a.AccessDateTime
-                                                                                                      && a.User.Id ==
-                                                                                                      userId))
+                                                                                                      && (!userId.HasValue || a.User.Id == userId.Value)))
                     && (accessType == AccessType.Class || accessType == AccessType.All))
                 .Select(a =>
                     new AccessInfo
@@ -52,7 +51,7 @@ namespace SmartLMS.Domain.Services
                                                       && (!range.EndDate.HasValue ||
                                                           range.EndDate.HasValue && range.EndDate.Value >=
                                                                                  a.AccessDateTime
-                                                                                 && a.User.Id == userId))
+                                                                                  && (!userId.HasValue || a.User.Id == userId.Value)))
                             && (accessType == AccessType.File || accessType == AccessType.All))
                         .Select(a =>
                             new AccessInfo

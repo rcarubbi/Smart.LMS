@@ -1,14 +1,19 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Web.Mvc;
 using System.Web.Routing;
 using SmartLMS.Domain;
+using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
 
 namespace SmartLMS.WebUI.Controllers
 {
+#if !DEBUG
+    [RequireHttps]
+#endif
     public class BaseController : Controller
     {
         protected IContext _context;
@@ -72,14 +77,24 @@ namespace SmartLMS.WebUI.Controllers
 
             if (!HttpContext.User.Identity.IsAuthenticated) return;
 
+            _loggedUser = userRepository.GetByLogin(HttpContext.User.Identity.Name);
+
             if (!Request.IsAjaxRequest())
-                if (Request.Url != Request.UrlReferrer)
+            {
+                var signoutAction = new Uri($"{Parameter.BASE_URL.Substring(0, Parameter.BASE_URL.Length - 1)}{Url.Action("Signout", "Authentication")}");
+                var updatePasswordAction = new Uri($"{Parameter.BASE_URL.Substring(0, Parameter.BASE_URL.Length -1)}{Url.Action("ChangePassword", "Authentication")}");
+                if (_loggedUser.PrivateNotices.Count <= 1 && Request.Url.AbsolutePath != updatePasswordAction.AbsolutePath && Request.Url != signoutAction)
+                {
+                    Response.Redirect($"{updatePasswordAction}?firstAccess=true");
+                }
+                else if (Request.Url != Request.UrlReferrer)
                 {
                     ViewBag.BackURL = Request.UrlReferrer;
                     TempData["BackURL"] = Request.UrlReferrer;
                 }
+            }
 
-            _loggedUser = userRepository.GetByLogin(HttpContext.User.Identity.Name);
+           
             ViewBag.LoggedUserId = _loggedUser != null ? _loggedUser.Id.ToString() : string.Empty;
         }
     }

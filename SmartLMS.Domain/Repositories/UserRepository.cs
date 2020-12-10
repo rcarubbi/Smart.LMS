@@ -162,7 +162,9 @@ namespace SmartLMS.Domain.Repositories
             var deliveryPlans = _context.GetList<DeliveryPlan>().Where(x => x.Students.Any(y => y.Id == id));
             var studentComments = _context.GetList<Comment>().Where(x => x.User.Id == id);
             var comments = _context.GetList<Comment>();
+            var logs = _context.GetList<Log>();
 
+            logs.Where(l => l.User.Id == id).ToList().ForEach(l => logs.Remove(l));
             student.VisitedNotices.ToList().ForEach(a => userNotices.Remove(a));
             student.ClassAccesses.ToList().ForEach(a => classAccesses.Remove(a));
             student.FileAccesses.ToList().ForEach(a => fileAccesses.Remove(a));

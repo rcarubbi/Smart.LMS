@@ -1558,7 +1558,7 @@ output {
 
     .form-group.is-focused label,
     .form-group.is-focused label.control-label {
-        color: #ThemeColor#;
+        color: #ThemeColorBrighter40#;
     }
 
     .form-group.is-focused.label-placeholder label,

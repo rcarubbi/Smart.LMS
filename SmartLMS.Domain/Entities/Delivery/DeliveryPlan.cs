@@ -31,11 +31,15 @@ namespace SmartLMS.Domain.Entities.Delivery
             if (Concluded && AvailableClasses.Count != classroomClasses.Count())
                 return;
 
-
+            var classroomClassesToDelivery = new List<ClassDeliveryPlan>();
             foreach (var classroomClass in classroomClasses)
                 if (classroomClass.DeliveryDate <= DateTime.Today &&
                     AvailableClasses.All(ac => ac.ClassId != classroomClass.Class.Id))
-                    DeliverClass(context, sender, classroomClass);
+                {
+                    classroomClassesToDelivery.Add(classroomClass);
+                }
+
+            DeliverClasses(context, sender, classroomClassesToDelivery);
 
             if (AvailableClasses.Count != classroomClasses.Count()) return;
             Concluded = true;
@@ -63,26 +67,46 @@ namespace SmartLMS.Domain.Entities.Delivery
         }
 
 
-        internal void DeliverClass(IContext context, IMailSender sender, ClassDeliveryPlan classDeliveryPlan)
+        internal void DeliverClasses(IContext context, IMailSender sender, List<ClassDeliveryPlan> classesDeliveryPlan)
         {
-            classDeliveryPlan.DeliveryDate = DateTime.Now;
-            AvailableClasses.Add(classDeliveryPlan);
-
-            context.GetList<Notice>().Add(new Notice
+            foreach (var classDeliveryPlan in classesDeliveryPlan)
             {
-                Text =
-                    $@"{Resource.New} <a href='Class/Watch/{classDeliveryPlan.ClassId}'>{Resource.ClassName} {classDeliveryPlan.Class.Name}</a> {Resource.Available}! <br />
+                classDeliveryPlan.DeliveryDate = DateTime.Now;
+                AvailableClasses.Add(classDeliveryPlan);
+                context.GetList<Notice>().Add(new Notice
+                {
+                    Text =
+                   $@"{Resource.New} <a href='Class/Watch/{classDeliveryPlan.ClassId}'>{Resource.ClassName} {classDeliveryPlan.Class.Name}</a> {Resource.Available}! <br />
                                <a href='Class/Index/{classDeliveryPlan.Class.Course.Id}'>{Resource.CourseName} {classDeliveryPlan.Class.Course.Name}</a> <br />",
-                DateTime = DateTime.Now,
-                DeliveryPlan = this
-            });
-            context.Save();
-            SendDeliveringClassEmail(context, sender, classDeliveryPlan.Class, Students);
+                    DateTime = DateTime.Now,
+                    DeliveryPlan = this
+                });
+                context.Save();
+            }
+
+            if (classesDeliveryPlan.Any())
+            {
+                if (classesDeliveryPlan.Count == 1)
+                {
+                    SendDeliveringClassEmail(context, sender, classesDeliveryPlan.Select(cdp => cdp.Class).First(), Students);
+                }
+                else
+                {
+                    SendDeliveringClassesEmail(context, sender, classesDeliveryPlan.Select(cdp => cdp.Class).ToList(), Students);
+                }
+            }
         }
 
 
-        public void SendDeliveringClassEmail(IContext context, IMailSender sender, Class klass,
+        public void SendDeliveringClassesEmail(IContext context, IMailSender sender, List<Class> classes,
             ICollection<Student> students)
+        {
+            var notificationService = new NotificationService(context, sender);
+            foreach (var student in students) notificationService.SendDeliveryClassesEmail(classes, student);
+        }
+
+        public void SendDeliveringClassEmail(IContext context, IMailSender sender, Class klass,
+          ICollection<Student> students)
         {
             var notificationService = new NotificationService(context, sender);
             foreach (var student in students) notificationService.SendDeliveryClassEmail(klass, student);

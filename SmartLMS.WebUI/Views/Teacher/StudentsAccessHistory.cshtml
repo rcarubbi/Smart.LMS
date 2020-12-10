@@ -65,7 +65,7 @@
                                         </div>
                                     </div>
                                     <p class="list-group-item-text">@item.CourseName</p>
-                                    <div class="footer-content">@item.DateTimeDescription</div>
+                                    <div class="footer-content">@item.UserName - @item.DateTimeDescription</div>
                                 </div>
                             </a>
                         }
@@ -78,7 +78,7 @@
                                 <div class="row-content">
                                     <h5 class="list-group-item-heading">@item.Name</h5>
                                     <p class="list-group-item-text">@item.CourseName - @item.ClassName</p>
-                                    <div class="footer-content">@item.DateTimeDescription</div>
+                                    <div class="footer-content">@item.UserName - @item.DateTimeDescription</div>
                                 </div>
                             </a>
                         }
@@ -112,7 +112,7 @@
                         </div>
                     </div>
                     <p class="list-group-item-text">{{CourseName}}</p>
-                    <div class="footer-content">{{DateTimeDescription}}</div>
+                    <div class="footer-content">{{UserName}} - {{DateTimeDescription}}</div>
                 </div>
             </a>
             {{else}}
@@ -123,7 +123,7 @@
                 <div class="row-content">
                     <h5 class="list-group-item-heading">{{Name}}</h5>
                     <p class="list-group-item-text">{{CourseName}} - {{ClassName}}</p>
-                    <div class="footer-content">{{DateTimeDescription}}</div>
+                    <div class="footer-content">{{UserName}} - {{DateTimeDescription}}</div>
                 </div>
             </a>
             {{/equals}}
@@ -153,7 +153,7 @@
 
             $(function() {
                 $private.AccessType = 0;
-                $private.UserId = "";
+                $private.UserId = null;
 
                 SmartLMS.Pagination.init({
                     onPageChanged: $private.changePage,
@@ -169,7 +169,7 @@
                 $("#Students").on("dropdownjs.change",
                     function() {
                         var selectedItem = $(this).find("option:selected");
-                        $private.UserId = selectedItem.val();
+                        $private.UserId = selectedItem.val() || null;
 
                     });
 
@@ -179,7 +179,7 @@
             $private.changePage = function(page) {
                 var startDate = $("#startDate").val();
                 var endDate = $("#endDate").val();
-                return proxy.search(startDate, endDate, userId, $private.AccessType, page);
+                return proxy.search(startDate, endDate, $private.UserId, $private.AccessType, page);
             };
 
             $private.search = function() {

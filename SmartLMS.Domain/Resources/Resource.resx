@@ -121,19 +121,10 @@
     <value>About</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Through the research of Multi-instrumentalist, Composer and Arranger Mario Aphonso III with the music of the world, a musical journey begins that connects strands and cultures through modal music from the Middle East, Turkey, Mediterranean and Balkans, to the Arab world and music Brazilian instrumental. Within the study of theory, the practice of traditional repertoire and language are fundamental to a rich and complete experience. The need to share this research with musicians and friends has become a very enriching possibility. With the aim of creating bridges between cultures and establishing a poetic and artistic dialogue, the essence of Coletivo Tarab was born.
-
-Aiming to study, research and creativity through art, poetry, music and oriental dance, since 2010, this group has been responsible for artistic development and creation of fundamental groups in the World Music Paulistana Brasileira scene, in addition to a scenario of international meetings with renowned artists which promoted workshops, research, concerts and studies with collaborating students and musicians.
-
-
-Coordination of Mario Aphonso III, Ian Nain and Bruna Milani.
-
-
-
-Website: www.coletivotarab.com.br</value>
+    <value>&lt;p align="justify"&gt;Through the research of Multi-instrumentalist, Composer and Arranger Mário Aphonso III with the music of the world, a musical journey begins that connects strands and cultures through modal music from the Middle East, Turkey, the Mediterranean and the Balkans, to the Arab world and music Brazilian instrumental. Within the study of theory, the practice of traditional repertoire and language are fundamental to a rich and complete experience. The need to share this research with musicians and friends has become a very enriching possibility. With the aim of creating bridges between cultures and establishing a poetic and artistic dialogue, the essence of Coletivo Tarab was born. Aiming to study, research and creativity through art, poetry, music and oriental dance, since 2010, this group has been responsible for artistic development and creation of fundamental groups in the World Music Paulistana Brasileira scene, in addition to a scenario of international meetings with renowned artists which promoted workshops, research, concerts and studies with collaborating students and musicians. Coordination of Mario Aphonso III, Ian Nain and Bruna Milani. Site:&lt;a href="https://www.coletivotarab.com.br"&gt;www.coletivotarab.com.br&lt;/a&gt;&lt;/p&gt;</value>
   </data>
   <data name="AboutTitle" xml:space="preserve">
-    <value>About Your Company Training</value>
+    <value>About Coletivo Tarab</value>
   </data>
   <data name="AccessHistoryMenuItem" xml:space="preserve">
     <value>Access History</value>
@@ -225,10 +216,10 @@ Hi {username}, your Your Company Training credendials are:
     <value>Welcome to Your Company Training</value>
   </data>
   <data name="DeliveredClassNotificationEmailBody" xml:space="preserve">
-    <value>Hi {username}, how are you? &lt;br /&gt; The class &lt;a href='{link}/Class/Watch/{classId}'&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href='{link}/Class/Index/{courseId}'&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Your Company Training Team</value>
+    <value>Hi {username}, how are you? &lt;br /&gt; The class &lt;a href='{link}/Class/Watch/{classId}'&gt;{classname}&lt;/a&gt; is now avaialble on the course &lt;a href='{link}/Class/Index/{courseId}'&gt;{coursename}&lt;/a&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Coletivo Tarab</value>
   </data>
   <data name="DeliveredClassNotificationEmailSubject" xml:space="preserve">
-    <value>Your Company Training - New available class</value>
+    <value>Coletivo Tarab - New available class</value>
   </data>
   <data name="FileName" xml:space="preserve">
     <value>Support Material</value>
@@ -937,5 +928,20 @@ Regards, Your Company Training Team
   </data>
   <data name="PublicName" xml:space="preserve">
     <value>Public</value>
+  </data>
+  <data name="DeliveredClassesNotificationEmailBodyItem" xml:space="preserve">
+    <value>&lt;li&gt; &lt;a href='{link}/Class/Watch/{classId}'&gt;{classname}&lt;/a&gt; is available on the course &lt;a href='{link}/Class/Index/{courseId}'&gt;{coursename}&lt;/a&gt;&lt;/li&gt;</value>
+  </data>
+  <data name="DeliveredClassesNotificationEmailFooter" xml:space="preserve">
+    <value>&lt;/ul&gt; &lt;br /&gt;Have a productive study! &lt;br /&gt;&lt;br /&gt; Coletivo Tarab</value>
+  </data>
+  <data name="DeliveredClassesNotificationEmailHeader" xml:space="preserve">
+    <value>Hi {username}, how are you? &lt;br /&gt;You have access to the following classes: &lt;/br&gt; &lt;ul&gt;</value>
+  </data>
+  <data name="DeliveredClassesNotificationEmailSubject" xml:space="preserve">
+    <value>Coletivo Tarab - You have {availableClassesCount} available classes</value>
+  </data>
+  <data name="FirstAccessInformaton" xml:space="preserve">
+    <value>Please change your password in the first access to proceed</value>
   </data>
 </root>

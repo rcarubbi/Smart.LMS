@@ -38,6 +38,7 @@ namespace SmartLMS.DAL
         public void Update<TEntidade>(TEntidade oldState, TEntidade newState) where TEntidade : class
         {
             Entry(oldState).CurrentValues.SetValues(newState);
+            Entry(oldState).OriginalValues.SetValues(newState);
             Entry(oldState).State = EntityState.Modified;
         }
 
@@ -193,7 +194,9 @@ namespace SmartLMS.DAL
                     EntityId = ((Entity) entry.Entity).Id,
                     Type = GetType(entry.Entity).ToString()
                 }).State = EntityState.Added;
-                Entry(loggedUser).State = EntityState.Unchanged;
+
+                // TODO: verificar porque o logged user estava sendo setado para unchanged pois isso causa a nao atualizacao da senha por exemplo
+                //Entry(loggedUser).State = EntityState.Unchanged;
             }
         }
 

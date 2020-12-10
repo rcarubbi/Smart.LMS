@@ -152,7 +152,7 @@ namespace SmartLMS.WebUI.Controllers
 
         [OverrideAuthorization]
         [Authorize(Roles = "Admin,Teacher")]
-        public ActionResult ListAccessHistory(DateTime? startDate, DateTime? endDate, Guid userId,
+        public ActionResult ListAccessHistory(DateTime? startDate, DateTime? endDate, Guid? userId,
             AccessType accessType = AccessType.All, int page = 1)
         {
             var range = new DateRange

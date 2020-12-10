@@ -181,7 +181,7 @@ namespace SmartLMS.WebUI.Controllers
             var classRepository = new ClassRepository(_context);
             var file = classRepository.GetFile(id);
 
-            var classAvailable = classRepository.CheckClassAvailability(file.Class.Id, _loggedUser?.Id);
+            var classAvailable = file.Class != null && classRepository.CheckClassAvailability(file.Class.Id, _loggedUser?.Id);
             if (classAvailable)
             {
                 classRepository.SaveAccess(file, _loggedUser);

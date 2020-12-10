@@ -96,16 +96,25 @@ namespace SmartLMS.WebUI.Controllers
 
                         var notificationService = new NotificationService(_context, sender);
 
-                        // notify already delivered classes
-                        foreach (var item in todayDeliveryPlan.AvailableClasses)
+                        if (todayDeliveryPlan.AvailableClasses.Any())
+                        {
                             try
                             {
-                                notificationService.SendDeliveryClassEmail(item.Class, (Student) newStudent);
+
+                                if (todayDeliveryPlan.AvailableClasses.Count == 1)
+                                {
+                                    notificationService.SendDeliveryClassEmail(todayDeliveryPlan.AvailableClasses.Select(ac => ac.Class).First(), (Student)newStudent);
+                                }
+                                else
+                                {
+                                    notificationService.SendDeliveryClassesEmail(todayDeliveryPlan.AvailableClasses.Select(ac => ac.Class).ToList(), (Student)newStudent);
+                                }
                             }
                             catch (Exception)
                             {
-                                // ignored
+                                // ignored 
                             }
+                        }
 
                         // force deliver for today
                         todayDeliveryPlan.DeliverPendingClasses(_context, new SmtpSender());
