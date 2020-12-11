@@ -70,7 +70,7 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p align=&quot;justify&quot;&gt;Through the research of Multi-instrumentalist, Composer and Arranger Mário Aphonso III with the music of the world, a musical journey begins that connects strands and cultures through modal music from the Middle East, Turkey, the Mediterranean and the Balkans, to the Arab world and music Brazilian instrumental. Within the study of theory, the practice of traditional repertoire and language are fundamental to a rich and complete experience. The need to share this research with musicians an [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;p align=&quot;justify&quot;  style=&quot;text-indent: 1.5em;&quot;&gt;Through the research of Multi-instrumentalist, Composer and Arranger Mário Aphonso III with the music of the world, a musical journey begins that connects strands and cultures through modal music from the Middle East, Turkey, the Mediterranean and the Balkans, to the Arab world and music Brazilian instrumental. Within the study of theory, the practice of traditional repertoire and language are fundamental to a rich and complete experience. The need to share th [rest of string was truncated]&quot;;.
         /// </summary>
         public static string AboutText {
             get {

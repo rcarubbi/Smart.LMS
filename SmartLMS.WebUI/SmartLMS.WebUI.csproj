@@ -250,6 +250,7 @@
     <Content Include="Content\icons\favicon-32x32.png" />
     <Content Include="Content\animated-spinner\inverted-animated-spinner.css" />
     <Content Include="Content\animated-spinner\animated-spinner.css" />
+    <Content Include="Content\img\fundo9.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="Content\icons\mstile-150x150.png" />
     <Content Include="Content\icons\safari-pinned-tab.svg" />

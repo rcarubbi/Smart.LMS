@@ -23,6 +23,7 @@
     var firstLine = true;
     if (Model.Count() > 1)
     {
+ 
         <div class="row">
             <div class="col-md-12">
                 <div class="card" style="min-height: 295px;">
@@ -84,7 +85,7 @@
 
 @if (HttpContext.Current.User.Identity.IsAuthenticated)
 {
-    <div class="row">
+    @*<div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="content">
@@ -94,7 +95,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
     <div class="row">
         <div class="col-md-6">
             @Html.Action("NewClassesPanel", "Class")

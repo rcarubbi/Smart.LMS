@@ -6,11 +6,15 @@
 }
 
 @media (min-width: 992px) {
-    .carousel-inner .active.left { left: -25%; }
+     .carousel-inner .active.left { left: -100%; }
 
-    .carousel-inner .next { left: 25%; }
+    .carousel-inner .next {
+        left: 100%;
+    }
 
-    .carousel-inner .prev { left: -25%; }
+    .carousel-inner .prev {
+        left: -100%;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {

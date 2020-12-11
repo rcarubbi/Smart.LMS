@@ -29,7 +29,8 @@ namespace SmartLMS.Domain.Repositories
                 return student.DeliveryPlans
                     .SelectMany(x => x.AvailableClasses)
                     .OrderByDescending(x => x.DeliveryDate)
-                    .Take(6)
+                    .ThenBy(x => x.Class.Order)
+                    .Take(10)
                     .ToList();
 
             return new List<ClassDeliveryPlan>();

@@ -129,7 +129,7 @@ SmartLMS.App = (function() {
     $public.initializeCarouselMulti = function() {
         $('.carousel[data-type="multi"] .item').each(function() {
             var next = jQuery(this).next();
-            var maxItem = 3;
+            var maxItem = 1;
             if (!next.length) {
                 next = jQuery(this).parent().children(":first-child");
             }
