@@ -151,6 +151,7 @@ namespace SmartLMS.Domain.Repositories
             klass.DeliveredPlans = currentClass.DeliveredPlans;
             klass.Accesses = currentClass.Accesses;
             klass.Files = currentClass.Files;
+            currentClass.Teacher = klass.Teacher;
 
             _context.Update(currentClass, klass);
         }
@@ -162,6 +163,8 @@ namespace SmartLMS.Domain.Repositories
             klass.Accesses = currentClass.Accesses;
             klass.Comments = currentClass.Comments;
             klass.DeliveredPlans = currentClass.DeliveredPlans;
+            currentClass.Teacher = klass.Teacher;
+
             _context.Update(currentClass, klass);
         }
 

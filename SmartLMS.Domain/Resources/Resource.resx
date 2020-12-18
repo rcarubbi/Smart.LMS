@@ -944,4 +944,7 @@ Regards, Your Company Training Team
   <data name="FirstAccessInformaton" xml:space="preserve">
     <value>Please change your password in the first access to proceed</value>
   </data>
+  <data name="ClassUpdatedToastrMessage" xml:space="preserve">
+    <value>Class updated</value>
+  </data>
 </root>

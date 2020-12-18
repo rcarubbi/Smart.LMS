@@ -941,4 +941,7 @@ Atenciosamente, Coletivo Tarab
   <data name="FirstAccessInformaton" xml:space="preserve">
     <value>Altere sua senha no seu primeiro acesso para prosseguir</value>
   </data>
+  <data name="ClassUpdatedToastrMessage" xml:space="preserve">
+    <value>Aula atualizada</value>
+  </data>
 </root>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Carubbi.Mailer.Interfaces;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Content;
@@ -69,26 +70,27 @@ namespace SmartLMS.Domain.Entities.Delivery
 
         internal void DeliverClasses(IContext context, IMailSender sender, List<ClassDeliveryPlan> classesDeliveryPlan)
         {
-            foreach (var classDeliveryPlan in classesDeliveryPlan)
+             
+            foreach (var classDeliveryPlan in classesDeliveryPlan.OrderBy(c => c.Class.Order))
             {
                 classDeliveryPlan.DeliveryDate = DateTime.Now;
                 AvailableClasses.Add(classDeliveryPlan);
-                context.GetList<Notice>().Add(new Notice
+                var notice = new Notice
                 {
-                    Text =
-                   $@"{Resource.New} <a href='Class/Watch/{classDeliveryPlan.ClassId}'>{Resource.ClassName} {classDeliveryPlan.Class.Name}</a> {Resource.Available}! <br />
+                    Text = $@"{Resource.New} <a href='Class/Watch/{classDeliveryPlan.ClassId}'>{Resource.ClassName} {classDeliveryPlan.Class.Name}</a> {Resource.Available}! <br />
                                <a href='Class/Index/{classDeliveryPlan.Class.Course.Id}'>{Resource.CourseName} {classDeliveryPlan.Class.Course.Name}</a> <br />",
                     DateTime = DateTime.Now,
                     DeliveryPlan = this
-                });
+                };
+                context.GetList<Notice>().Add(notice);
                 context.Save();
             }
-
+           
             if (classesDeliveryPlan.Any())
             {
                 if (classesDeliveryPlan.Count == 1)
                 {
-                    SendDeliveringClassEmail(context, sender, classesDeliveryPlan.Select(cdp => cdp.Class).First(), Students);
+                    SendDeliveringClassEmail(context, sender, classesDeliveryPlan.First().Class, Students);
                 }
                 else
                 {

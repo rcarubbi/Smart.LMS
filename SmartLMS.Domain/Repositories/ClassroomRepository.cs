@@ -154,8 +154,15 @@ namespace SmartLMS.Domain.Repositories
             _context.Update(todayDeliveryPlan, todayDeliveryPlan);
 
             // Enviar emails das aulas já disponibilizadas no dia para os novos alunos
-            foreach (var classDeliveryPlan in todayDeliveryPlan.AvailableClasses)
-                todayDeliveryPlan.SendDeliveringClassEmail(_context, sender, classDeliveryPlan.Class, newStudents);
+            if (todayDeliveryPlan.AvailableClasses.Count == 1)
+            {
+                todayDeliveryPlan.SendDeliveringClassEmail(_context, sender, todayDeliveryPlan.AvailableClasses.First().Class, newStudents);
+            } 
+            else
+            {
+                todayDeliveryPlan.SendDeliveringClassesEmail(_context, sender, todayDeliveryPlan.AvailableClasses.Select(cdp => cdp.Class).ToList(), newStudents);
+            }
+               
         }
 
         private void RemoveStudents(Classroom classroom, List<Guid> studentIds)

@@ -412,7 +412,7 @@ namespace SmartLMS.WebUI.Controllers
                     _context.Save(_loggedUser);
                     TempData["MessageType"] = "success";
                     TempData["MessageTitle"] = Resource.ContentManagementToastrTitle;
-                    TempData["Message"] = "Class updated";
+                    TempData["Message"] = Resource.ClassUpdatedToastrMessage;
 
                     return Redirect(TempData["BackURL"].ToString());
                 }

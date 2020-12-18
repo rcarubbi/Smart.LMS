@@ -448,6 +448,15 @@ namespace SmartLMS.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Class updated.
+        /// </summary>
+        public static string ClassUpdatedToastrMessage {
+            get {
+                return ResourceManager.GetString("ClassUpdatedToastrMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Class Update.
         /// </summary>
         public static string ClassUpdatePageTitle {
