@@ -1,19 +1,20 @@
-﻿using SmartLMS.Domain.Attributes;
+﻿using Carubbi.Utils.Localization;
+using SmartLMS.Domain.Attributes;
 
 namespace SmartLMS.Domain.Services
 {
     public enum NoticeType
     {
-        [LocalizedDescription("NoticeTypeAll")]
+        [LocalizedDescription("NoticeTypeAll", typeof(Resources.Resource))]
         All,
 
-        [LocalizedDescription("NoticeTypePublic")]
+        [LocalizedDescription("NoticeTypePublic", typeof(Resources.Resource))]
         Public,
 
-        [LocalizedDescription("NoticeTypeClassroom")]
+        [LocalizedDescription("NoticeTypeClassroom", typeof(Resources.Resource))]
         Classroom,
 
-        [LocalizedDescription("NoticeTypePersonal")]
+        [LocalizedDescription("NoticeTypePersonal", typeof(Resources.Resource))]
         Personal
     }
 }

@@ -18,6 +18,7 @@ namespace SmartLMS.Domain.Entities
         public const string TALK_TO_US_RECEIVER_EMAIL_KEY = "TalkToUsReceiverEmail";
         public const string BASE_URL_KEY = "BaseUrlKey";
         public const string DAEMON_USER_KEY = "DaemonUser";
+        private const string DEFAULT_APPLICATION_NAME = "Smart LMS";
 
         public static string APP_NAME { get; set; }
 
@@ -36,7 +37,7 @@ namespace SmartLMS.Domain.Entities
         public static void LoadParameters(IContext context)
         {
             var parameterRepository = new ParameterRepository(context);
-            APP_NAME = parameterRepository.GetValueByKey(APP_NAME_KEY);
+            APP_NAME = parameterRepository.GetValueByKey(APP_NAME_KEY) ?? DEFAULT_APPLICATION_NAME;
             FILE_STORAGE = parameterRepository.GetValueByKey(FILE_STORAGE_KEY);
             DAEMON_USER = parameterRepository.GetValueByKey(DAEMON_USER_KEY);
             BASE_URL = parameterRepository.GetValueByKey(BASE_URL_KEY);

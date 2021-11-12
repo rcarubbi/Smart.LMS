@@ -14,7 +14,7 @@ namespace SmartLMS.Domain.Repositories
 
         public string GetValueByKey(string key)
         {
-            return _context.GetList<Parameter>().Single(p => p.Key == key).Value;
+            return _context.GetList<Parameter>().SingleOrDefault(p => p.Key == key)?.Value;
         }
     }
 }

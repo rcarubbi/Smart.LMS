@@ -17,6 +17,7 @@ namespace SmartLMS.Domain.Services
         private readonly IContext _context;
         private readonly SymmetricCrypt _crypt;
         private readonly NotificationService _notificationService;
+        private const string DEFAULT_CRIPTO_KEY = "";
 
         public AuthenticationService(IContext context, IMailSender sender)
         {
@@ -24,7 +25,7 @@ namespace SmartLMS.Domain.Services
             _notificationService = new NotificationService(_context, sender);
             _crypt = new SymmetricCrypt(SymmetricCryptProvider.TripleDES);
             var parameterRepository = new ParameterRepository(_context);
-            _crypt.Key = parameterRepository.GetValueByKey(Parameter.CRYPTO_KEY);
+            _crypt.Key = parameterRepository.GetValueByKey(Parameter.CRYPTO_KEY) ?? DEFAULT_CRIPTO_KEY;
         }
 
 

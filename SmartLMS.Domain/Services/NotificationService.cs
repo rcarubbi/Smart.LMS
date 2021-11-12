@@ -1,12 +1,11 @@
-﻿using System.Linq;
-using System.Net.Mail;
-using Carubbi.Extensions;
+﻿using Carubbi.Extensions;
 using Carubbi.Mailer.Interfaces;
 using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Repositories;
 using SmartLMS.Domain.Resources;
+using System.Net.Mail;
 
 namespace SmartLMS.Domain.Services
 {
@@ -25,10 +24,9 @@ namespace SmartLMS.Domain.Services
 
         public void SendRecoverPasswordNotification(string email, string recoveredPassword)
         {
+            var parameterRepository = new ParameterRepository(_context);
             var userRepository = new UserRepository(_context);
             var user = userRepository.GetByEmail(email);
-
-            var parameterRepository = new ParameterRepository(_context);
 
             var body = Resource.PasswordRecoveryEmailBody
                 .Replace("{username}", user.Name)
@@ -51,27 +49,25 @@ namespace SmartLMS.Domain.Services
 
         private void ConfigureSender()
         {
-            _sender.PortNumber =
-                _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_PORT_KEY).Value.To(0);
-            _sender.Host = _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_SERVER_KEY).Value;
-            _sender.UseDefaultCredentials = _context.GetList<Parameter>()
-                .Single(x => x.Key == Parameter.SMTP_USE_DEFAULT_CREDENTIALS_KEY).Value.To(false);
-            _sender.UseSsl = _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_USE_SSL_KEY).Value
-                .To(false);
+            var parameterRepository = new ParameterRepository(_context);
+
+            _sender.PortNumber = parameterRepository.GetValueByKey(Parameter.SMTP_PORT_KEY).To(0);
+            _sender.Host = parameterRepository.GetValueByKey(Parameter.SMTP_SERVER_KEY);
+            _sender.UseDefaultCredentials = parameterRepository.GetValueByKey(Parameter.SMTP_USE_DEFAULT_CREDENTIALS_KEY).To(false);
+            _sender.UseSsl = parameterRepository.GetValueByKey(Parameter.SMTP_USE_SSL_KEY).To(false);
             if (_sender.UseDefaultCredentials) return;
 
-
-            _sender.Username = _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_USERNAME_KEY).Value;
-            _sender.Password = _context.GetList<Parameter>().Single(x => x.Key == Parameter.SMTP_PASSWORD_KEY).Value;
+            _sender.Username = parameterRepository.GetValueByKey(Parameter.SMTP_USERNAME_KEY);
+            _sender.Password = parameterRepository.GetValueByKey(Parameter.SMTP_PASSWORD_KEY);
         }
 
         public void SendTalkToUsMessage(string name, string email, string message)
         {
-            var talkToUsReceiverEmail = _context.GetList<Parameter>()
-                .Single(x => x.Key == Parameter.TALK_TO_US_RECEIVER_EMAIL_KEY).Value;
-            var talkToUsReceiverName = _context.GetList<Parameter>()
-                .Single(x => x.Key == Parameter.TALK_TO_US_RECEIVER_NAME_KEY).Value;
-            var senderMail = _context.GetList<Parameter>().Single(x => x.Key == Parameter.EMAIL_FROM_KEY).Value;
+            var parameterRepository = new ParameterRepository(_context);
+
+            var talkToUsReceiverEmail = parameterRepository.GetValueByKey(Parameter.TALK_TO_US_RECEIVER_EMAIL_KEY);
+            var talkToUsReceiverName = parameterRepository.GetValueByKey(Parameter.TALK_TO_US_RECEIVER_NAME_KEY);
+            var senderMail = parameterRepository.GetValueByKey(Parameter.EMAIL_FROM_KEY);
 
             var mailMessage = new MailMessage();
             var receiverMailAddress = new MailAddress(talkToUsReceiverEmail, talkToUsReceiverName);
@@ -89,7 +85,9 @@ namespace SmartLMS.Domain.Services
 
         public void SendDeliveryClassEmail(Class klass, Student student)
         {
-            var senderEmail = _context.GetList<Parameter>().Single(x => x.Key == Parameter.EMAIL_FROM_KEY).Value;
+            var parameterRepository = new ParameterRepository(_context);
+
+            var senderEmail = parameterRepository.GetValueByKey(Parameter.EMAIL_FROM_KEY);
 
             var email = new MailMessage();
             var receievrMailAddress = new MailAddress(student.Email, student.Name);
@@ -121,8 +119,7 @@ namespace SmartLMS.Domain.Services
 
             var message = new MailMessage();
             message.To.Add(user.Email);
-            message.From = new MailAddress(parameterRepository.GetValueByKey(Parameter.EMAIL_FROM_KEY),
-                Parameter.APP_NAME);
+            message.From = new MailAddress(parameterRepository.GetValueByKey(Parameter.EMAIL_FROM_KEY), Parameter.APP_NAME);
             message.Subject = Resource.CreatingUserNotificationEmailSubject;
             message.IsBodyHtml = true;
             message.Body = body;
