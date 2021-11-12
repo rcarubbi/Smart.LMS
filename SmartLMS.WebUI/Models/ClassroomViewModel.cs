@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Carubbi.GenericRepository;
-using SmartLMS.Domain.Attributes;
+using Carubbi.Utils.Localization;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Resources;
 
@@ -14,10 +14,10 @@ namespace SmartLMS.WebUI.Models
         [Required] public string Name { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectCourse")]
-        [LocalizedDisplay("CoursePlural")]
+        [LocalizedDisplay("CoursePlural", typeof(Resource))]
         public List<Guid> CourseIds { get; set; }
 
-        [LocalizedDisplay("StudentPlural")] public List<Guid> StudentIds { get; set; }
+        [LocalizedDisplay("StudentPlural", typeof(Resource))] public List<Guid> StudentIds { get; set; }
 
         public bool Active { get; set; }
 

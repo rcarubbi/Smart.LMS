@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using Carubbi.GenericRepository;
+using Carubbi.Utils.Localization;
 using Humanizer.DateTimeHumanizeStrategy;
-using SmartLMS.Domain.Attributes;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.UserAccess;
@@ -17,12 +17,12 @@ namespace SmartLMS.WebUI.Models
     public class ClassViewModel
     {
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectTeacher")]
-        [LocalizedDisplay("TeacherName")]
+        [LocalizedDisplay("TeacherName", typeof(Resource))]
         public Guid TeacherId { get; set; }
 
         [Required] public int Order { get; set; }
 
-        [LocalizedDisplay("DaysToDeliverLabel")]
+        [LocalizedDisplay("DaysToDeliverLabel", typeof(Resource))]
         [Required]
         public int DeliveryDays { get; set; }
 
@@ -39,14 +39,14 @@ namespace SmartLMS.WebUI.Models
 
         public decimal WatchedSeconds { get; set; }
 
-        [LocalizedDisplay("CourseName")]
+        [LocalizedDisplay("CourseName", typeof(Resource))]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectCourse")]
         public Guid CourseId { get; set; }
 
         public Guid Id { get; set; }
 
 
-        [LocalizedDisplay("FileName")] public IEnumerable<FileViewModel> Files { get; set; }
+        [LocalizedDisplay("FileName", typeof(Resource))] public IEnumerable<FileViewModel> Files { get; set; }
 
         [Required] public string Content { get; set; }
 
@@ -55,7 +55,7 @@ namespace SmartLMS.WebUI.Models
         public string TeacherName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectContentType")]
-        [LocalizedDisplay("ContentTypeName")]
+        [LocalizedDisplay("ContentTypeName", typeof(Resource))]
         public ContentType ContentType { get; set; }
 
         public DateTime DeliveryDate { get; set; }
@@ -67,7 +67,7 @@ namespace SmartLMS.WebUI.Models
 
         public DateTime CreatedAt { get; set; }
 
-        [LocalizedDisplay("ActiveFieldName")] public bool Active { get; set; }
+        [LocalizedDisplay("ActiveFieldName", typeof(Resource))] public bool Active { get; set; }
 
         public bool Editable { get; set; }
 

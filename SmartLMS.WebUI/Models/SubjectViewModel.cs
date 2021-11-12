@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Carubbi.GenericRepository;
-using SmartLMS.Domain.Attributes;
+using Carubbi.Utils.Localization;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Resources;
 
@@ -16,7 +16,7 @@ namespace SmartLMS.WebUI.Models
 
         public DateTime CreatedAt { get; set; }
 
-        [LocalizedDisplay("KnowledgeAreaName")]
+        [LocalizedDisplay("KnowledgeAreaName", typeof(Resource))]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "SelectKnowledgeArea")]
         public Guid KnowledgeAreaId { get; set; }
 

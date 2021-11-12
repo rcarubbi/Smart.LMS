@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using SmartLMS.Domain.Attributes;
+using Carubbi.Utils.Localization;
 using SmartLMS.Domain.Resources;
 
 namespace SmartLMS.WebUI.Models
@@ -7,7 +7,7 @@ namespace SmartLMS.WebUI.Models
     public class SendNoticeViewModel
     {
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MessageRequired")]
-        [LocalizedDisplay("NoticeMessagePlaceholder")]
+        [LocalizedDisplay("NoticeMessagePlaceholder", typeof(Resource))]
         public string Text { get; set; }
     }
 }

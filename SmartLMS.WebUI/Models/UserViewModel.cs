@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using Carubbi.GenericRepository;
-using SmartLMS.Domain.Attributes;
+using Carubbi.Utils.Localization;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Resources;
 
@@ -11,7 +11,7 @@ namespace SmartLMS.WebUI.Models
 {
     public class UserViewModel
     {
-        [LocalizedDisplay("ActiveFieldName")] public bool Active { get; set; }
+        [LocalizedDisplay("ActiveFieldName", typeof(Resource))] public bool Active { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "EmailRequired")]
         [DataType(DataType.EmailAddress)]
@@ -26,11 +26,11 @@ namespace SmartLMS.WebUI.Models
         public string Login { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "ClassroomRequired")]
-        [LocalizedDisplay("ClassroomName")]
+        [LocalizedDisplay("ClassroomName", typeof(Resource))]
         public Guid ClassroomId { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "UserNameRequired")]
-        [LocalizedDisplay("UserNameFieldName")]
+        [LocalizedDisplay("UserNameFieldName", typeof(Resource))]
         public string Name { get; set; }
 
 
@@ -39,7 +39,7 @@ namespace SmartLMS.WebUI.Models
         public string RoleName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "UserPasswordRequired")]
-        [LocalizedDisplay("PasswordFieldName")]
+        [LocalizedDisplay("PasswordFieldName", typeof(Resource))]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
@@ -48,7 +48,7 @@ namespace SmartLMS.WebUI.Models
         [DataType(DataType.Password)]
         [Required(ErrorMessageResourceType = typeof(Resource),
             ErrorMessageResourceName = "PasswordConfirmationRequired")]
-        [LocalizedDisplay("PasswordConfirmationFieldName")]
+        [LocalizedDisplay("PasswordConfirmationFieldName", typeof(Resource))]
         public string ConfirmPassword { get; set; }
 
         internal static UserViewModel FromEntity(User user)

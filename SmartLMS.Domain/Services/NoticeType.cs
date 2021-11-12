@@ -1,5 +1,4 @@
 ﻿using Carubbi.Utils.Localization;
-using SmartLMS.Domain.Attributes;
 
 namespace SmartLMS.Domain.Services
 {
