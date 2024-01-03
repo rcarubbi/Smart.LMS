@@ -399,3 +399,9 @@ tbody#result-container td {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+body.modal-open,
+.modal-open .navbar-fixed-top,
+.modal-open .navbar-fixed-bottom {
+  margin-right: 0px !important;
+}
