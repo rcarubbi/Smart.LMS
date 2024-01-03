@@ -405,3 +405,7 @@ body.modal-open,
 .modal-open .navbar-fixed-bottom {
   margin-right: 0px !important;
 }
+
+.modal {
+  overflow-y: hidden !important;
+}
