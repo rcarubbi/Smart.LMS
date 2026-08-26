@@ -9,13 +9,9 @@ public class SupportFile : Entity
     /// <summary>Relative path inside the file storage volume.</summary>
     public string StoragePath { get; set; } = string.Empty;
 
-    public Guid CourseId { get; set; }
-
-    public Course Course { get; set; } = null!;
-
     public Guid ClassId { get; set; }
 
-    public Class Class { get; set; } = null!;
+    public virtual Class Class { get; set; } = null!;
 
-    public ICollection<FileAccess> FileAccesses { get; set; } = [];
+    public virtual ICollection<FileAccess> FileAccesses { get; set; } = [];
 }

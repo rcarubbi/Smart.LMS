@@ -2,9 +2,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartLMS.Application\SmartLMS.Application.csproj" />
+    <ProjectReference Include="..\SmartLMS.DataAccess\SmartLMS.DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
   </ItemGroup>
 

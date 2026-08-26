@@ -23,8 +23,6 @@ public class Course : Entity
 
     public ICollection<Class> Classes { get; set; } = [];
 
-    public ICollection<SupportFile> Files { get; set; } = [];
-
     public ICollection<Assessment> AvailableAssessments { get; set; } = [];
 
     public ICollection<ClassroomCourse> Classrooms { get; set; } = [];

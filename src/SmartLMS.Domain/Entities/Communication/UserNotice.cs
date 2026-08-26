@@ -6,11 +6,11 @@ public class UserNotice
 {
     public Guid UserId { get; set; }
 
-    public User User { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
 
-    public long NoticeId { get; set; }
+    public Guid NoticeId { get; set; }
 
-    public Notice Notice { get; set; } = null!;
+    public virtual Notice Notice { get; set; } = null!;
 
     public DateTime VisualizationDateTime { get; set; }
 }

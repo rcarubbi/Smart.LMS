@@ -1,0 +1,56 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using SmartLMS.Application.Abstractions;
+using SmartLMS.DataAccess;
+using SmartLMS.Domain.Entities;
+using SmartLMS.Domain.Entities.UserAccess;
+
+namespace SmartLMS.Infrastructure.Persistence;
+
+/// <summary>Applies migrations and creates the default admin + baseline parameters.</summary>
+public static class DbSeeder
+{
+    public const string DefaultAdminEmail = "administrator@yourcompany.com";
+    public const string DefaultAdminPassword = "smart123";
+
+    public static async Task SeedAsync(
+        SmartLmsDbContext context,
+        IPasswordHasher passwordHasher,
+        ILogger? logger = null,
+        CancellationToken cancellationToken = default)
+    {
+        await context.Database.MigrateAsync(cancellationToken);
+
+        var admin = await context.Set<Admin>().FirstOrDefaultAsync(u => u.Email == DefaultAdminEmail, cancellationToken);
+        if (admin is null)
+        {
+            context.Set<Admin>().Add(new Admin
+            {
+                Name = "Administrator",
+                Email = DefaultAdminEmail,
+                PasswordHash = passwordHasher.Hash(DefaultAdminPassword),
+                Active = true,
+            });
+
+            logger?.LogInformation("Default admin user created ({Email})", DefaultAdminEmail);
+        }
+
+        await SeedParameterIfMissingAsync(context, Parameter.AppNameKey, "Smart LMS", cancellationToken);
+        await SeedParameterIfMissingAsync(context, Parameter.BaseUrlKey, "http://localhost:3000", cancellationToken);
+        await SeedParameterIfMissingAsync(context, Parameter.FileStorageKey, "/app/storage", cancellationToken);
+
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private static async Task SeedParameterIfMissingAsync(
+        SmartLmsDbContext context,
+        string key,
+        string value,
+        CancellationToken cancellationToken)
+    {
+        if (!await context.Parameters.AnyAsync(p => p.Key == key, cancellationToken))
+        {
+            context.Parameters.Add(new Parameter { Key = key, Value = value });
+        }
+    }
+}

@@ -6,7 +6,7 @@ public class ClassDeliveryPlan
 {
     public long Id { get; private set; }
 
-    public long DeliveryPlanId { get; set; }
+    public Guid DeliveryPlanId { get; set; }
 
     public DeliveryPlan DeliveryPlan { get; set; } = null!;
 
