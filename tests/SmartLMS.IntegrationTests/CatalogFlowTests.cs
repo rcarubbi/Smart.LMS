@@ -21,13 +21,14 @@ public class CatalogFlowTests
     public async Task Admin_builds_catalog_searches_and_students_are_read_only()
     {
         await using var container = new MsSqlBuilder().Build();
-        await container.StartAsync();
+        IntegrationTestGate.Instance.Wait();
+        try
+        {
+            await container.StartAsync();
 
         Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", container.GetConnectionString());
         Environment.SetEnvironmentVariable("Jwt__SigningKey", "catalog-test-signing-key-0123456789abcdef");
 
-        try
-        {
             await using var factory = new WebApplicationFactory<Program>();
             var client = factory.CreateClient();
 
@@ -140,6 +141,7 @@ public class CatalogFlowTests
         {
             Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", null);
             Environment.SetEnvironmentVariable("Jwt__SigningKey", null);
+            IntegrationTestGate.Instance.Release();
         }
     }
 

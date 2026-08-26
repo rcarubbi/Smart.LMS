@@ -21,15 +21,16 @@ public class AuthFlowTests
     public async Task Login_refresh_and_role_protected_endpoints_work()
     {
         await using var container = new MsSqlBuilder().Build();
-        await container.StartAsync();
+        IntegrationTestGate.Instance.Wait();
+        try
+        {
+            await container.StartAsync();
 
         // Environment variables are the most reliable way to feed configuration into
         // the minimal-hosting pipeline under WebApplicationFactory.
         Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", container.GetConnectionString());
         Environment.SetEnvironmentVariable("Jwt__SigningKey", "integration-test-signing-key-0123456789abcdef");
 
-        try
-        {
             await using var factory = new WebApplicationFactory<Program>();
             factory.ClientOptions.AllowAutoRedirect = false;
 
@@ -41,6 +42,7 @@ public class AuthFlowTests
         {
             Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", null);
             Environment.SetEnvironmentVariable("Jwt__SigningKey", null);
+            IntegrationTestGate.Instance.Release();
         }
     }
 
