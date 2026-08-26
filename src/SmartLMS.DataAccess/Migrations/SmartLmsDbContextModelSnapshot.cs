@@ -712,7 +712,7 @@ namespace SmartLMS.DataAccess.Migrations
                 {
                     b.HasBaseType("SmartLMS.Domain.Entities.Assessments.Question");
 
-                    b.Property<Guid>("RightOptionId")
+                    b.Property<Guid?>("RightOptionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasIndex("RightOptionId");
@@ -1010,8 +1010,7 @@ namespace SmartLMS.DataAccess.Migrations
                     b.HasOne("SmartLMS.Domain.Entities.Assessments.QuestionOption", "RightOption")
                         .WithMany()
                         .HasForeignKey("RightOptionId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("RightOption");
                 });

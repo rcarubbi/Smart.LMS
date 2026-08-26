@@ -79,6 +79,7 @@ app.MapAuthEndpoints();
 app.MapUserEndpoints();
 app.MapCatalogEndpoints();
 app.MapLearningEndpoints();
+app.MapAssessmentEndpoints();
 
 await app.RunAsync();
 

@@ -8,7 +8,7 @@ public abstract class Entity
         CreatedAt = DateTime.UtcNow;
     }
 
-    public Guid Id { get; protected set; }
+    public Guid Id { get; set; }
 
     public bool Active { get; set; }
 
