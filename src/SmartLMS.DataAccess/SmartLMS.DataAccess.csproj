@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartLMS.Domain\SmartLMS.Domain.csproj" />
+    <ProjectReference Include="..\SmartLMS.Application\SmartLMS.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

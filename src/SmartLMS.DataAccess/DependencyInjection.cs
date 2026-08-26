@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SmartLMS.Application.Abstractions;
 using SmartLMS.DataAccess.Auditing;
 
 namespace SmartLMS.DataAccess;
@@ -12,6 +13,7 @@ public static class DependencyInjection
     public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<AuditSaveChangesInterceptor>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddDbContext<SmartLmsDbContext>((sp, options) =>
         {
