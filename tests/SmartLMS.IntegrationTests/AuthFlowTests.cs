@@ -14,6 +14,7 @@ namespace SmartLMS.IntegrationTests;
 /// seeder runs (Development), login issues JWT + refresh, refresh rotates, protected
 /// endpoints enforce roles, wrong credentials are rejected.
 /// </summary>
+[NotInParallel]
 public class AuthFlowTests
 {
     [Test]

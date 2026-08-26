@@ -77,6 +77,7 @@ app.UseAuthorization();
 app.MapGet("/health", () => Results.Ok(new { status = "Healthy" }));
 app.MapAuthEndpoints();
 app.MapUserEndpoints();
+app.MapCatalogEndpoints();
 
 await app.RunAsync();
 
