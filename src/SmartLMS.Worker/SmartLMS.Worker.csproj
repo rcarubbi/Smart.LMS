@@ -1,6 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <!-- Background jobs host (TickerQ + Dashboard). -->
+
+  <ItemGroup>
+    <PackageReference Include="TickerQ" />
+    <PackageReference Include="TickerQ.Dashboard" />
+    <PackageReference Include="TickerQ.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SmartLMS.Application\SmartLMS.Application.csproj" />

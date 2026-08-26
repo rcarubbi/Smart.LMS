@@ -53,8 +53,12 @@ services:
     environment:
       DOTNET_ENVIRONMENT: Development
       ConnectionStrings__SmartLMS: "Server=sql,1433;Database=SmartLMS;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True"
+      Jwt__SigningKey: "compose-signing-key-0123456789abcdef0123456789abcdef"
       Smtp__Host: mailpit
       Smtp__Port: 1025
+      TickerQ__Dashboard__Password: "tickerq-admin"
+    ports:
+      - "8081:8081"
     depends_on:
       sql:
         condition: service_healthy
