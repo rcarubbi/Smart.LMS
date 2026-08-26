@@ -1,0 +1,23 @@
+# Build stage
+FROM node:24-alpine AS build
+WORKDIR /app
+
+COPY web/smartlms-web/package.json web/smartlms-web/package-lock.json ./web/smartlms-web/
+RUN cd web/smartlms-web && npm ci
+
+COPY web/smartlms-web ./web/smartlms-web
+RUN cd web/smartlms-web && npm run build
+
+# Runtime stage (Next.js standalone output)
+FROM node:24-alpine AS final
+WORKDIR /app
+
+COPY --from=build /app/web/smartlms-web/.next/standalone ./
+COPY --from=build /app/web/smartlms-web/.next/static ./.next/static
+COPY --from=build /app/web/smartlms-web/public ./public
+
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+EXPOSE 3000
+
+CMD ["node", "server.js"]
