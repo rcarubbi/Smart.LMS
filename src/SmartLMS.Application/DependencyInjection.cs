@@ -1,8 +1,8 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using SmartLMS.Application.Abstractions.Messaging;
+using SmartLMS.Application.Auth;
 using SmartLMS.Application.Messaging;
-using SmartLMS.Application.Messaging.Decorators;
 
 namespace SmartLMS.Application;
 
@@ -12,9 +12,10 @@ public static class DependencyInjection
     {
         var applicationAssembly = typeof(DependencyInjection).Assembly;
 
-        services.AddValidatorsFromAssembly(applicationAssembly);
-
+        services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
         services.AddScoped<IDispatcher, Dispatcher>();
+        services.AddSingleton(TimeProvider.System);
+        services.AddScoped<AuthTokenIssuer>();
 
         // Discover all command/query handlers in the application layer.
         services.Scan(scan => scan
@@ -30,19 +31,8 @@ public static class DependencyInjection
                  interfaceType.GetGenericTypeDefinition() == typeof(IQueryHandler<,>))))
             .WithScopedLifetime());
 
-        // Cross-cutting middleware. Each Decorate call wraps the previous layer,
-        // so registration order builds the pipeline inside-out:
-        // Logging(Validation(Transaction(inner))).
-        services.Decorate(typeof(ICommandHandler<>), typeof(TransactionCommandDecorator<>));
-        services.Decorate(typeof(ICommandHandler<,>), typeof(TransactionCommandDecorator<,>));
-
-        services.Decorate(typeof(ICommandHandler<>), typeof(ValidationCommandDecorator<>));
-        services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationCommandDecorator<,>));
-        services.Decorate(typeof(IQueryHandler<,>), typeof(ValidationQueryDecorator<,>));
-
-        services.Decorate(typeof(ICommandHandler<>), typeof(LoggingCommandDecorator<>));
-        services.Decorate(typeof(ICommandHandler<,>), typeof(LoggingCommandDecorator<,>));
-        services.Decorate(typeof(IQueryHandler<,>), typeof(LoggingQueryDecorator<,>));
+        // Cross-cutting middleware pipeline (decorator pattern).
+        services.DecorateMessageHandlers();
 
         return services;
     }

@@ -24,6 +24,8 @@ public static class DependencyInjection
             options.AddInterceptors(sp.GetRequiredService<AuditSaveChangesInterceptor>());
         });
 
+        services.AddScoped<ISmartLmsDbContext>(sp => sp.GetRequiredService<SmartLmsDbContext>());
+
         return services;
     }
 }

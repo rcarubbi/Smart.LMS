@@ -55,7 +55,11 @@ public class CqrsPipelineTests
         var inner = Substitute.For<ICommandHandler<RegisterUserCommand>>();
         var validator = new RegisterUserValidator();
 
-        var decorator = new ValidationCommandDecorator<RegisterUserCommand>(inner, [validator]);
+        var provider = new ServiceCollection()
+            .AddSingleton<IValidator<RegisterUserCommand>>(validator)
+            .BuildServiceProvider();
+
+        var decorator = new ValidationCommandDecorator<RegisterUserCommand>(provider, inner);
 
         var result = await decorator.Handle(new RegisterUserCommand(Email: "not-an-email"), CancellationToken.None);
 
@@ -76,7 +80,11 @@ public class CqrsPipelineTests
         inner.Handle(Arg.Any<RegisterUserCommand>(), Arg.Any<CancellationToken>())
             .Returns(ValueTask.FromResult(Result.Success()));
 
-        var decorator = new ValidationCommandDecorator<RegisterUserCommand>(inner, [new RegisterUserValidator()]);
+        var provider = new ServiceCollection()
+            .AddSingleton<IValidator<RegisterUserCommand>>(new RegisterUserValidator())
+            .BuildServiceProvider();
+
+        var decorator = new ValidationCommandDecorator<RegisterUserCommand>(provider, inner);
 
         var result = await decorator.Handle(new RegisterUserCommand(Email: "student@smartlms.local"), CancellationToken.None);
 

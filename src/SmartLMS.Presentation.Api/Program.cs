@@ -1,10 +1,19 @@
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SmartLMS.Application;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.DataAccess;
 using SmartLMS.DataAccess.Auditing;
 using SmartLMS.Infrastructure;
 using SmartLMS.Infrastructure.Persistence;
+using SmartLMS.Infrastructure.Security;
+using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Presentation.Api;
+using SmartLMS.Presentation.Api.Auth;
+using SmartLMS.Presentation.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +22,39 @@ builder.Services
     .AddDataAccess(builder.Configuration)
     .AddInfrastructure(builder.Configuration);
 
-builder.Services.AddScoped<ICurrentUserProvider, HttpContextCurrentUserProvider>();
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<HttpCurrentUser>();
+builder.Services.AddScoped<ICurrentUser>(sp => sp.GetRequiredService<HttpCurrentUser>());
+builder.Services.AddScoped<ICurrentUserProvider>(sp => sp.GetRequiredService<HttpCurrentUser>());
+
+var jwtOptions = builder.Configuration
+    .GetSection(JwtOptions.SectionName)
+    .Get<JwtOptions>() ?? new JwtOptions();
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.MapInboundClaims = false; // keep 'sub' and 'role' claim types as issued
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtOptions.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtOptions.Audience,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SigningKey)),
+            NameClaimType = "sub",
+            RoleClaimType = "role",
+            ClockSkew = TimeSpan.FromSeconds(30),
+        };
+    });
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy(Policies.AdminOnly, policy => policy.RequireRole(nameof(UserRole.Admin)));
 
 builder.Services.AddOpenApi();
 
@@ -31,16 +71,14 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapGet("/health", () => Results.Ok(new { status = "Healthy" }));
+app.MapAuthEndpoints();
+app.MapUserEndpoints();
 
 await app.RunAsync();
 
-/// <summary>Resolves the audit user from the current HTTP context claims.</summary>
-internal sealed class HttpContextCurrentUserProvider(IHttpContextAccessor accessor) : ICurrentUserProvider
-{
-    public Guid? GetCurrentUserId()
-    {
-        var value = accessor.HttpContext?.User?.FindFirst("sub")?.Value;
-        return Guid.TryParse(value, out var id) ? id : null;
-    }
-}
+/// <summary>Exposes the implicit Program class to WebApplicationFactory-based integration tests.</summary>
+public partial class Program;

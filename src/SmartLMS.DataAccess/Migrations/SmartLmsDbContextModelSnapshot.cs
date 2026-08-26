@@ -615,6 +615,41 @@ namespace SmartLMS.DataAccess.Migrations
                     b.ToTable("Parameters", (string)null);
                 });
 
+            modelBuilder.Entity("SmartLMS.Domain.Entities.UserAccess.RefreshToken", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RevokedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens", (string)null);
+                });
+
             modelBuilder.Entity("SmartLMS.Domain.Entities.UserAccess.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -955,6 +990,17 @@ namespace SmartLMS.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("File");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SmartLMS.Domain.Entities.UserAccess.RefreshToken", b =>
+                {
+                    b.HasOne("SmartLMS.Domain.Entities.UserAccess.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

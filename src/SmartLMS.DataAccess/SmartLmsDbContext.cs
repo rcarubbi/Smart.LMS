@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SmartLMS.Application.Abstractions;
 using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.Assessments;
 using SmartLMS.Domain.Entities.Communication;
@@ -10,7 +11,7 @@ using FileAccess = SmartLMS.Domain.Entities.History.FileAccess;
 
 namespace SmartLMS.DataAccess;
 
-public class SmartLmsDbContext(DbContextOptions<SmartLmsDbContext> options) : DbContext(options)
+public class SmartLmsDbContext(DbContextOptions<SmartLmsDbContext> options) : DbContext(options), ISmartLmsDbContext
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<Student> Students => Set<Student>();
@@ -40,6 +41,7 @@ public class SmartLmsDbContext(DbContextOptions<SmartLmsDbContext> options) : Db
     public DbSet<FileAccess> FileAccesses => Set<FileAccess>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<Parameter> Parameters => Set<Parameter>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

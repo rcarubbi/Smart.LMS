@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Application.Common;
 
@@ -7,15 +8,17 @@ namespace SmartLMS.Application.Messaging.Decorators;
 /// <summary>
 /// Runs every registered FluentValidation validator for the incoming message.
 /// Any failure short-circuits with a ValidationError before the handler runs.
+/// Validators are resolved from IServiceProvider so the open-generic decoration
+/// remains compatible with the DI container's build-time validation.
 /// </summary>
 internal sealed class ValidationCommandDecorator<TCommand>(
-    ICommandHandler<TCommand> inner,
-    IEnumerable<IValidator<TCommand>> validators) : ICommandHandler<TCommand>
+    IServiceProvider serviceProvider,
+    ICommandHandler<TCommand> inner) : ICommandHandler<TCommand>
     where TCommand : ICommand
 {
     public async ValueTask<Result> Handle(TCommand command, CancellationToken cancellationToken)
     {
-        var failures = await ValidationRunner.ValidateAsync(command, validators, cancellationToken);
+        var failures = await ValidationRunner.ValidateAsync(command, serviceProvider.GetServices<IValidator<TCommand>>(), cancellationToken);
         return failures.Count > 0
             ? Result.Failure(new ValidationError(failures))
             : await inner.Handle(command, cancellationToken);
@@ -23,13 +26,13 @@ internal sealed class ValidationCommandDecorator<TCommand>(
 }
 
 internal sealed class ValidationCommandDecorator<TCommand, TResponse>(
-    ICommandHandler<TCommand, TResponse> inner,
-    IEnumerable<IValidator<TCommand>> validators) : ICommandHandler<TCommand, TResponse>
+    IServiceProvider serviceProvider,
+    ICommandHandler<TCommand, TResponse> inner) : ICommandHandler<TCommand, TResponse>
     where TCommand : ICommand<TResponse>
 {
     public async ValueTask<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken)
     {
-        var failures = await ValidationRunner.ValidateAsync(command, validators, cancellationToken);
+        var failures = await ValidationRunner.ValidateAsync(command, serviceProvider.GetServices<IValidator<TCommand>>(), cancellationToken);
         return failures.Count > 0
             ? Result.Failure<TResponse>(new ValidationError(failures))
             : await inner.Handle(command, cancellationToken);
@@ -37,13 +40,13 @@ internal sealed class ValidationCommandDecorator<TCommand, TResponse>(
 }
 
 internal sealed class ValidationQueryDecorator<TQuery, TResponse>(
-    IQueryHandler<TQuery, TResponse> inner,
-    IEnumerable<IValidator<TQuery>> validators) : IQueryHandler<TQuery, TResponse>
+    IServiceProvider serviceProvider,
+    IQueryHandler<TQuery, TResponse> inner) : IQueryHandler<TQuery, TResponse>
     where TQuery : IQuery<TResponse>
 {
     public async ValueTask<Result<TResponse>> Handle(TQuery query, CancellationToken cancellationToken)
     {
-        var failures = await ValidationRunner.ValidateAsync(query, validators, cancellationToken);
+        var failures = await ValidationRunner.ValidateAsync(query, serviceProvider.GetServices<IValidator<TQuery>>(), cancellationToken);
         return failures.Count > 0
             ? Result.Failure<TResponse>(new ValidationError(failures))
             : await inner.Handle(query, cancellationToken);
