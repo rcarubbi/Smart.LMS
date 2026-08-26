@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SmartLMS.Application/SmartLMS.Application.csproj" />
+    <Project Path="src/SmartLMS.DataAccess/SmartLMS.DataAccess.csproj" />
+    <Project Path="src/SmartLMS.Domain/SmartLMS.Domain.csproj" />
+    <Project Path="src/SmartLMS.Infrastructure/SmartLMS.Infrastructure.csproj" />
+    <Project Path="src/SmartLMS.Presentation.Api/SmartLMS.Presentation.Api.csproj" />
+    <Project Path="src/SmartLMS.Worker/SmartLMS.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SmartLMS.IntegrationTests/SmartLMS.IntegrationTests.csproj" />
+    <Project Path="tests/SmartLMS.UnitTests/SmartLMS.UnitTests.csproj" />
+  </Folder>
+</Solution>

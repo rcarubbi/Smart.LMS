@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="NSubstitute.Analyzers.CSharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="TUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SmartLMS.Domain\SmartLMS.Domain.csproj" />
+    <ProjectReference Include="..\..\src\SmartLMS.Application\SmartLMS.Application.csproj" />
+    <ProjectReference Include="..\..\src\SmartLMS.DataAccess\SmartLMS.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>

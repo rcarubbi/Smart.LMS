@@ -1,0 +1,65 @@
+name: smartlms
+
+services:
+  sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: smartlms-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "yourStrong(!)Password"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: smartlms-mailpit
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI
+
+  api:
+    build:
+      context: .
+      dockerfile: src/SmartLMS.Presentation.Api/Dockerfile
+    container_name: smartlms-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__SmartLMS: "Server=sql,1433;Database=SmartLMS;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True"
+      Jwt__SigningKey: "compose-signing-key-0123456789abcdef0123456789abcdef"
+      Smtp__Host: mailpit
+      Smtp__Port: 1025
+    ports:
+      - "8080:8080"
+    depends_on:
+      sql:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+  worker:
+    build:
+      context: .
+      dockerfile: src/SmartLMS.Worker/Dockerfile
+    container_name: smartlms-worker
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      ConnectionStrings__SmartLMS: "Server=sql,1433;Database=SmartLMS;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True"
+      Smtp__Host: mailpit
+      Smtp__Port: 1025
+    depends_on:
+      sql:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+volumes:
+  sql-data:

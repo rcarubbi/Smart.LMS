@@ -244,3 +244,13 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /SmartLMS.WebUI/Content
+
+# Modernization (.NET 10 / Next.js)
+[Oo]bj/
+TestResults/
+*.user
+.vs/
+artifacts/
+web/.next/
+web/node_modules/
+.env*.local

@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Domain layer: pure business model, no external dependencies. -->
+
+</Project>

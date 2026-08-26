@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/.git/
+**/.vs/
+**/*.user
+**/legacy/
+web/.next/

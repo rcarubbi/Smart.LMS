@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <!-- Presentation layer: REST API host. -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartLMS.Application\SmartLMS.Application.csproj" />
+    <ProjectReference Include="..\SmartLMS.Infrastructure\SmartLMS.Infrastructure.csproj" />
+    <ProjectReference Include="..\SmartLMS.DataAccess\SmartLMS.DataAccess.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+  </ItemGroup>
+
+</Project>
