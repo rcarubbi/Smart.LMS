@@ -52,11 +52,11 @@ export default function CatalogPage() {
   }
 
   return (
-    <main className="min-h-dvh bg-gray-50">
+    <main className="min-h-dvh bg-gray-950">
       <Nav />
       <div className="mx-auto max-w-4xl space-y-8 p-6">
         <h1 className="text-lg font-semibold">Catálogo</h1>
-        {error && <p className="rounded border border-red-200 bg-red-50 p-2 text-sm text-red-700">{error}</p>}
+        {error && <p className="rounded border border-red-800 bg-red-950 p-2 text-sm text-red-400">{error}</p>}
 
         <section className="space-y-3">
           <h2 className="font-medium">Áreas de conhecimento</h2>
@@ -66,15 +66,15 @@ export default function CatalogPage() {
               onChange={(e) => setNewAreaName(e.target.value)}
               required
               placeholder="Nova área..."
-              className="flex-1 rounded border bg-white px-3 py-2"
+              className="flex-1 rounded border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
-            <button className="rounded bg-indigo-600 px-4 text-white hover:bg-indigo-700">Criar</button>
+            <button className="rounded bg-indigo-600 px-4 text-white hover:bg-indigo-500">Criar</button>
           </form>
-          <ul className="divide-y rounded border bg-white">
+          <ul className="divide-y divide-gray-800 rounded border border-gray-800 bg-gray-900">
             {areas.map((a) => (
               <li
                 key={a.id}
-                className={`flex items-center justify-between p-3 text-sm ${selectedArea === a.id ? "bg-indigo-50" : ""}`}
+                className={`flex items-center justify-between p-3 text-sm ${selectedArea === a.id ? "bg-indigo-950" : ""}`}
               >
                 <button
                   onClick={() => {
@@ -82,11 +82,11 @@ export default function CatalogPage() {
                     setSelectedArea(next);
                     reload(next);
                   }}
-                  className="text-left"
+                  className="text-left text-gray-200 hover:text-white"
                 >
                   {a.name}
                 </button>
-                <button onClick={() => deleteArea(a.id)} className="text-xs text-red-600">
+                <button onClick={() => deleteArea(a.id)} className="text-xs text-red-400 hover:text-red-300">
                   Excluir
                 </button>
               </li>
@@ -96,9 +96,9 @@ export default function CatalogPage() {
 
         <section className="space-y-3">
           <h2 className="font-medium">Assuntos{selectedArea ? " (da área selecionada)" : ""}</h2>
-          <ul className="divide-y rounded border bg-white">
+          <ul className="divide-y divide-gray-800 rounded border border-gray-800 bg-gray-900">
             {subjects.map((s) => (
-              <li key={s.id} className="p-3 text-sm">
+              <li key={s.id} className="p-3 text-sm text-gray-300">
                 {s.name}
               </li>
             ))}
@@ -108,9 +108,9 @@ export default function CatalogPage() {
 
         <section className="space-y-3">
           <h2 className="font-medium">Cursos</h2>
-          <ul className="divide-y rounded border bg-white">
+          <ul className="divide-y divide-gray-800 rounded border border-gray-800 bg-gray-900">
             {courses.map((c) => (
-              <li key={c.id} className="flex items-center justify-between p-3 text-sm">
+              <li key={c.id} className="flex items-center justify-between p-3 text-sm text-gray-300">
                 <span>{c.name}</span>
                 <span className="text-xs text-gray-500">{c.classCount} aulas</span>
               </li>

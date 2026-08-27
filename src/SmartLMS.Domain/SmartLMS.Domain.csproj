@@ -2,4 +2,8 @@
 
   <!-- Domain layer: pure business model, no external dependencies. -->
 
+  <ItemGroup>
+    <PackageReference Include="Ardalis.Specification" />
+  </ItemGroup>
+
 </Project>

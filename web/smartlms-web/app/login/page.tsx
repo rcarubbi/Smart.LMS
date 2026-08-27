@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api, storeTokens } from "@/lib/api";
+import Icon from "@/components/ui/Icon";
 
 type AuthResponse = {
   accessToken: string;
@@ -28,7 +29,7 @@ export default function LoginPage() {
       });
       storeTokens(tokens);
       router.push("/");
-    } catch (err) {
+    } catch {
       setError("Credenciais inválidas. Verifique e tente novamente.");
     } finally {
       setLoading(false);
@@ -36,43 +37,35 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-gray-50">
-      <form onSubmit={submit} className="w-full max-w-sm space-y-4 rounded-lg border bg-white p-8 shadow-sm">
-        <h1 className="text-xl font-semibold">SmartLMS</h1>
+    <main className="flex min-h-dvh items-center justify-center p-4">
+      <form onSubmit={submit} className="glass w-full max-w-sm space-y-4 p-8">
+        <div className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-500 text-lg font-bold text-white shadow-lg">
+            S
+          </span>
+          <div>
+            <h1 className="text-lg font-semibold">SmartLMS</h1>
+            <p className="text-xs text-white/50">Acesse sua conta</p>
+          </div>
+        </div>
 
         <label className="block space-y-1">
-          <span className="text-sm text-gray-600">E-mail</span>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded border px-3 py-2"
-          />
+          <span className="text-sm text-white/60">E-mail</span>
+          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="field" />
         </label>
 
         <label className="block space-y-1">
-          <span className="text-sm text-gray-600">Senha</span>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded border px-3 py-2"
-          />
+          <span className="text-sm text-white/60">Senha</span>
+          <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="field" />
         </label>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-red-400">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
-        >
-          {loading ? "Entrando..." : "Entrar"}
+        <button type="submit" disabled={loading} className="btn btn-primary w-full justify-center">
+          {loading ? "Entrando..." : (<><Icon name="login" /> Entrar</>)}
         </button>
 
-        <p className="text-center text-xs text-gray-400">
+        <p className="text-center text-xs text-white/40">
           admin padrão: administrator@yourcompany.com / smart123
         </p>
       </form>

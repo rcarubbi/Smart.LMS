@@ -107,3 +107,14 @@ export async function api<T>(
 
   return (await response.json()) as T;
 }
+
+/** Extracts a human-readable message from an ApiError thrown against an ErrorOr problem response. */
+export function errorMessage(err: unknown, fallback = "Falha na operação."): string {
+  if (err instanceof ApiError) {
+    const body = err.body as { title?: string; detail?: string; message?: string } | undefined;
+    return body?.message ?? body?.detail ?? body?.title ?? fallback;
+  }
+  return fallback;
+}
+
+export type ListItem = { id: string; name: string; order: number };

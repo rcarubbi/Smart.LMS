@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
+using ErrorOr;
 using SmartLMS.Domain.Entities.Assessments;
 
 namespace SmartLMS.Application.Assessments;
@@ -60,20 +60,15 @@ internal sealed class CreateAssessmentValidator : AbstractValidator<CreateAssess
 
 internal sealed class CreateAssessmentHandler(ISmartLmsDbContext context) : ICommandHandler<CreateAssessmentCommand, Guid>
 {
-    public async ValueTask<Result<Guid>> Handle(CreateAssessmentCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Guid>> Handle(CreateAssessmentCommand command, CancellationToken cancellationToken)
     {
         var courseExists = await context.Courses.AnyAsync(c => c.Id == command.CourseId, cancellationToken);
         if (!courseExists)
         {
-            return Result.Failure<Guid>(Error.NotFound("Courses.NotFound", "Course not found."));
+            return Error.NotFound("Courses.NotFound", "Course not found.");
         }
 
-        var assessment = new Assessment
-        {
-            CourseId = command.CourseId,
-            MinimumScore = command.MinimumScore,
-            Active = true,
-        };
+        var assessment = new Assessment(command.CourseId, command.MinimumScore);
 
         var pendingRightAnswers = new List<(SingleChoiceQuestion? Single, int? RightOrder, MultipleChoiceQuestion? Multiple, IReadOnlyList<int> RightOrders)>();
 
@@ -83,27 +78,20 @@ internal sealed class CreateAssessmentHandler(ISmartLmsDbContext context) : ICom
 
             Question question = type switch
             {
-                QuestionTypes.SingleChoice => new SingleChoiceQuestion(),
-                QuestionTypes.MultipleChoice => new MultipleChoiceQuestion(),
-                QuestionTypes.Reordering => new ReorderingQuestion(),
+                QuestionTypes.SingleChoice => new SingleChoiceQuestion(questionInput.Description, questionInput.Score),
+                QuestionTypes.MultipleChoice => new MultipleChoiceQuestion(questionInput.Description, questionInput.Score),
+                QuestionTypes.Reordering => new ReorderingQuestion(questionInput.Description, questionInput.Score),
                 _ => throw new InvalidOperationException($"Unknown question type '{questionInput.Type}'."),
             };
 
-            question.Description = questionInput.Description;
-            question.Score = questionInput.Score;
-            question.Assessment = assessment;
+            question.AttachAssessment(assessment);
 
-            var options = questionInput.Options
-                .OrderBy(o => o.Order)
-                .Select(o => new QuestionOption { Text = o.Text, Order = o.Order, Question = question })
-                .ToList();
-
-            foreach (var option in options)
+            foreach (var optionInput in questionInput.Options.OrderBy(o => o.Order))
             {
-                question.Options.Add(option);
+                question.AddOption(optionInput.Text, optionInput.Order);
             }
 
-            assessment.Questions.Add(question);
+            assessment.AddQuestion(question);
             pendingRightAnswers.Add((
                 question as SingleChoiceQuestion,
                 questionInput.SingleChoiceRightOrder,
@@ -124,7 +112,7 @@ internal sealed class CreateAssessmentHandler(ISmartLmsDbContext context) : ICom
                 {
                     var rightOption = s.Options.ElementAtOrDefault(order)
                         ?? throw new InvalidOperationException("Single choice right answer index is out of range.");
-                    s.RightOptionId = rightOption.Id;
+                    s.SetRightOption(rightOption.Id);
                 }
             }
             else if (multiple is { } m)
@@ -133,14 +121,14 @@ internal sealed class CreateAssessmentHandler(ISmartLmsDbContext context) : ICom
                 {
                     var rightOption = m.Options.ElementAtOrDefault(index)
                         ?? throw new InvalidOperationException("Multiple choice right answer indexes are out of range.");
-                    m.RightOptions.Add(rightOption);
+                    m.AddRightOption(rightOption);
                 }
             }
         }
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(assessment.Id);
+        return assessment.Id;
     }
 }
 
@@ -148,18 +136,18 @@ public sealed record DeleteAssessmentCommand(Guid Id) : ICommand;
 
 internal sealed class DeleteAssessmentHandler(ISmartLmsDbContext context) : ICommandHandler<DeleteAssessmentCommand>
 {
-    public async ValueTask<Result> Handle(DeleteAssessmentCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(DeleteAssessmentCommand command, CancellationToken cancellationToken)
     {
         var assessment = await context.Assessments.FindAsync([command.Id], cancellationToken);
         if (assessment is null)
         {
-            return Result.Failure(Error.NotFound("Assessments.NotFound", "Assessment not found."));
+            return Error.NotFound("Assessments.NotFound", "Assessment not found.");
         }
 
         context.Assessments.Remove(assessment);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success;
     }
 }
 
@@ -172,7 +160,7 @@ public sealed record AssessmentListItem(Guid Id, string CourseName, int MinimumS
 internal sealed class ListAssessmentsHandler(ISmartLmsDbContext context)
     : IQueryHandler<ListAssessmentsQuery, IReadOnlyList<AssessmentListItem>>
 {
-    public async ValueTask<Result<IReadOnlyList<AssessmentListItem>>> Handle(
+    public async ValueTask<ErrorOr<IReadOnlyList<AssessmentListItem>>> Handle(
         ListAssessmentsQuery query,
         CancellationToken cancellationToken)
     {
@@ -182,6 +170,6 @@ internal sealed class ListAssessmentsHandler(ISmartLmsDbContext context)
             .Select(a => new AssessmentListItem(a.Id, a.Course.Name, a.MinimumScore, a.Questions.Count))
             .ToListAsync(cancellationToken);
 
-        return Result.Success<IReadOnlyList<AssessmentListItem>>(items);
+        return items;
     }
 }

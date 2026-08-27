@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Application.Catalog.Courses;
-using SmartLMS.Application.Common;
+using ErrorOr;
 using SmartLMS.Domain.Entities.Content;
 using ClassSummary = SmartLMS.Application.Catalog.Courses.ClassSummary;
 
@@ -34,12 +34,12 @@ internal sealed class CreateClassValidator : AbstractValidator<CreateClassComman
 
 internal sealed class CreateClassHandler(ISmartLmsDbContext context) : ICommandHandler<CreateClassCommand, Guid>
 {
-    public async ValueTask<Result<Guid>> Handle(CreateClassCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Guid>> Handle(CreateClassCommand command, CancellationToken cancellationToken)
     {
         var courseExists = await context.Courses.AnyAsync(c => c.Id == command.CourseId, cancellationToken);
         if (!courseExists)
         {
-            return Result.Failure<Guid>(Error.NotFound("Courses.NotFound", "Course not found."));
+            return Error.NotFound("Courses.NotFound", "Course not found.");
         }
 
         var teacherIsTeacher = await context.Users
@@ -47,25 +47,22 @@ internal sealed class CreateClassHandler(ISmartLmsDbContext context) : ICommandH
 
         if (!teacherIsTeacher)
         {
-            return Result.Failure<Guid>(Error.Conflict("Classes.InvalidTeacher", "The informed teacher does not exist or is not a teacher."));
+            return Error.Conflict("Classes.InvalidTeacher", "The informed teacher does not exist or is not a teacher.");
         }
 
-        var klass = new Class
-        {
-            Name = command.Name,
-            Content = command.Content,
-            Order = command.Order,
-            DeliveryDays = command.DeliveryDays,
-            ContentType = command.ContentType,
-            CourseId = command.CourseId,
-            TeacherId = command.TeacherId,
-            Active = true,
-        };
+        var klass = new Class(
+            command.Name,
+            command.Content,
+            command.Order,
+            command.DeliveryDays,
+            command.ContentType,
+            command.CourseId,
+            command.TeacherId);
 
         context.Classes.Add(klass);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(klass.Id);
+        return klass.Id;
     }
 }
 
@@ -89,23 +86,23 @@ internal sealed class UpdateClassValidator : AbstractValidator<UpdateClassComman
 
 internal sealed class UpdateClassHandler(ISmartLmsDbContext context) : ICommandHandler<UpdateClassCommand>
 {
-    public async ValueTask<Result> Handle(UpdateClassCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(UpdateClassCommand command, CancellationToken cancellationToken)
     {
         var klass = await context.Classes.FindAsync([command.Id], cancellationToken);
         if (klass is null)
         {
-            return Result.Failure(Error.NotFound("Classes.NotFound", "Class not found."));
+            return Error.NotFound("Classes.NotFound", "Class not found.");
         }
 
-        klass.Name = command.Name;
-        klass.Content = command.Content;
-        klass.Order = command.Order;
-        klass.DeliveryDays = command.DeliveryDays;
-        klass.ContentType = command.ContentType;
-        klass.TeacherId = command.TeacherId;
+        klass.Rename(command.Name);
+        klass.ChangeContent(command.Content);
+        klass.SetOrder(command.Order);
+        klass.ChangeDeliveryDays(command.DeliveryDays);
+        klass.SetContentType(command.ContentType);
+        klass.AssignTeacher(command.TeacherId);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success;
     }
 }
 
@@ -113,12 +110,12 @@ public sealed record DeleteClassCommand(Guid Id) : ICommand;
 
 internal sealed class DeleteClassHandler(ISmartLmsDbContext context) : ICommandHandler<DeleteClassCommand>
 {
-    public async ValueTask<Result> Handle(DeleteClassCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(DeleteClassCommand command, CancellationToken cancellationToken)
     {
         var klass = await context.Classes.FindAsync([command.Id], cancellationToken);
         if (klass is null)
         {
-            return Result.Failure(Error.NotFound("Classes.NotFound", "Class not found."));
+            return Error.NotFound("Classes.NotFound", "Class not found.");
         }
 
         var hasHistory = await context.ClassAccesses.AnyAsync(a => a.ClassId == command.Id, cancellationToken)
@@ -126,15 +123,15 @@ internal sealed class DeleteClassHandler(ISmartLmsDbContext context) : ICommandH
 
         if (hasHistory)
         {
-            return Result.Failure(Error.Conflict(
+            return Error.Conflict(
                 "Classes.HasHistory",
-                "Cannot delete a class that already has access history or deliveries."));
+                "Cannot delete a class that already has access history or deliveries.");
         }
 
         context.Classes.Remove(klass);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success;
     }
 }
 
@@ -156,7 +153,7 @@ public sealed record GetClassQuery(Guid Id) : IQuery<ClassDetail>;
 
 internal sealed class GetClassHandler(ISmartLmsDbContext context) : IQueryHandler<GetClassQuery, ClassDetail>
 {
-    public async ValueTask<Result<ClassDetail>> Handle(GetClassQuery query, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<ClassDetail>> Handle(GetClassQuery query, CancellationToken cancellationToken)
     {
         var detail = await context.Classes
             .Where(c => c.Id == query.Id)
@@ -174,8 +171,8 @@ internal sealed class GetClassHandler(ISmartLmsDbContext context) : IQueryHandle
             .SingleOrDefaultAsync(cancellationToken);
 
         return detail is null
-            ? Result.Failure<ClassDetail>(Error.NotFound("Classes.NotFound", "Class not found."))
-            : Result.Success<ClassDetail>(detail);
+            ? Error.NotFound("Classes.NotFound", "Class not found.")
+            : detail;
     }
 }
 
@@ -184,7 +181,7 @@ public sealed record ListClassesQuery(Guid CourseId) : IQuery<IReadOnlyList<Clas
 internal sealed class ListClassesHandler(ISmartLmsDbContext context)
     : IQueryHandler<ListClassesQuery, IReadOnlyList<ClassSummary>>
 {
-    public async ValueTask<Result<IReadOnlyList<ClassSummary>>> Handle(
+    public async ValueTask<ErrorOr<IReadOnlyList<ClassSummary>>> Handle(
         ListClassesQuery query,
         CancellationToken cancellationToken)
     {
@@ -194,6 +191,6 @@ internal sealed class ListClassesHandler(ISmartLmsDbContext context)
             .Select(c => new Courses.ClassSummary(c.Id, c.Name, c.Order, c.DeliveryDays, c.ContentType.ToString()))
             .ToListAsync(cancellationToken);
 
-        return Result.Success<IReadOnlyList<Courses.ClassSummary>>(items);
+        return items;
     }
 }

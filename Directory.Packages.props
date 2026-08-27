@@ -8,6 +8,7 @@
   <ItemGroup>
     <!-- ASP.NET Core / hosting -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.1" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.11" />
 
@@ -18,6 +19,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.11" />
 
     <!-- Application (CQRS, validation, DI decoration) -->
+    <PackageVersion Include="ErrorOr" Version="2.0.1" />
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageVersion Include="Scrutor" Version="7.0.0" />
@@ -34,6 +36,10 @@
     <PackageVersion Include="TickerQ" Version="10.4.0" />
     <PackageVersion Include="TickerQ.Dashboard" Version="10.4.0" />
     <PackageVersion Include="TickerQ.EntityFrameworkCore" Version="10.4.0" />
+
+    <!-- Specifications -->
+    <PackageVersion Include="Ardalis.Specification" Version="9.3.1" />
+    <PackageVersion Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
 
     <!-- Tests -->
     <PackageVersion Include="TUnit" Version="1.65.63" />

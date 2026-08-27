@@ -1,8 +1,8 @@
+using ErrorOr;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
 using SmartLMS.Domain.Entities.UserAccess;
 
 namespace SmartLMS.Application.Auth.Logout;
@@ -22,7 +22,7 @@ internal sealed class LogoutHandler(
     ITokenService tokenService,
     TimeProvider timeProvider) : ICommandHandler<LogoutCommand>
 {
-    public async ValueTask<Result> Handle(LogoutCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(LogoutCommand command, CancellationToken cancellationToken)
     {
         var tokenHash = tokenService.HashRefreshToken(command.RefreshToken);
         var now = timeProvider.GetUtcNow().UtcDateTime;
@@ -37,6 +37,6 @@ internal sealed class LogoutHandler(
         }
 
         // Idempotent: logging out with an already-revoked/unknown token still succeeds.
-        return Result.Success();
+        return Result.Success;
     }
 }

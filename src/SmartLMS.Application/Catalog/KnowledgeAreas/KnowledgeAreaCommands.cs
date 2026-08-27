@@ -2,7 +2,8 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
+using SmartLMS.Domain.Entities.Content;
+using ErrorOr;
 
 namespace SmartLMS.Application.Catalog.KnowledgeAreas;
 
@@ -24,23 +25,23 @@ internal sealed class CreateKnowledgeAreaValidator : AbstractValidator<CreateKno
 internal sealed class CreateKnowledgeAreaHandler(ISmartLmsDbContext context)
     : ICommandHandler<CreateKnowledgeAreaCommand, Guid>
 {
-    public async ValueTask<Result<Guid>> Handle(CreateKnowledgeAreaCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Guid>> Handle(CreateKnowledgeAreaCommand command, CancellationToken cancellationToken)
     {
         var duplicated = await context.KnowledgeAreas
             .AnyAsync(k => k.Name == command.Name, cancellationToken);
 
         if (duplicated)
         {
-            return Result.Failure<Guid>(Error.Conflict(
+            return Error.Conflict(
                 "KnowledgeAreas.NameAlreadyExists",
-                $"A knowledge area named '{command.Name}' already exists."));
+                $"A knowledge area named '{command.Name}' already exists.");
         }
 
-        var area = new Domain.Entities.Content.KnowledgeArea { Name = command.Name, Order = command.Order, Active = true };
+        var area = new Domain.Entities.Content.KnowledgeArea(command.Name, command.Order);
         context.KnowledgeAreas.Add(area);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(area.Id);
+        return area.Id;
     }
 }
 
@@ -57,19 +58,19 @@ internal sealed class UpdateKnowledgeAreaValidator : AbstractValidator<UpdateKno
 
 internal sealed class UpdateKnowledgeAreaHandler(ISmartLmsDbContext context) : ICommandHandler<UpdateKnowledgeAreaCommand>
 {
-    public async ValueTask<Result> Handle(UpdateKnowledgeAreaCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(UpdateKnowledgeAreaCommand command, CancellationToken cancellationToken)
     {
         var area = await context.KnowledgeAreas.FindAsync([command.Id], cancellationToken);
         if (area is null)
         {
-            return Result.Failure(Error.NotFound("KnowledgeAreas.NotFound", "Knowledge area not found."));
+            return Error.NotFound("KnowledgeAreas.NotFound", "Knowledge area not found.");
         }
 
-        area.Name = command.Name;
-        area.Order = command.Order;
+        area.Rename(command.Name);
+        area.SetOrder(command.Order);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success;
     }
 }
 
@@ -77,26 +78,26 @@ public sealed record DeleteKnowledgeAreaCommand(Guid Id) : ICommand;
 
 internal sealed class DeleteKnowledgeAreaHandler(ISmartLmsDbContext context) : ICommandHandler<DeleteKnowledgeAreaCommand>
 {
-    public async ValueTask<Result> Handle(DeleteKnowledgeAreaCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(DeleteKnowledgeAreaCommand command, CancellationToken cancellationToken)
     {
         var area = await context.KnowledgeAreas.FindAsync([command.Id], cancellationToken);
         if (area is null)
         {
-            return Result.Failure(Error.NotFound("KnowledgeAreas.NotFound", "Knowledge area not found."));
+            return Error.NotFound("KnowledgeAreas.NotFound", "Knowledge area not found.");
         }
 
         var hasSubjects = await context.Subjects.AnyAsync(s => s.KnowledgeAreaId == command.Id, cancellationToken);
         if (hasSubjects)
         {
-            return Result.Failure(Error.Conflict(
+            return Error.Conflict(
                 "KnowledgeAreas.HasSubjects",
-                "Cannot delete a knowledge area that still has subjects."));
+                "Cannot delete a knowledge area that still has subjects.");
         }
 
         context.KnowledgeAreas.Remove(area);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success;
     }
 }
 
@@ -107,7 +108,7 @@ public sealed record ListKnowledgeAreasQuery : IQuery<IReadOnlyList<CatalogListI
 internal sealed class ListKnowledgeAreasHandler(ISmartLmsDbContext context)
     : IQueryHandler<ListKnowledgeAreasQuery, IReadOnlyList<CatalogListItem>>
 {
-    public async ValueTask<Result<IReadOnlyList<CatalogListItem>>> Handle(
+    public async ValueTask<ErrorOr<IReadOnlyList<CatalogListItem>>> Handle(
         ListKnowledgeAreasQuery query,
         CancellationToken cancellationToken)
     {
@@ -116,6 +117,6 @@ internal sealed class ListKnowledgeAreasHandler(ISmartLmsDbContext context)
             .Select(k => new CatalogListItem(k.Id, k.Name, k.Order))
             .ToListAsync(cancellationToken);
 
-        return Result.Success<IReadOnlyList<CatalogListItem>>(items);
+        return items;
     }
 }

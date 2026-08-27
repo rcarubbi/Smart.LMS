@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
+using ErrorOr;
 
 namespace SmartLMS.Application.Search;
 
@@ -25,7 +25,7 @@ internal sealed class ContextualSearchValidator : AbstractValidator<ContextualSe
 internal sealed class ContextualSearchHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
     : IQueryHandler<ContextualSearchQuery, IReadOnlyList<SearchResultItem>>
 {
-    public async ValueTask<Result<IReadOnlyList<SearchResultItem>>> Handle(
+    public async ValueTask<ErrorOr<IReadOnlyList<SearchResultItem>>> Handle(
         ContextualSearchQuery query,
         CancellationToken cancellationToken)
     {
@@ -96,6 +96,6 @@ internal sealed class ContextualSearchHandler(ISmartLmsDbContext context, ICurre
             .Concat(fileItems)
             .ToList();
 
-        return Result.Success<IReadOnlyList<SearchResultItem>>(results);
+        return results;
     }
 }

@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
+using ErrorOr;
 
 namespace SmartLMS.Application.Learning.Classrooms;
 
@@ -18,19 +18,19 @@ internal sealed class CreateClassroomValidator : AbstractValidator<CreateClassro
 
 internal sealed class CreateClassroomHandler(ISmartLmsDbContext context) : ICommandHandler<CreateClassroomCommand, Guid>
 {
-    public async ValueTask<Result<Guid>> Handle(CreateClassroomCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Guid>> Handle(CreateClassroomCommand command, CancellationToken cancellationToken)
     {
         var duplicated = await context.Classrooms.AnyAsync(c => c.Name == command.Name, cancellationToken);
         if (duplicated)
         {
-            return Result.Failure<Guid>(Error.Conflict("Classrooms.NameAlreadyExists", $"A classroom named '{command.Name}' already exists."));
+            return Error.Conflict("Classrooms.NameAlreadyExists", $"A classroom named '{command.Name}' already exists.");
         }
 
-        var classroom = new Domain.Entities.Delivery.Classroom { Name = command.Name, Active = true };
+        var classroom = new Domain.Entities.Delivery.Classroom(command.Name);
         context.Classrooms.Add(classroom);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(classroom.Id);
+        return classroom.Id;
     }
 }
 
@@ -46,18 +46,18 @@ internal sealed class UpdateClassroomValidator : AbstractValidator<UpdateClassro
 
 internal sealed class UpdateClassroomHandler(ISmartLmsDbContext context) : ICommandHandler<UpdateClassroomCommand>
 {
-    public async ValueTask<Result> Handle(UpdateClassroomCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(UpdateClassroomCommand command, CancellationToken cancellationToken)
     {
         var classroom = await context.Classrooms.FindAsync([command.Id], cancellationToken);
         if (classroom is null)
         {
-            return Result.Failure(Error.NotFound("Classrooms.NotFound", "Classroom not found."));
+            return Error.NotFound("Classrooms.NotFound", "Classroom not found.");
         }
 
-        classroom.Name = command.Name;
+        classroom.Rename(command.Name);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success;
     }
 }
 
@@ -65,24 +65,24 @@ public sealed record DeleteClassroomCommand(Guid Id) : ICommand;
 
 internal sealed class DeleteClassroomHandler(ISmartLmsDbContext context) : ICommandHandler<DeleteClassroomCommand>
 {
-    public async ValueTask<Result> Handle(DeleteClassroomCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(DeleteClassroomCommand command, CancellationToken cancellationToken)
     {
         var classroom = await context.Classrooms.FindAsync([command.Id], cancellationToken);
         if (classroom is null)
         {
-            return Result.Failure(Error.NotFound("Classrooms.NotFound", "Classroom not found."));
+            return Error.NotFound("Classrooms.NotFound", "Classroom not found.");
         }
 
         var hasPlans = await context.DeliveryPlans.AnyAsync(p => p.ClassroomId == command.Id, cancellationToken);
         if (hasPlans)
         {
-            return Result.Failure(Error.Conflict("Classrooms.HasDeliveryPlans", "Cannot delete a classroom that has delivery plans."));
+            return Error.Conflict("Classrooms.HasDeliveryPlans", "Cannot delete a classroom that has delivery plans.");
         }
 
         context.Classrooms.Remove(classroom);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success;
     }
 }
 
@@ -93,7 +93,7 @@ public sealed record ListClassroomsQuery : IQuery<IReadOnlyList<ClassroomListIte
 internal sealed class ListClassroomsHandler(ISmartLmsDbContext context)
     : IQueryHandler<ListClassroomsQuery, IReadOnlyList<ClassroomListItem>>
 {
-    public async ValueTask<Result<IReadOnlyList<ClassroomListItem>>> Handle(
+    public async ValueTask<ErrorOr<IReadOnlyList<ClassroomListItem>>> Handle(
         ListClassroomsQuery query,
         CancellationToken cancellationToken)
     {
@@ -102,7 +102,7 @@ internal sealed class ListClassroomsHandler(ISmartLmsDbContext context)
             .Select(c => new ClassroomListItem(c.Id, c.Name, c.Courses.Count, c.DeliveryPlans.Count))
             .ToListAsync(cancellationToken);
 
-        return Result.Success<IReadOnlyList<ClassroomListItem>>(items);
+        return items;
     }
 }
 
@@ -112,7 +112,7 @@ public sealed record EnrollClassroomCoursesCommand(Guid ClassroomId, IReadOnlyLi
 internal sealed class EnrollClassroomCoursesHandler(ISmartLmsDbContext context)
     : ICommandHandler<EnrollClassroomCoursesCommand>
 {
-    public async ValueTask<Result> Handle(EnrollClassroomCoursesCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(EnrollClassroomCoursesCommand command, CancellationToken cancellationToken)
     {
         var classroom = await context.Classrooms
             .Include(c => c.Courses)
@@ -120,7 +120,7 @@ internal sealed class EnrollClassroomCoursesHandler(ISmartLmsDbContext context)
 
         if (classroom is null)
         {
-            return Result.Failure(Error.NotFound("Classrooms.NotFound", "Classroom not found."));
+            return Error.NotFound("Classrooms.NotFound", "Classroom not found.");
         }
 
         var requested = command.CourseIds.Distinct().ToList();
@@ -132,23 +132,18 @@ internal sealed class EnrollClassroomCoursesHandler(ISmartLmsDbContext context)
         var missing = requested.Except(existing).ToList();
         if (missing.Count > 0)
         {
-            return Result.Failure(Error.Conflict(
+            return Error.Conflict(
                 "Classrooms.UnknownCourses",
-                $"Unknown course ids: {string.Join(", ", missing)}"));
+                $"Unknown course ids: {string.Join(", ", missing)}");
         }
 
         classroom.Courses.Clear();
         foreach (var courseId in requested)
         {
-            classroom.Courses.Add(new Domain.Entities.Delivery.ClassroomCourse
-            {
-                ClassroomId = classroom.Id,
-                CourseId = courseId,
-                Order = classroom.Courses.Count,
-            });
+            classroom.Courses.Add(new Domain.Entities.Delivery.ClassroomCourse(classroom.Id, courseId, classroom.Courses.Count));
         }
 
         await context.SaveChangesAsync(cancellationToken);
-        return Result.Success();
+        return Result.Success;
     }
 }

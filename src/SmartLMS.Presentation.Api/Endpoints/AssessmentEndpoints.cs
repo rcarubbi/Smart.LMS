@@ -13,7 +13,7 @@ internal static class AssessmentEndpoints
         group.MapGet("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var r = await dispatcher.Query(new GetAssessmentQuery(id), ct);
-                return r.IsSuccess ? Results.Ok(r.Value) : r.Error.ToProblem();
+                return r.IsError ? r.FirstError.ToProblem() : Results.Ok(r.Value);
             })
             .RequireAuthorization()
             .Produces(404);
@@ -22,7 +22,7 @@ internal static class AssessmentEndpoints
             {
                 var r = await dispatcher.Send(new CreateAssessmentCommand(
                     request.CourseId, request.MinimumScore, request.Questions), ct);
-                return r.IsSuccess ? Results.Created($"/api/assessments/{r.Value}", new { id = r.Value }) : r.Error.ToProblem();
+                return r.IsError ? r.FirstError.ToProblem() : Results.Created($"/api/assessments/{r.Value}", new { id = r.Value });
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(201)
@@ -31,7 +31,7 @@ internal static class AssessmentEndpoints
         group.MapDelete("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var r = await dispatcher.Send(new DeleteAssessmentCommand(id), ct);
-                return r.IsSuccess ? Results.NoContent() : r.Error.ToProblem();
+                return r.IsError ? r.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization(Policies.AdminOnly);
 
@@ -42,7 +42,7 @@ internal static class AssessmentEndpoints
                     .ToList();
 
                 var r = await dispatcher.Send(new SubmitAssessmentCommand(id, submissions), ct);
-                return r.IsSuccess ? Results.Ok(r.Value) : r.Error.ToProblem();
+                return r.IsError ? r.FirstError.ToProblem() : Results.Ok(r.Value);
             })
             .RequireAuthorization()
             .Produces(200)
@@ -52,7 +52,7 @@ internal static class AssessmentEndpoints
                 async (Guid courseId, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var r = await dispatcher.Query(new ListAssessmentsQuery(courseId), ct);
-                return r.IsSuccess ? Results.Ok(r.Value) : r.Error.ToProblem();
+                return r.IsError ? r.FirstError.ToProblem() : Results.Ok(r.Value);
             })
             .WithTags("Assessments")
             .RequireAuthorization();

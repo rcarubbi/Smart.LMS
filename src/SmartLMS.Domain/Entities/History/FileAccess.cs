@@ -5,15 +5,45 @@ namespace SmartLMS.Domain.Entities.History;
 
 public class FileAccess
 {
+    public FileAccess(Guid userId, Guid fileId, DateTime accessDateTime)
+    {
+        UserId = userId;
+        FileId = fileId;
+        AccessDateTime = accessDateTime;
+    }
+
+    // ORM materialization.
+    private FileAccess()
+    {
+    }
+
     public long Id { get; private set; }
 
-    public Guid UserId { get; set; }
+    public Guid UserId { get; private set; }
 
-    public User User { get; set; } = null!;
+    private User _user = null!;
 
-    public Guid FileId { get; set; }
+    public User User
+    {
+        get => _user;
+        private set => _user = value;
+    }
 
-    public SupportFile File { get; set; } = null!;
+    public Guid FileId { get; private set; }
 
-    public DateTime AccessDateTime { get; set; }
+    private SupportFile _file = null!;
+
+    public SupportFile File
+    {
+        get => _file;
+        private set => _file = value;
+    }
+
+    private DateTime _accessDateTime;
+
+    public DateTime AccessDateTime
+    {
+        get => _accessDateTime;
+        private set => _accessDateTime = value;
+    }
 }

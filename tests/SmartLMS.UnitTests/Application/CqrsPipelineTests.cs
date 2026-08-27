@@ -1,8 +1,8 @@
+using ErrorOr;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
 using SmartLMS.Application.Messaging;
 using SmartLMS.Application.Messaging.Decorators;
 using NSubstitute;
@@ -21,13 +21,13 @@ public class CqrsPipelineTests
         var queryHandler = Substitute.For<IQueryHandler<GetGreetingQuery, string>>();
 
         commandHandler.Handle(Arg.Any<PingCommand>(), Arg.Any<CancellationToken>())
-            .Returns(ValueTask.FromResult(Result.Success()));
+            .Returns(ValueTask.FromResult<ErrorOr<Success>>(Result.Success));
 
         commandHandlerWithResponse.Handle(Arg.Any<EchoCommand>(), Arg.Any<CancellationToken>())
-            .Returns(ValueTask.FromResult(Result.Success("echo!")));
+            .Returns(ValueTask.FromResult<ErrorOr<string>>("echo!"));
 
         queryHandler.Handle(Arg.Any<GetGreetingQuery>(), Arg.Any<CancellationToken>())
-            .Returns(ValueTask.FromResult(Result.Success("hello")));
+            .Returns(ValueTask.FromResult<ErrorOr<string>>("hello"));
 
         services.AddSingleton(commandHandler);
         services.AddSingleton(commandHandlerWithResponse);
@@ -43,7 +43,7 @@ public class CqrsPipelineTests
 
         using (Assert.Multiple())
         {
-            await Assert.That(pingResult.IsSuccess).IsTrue();
+            await Assert.That(pingResult.IsError).IsFalse();
             await Assert.That(echoResult.Value).IsEqualTo("echo!");
             await Assert.That(greetingResult.Value).IsEqualTo("hello");
         }
@@ -65,9 +65,8 @@ public class CqrsPipelineTests
 
         using (Assert.Multiple())
         {
-            await Assert.That(result.IsFailure).IsTrue();
-            await Assert.That(result.Error).IsAssignableTo<ValidationError>();
-            await Assert.That(((ValidationError)result.Error).Errors.Keys).Contains("Email");
+            await Assert.That(result.IsError).IsTrue();
+            await Assert.That(result.FirstError.Type).IsEqualTo(ErrorType.Validation);
         }
 
         await inner.DidNotReceive().Handle(Arg.Any<RegisterUserCommand>(), Arg.Any<CancellationToken>());
@@ -78,7 +77,7 @@ public class CqrsPipelineTests
     {
         var inner = Substitute.For<ICommandHandler<RegisterUserCommand>>();
         inner.Handle(Arg.Any<RegisterUserCommand>(), Arg.Any<CancellationToken>())
-            .Returns(ValueTask.FromResult(Result.Success()));
+            .Returns(ValueTask.FromResult<ErrorOr<Success>>(Result.Success));
 
         var provider = new ServiceCollection()
             .AddSingleton<IValidator<RegisterUserCommand>>(new RegisterUserValidator())
@@ -88,7 +87,7 @@ public class CqrsPipelineTests
 
         var result = await decorator.Handle(new RegisterUserCommand(Email: "student@smartlms.local"), CancellationToken.None);
 
-        await Assert.That(result.IsSuccess).IsTrue();
+        await Assert.That(result.IsError).IsFalse();
         await inner.Received(1).Handle(Arg.Any<RegisterUserCommand>(), Arg.Any<CancellationToken>());
     }
 
@@ -102,12 +101,12 @@ public class CqrsPipelineTests
 
         var successInner = Substitute.For<ICommandHandler<PingCommand>>();
         successInner.Handle(Arg.Any<PingCommand>(), Arg.Any<CancellationToken>())
-            .Returns(ValueTask.FromResult(Result.Success()));
+            .Returns(ValueTask.FromResult<ErrorOr<Success>>(Result.Success));
         var successDecorator = new TransactionCommandDecorator<PingCommand>(successInner, unitOfWork);
 
         var failureInner = Substitute.For<ICommandHandler<PingCommand>>();
         failureInner.Handle(Arg.Any<PingCommand>(), Arg.Any<CancellationToken>())
-            .Returns(ValueTask.FromResult(Result.Failure(Error.Conflict("X", "conflict"))));
+            .Returns(ValueTask.FromResult<ErrorOr<Success>>(Error.Conflict("X", "conflict")));
         var failureDecorator = new TransactionCommandDecorator<PingCommand>(failureInner, unitOfWork);
 
         var successResult = await successDecorator.Handle(new PingCommand(), CancellationToken.None);
@@ -115,8 +114,8 @@ public class CqrsPipelineTests
 
         using (Assert.Multiple())
         {
-            await Assert.That(successResult.IsSuccess).IsTrue();
-            await Assert.That(failureResult.IsFailure).IsTrue();
+            await Assert.That(successResult.IsError).IsFalse();
+            await Assert.That(failureResult.IsError).IsTrue();
         }
 
         _ = unitOfWork.Received(2).HasActiveTransaction;
@@ -132,7 +131,7 @@ public class CqrsPipelineTests
 
         var inner = Substitute.For<ICommandHandler<PingCommand>>();
         inner.Handle(Arg.Any<PingCommand>(), Arg.Any<CancellationToken>())
-            .Returns(ValueTask.FromResult(Result.Success()));
+            .Returns(ValueTask.FromResult<ErrorOr<Success>>(Result.Success));
 
         var decorator = new TransactionCommandDecorator<PingCommand>(inner, unitOfWork);
 

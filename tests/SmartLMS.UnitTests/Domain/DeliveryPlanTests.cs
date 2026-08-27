@@ -7,6 +7,13 @@ public class DeliveryPlanTests
 {
     private static readonly DateTime StartDate = new(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc);
 
+    private static DeliveryPlan CreatePlan(Classroom classroom)
+    {
+        var plan = new DeliveryPlan(classroom.Id, StartDate);
+        plan.AttachClassroom(classroom);
+        return plan;
+    }
+
     [Test]
     public async Task GetSchedule_computes_cumulative_dates_across_ordered_courses_and_classes()
     {
@@ -18,7 +25,7 @@ public class DeliveryPlanTests
                 c => c.WithClass("B1", deliveryDays: 5, classOrder: 1))
             .Build();
 
-        var plan = new SmartLMS.Domain.Entities.Delivery.DeliveryPlan { Classroom = classroom, StartDate = StartDate };
+        var plan = CreatePlan(classroom);
 
         var schedule = plan.GetSchedule();
 
@@ -40,7 +47,7 @@ public class DeliveryPlanTests
                       .WithClass("C2", deliveryDays: 10))
             .Build();
 
-        var plan = new SmartLMS.Domain.Entities.Delivery.DeliveryPlan { Classroom = classroom, StartDate = StartDate };
+        var plan = CreatePlan(classroom);
         var today = DateOnly.FromDateTime(StartDate.AddDays(5));
 
         var pending = plan.GetPendingClasses(today);
@@ -58,7 +65,7 @@ public class DeliveryPlanTests
                       .WithClass("C2", deliveryDays: 2))
             .Build();
 
-        var plan = new SmartLMS.Domain.Entities.Delivery.DeliveryPlan { Classroom = classroom, StartDate = StartDate };
+        var plan = CreatePlan(classroom);
         var ids = classroom.Courses.Single().Course.Classes.OrderBy(c => c.Order).Select(c => c.Id).ToList();
 
         plan.MarkDelivered(ids[0]);
@@ -76,7 +83,7 @@ public class DeliveryPlanTests
             .WithCourse("Course", order: 1, c => c.WithClass("C1", deliveryDays: 1))
             .Build();
 
-        var plan = new SmartLMS.Domain.Entities.Delivery.DeliveryPlan { Classroom = classroom, StartDate = StartDate };
+        var plan = CreatePlan(classroom);
         var classId = classroom.Courses.Single().Course.Classes.Single().Id;
 
         plan.MarkDelivered(classId);
@@ -91,12 +98,9 @@ public class DeliveryPlanTests
             .WithCourse("Course", order: 1, c => c.WithClass("C1", deliveryDays: 1))
             .Build();
 
-        var plan = new SmartLMS.Domain.Entities.Delivery.DeliveryPlan
-        {
-            Classroom = classroom,
-            StartDate = StartDate,
-            Concluded = true,
-        };
+        var plan = CreatePlan(classroom);
+        var classId = classroom.Courses.Single().Course.Classes.Single().Id;
+        plan.MarkDelivered(classId);
 
         var pending = plan.GetPendingClasses(DateOnly.FromDateTime(StartDate.AddYears(1)));
 
@@ -118,26 +122,30 @@ internal sealed class ClassroomBuilder
 
     public Classroom Build()
     {
-        var classroom = new Classroom { Name = "Classroom" };
+        var classroom = new Classroom("Classroom");
         var order = 0;
+        var teacherId = Guid.NewGuid();
 
         foreach (var (courseName, courseOrder, classes) in _courses)
         {
-            var subject = new Subject { Name = "Subject" };
-            var course = new Course { Name = courseName, Subject = subject, Order = courseOrder };
+            var course = new Course(courseName, courseOrder, Guid.NewGuid());
 
             foreach (var (className, deliveryDays, classOrder) in classes.OrderBy(c => c.ClassOrder))
             {
-                course.Classes.Add(new Class
-                {
-                    Name = className,
-                    DeliveryDays = deliveryDays,
-                    Order = classOrder,
-                    Course = course,
-                });
+                course.Classes.Add(new Class(
+                    className,
+                    "https://example.com/lesson",
+                    classOrder,
+                    deliveryDays,
+                    ContentType.YouTube,
+                    course.Id,
+                    teacherId));
             }
 
-            classroom.Courses.Add(new ClassroomCourse { Course = course, Classroom = classroom, Order = order++ });
+            var classroomCourse = new ClassroomCourse(classroom.Id, course.Id, order++);
+            classroomCourse.AttachClassroom(classroom);
+            classroomCourse.AttachCourse(course);
+            classroom.Courses.Add(classroomCourse);
         }
 
         return classroom;

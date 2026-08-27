@@ -16,7 +16,7 @@ internal static class AuthEndpoints
         group.MapPost("/login", async (LoginRequest request, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new LoginCommand(request.Email, request.Password), ct);
-                return result.IsSuccess ? Results.Ok(result.Value) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
             })
             .AllowAnonymous()
             .Produces(200)
@@ -26,7 +26,7 @@ internal static class AuthEndpoints
         group.MapPost("/refresh", async (RefreshTokenRequest request, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new RefreshTokenCommand(request.RefreshToken), ct);
-                return result.IsSuccess ? Results.Ok(result.Value) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
             })
             .AllowAnonymous()
             .Produces(200)
@@ -35,7 +35,7 @@ internal static class AuthEndpoints
         group.MapPost("/logout", async (LogoutRequest request, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new LogoutCommand(request.RefreshToken), ct);
-                return result.IsSuccess ? Results.NoContent() : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization()
             .Produces(204);
@@ -43,7 +43,7 @@ internal static class AuthEndpoints
         group.MapPost("/change-password", async (ChangePasswordRequest request, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new ChangePasswordCommand(request.CurrentPassword, request.NewPassword), ct);
-                return result.IsSuccess ? Results.NoContent() : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization()
             .Produces(204)

@@ -68,15 +68,13 @@ public sealed class AuditSaveChangesInterceptor(ICurrentUserProvider currentUser
                 ? Serialize(entry, includeOriginalValues: true)
                 : string.Empty;
 
-            context.Set<AuditLog>().Add(new AuditLog
-            {
-                EntityId = entity.Id,
-                Type = entity.GetType().Name,
-                OldState = oldState,
-                NewState = newState,
-                DateTime = now,
-                UserId = userId,
-            });
+            context.Set<AuditLog>().Add(new AuditLog(
+                entity.Id,
+                entity.GetType().Name,
+                oldState,
+                newState,
+                now,
+                userId));
         }
     }
 

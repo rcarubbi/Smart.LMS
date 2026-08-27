@@ -1,6 +1,6 @@
+using ErrorOr;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
 
 namespace SmartLMS.Application.Messaging.Decorators;
 
@@ -13,7 +13,7 @@ internal sealed class TransactionCommandDecorator<TCommand>(
     IUnitOfWork unitOfWork) : ICommandHandler<TCommand>
     where TCommand : ICommand
 {
-    public async ValueTask<Result> Handle(TCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(TCommand command, CancellationToken cancellationToken)
     {
         if (unitOfWork.HasActiveTransaction)
         {
@@ -26,7 +26,7 @@ internal sealed class TransactionCommandDecorator<TCommand>(
         {
             var result = await inner.Handle(command, cancellationToken);
 
-            if (result.IsSuccess)
+            if (!result.IsError)
             {
                 await unitOfWork.CommitAsync(cancellationToken);
             }
@@ -50,7 +50,7 @@ internal sealed class TransactionCommandDecorator<TCommand, TResponse>(
     IUnitOfWork unitOfWork) : ICommandHandler<TCommand, TResponse>
     where TCommand : ICommand<TResponse>
 {
-    public async ValueTask<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<TResponse>> Handle(TCommand command, CancellationToken cancellationToken)
     {
         if (unitOfWork.HasActiveTransaction)
         {
@@ -63,7 +63,7 @@ internal sealed class TransactionCommandDecorator<TCommand, TResponse>(
         {
             var result = await inner.Handle(command, cancellationToken);
 
-            if (result.IsSuccess)
+            if (!result.IsError)
             {
                 await unitOfWork.CommitAsync(cancellationToken);
             }

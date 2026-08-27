@@ -1,8 +1,8 @@
+using ErrorOr;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
 
 namespace SmartLMS.Application.Auth.ChangePassword;
 
@@ -27,20 +27,20 @@ internal sealed class ChangePasswordHandler(
     IPasswordHasher passwordHasher,
     TimeProvider timeProvider) : ICommandHandler<ChangePasswordCommand>
 {
-    public async ValueTask<Result> Handle(ChangePasswordCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(ChangePasswordCommand command, CancellationToken cancellationToken)
     {
         if (currentUser.UserId is not { } userId)
         {
-            return Result.Failure(Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user."));
+            return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
         }
 
         var user = await context.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellationToken);
         if (user is null || !user.Active || !passwordHasher.Verify(command.CurrentPassword, user.PasswordHash))
         {
-            return Result.Failure(Error.Unauthorized("Auth.InvalidCredentials", "The current password is incorrect."));
+            return Error.Unauthorized("Auth.InvalidCredentials", "The current password is incorrect.");
         }
 
-        user.PasswordHash = passwordHasher.Hash(command.NewPassword);
+        user.UpdatePasswordHash(passwordHasher.Hash(command.NewPassword));
 
         // Revoke every active session: a password change invalidates existing refresh tokens.
         var activeTokens = await context.RefreshTokens
@@ -53,6 +53,6 @@ internal sealed class ChangePasswordHandler(
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success;
     }
 }

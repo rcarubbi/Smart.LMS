@@ -4,13 +4,43 @@ namespace SmartLMS.Domain.Entities.Communication;
 
 public class UserNotice
 {
-    public Guid UserId { get; set; }
+    public UserNotice(Guid userId, Guid noticeId, DateTime visualizationDateTime)
+    {
+        UserId = userId;
+        NoticeId = noticeId;
+        VisualizationDateTime = visualizationDateTime;
+    }
 
-    public virtual User User { get; set; } = null!;
+    // ORM materialization.
+    private UserNotice()
+    {
+    }
 
-    public Guid NoticeId { get; set; }
+    public Guid UserId { get; private set; }
 
-    public virtual Notice Notice { get; set; } = null!;
+    private User _user = null!;
 
-    public DateTime VisualizationDateTime { get; set; }
+    public User User
+    {
+        get => _user;
+        private set => _user = value;
+    }
+
+    public Guid NoticeId { get; private set; }
+
+    private Notice _notice = null!;
+
+    public Notice Notice
+    {
+        get => _notice;
+        private set => _notice = value;
+    }
+
+    private DateTime _visualizationDateTime;
+
+    public DateTime VisualizationDateTime
+    {
+        get => _visualizationDateTime;
+        private set => _visualizationDateTime = value;
+    }
 }

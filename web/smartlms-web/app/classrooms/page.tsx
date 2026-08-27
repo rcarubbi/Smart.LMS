@@ -32,11 +32,11 @@ export default function ClassroomsPage() {
   }
 
   return (
-    <main className="min-h-dvh bg-gray-50">
+    <main className="min-h-dvh bg-gray-950">
       <Nav />
       <div className="mx-auto max-w-3xl space-y-6 p-6">
         <h1 className="text-lg font-semibold">Turmas</h1>
-        {error && <p className="rounded border border-red-200 bg-red-50 p-2 text-sm text-red-700">{error}</p>}
+        {error && <p className="rounded border border-red-800 bg-red-950 p-2 text-sm text-red-400">{error}</p>}
 
         <form onSubmit={create} className="flex gap-2">
           <input
@@ -44,14 +44,14 @@ export default function ClassroomsPage() {
             onChange={(e) => setName(e.target.value)}
             required
             placeholder="Nome da turma..."
-            className="flex-1 rounded border bg-white px-3 py-2"
+            className="flex-1 rounded border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
-          <button className="rounded bg-indigo-600 px-4 text-white hover:bg-indigo-700">Criar</button>
+          <button className="rounded bg-indigo-600 px-4 text-white hover:bg-indigo-500">Criar</button>
         </form>
 
-        <ul className="divide-y rounded border bg-white">
+        <ul className="divide-y divide-gray-800 rounded border border-gray-800 bg-gray-900">
           {classrooms.map((c) => (
-            <li key={c.id} className="flex items-center justify-between p-3 text-sm">
+            <li key={c.id} className="flex items-center justify-between p-3 text-sm text-gray-300">
               <span>{c.name}</span>
               <span className="text-xs text-gray-500">
                 {c.courseCount} cursos · {c.planCount} planos

@@ -24,13 +24,9 @@ public static class DbSeeder
         var admin = await context.Set<Admin>().FirstOrDefaultAsync(u => u.Email == DefaultAdminEmail, cancellationToken);
         if (admin is null)
         {
-            context.Set<Admin>().Add(new Admin
-            {
-                Name = "Administrator",
-                Email = DefaultAdminEmail,
-                PasswordHash = passwordHasher.Hash(DefaultAdminPassword),
-                Active = true,
-            });
+            var newAdmin = new Admin("Administrator", DefaultAdminEmail);
+            newAdmin.UpdatePasswordHash(passwordHasher.Hash(DefaultAdminPassword));
+            context.Set<Admin>().Add(newAdmin);
 
             logger?.LogInformation("Default admin user created ({Email})", DefaultAdminEmail);
         }

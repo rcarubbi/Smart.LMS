@@ -5,15 +5,56 @@ namespace SmartLMS.Domain.Entities.Communication;
 
 public class Comment : Entity
 {
-    public string CommentText { get; set; } = string.Empty;
+    public const int MaxCommentLength = 2000;
 
-    public DateTime DateTime { get; set; }
+    public Comment(string commentText, Guid classId, Guid userId, DateTime dateTime)
+    {
+        CommentText = commentText;
+        ClassId = classId;
+        UserId = userId;
+        DateTime = dateTime;
+    }
 
-    public Guid UserId { get; set; }
+    // ORM materialization.
+    private Comment()
+    {
+    }
 
-    public User User { get; set; } = null!;
+    private string _commentText = string.Empty;
 
-    public Guid ClassId { get; set; }
+    public string CommentText
+    {
+        get => _commentText;
+        private set => _commentText = value?.Trim() ?? string.Empty;
+    }
 
-    public Class Class { get; set; } = null!;
+    private DateTime _dateTime;
+
+    public DateTime DateTime
+    {
+        get => _dateTime;
+        private set => _dateTime = value;
+    }
+
+    public Guid UserId { get; private set; }
+
+    private User _user = null!;
+
+    public User User
+    {
+        get => _user;
+        private set => _user = value;
+    }
+
+    public Guid ClassId { get; private set; }
+
+    private Class _class = null!;
+
+    public Class Class
+    {
+        get => _class;
+        private set => _class = value;
+    }
+
+    public void SetText(string commentText) => CommentText = commentText;
 }

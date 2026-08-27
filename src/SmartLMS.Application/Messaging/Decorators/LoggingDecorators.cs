@@ -1,7 +1,7 @@
 using System.Diagnostics;
+using ErrorOr;
 using Microsoft.Extensions.Logging;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
 
 namespace SmartLMS.Application.Messaging.Decorators;
 
@@ -14,7 +14,7 @@ internal sealed class LoggingCommandDecorator<TCommand>(
     ILogger<LoggingCommandDecorator<TCommand>> logger) : ICommandHandler<TCommand>
     where TCommand : ICommand
 {
-    public async ValueTask<Result> Handle(TCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Success>> Handle(TCommand command, CancellationToken cancellationToken)
     {
         var name = typeof(TCommand).Name;
         var start = Stopwatch.GetTimestamp();
@@ -23,7 +23,7 @@ internal sealed class LoggingCommandDecorator<TCommand>(
         {
             logger.LogInformation("Handling {MessageName}", name);
             var result = await inner.Handle(command, cancellationToken);
-            LogOutcome(name, result.IsSuccess, start, result.Error.Description);
+            LogOutcome(name, !result.IsError, start, result.IsError ? result.FirstError.Description : null);
             return result;
         }
         catch (Exception ex)
@@ -47,7 +47,7 @@ internal sealed class LoggingCommandDecorator<TCommand, TResponse>(
     ILogger<LoggingCommandDecorator<TCommand, TResponse>> logger) : ICommandHandler<TCommand, TResponse>
     where TCommand : ICommand<TResponse>
 {
-    public async ValueTask<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<TResponse>> Handle(TCommand command, CancellationToken cancellationToken)
     {
         var name = typeof(TCommand).Name;
         var start = Stopwatch.GetTimestamp();
@@ -57,10 +57,10 @@ internal sealed class LoggingCommandDecorator<TCommand, TResponse>(
             logger.LogInformation("Handling {MessageName}", name);
             var result = await inner.Handle(command, cancellationToken);
 
-            if (result.IsFailure)
+            if (result.IsError)
             {
                 logger.LogWarning("Handled {MessageName} in {ElapsedMs}ms with failure ({Description})",
-                    name, Stopwatch.GetElapsedTime(start).Milliseconds, result.Error.Description);
+                    name, Stopwatch.GetElapsedTime(start).Milliseconds, result.FirstError.Description);
             }
             else
             {
@@ -84,7 +84,7 @@ internal sealed class LoggingQueryDecorator<TQuery, TResponse>(
     ILogger<LoggingQueryDecorator<TQuery, TResponse>> logger) : IQueryHandler<TQuery, TResponse>
     where TQuery : IQuery<TResponse>
 {
-    public async ValueTask<Result<TResponse>> Handle(TQuery query, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<TResponse>> Handle(TQuery query, CancellationToken cancellationToken)
     {
         var name = typeof(TQuery).Name;
         var start = Stopwatch.GetTimestamp();
@@ -94,7 +94,7 @@ internal sealed class LoggingQueryDecorator<TQuery, TResponse>(
             logger.LogInformation("Handling {MessageName}", name);
             var result = await inner.Handle(query, cancellationToken);
             logger.LogInformation("Handled {MessageName} in {ElapsedMs}ms with {Result}",
-                name, Stopwatch.GetElapsedTime(start).Milliseconds, result.IsSuccess ? "success" : "failure");
+                name, Stopwatch.GetElapsedTime(start).Milliseconds, result.IsError ? "failure" : "success");
             return result;
         }
         catch (Exception ex)

@@ -12,14 +12,10 @@ public class AssessmentScorerTests
     [Test]
     public async Task Single_choice_scores_only_when_right_option_picked()
     {
-        var question = new SingleChoiceQuestion
-        {
-            Description = "Pick A",
-            Score = 5,
-            RightOptionId = OptionA,
-        };
-        question.Options.Add(new QuestionOption { Id = OptionA, Text = "A", Order = 0 });
-        question.Options.Add(new QuestionOption { Id = OptionB, Text = "B", Order = 1 });
+        var question = new SingleChoiceQuestion("Pick A", 5);
+        question.SetRightOption(OptionA);
+        question.Options.Add(new QuestionOption("A", 0) { Id = OptionA });
+        question.Options.Add(new QuestionOption("B", 1) { Id = OptionB });
 
         var (scoreRight, resultsRight) = AssessmentScorer.Score([(question, new QuestionSubmission(question.Id, [OptionA]))]);
         var (scoreWrong, _) = AssessmentScorer.Score([(question, new QuestionSubmission(question.Id, [OptionB]))]);
@@ -36,15 +32,14 @@ public class AssessmentScorerTests
     [Test]
     public async Task Multiple_choice_requires_exact_set_match()
     {
-        var question = new MultipleChoiceQuestion { Description = "Pick A and C", Score = 6 };
+        var question = new MultipleChoiceQuestion("Pick A and C", 6);
         foreach (var id in new[] { OptionA, OptionB, OptionC })
         {
-            var option = new QuestionOption { Id = id, Text = id.ToString(), Order = 0 };
-            question.Options.Add(option);
+            question.Options.Add(new QuestionOption(id.ToString(), 0) { Id = id });
         }
         foreach (var id in new[] { OptionA, OptionC })
         {
-            question.RightOptions.Add(new QuestionOption { Id = id });
+            question.RightOptions.Add(new QuestionOption("Right", 0) { Id = id });
         }
 
         var (full, fullResults) = AssessmentScorer.Score([(question, new QuestionSubmission(question.Id, [OptionC, OptionA]))]);
@@ -63,11 +58,11 @@ public class AssessmentScorerTests
     [Test]
     public async Task Reordering_requires_exact_sequence_of_ordered_options()
     {
-        var question = new ReorderingQuestion { Description = "Order the steps", Score = 4 };
+        var question = new ReorderingQuestion("Order the steps", 4);
         // Correct order is B (order 1), A (order 2), C (order 3).
-        question.Options.Add(new QuestionOption { Id = OptionA, Text = "Step A", Order = 2 });
-        question.Options.Add(new QuestionOption { Id = OptionB, Text = "Step B", Order = 1 });
-        question.Options.Add(new QuestionOption { Id = OptionC, Text = "Step C", Order = 3 });
+        question.Options.Add(new QuestionOption("Step A", 2) { Id = OptionA });
+        question.Options.Add(new QuestionOption("Step B", 1) { Id = OptionB });
+        question.Options.Add(new QuestionOption("Step C", 3) { Id = OptionC });
 
         var rightSequence = new[] { OptionB, OptionA, OptionC };
 
@@ -85,11 +80,12 @@ public class AssessmentScorerTests
     [Test]
     public async Task Unanswered_questions_score_zero_and_totals_accumulate()
     {
-        var single = new SingleChoiceQuestion { Description = "S", Score = 3, RightOptionId = OptionA };
-        single.Options.Add(new QuestionOption { Id = OptionA, Order = 0 });
+        var single = new SingleChoiceQuestion("S", 3);
+        single.SetRightOption(OptionA);
+        single.Options.Add(new QuestionOption("A", 0) { Id = OptionA });
 
-        var reorder = new ReorderingQuestion { Description = "R", Score = 2 };
-        reorder.Options.Add(new QuestionOption { Id = OptionA, Order = 0 });
+        var reorder = new ReorderingQuestion("R", 2);
+        reorder.Options.Add(new QuestionOption("A", 0) { Id = OptionA });
 
         var (score, results) = AssessmentScorer.Score(
         [

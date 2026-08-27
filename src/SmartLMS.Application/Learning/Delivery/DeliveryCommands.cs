@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
+using ErrorOr;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Delivery;
 
@@ -26,12 +26,12 @@ internal sealed class CreateDeliveryPlanValidator : AbstractValidator<CreateDeli
 internal sealed class CreateDeliveryPlanHandler(ISmartLmsDbContext context)
     : ICommandHandler<CreateDeliveryPlanCommand, Guid>
 {
-    public async ValueTask<Result<Guid>> Handle(CreateDeliveryPlanCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Guid>> Handle(CreateDeliveryPlanCommand command, CancellationToken cancellationToken)
     {
         var classroomExists = await context.Classrooms.AnyAsync(c => c.Id == command.ClassroomId, cancellationToken);
         if (!classroomExists)
         {
-            return Result.Failure<Guid>(Error.NotFound("Classrooms.NotFound", "Classroom not found."));
+            return Error.NotFound("Classrooms.NotFound", "Classroom not found.");
         }
 
         var students = await context.Users
@@ -41,27 +41,22 @@ internal sealed class CreateDeliveryPlanHandler(ISmartLmsDbContext context)
 
         if (students.Count != command.StudentIds.Distinct().Count())
         {
-            return Result.Failure<Guid>(Error.Conflict(
+            return Error.Conflict(
                 "Delivery.UnknownStudents",
-                "One or more informed ids are not registered students."));
+                "One or more informed ids are not registered students.");
         }
 
-        var plan = new DeliveryPlan
-        {
-            ClassroomId = command.ClassroomId,
-            StartDate = command.StartDate,
-            Active = true,
-        };
+        var plan = new DeliveryPlan(command.ClassroomId, command.StartDate);
 
         foreach (var student in students)
         {
-            plan.Students.Add(student);
+            plan.AddStudent(student);
         }
 
         context.DeliveryPlans.Add(plan);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(plan.Id);
+        return plan.Id;
     }
 }
 
@@ -80,7 +75,7 @@ internal sealed class ExecuteDeliveriesHandler(
     TimeProvider timeProvider,
     ILogger<ExecuteDeliveriesHandler> logger) : ICommandHandler<ExecuteDeliveriesCommand, IReadOnlyList<DeliveredClassInfo>>
 {
-    public async ValueTask<Result<IReadOnlyList<DeliveredClassInfo>>> Handle(
+    public async ValueTask<ErrorOr<IReadOnlyList<DeliveredClassInfo>>> Handle(
         ExecuteDeliveriesCommand command,
         CancellationToken cancellationToken)
     {
@@ -111,15 +106,11 @@ internal sealed class ExecuteDeliveriesHandler(
 
                 plan.MarkDelivered(klass.Id);
 
-                context.Notices.Add(new Notice
-                {
-                    Text =
-                        $"<a href='/class/{klass.Id}'>{klass.Name}</a> is now available! <br />" +
-                        $"<a href='/course/{course.Id}'>{course.Name}</a>",
-                    DateTime = timeProvider.GetUtcNow().UtcDateTime,
-                    DeliveryPlanId = plan.Id,
-                    Active = true,
-                });
+                context.Notices.Add(new Notice(
+                    $"<a href='/class/{klass.Id}'>{klass.Name}</a> is now available! <br />" +
+                    $"<a href='/course/{course.Id}'>{course.Name}</a>",
+                    timeProvider.GetUtcNow().UtcDateTime,
+                    plan.Id));
 
                 foreach (var student in plan.Students.Where(s => s.Active))
                 {
@@ -144,6 +135,6 @@ internal sealed class ExecuteDeliveriesHandler(
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success<IReadOnlyList<DeliveredClassInfo>>(delivered);
+        return delivered;
     }
 }

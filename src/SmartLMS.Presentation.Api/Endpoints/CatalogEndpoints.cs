@@ -1,5 +1,6 @@
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Application.Catalog.Classes;
+using SmartLMS.Application.Catalog.Classes.Comments;
 using SmartLMS.Application.Catalog.Courses;
 using SmartLMS.Application.Catalog.KnowledgeAreas;
 using SmartLMS.Application.Catalog.Subjects;
@@ -18,6 +19,7 @@ internal static class CatalogEndpoints
         MapSubjects(app);
         MapCourses(app);
         MapClasses(app);
+        MapClassComments(app);
         MapSearch(app);
 
         return app;
@@ -30,14 +32,14 @@ internal static class CatalogEndpoints
         group.MapGet("/", async (IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Query(new ListKnowledgeAreasQuery(), ct);
-                return result.IsSuccess ? Results.Ok(result.Value) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
             })
             .RequireAuthorization();
 
         group.MapPost("/", async (CatalogCreateRequest request, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new CreateKnowledgeAreaCommand(request.Name, request.Order), ct);
-                return result.IsSuccess ? Results.Created($"/api/knowledge-areas/{result.Value}", new { id = result.Value }) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Created($"/api/knowledge-areas/{result.Value}", new { id = result.Value });
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(201)
@@ -47,7 +49,7 @@ internal static class CatalogEndpoints
         group.MapPut("/{id:guid}", async (Guid id, CatalogCreateRequest request, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new UpdateKnowledgeAreaCommand(id, request.Name, request.Order), ct);
-                return result.IsSuccess ? Results.NoContent() : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(204);
@@ -55,7 +57,7 @@ internal static class CatalogEndpoints
         group.MapDelete("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new DeleteKnowledgeAreaCommand(id), ct);
-                return result.IsSuccess ? Results.NoContent() : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(204)
@@ -70,14 +72,14 @@ internal static class CatalogEndpoints
         group.MapGet("/", async (Guid? knowledgeAreaId, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Query(new ListSubjectsQuery(knowledgeAreaId), ct);
-                return result.IsSuccess ? Results.Ok(result.Value) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
             })
             .RequireAuthorization();
 
         group.MapPost("/", async (CatalogCreateRequest request, Guid knowledgeAreaId, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new CreateSubjectCommand(request.Name, request.Order, knowledgeAreaId), ct);
-                return result.IsSuccess ? Results.Created($"/api/subjects/{result.Value}", new { id = result.Value }) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Created($"/api/subjects/{result.Value}", new { id = result.Value });
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(201);
@@ -85,7 +87,7 @@ internal static class CatalogEndpoints
         group.MapPut("/{id:guid}", async (Guid id, CatalogCreateRequest request, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new UpdateSubjectCommand(id, request.Name, request.Order), ct);
-                return result.IsSuccess ? Results.NoContent() : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(204);
@@ -93,7 +95,7 @@ internal static class CatalogEndpoints
         group.MapDelete("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new DeleteSubjectCommand(id), ct);
-                return result.IsSuccess ? Results.NoContent() : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(204)
@@ -107,14 +109,14 @@ internal static class CatalogEndpoints
         group.MapGet("/", async (Guid? subjectId, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Query(new ListCoursesQuery(subjectId), ct);
-                return result.IsSuccess ? Results.Ok(result.Value) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
             })
             .RequireAuthorization();
 
         group.MapGet("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Query(new GetCourseQuery(id), ct);
-                return result.IsSuccess ? Results.Ok(result.Value) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
             })
             .RequireAuthorization()
             .Produces(200)
@@ -124,7 +126,7 @@ internal static class CatalogEndpoints
             {
                 var result = await dispatcher.Send(
                     new CreateCourseCommand(request.Name, request.Order, request.SubjectId, request.TeacherInChargeId, request.Image), ct);
-                return result.IsSuccess ? Results.Created($"/api/courses/{result.Value}", new { id = result.Value }) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Created($"/api/courses/{result.Value}", new { id = result.Value });
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(201);
@@ -133,7 +135,7 @@ internal static class CatalogEndpoints
             {
                 var result = await dispatcher.Send(
                     new UpdateCourseCommand(id, request.Name, request.Order, request.SubjectId, request.TeacherInChargeId, request.Image), ct);
-                return result.IsSuccess ? Results.NoContent() : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(204);
@@ -141,7 +143,7 @@ internal static class CatalogEndpoints
         group.MapDelete("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new DeleteCourseCommand(id), ct);
-                return result.IsSuccess ? Results.NoContent() : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(204)
@@ -155,14 +157,14 @@ internal static class CatalogEndpoints
         group.MapGet("/", async (Guid courseId, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Query(new ListClassesQuery(courseId), ct);
-                return result.IsSuccess ? Results.Ok(result.Value) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
             })
             .RequireAuthorization();
 
         group.MapGet("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Query(new GetClassQuery(id), ct);
-                return result.IsSuccess ? Results.Ok(result.Value) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
             })
             .RequireAuthorization()
             .Produces(404);
@@ -174,7 +176,7 @@ internal static class CatalogEndpoints
                     ParseContentType(request.ContentType), request.CourseId, request.TeacherId);
 
                 var result = await dispatcher.Send(command, ct);
-                return result.IsSuccess ? Results.Created($"/api/classes/{result.Value}", new { id = result.Value }) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Created($"/api/classes/{result.Value}", new { id = result.Value });
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(201)
@@ -188,7 +190,7 @@ internal static class CatalogEndpoints
                     ParseContentType(request.ContentType), request.TeacherId);
 
                 var result = await dispatcher.Send(command, ct);
-                return result.IsSuccess ? Results.NoContent() : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(204);
@@ -196,11 +198,44 @@ internal static class CatalogEndpoints
         group.MapDelete("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Send(new DeleteClassCommand(id), ct);
-                return result.IsSuccess ? Results.NoContent() : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(204)
             .Produces(409);
+    }
+
+    private static void MapClassComments(IEndpointRouteBuilder app)
+    {
+        var group = app.MapGroup("/api/classes/{classId:guid}/comments").WithTags("Classes");
+
+        group.MapGet("/", async (Guid classId, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var result = await dispatcher.Query(new ListClassCommentsQuery(classId), ct);
+                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
+            })
+            .RequireAuthorization()
+            .Produces(200);
+
+        group.MapPost("/", async (Guid classId, AddCommentRequest request, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var result = await dispatcher.Send(new AddClassCommentCommand(classId, request.CommentText), ct);
+                return result.IsError ? result.FirstError.ToProblem() : Results.Created($"/api/classes/{classId}/comments/{result.Value}", new { id = result.Value });
+            })
+            .RequireAuthorization()
+            .Produces(201)
+            .Produces(400)
+            .Produces(404);
+
+        group.MapDelete("/{commentId:guid}", async (Guid classId, Guid commentId, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var result = await dispatcher.Send(new DeleteClassCommentCommand(classId, commentId), ct);
+                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
+            })
+            .RequireAuthorization()
+            .Produces(204)
+            .Produces(404)
+            .Produces(403);
     }
 
     private static void MapSearch(IEndpointRouteBuilder app)
@@ -208,7 +243,7 @@ internal static class CatalogEndpoints
         app.MapGet("/api/search", async (string q, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Query(new ContextualSearchQuery(q), ct);
-                return result.IsSuccess ? Results.Ok(result.Value) : result.Error.ToProblem();
+                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
             })
             .WithTags("Search")
             .RequireAuthorization()
@@ -227,3 +262,5 @@ public sealed record CatalogCreateRequest(string Name, int Order);
 public sealed record CourseRequest(string Name, int Order, Guid SubjectId, Guid? TeacherInChargeId, string? Image);
 
 public sealed record ClassRequest(string Name, string Content, int Order, int DeliveryDays, string ContentType, Guid CourseId, Guid TeacherId);
+
+public sealed record AddCommentRequest(string CommentText);

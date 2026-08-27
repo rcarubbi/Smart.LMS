@@ -1,4 +1,4 @@
-using SmartLMS.Application.Common;
+using ErrorOr;
 
 namespace SmartLMS.Application.Abstractions.Messaging;
 
@@ -14,19 +14,19 @@ public interface IQuery<TResponse>;
 public interface ICommandHandler<in TCommand>
     where TCommand : ICommand
 {
-    ValueTask<Result> Handle(TCommand command, CancellationToken cancellationToken);
+    ValueTask<ErrorOr<Success>> Handle(TCommand command, CancellationToken cancellationToken);
 }
 
 public interface ICommandHandler<in TCommand, TResponse>
     where TCommand : ICommand<TResponse>
 {
-    ValueTask<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken);
+    ValueTask<ErrorOr<TResponse>> Handle(TCommand command, CancellationToken cancellationToken);
 }
 
 public interface IQueryHandler<in TQuery, TResponse>
     where TQuery : IQuery<TResponse>
 {
-    ValueTask<Result<TResponse>> Handle(TQuery query, CancellationToken cancellationToken);
+    ValueTask<ErrorOr<TResponse>> Handle(TQuery query, CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -35,9 +35,9 @@ public interface IQueryHandler<in TQuery, TResponse>
 /// </summary>
 public interface IDispatcher
 {
-    ValueTask<Result> Send(ICommand command, CancellationToken cancellationToken = default);
+    ValueTask<ErrorOr<Success>> Send(ICommand command, CancellationToken cancellationToken = default);
 
-    ValueTask<Result<TResponse>> Send<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default);
+    ValueTask<ErrorOr<TResponse>> Send<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default);
 
-    ValueTask<Result<TResponse>> Query<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default);
+    ValueTask<ErrorOr<TResponse>> Query<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default);
 }

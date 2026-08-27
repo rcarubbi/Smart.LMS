@@ -53,9 +53,9 @@ public class DatabasePersistenceTests
 
         await using (var context = CreateContext(connectionString))
         {
-            var area = new KnowledgeArea { Name = "Engineering", Order = 1 };
-            var subject = new Subject { Name = "Software Architecture", KnowledgeArea = area, Order = 1 };
-            var course = new Course { Name = "Clean Architecture", Subject = subject, Order = 1 };
+            var area = new KnowledgeArea("Engineering", 1);
+            var subject = new Subject("Software Architecture", 1, area.Id);
+            var course = new Course("Clean Architecture", 1, subject.Id);
 
             context.AddRange(area, subject, course);
             await context.SaveChangesAsync();
@@ -72,7 +72,7 @@ public class DatabasePersistenceTests
 
             // Modification produces old/new state pair.
             var course = await context.Courses.SingleAsync(c => c.Id == courseId);
-            course.Name = "Clean Architecture v2";
+            course.Rename("Clean Architecture v2");
             await context.SaveChangesAsync();
 
             var updateLogs = await context.AuditLogs

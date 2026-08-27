@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { api } from "@/lib/api";
-import Nav from "@/components/Nav";
+import AppShell from "@/components/AppShell";
+import Panel from "@/components/ui/Panel";
 
 type MyPlan = { classroomId: string; name: string; deliveredCount: number; totalCount: number };
-type Progress = { classId: string; className: string; courseName: string; percentual: number; lastAccessAtUtc: string };
+type Progress = { classId: string; className: string; courseName: string; percentual: number; watchedSeconds: number; lastAccessAtUtc: string };
 type NoticeItem = { id: string; text: string; seen: boolean };
 
 export default function MePage() {
@@ -19,63 +21,76 @@ export default function MePage() {
     api<NoticeItem[]>("/api/notices").then(setNotices).catch(() => setNotices([]));
   }, []);
 
-  return (
-    <main className="min-h-dvh bg-gray-50">
-      <Nav />
-      <div className="mx-auto max-w-3xl space-y-8 p-6">
-        <section className="space-y-3">
-          <h1 className="text-lg font-semibold">Minhas turmas</h1>
-          <ul className="divide-y rounded border bg-white">
-            {plans.map((p) => (
-              <li key={p.classroomId} className="space-y-1 p-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">{p.name}</span>
-                  <span className="text-xs text-gray-500">
-                    {p.deliveredCount}/{p.totalCount} aulas liberadas
-                  </span>
-                </div>
-                <div className="h-2 rounded bg-gray-100">
-                  <div
-                    className="h-2 rounded bg-indigo-500"
-                    style={{ width: `${p.totalCount ? (p.deliveredCount / p.totalCount) * 100 : 0}%` }}
-                  />
-                </div>
-              </li>
-            ))}
-            {plans.length === 0 && <li className="p-3 text-sm text-gray-500">Você não está em nenhuma turma.</li>}
-          </ul>
-        </section>
-
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold">Meu progresso</h2>
-          <ul className="divide-y rounded border bg-white">
-            {progress.map((p) => (
-              <li key={p.classId} className="flex items-center justify-between p-3 text-sm">
-                <span>
-                  {p.className} <span className="text-xs text-gray-500">· {p.courseName}</span>
-                </span>
-                <span className="text-xs font-medium text-green-600">{p.percentual}%</span>
-              </li>
-            ))}
-            {progress.length === 0 && <li className="p-3 text-sm text-gray-500">Nenhum acesso registrado.</li>}
-          </ul>
-        </section>
-
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold">Avisos</h2>
-          <ul className="divide-y rounded border bg-white">
-            {notices.map((n) => (
-              <li key={n.id} className="flex items-center justify-between p-3 text-sm">
-                <div dangerouslySetInnerHTML={{ __html: n.text }} className="[&_a]:text-indigo-600" />
-                <span className={`text-xs ${n.seen ? "text-gray-400" : "font-medium text-indigo-600"}`}>
-                  {n.seen ? "lido" : "novo"}
-                </span>
-              </li>
-            ))}
-            {notices.length === 0 && <li className="p-3 text-sm text-gray-500">Sem avisos.</li>}
-          </ul>
-        </section>
+  function bar(v: number) {
+    const w = Math.max(0, Math.min(100, v));
+    return (
+      <div className="h-2 overflow-hidden rounded-full bg-white/10">
+        <div className="h-2 rounded-full bg-gradient-to-r from-indigo-500 to-sky-400" style={{ width: `${w}%` }} />
       </div>
-    </main>
+    );
+  }
+
+  return (
+    <AppShell>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Panel icon="groups" title="Minhas turmas" accent="#ec4899">
+          {plans.length === 0 ? (
+            <p className="text-sm text-white/50">Você não está em nenhuma turma.</p>
+          ) : (
+            <ul className="space-y-4">
+              {plans.map((p) => (
+                <li key={p.classroomId} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium">{p.name}</span>
+                    <span className="text-xs text-white/50">{p.deliveredCount}/{p.totalCount} aulas liberadas</span>
+                  </div>
+                  {bar(p.totalCount ? (p.deliveredCount / p.totalCount) * 100 : 0)}
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+
+        <Panel icon="insights" title="Meu progresso" accent="#6366f1">
+          {progress.length === 0 ? (
+            <p className="text-sm text-white/50">Nenhum acesso registrado.</p>
+          ) : (
+            <ul className="space-y-3">
+              {progress.map((p) => (
+                <li key={p.classId}>
+                  <Link href={`/class/${p.classId}`} className="block rounded-lg border border-white/10 bg-white/5 p-3 transition hover:bg-white/10">
+                    <div className="mb-1 flex items-center justify-between">
+                      <span className="text-sm font-medium">{p.className}</span>
+                      <span className={`text-xs font-semibold ${p.percentual >= 100 ? "text-emerald-400" : "text-indigo-300"}`}>{p.percentual}%</span>
+                    </div>
+                    <p className="mb-1.5 text-xs text-white/40">{p.courseName}</p>
+                    {bar(p.percentual)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+      </div>
+
+      <div className="mt-6">
+        <Panel icon="notifications" title="Avisos" accent="#f59e0b">
+          {notices.length === 0 ? (
+            <p className="text-sm text-white/50">Sem avisos.</p>
+          ) : (
+            <ul className="space-y-2">
+              {notices.map((n) => (
+                <li key={n.id} className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-3 text-sm">
+                  <div dangerouslySetInnerHTML={{ __html: n.text }} className="[&_a]:text-indigo-300" />
+                  <span className={`ml-3 shrink-0 text-xs ${n.seen ? "text-white/40" : "font-medium text-indigo-400"}`}>
+                    {n.seen ? "lido" : "novo"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+      </div>
+    </AppShell>
   );
 }

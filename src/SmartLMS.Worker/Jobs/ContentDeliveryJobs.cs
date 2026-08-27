@@ -19,13 +19,13 @@ public class ContentDeliveryJobs(IDispatcher dispatcher, ILogger<ContentDelivery
 
         var result = await dispatcher.Send(new ExecuteDeliveriesCommand(), cancellationToken);
 
-        if (result.IsSuccess)
+        if (!result.IsError)
         {
             logger.LogInformation("Content delivery job delivered {Count} classes", result.Value.Count);
         }
         else
         {
-            logger.LogWarning("Content delivery job failed: {Error}", result.Error.Description);
+            logger.LogWarning("Content delivery job failed: {Error}", result.FirstError.Description);
         }
     }
 }

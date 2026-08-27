@@ -1,9 +1,9 @@
+using ErrorOr;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Application.Auth.Models;
-using SmartLMS.Application.Common;
 
 namespace SmartLMS.Application.Auth.Refresh;
 
@@ -24,7 +24,7 @@ internal sealed class RefreshTokenHandler(
     AuthTokenIssuer tokenIssuer,
     TimeProvider timeProvider) : ICommandHandler<RefreshTokenCommand, AuthResponse>
 {
-    public async ValueTask<Result<AuthResponse>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<AuthResponse>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken)
     {
         var now = timeProvider.GetUtcNow().UtcDateTime;
         var tokenHash = tokenService.HashRefreshToken(command.RefreshToken);
@@ -35,12 +35,12 @@ internal sealed class RefreshTokenHandler(
 
         if (stored is null || !stored.IsActive(now))
         {
-            return Result.Failure<AuthResponse>(Error.Unauthorized("Auth.InvalidRefreshToken", "The refresh token is invalid or expired."));
+            return Error.Unauthorized("Auth.InvalidRefreshToken", "The refresh token is invalid or expired.");
         }
 
         stored.Revoke(now);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(await tokenIssuer.IssueAsync(stored.User, cancellationToken));
+        return await tokenIssuer.IssueAsync(stored.User, cancellationToken);
     }
 }

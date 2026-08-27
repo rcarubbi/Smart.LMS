@@ -1,8 +1,10 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
 using SmartLMS.Application;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.DataAccess;
@@ -56,7 +58,23 @@ builder.Services
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy(Policies.AdminOnly, policy => policy.RequireRole(nameof(UserRole.Admin)));
 
-builder.Services.AddOpenApi();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Development", policy =>
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
+
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, _, _) =>
+    {
+        document.Info.Title = "SmartLMS API";
+        document.Info.Description = "Learning Management System REST API";
+        return Task.CompletedTask;
+    });
+});
 
 var app = builder.Build();
 
@@ -69,8 +87,15 @@ if (app.Environment.IsDevelopment())
         app.Logger);
 
     app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithTitle("SmartLMS API")
+               .WithTheme(ScalarTheme.Kepler)
+               .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    });
 }
 
+app.UseCors("Development");
 app.UseAuthentication();
 app.UseAuthorization();
 

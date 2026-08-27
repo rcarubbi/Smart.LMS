@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
+using ErrorOr;
 using SmartLMS.Domain.Entities.Assessments;
 
 namespace SmartLMS.Application.Assessments;
@@ -73,7 +73,7 @@ public static class AssessmentScorer
 
 internal sealed class SubmitAssessmentHandler(ISmartLmsDbContext context) : ICommandHandler<SubmitAssessmentCommand, AssessmentResult>
 {
-    public async ValueTask<Result<AssessmentResult>> Handle(SubmitAssessmentCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<AssessmentResult>> Handle(SubmitAssessmentCommand command, CancellationToken cancellationToken)
     {
         var assessment = await context.Assessments
             .Include(a => a.Course)
@@ -83,7 +83,7 @@ internal sealed class SubmitAssessmentHandler(ISmartLmsDbContext context) : ICom
 
         if (assessment is null || !assessment.Active)
         {
-            return Result.Failure<AssessmentResult>(Error.NotFound("Assessments.NotFound", "Assessment not found."));
+            return Error.NotFound("Assessments.NotFound", "Assessment not found.");
         }
 
         // TPH-specific navigations (RightOption/RightOptions) are fixed up automatically:
@@ -94,13 +94,13 @@ internal sealed class SubmitAssessmentHandler(ISmartLmsDbContext context) : ICom
 
         var (score, perQuestion) = AssessmentScorer.Score(pairs);
 
-        return Result.Success(new AssessmentResult(
+        return new AssessmentResult(
             assessment.Id,
             assessment.Course.Name,
             score,
             assessment.MinimumScore,
             score >= assessment.MinimumScore,
-            perQuestion));
+            perQuestion);
     }
 }
 
@@ -109,7 +109,7 @@ public sealed record GetAssessmentQuery(Guid Id) : IQuery<AssessmentDetail>;
 /// <summary>Student-facing view: questions and options only, never the right answers.</summary>
 internal sealed class GetAssessmentHandler(ISmartLmsDbContext context) : IQueryHandler<GetAssessmentQuery, AssessmentDetail>
 {
-    public async ValueTask<Result<AssessmentDetail>> Handle(GetAssessmentQuery query, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<AssessmentDetail>> Handle(GetAssessmentQuery query, CancellationToken cancellationToken)
     {
         var detail = await context.Assessments
             .Where(a => a.Active && a.Id == query.Id)
@@ -130,7 +130,7 @@ internal sealed class GetAssessmentHandler(ISmartLmsDbContext context) : IQueryH
             .SingleOrDefaultAsync(cancellationToken);
 
         return detail is null
-            ? Result.Failure<AssessmentDetail>(Error.NotFound("Assessments.NotFound", "Assessment not found."))
-            : Result.Success<AssessmentDetail>(detail);
+            ? Error.NotFound("Assessments.NotFound", "Assessment not found.")
+            : detail;
     }
 }

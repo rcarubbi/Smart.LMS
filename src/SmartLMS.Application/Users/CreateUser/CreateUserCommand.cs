@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
+using ErrorOr;
 using SmartLMS.Domain.Entities.UserAccess;
 
 namespace SmartLMS.Application.Users.CreateUser;
@@ -25,30 +25,33 @@ internal sealed class CreateUserHandler(
     ISmartLmsDbContext context,
     IPasswordHasher passwordHasher) : ICommandHandler<CreateUserCommand, Guid>
 {
-    public async ValueTask<Result<Guid>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
+    public async ValueTask<ErrorOr<Guid>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
         var emailTaken = await context.Users
             .AnyAsync(u => u.Email == command.Email, cancellationToken);
 
         if (emailTaken)
         {
-            return Result.Failure<Guid>(Error.Conflict("Users.EmailAlreadyExists", $"The email '{command.Email}' is already registered."));
+            return Error.Conflict("Users.EmailAlreadyExists", $"The email '{command.Email}' is already registered.");
         }
 
         User user = command.Role switch
         {
-            UserRole.Admin => new Admin { Name = command.Name, Email = command.Email },
-            UserRole.Teacher => new Teacher { Name = command.Name, Email = command.Email },
-            UserRole.Student => new Student { Name = command.Name, Email = command.Email },
+            UserRole.Admin => new Admin(command.Name, command.Email),
+            UserRole.Teacher => new Teacher(command.Name, command.Email),
+            UserRole.Student => new Student(command.Name, command.Email),
             _ => throw new InvalidOperationException("Unknown role."),
         };
 
-        user.PasswordHash = passwordHasher.Hash(command.Password);
-        user.Active = command.Active;
+        user.UpdatePasswordHash(passwordHasher.Hash(command.Password));
+        if (!command.Active)
+        {
+            user.Deactivate();
+        }
 
         context.Users.Add(user);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(user.Id);
+        return user.Id;
     }
 }

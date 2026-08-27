@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
+using ErrorOr;
 using Microsoft.Extensions.DependencyInjection;
 using SmartLMS.Application.Abstractions.Messaging;
-using SmartLMS.Application.Common;
 
 namespace SmartLMS.Application.Messaging;
 
@@ -15,7 +15,7 @@ internal sealed class Dispatcher(IServiceProvider serviceProvider) : IDispatcher
     private static readonly ConcurrentDictionary<Type, CommandHandlerWrapper> CommandWrappers = new();
     private static readonly ConcurrentDictionary<Type, ResponseHandlerWrapperBase> ResponseWrappers = new();
 
-    public ValueTask<Result> Send(ICommand command, CancellationToken cancellationToken = default)
+    public ValueTask<ErrorOr<Success>> Send(ICommand command, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(command);
 
@@ -27,13 +27,13 @@ internal sealed class Dispatcher(IServiceProvider serviceProvider) : IDispatcher
         return wrapper.Handle(command, serviceProvider, cancellationToken);
     }
 
-    public ValueTask<Result<TResponse>> Send<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
+    public ValueTask<ErrorOr<TResponse>> Send<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
     {
         var resultTask = InvokeResponse(command, cancellationToken);
         return Wrap<TResponse>(resultTask);
     }
 
-    public ValueTask<Result<TResponse>> Query<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
+    public ValueTask<ErrorOr<TResponse>> Query<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
     {
         var resultTask = InvokeResponse(query, cancellationToken);
         return Wrap<TResponse>(resultTask);
@@ -66,22 +66,22 @@ internal sealed class Dispatcher(IServiceProvider serviceProvider) : IDispatcher
         return (ResponseHandlerWrapperBase)Activator.CreateInstance(wrapperType)!;
     }
 
-    private static async ValueTask<Result<TResponse>> Wrap<TResponse>(ValueTask<object> task)
+    private static async ValueTask<ErrorOr<TResponse>> Wrap<TResponse>(ValueTask<object> task)
     {
         var result = await task;
-        return (Result<TResponse>)result;
+        return (ErrorOr<TResponse>)result;
     }
 }
 
 internal abstract class CommandHandlerWrapper
 {
-    public abstract ValueTask<Result> Handle(object message, IServiceProvider serviceProvider, CancellationToken cancellationToken);
+    public abstract ValueTask<ErrorOr<Success>> Handle(object message, IServiceProvider serviceProvider, CancellationToken cancellationToken);
 }
 
 internal sealed class CommandHandlerWrapperImpl<TCommand> : CommandHandlerWrapper
     where TCommand : ICommand
 {
-    public override ValueTask<Result> Handle(object message, IServiceProvider serviceProvider, CancellationToken cancellationToken) =>
+    public override ValueTask<ErrorOr<Success>> Handle(object message, IServiceProvider serviceProvider, CancellationToken cancellationToken) =>
         serviceProvider
             .GetRequiredService<ICommandHandler<TCommand>>()
             .Handle((TCommand)message, cancellationToken);

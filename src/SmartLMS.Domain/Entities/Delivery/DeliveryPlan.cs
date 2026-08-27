@@ -9,18 +9,55 @@ namespace SmartLMS.Domain.Entities.Delivery;
 /// </summary>
 public class DeliveryPlan : Entity
 {
-    public DateTime StartDate { get; set; }
+    public DeliveryPlan(Guid classroomId, DateTime startDate)
+    {
+        ClassroomId = classroomId;
+        StartDate = startDate;
+    }
 
-    public bool Concluded { get; set; }
+    // ORM materialization.
+    private DeliveryPlan()
+    {
+    }
 
-    public Guid ClassroomId { get; set; }
+    private DateTime _startDate;
 
-    public Classroom Classroom { get; set; } = null!;
+    public DateTime StartDate
+    {
+        get => _startDate;
+        private set => _startDate = value;
+    }
 
-    public ICollection<Student> Students { get; set; } = [];
+    private bool _concluded;
+
+    public bool Concluded
+    {
+        get => _concluded;
+        private set => _concluded = value;
+    }
+
+    public Guid ClassroomId { get; private set; }
+
+    private Classroom _classroom = null!;
+
+    public Classroom Classroom
+    {
+        get => _classroom;
+        private set => _classroom = value;
+    }
+
+    public ICollection<Student> Students { get; private set; } = [];
 
     /// <summary>Classes already made available to students.</summary>
-    public ICollection<ClassDeliveryPlan> DeliveredClasses { get; set; } = [];
+    public ICollection<ClassDeliveryPlan> DeliveredClasses { get; private set; } = [];
+
+    public void AddStudent(Student student) => Students.Add(student);
+
+    public void AttachClassroom(Classroom classroom)
+    {
+        Classroom = classroom;
+        ClassroomId = classroom.Id;
+    }
 
     /// <summary>
     /// Computes the full delivery schedule: courses in classroom order, classes in course order,
@@ -68,12 +105,7 @@ public class DeliveryPlan : Entity
             throw new InvalidOperationException($"Class '{classId}' is already delivered by this plan.");
         }
 
-        var entry = new ClassDeliveryPlan
-        {
-            ClassId = classId,
-            DeliveryDate = DateTime.UtcNow,
-            DeliveryPlan = this,
-        };
+        var entry = new ClassDeliveryPlan(classId, DateTime.UtcNow, this);
 
         DeliveredClasses.Add(entry);
 
