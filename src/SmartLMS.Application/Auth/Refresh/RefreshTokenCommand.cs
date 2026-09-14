@@ -1,19 +1,23 @@
+using Ardalis.Specification.EntityFrameworkCore;
 using ErrorOr;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Application.Auth.Models;
+using SmartLMS.Domain.Specifications;
 
 namespace SmartLMS.Application.Auth.Refresh;
 
-public sealed record RefreshTokenCommand(string RefreshToken) : ICommand<AuthResponse>;
+public sealed record RefreshTokenInput(string RefreshToken);
+
+public sealed record RefreshTokenCommand(RefreshTokenInput Input) : ICommand<AuthResponse>;
 
 internal sealed class RefreshTokenValidator : AbstractValidator<RefreshTokenCommand>
 {
     public RefreshTokenValidator()
     {
-        RuleFor(c => c.RefreshToken).NotEmpty();
+        RuleFor(c => c.Input.RefreshToken).NotEmpty();
     }
 }
 
@@ -27,11 +31,12 @@ internal sealed class RefreshTokenHandler(
     public async ValueTask<ErrorOr<AuthResponse>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken)
     {
         var now = timeProvider.GetUtcNow().UtcDateTime;
-        var tokenHash = tokenService.HashRefreshToken(command.RefreshToken);
+        var tokenHash = tokenService.HashRefreshToken(command.Input.RefreshToken);
 
-        var stored = await context.RefreshTokens
-            .Include(t => t.User)
-            .SingleOrDefaultAsync(t => t.TokenHash == tokenHash, cancellationToken);
+        // Tracking on purpose: Revoke mutates + SaveChanges in the same unit of work.
+        var stored = await SpecificationEvaluator.Default
+            .GetQuery(context.RefreshTokens, new RefreshTokenByHashWithUserSpec(tokenHash))
+            .SingleOrDefaultAsync(cancellationToken);
 
         if (stored is null || !stored.IsActive(now))
         {

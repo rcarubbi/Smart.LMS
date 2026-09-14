@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application;
+using SmartLMS.Application.Abstractions;
 using SmartLMS.DataAccess;
 using SmartLMS.Infrastructure;
 using SmartLMS.Worker.Jobs;
 using SmartLMS.Worker.TickerQPersistence;
 using TickerQ.DependencyInjection;
 using TickerQ.EntityFrameworkCore.DependencyInjection;
+using TickerQ.Utilities.Entities;
 using TickerQ.Utilities.Models;
 using TickerQ.Dashboard.DependencyInjection;
 using SmartLMS.Worker;
@@ -18,8 +20,8 @@ builder.Services
     .AddInfrastructure(builder.Configuration);
 
 // Background deliveries run as the system user (no HTTP context).
-builder.Services.AddSingleton<ICurrentUserProvider, SystemCurrentUserProvider>();
-builder.Services.AddSingleton(TimeProvider.System);
+// TimeProvider comes from AddApplication above; ICurrentUser covers auditing too.
+builder.Services.AddSingleton<ICurrentUser, SystemCurrentUser>();
 
 var tickerConnectionString = builder.Configuration
     .GetConnectionString(SmartLMS.DataAccess.DependencyInjection.ConnectionStringName)
@@ -27,7 +29,7 @@ var tickerConnectionString = builder.Configuration
 
 builder.Services.AddDbContext<SmartLmsTickerDbContext>(options => options.UseSqlServer(tickerConnectionString));
 
-builder.Services.AddTickerQ<TimeTicker, CronTicker>(options =>
+builder.Services.AddTickerQ<TimeTickerEntity, CronTickerEntity>(options =>
 {
     options.AddOperationalStore(ef =>
         ef.UseTickerQDbContext<SmartLmsTickerDbContext>(dbOptions => dbOptions.UseSqlServer(tickerConnectionString)));

@@ -31,12 +31,12 @@ body {
   font-family: var(--font-roboto), system-ui, sans-serif;
 }
 
-/* Material-inspired glass card/panel */
+/* Material-inspired frosted glass card/panel */
 .glass {
-  background: var(--card);
+  background: rgba(13, 18, 32, 0.78);
   border: 1px solid var(--card-border);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
   border-radius: 1rem;
 }

@@ -1,23 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SmartLMS.Application.Abstractions;
-using SmartLMS.DataAccess;
 using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.UserAccess;
 
-namespace SmartLMS.Infrastructure.Persistence;
+namespace SmartLMS.DataAccess.Seed;
 
 /// <summary>Applies migrations and creates the default admin + baseline parameters.</summary>
-public static class DbSeeder
+public sealed class DbSeeder(
+    SmartLmsDbContext context,
+    IPasswordHasher passwordHasher,
+    ILogger<DbSeeder> logger) : IDbSeeder
 {
     public const string DefaultAdminEmail = "administrator@yourcompany.com";
     public const string DefaultAdminPassword = "smart123";
 
-    public static async Task SeedAsync(
-        SmartLmsDbContext context,
-        IPasswordHasher passwordHasher,
-        ILogger? logger = null,
-        CancellationToken cancellationToken = default)
+    public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
         await context.Database.MigrateAsync(cancellationToken);
 
@@ -28,18 +26,17 @@ public static class DbSeeder
             newAdmin.UpdatePasswordHash(passwordHasher.Hash(DefaultAdminPassword));
             context.Set<Admin>().Add(newAdmin);
 
-            logger?.LogInformation("Default admin user created ({Email})", DefaultAdminEmail);
+            logger.LogInformation("Default admin user created ({Email})", DefaultAdminEmail);
         }
 
-        await SeedParameterIfMissingAsync(context, Parameter.AppNameKey, "Smart LMS", cancellationToken);
-        await SeedParameterIfMissingAsync(context, Parameter.BaseUrlKey, "http://localhost:3000", cancellationToken);
-        await SeedParameterIfMissingAsync(context, Parameter.FileStorageKey, "/app/storage", cancellationToken);
+        await SeedParameterIfMissingAsync(Parameter.AppNameKey, "Smart LMS", cancellationToken);
+        await SeedParameterIfMissingAsync(Parameter.BaseUrlKey, "http://localhost:3000", cancellationToken);
+        await SeedParameterIfMissingAsync(Parameter.FileStorageKey, "/app/storage", cancellationToken);
 
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    private static async Task SeedParameterIfMissingAsync(
-        SmartLmsDbContext context,
+    private async Task SeedParameterIfMissingAsync(
         string key,
         string value,
         CancellationToken cancellationToken)

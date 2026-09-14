@@ -2,7 +2,7 @@ using SmartLMS.Domain.ValueObjects;
 
 namespace SmartLMS.Domain.Entities.Assessments;
 
-public class Assessment : Entity
+public class Assessment : AggregateRoot
 {
     public Assessment(Guid courseId, int minimumScore)
     {
@@ -42,5 +42,35 @@ public class Assessment : Entity
     {
         Questions.Add(question);
         return question;
+    }
+
+    /// <summary>Removes every question (options cascade at persistence); caller rewires anew.</summary>
+    public void ClearQuestions() => Questions.Clear();
+
+    /// <summary>
+    /// Scores a submission: unanswered questions score zero, correct ones award
+    /// their points, totals accumulate, pass follows <see cref="MinimumScore"/>.
+    /// </summary>
+    public AssessmentScore Score(IReadOnlyDictionary<Guid, IReadOnlyList<Guid>> answersByQuestionId)
+    {
+        int total = 0;
+        List<QuestionScore> perQuestion = [];
+
+        foreach (var question in Questions)
+        {
+            IReadOnlyList<Guid> submitted = answersByQuestionId.TryGetValue(question.Id, out var ids)
+                ? ids
+                : Array.Empty<Guid>();
+
+            var correct = question.IsCorrect(submitted);
+            if (correct)
+            {
+                total += question.Score;
+            }
+
+            perQuestion.Add(new QuestionScore(question.Id, correct, correct ? question.Score : 0));
+        }
+
+        return new AssessmentScore(total, total >= MinimumScore, perQuestion);
     }
 }

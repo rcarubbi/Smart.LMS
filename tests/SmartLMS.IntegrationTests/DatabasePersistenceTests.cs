@@ -3,8 +3,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.DataAccess;
 using SmartLMS.DataAccess.Auditing;
+using SmartLMS.DataAccess.Seed;
 using SmartLMS.Domain.Entities.Content;
-using SmartLMS.Infrastructure.Persistence;
+using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Infrastructure.Security;
 using Testcontainers.MsSql;
 
@@ -16,35 +17,34 @@ namespace SmartLMS.IntegrationTests;
 /// </summary>
 public class DatabasePersistenceTests
 {
-    private readonly MsSqlContainer _container = new MsSqlBuilder().Build();
-
     private SmartLmsDbContext CreateContext(string connectionString)
     {
         var options = new DbContextOptionsBuilder<SmartLmsDbContext>()
             .UseSqlServer(connectionString)
-            .AddInterceptors(new AuditSaveChangesInterceptor(new NullCurrentUserProvider()))
+            .AddInterceptors(new AuditSaveChangesInterceptor(new TestCurrentUser()))
             .Options;
 
         return new SmartLmsDbContext(options);
     }
 
     [Test]
-    public async Task Migrations_apply_seed_and_audit_roundtrip_succeeds()
+    [ClassDataSource<TestSqlContainer>(Shared = SharedType.PerTestSession)]
+    public async Task Migrations_apply_seed_and_audit_roundtrip_succeeds(TestSqlContainer db)
     {
-        await _container.StartAsync();
-        var connectionString = _container.GetConnectionString();
+        var connectionString = db.ConnectionStringForDatabase("persistence");
 
         await using (var context = CreateContext(connectionString))
         {
             await context.Database.MigrateAsync();
 
             // Seed creates admin + baseline parameters idempotently.
-            await DbSeeder.SeedAsync(context, new BCryptPasswordHasher(), NullLogger.Instance);
+            var seeder = new DbSeeder(context, new BCryptPasswordHasher(), NullLogger<DbSeeder>.Instance);
+            await seeder.SeedAsync();
 
             var parameters = await context.Parameters.ToListAsync();
             using (Assert.Multiple())
             {
-                await Assert.That(parameters).HasCount().GreaterThanOrEqualTo(3);
+                await Assert.That(parameters).Count().IsGreaterThanOrEqualTo(3);
                 await Assert.That(parameters.Any(p => p.Key == Domain.Entities.Parameter.AppNameKey)).IsTrue();
             }
         }
@@ -89,8 +89,10 @@ public class DatabasePersistenceTests
         }
     }
 
-    private sealed class NullCurrentUserProvider : ICurrentUserProvider
+    private sealed class TestCurrentUser : ICurrentUser
     {
-        public Guid? GetCurrentUserId() => null;
+        public Guid? UserId => null;
+
+        public UserRole? Role => null;
     }
 }

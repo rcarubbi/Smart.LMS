@@ -1,20 +1,24 @@
+using Ardalis.Specification.EntityFrameworkCore;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
+using SmartLMS.Domain.Specifications;
 using ErrorOr;
 
 namespace SmartLMS.Application.Learning.History;
 
-public sealed record RecordClassAccessCommand(Guid ClassId, int Percentual, decimal WatchedSeconds) : ICommand;
+public sealed record RecordClassAccessInput(Guid ClassId, int Percentual, decimal WatchedSeconds);
+
+public sealed record RecordClassAccessCommand(RecordClassAccessInput Input) : ICommand;
 
 internal sealed class RecordClassAccessValidator : AbstractValidator<RecordClassAccessCommand>
 {
     public RecordClassAccessValidator()
     {
-        RuleFor(c => c.ClassId).NotEmpty();
-        RuleFor(c => c.Percentual).InclusiveBetween(0, 100);
-        RuleFor(c => c.WatchedSeconds).GreaterThanOrEqualTo(0);
+        RuleFor(c => c.Input.ClassId).NotEmpty();
+        RuleFor(c => c.Input.Percentual).InclusiveBetween(0, 100);
+        RuleFor(c => c.Input.WatchedSeconds).GreaterThanOrEqualTo(0);
     }
 }
 
@@ -28,26 +32,65 @@ internal sealed class RecordClassAccessHandler(ISmartLmsDbContext context, ICurr
             return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
         }
 
-        var classExists = await context.Classes.AnyAsync(c => c.Id == command.ClassId, cancellationToken);
+        var classExists = await context.Classes.AnyAsync(c => c.Id == command.Input.ClassId, cancellationToken);
         if (!classExists)
         {
             return Error.NotFound("Classes.NotFound", "Class not found.");
         }
 
-        context.ClassAccesses.Add(new Domain.Entities.History.ClassAccess(
-            userId,
-            command.ClassId,
-            command.Percentual,
-            command.WatchedSeconds,
-            timeProvider.GetUtcNow().UtcDateTime));
+        var existing = await context.ClassAccesses
+            .FirstOrDefaultAsync(a => a.UserId == userId && a.ClassId == command.Input.ClassId, cancellationToken);
 
-        await context.SaveChangesAsync(cancellationToken);
+        var accessTime = timeProvider.GetUtcNow().UtcDateTime;
+
+        Domain.Entities.History.ClassAccess? added = null;
+        if (existing is null)
+        {
+            added = new Domain.Entities.History.ClassAccess(
+                userId,
+                command.Input.ClassId,
+                command.Input.Percentual,
+                command.Input.WatchedSeconds,
+                accessTime);
+            context.ClassAccesses.Add(added);
+        }
+        else
+        {
+            existing.UpdateProgress(command.Input.Percentual, command.Input.WatchedSeconds, accessTime);
+        }
+
+        try
+        {
+            await context.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException)
+        {
+            // Two heartbeats raced on the unique (UserId, ClassId): detach our
+            // loser insert, reload the winner and apply monotonic progress
+            // instead of surfacing a 500.
+            if (added is not null && context is DbContext db)
+            {
+                db.Entry(added).State = EntityState.Detached;
+            }
+
+            var winner = await context.ClassAccesses
+                .FirstOrDefaultAsync(a => a.UserId == userId && a.ClassId == command.Input.ClassId, cancellationToken);
+            if (winner is null)
+            {
+                throw;
+            }
+
+            winner.UpdateProgress(command.Input.Percentual, command.Input.WatchedSeconds, accessTime);
+            await context.SaveChangesAsync(cancellationToken);
+        }
 
         return Result.Success;
     }
 }
 
-public sealed record RecordFileAccessCommand(Guid FileId) : ICommand;
+public sealed record RecordFileAccessInput(Guid FileId);
+
+public sealed record RecordFileAccessCommand(RecordFileAccessInput Input) : ICommand;
 
 internal sealed class RecordFileAccessHandler(ISmartLmsDbContext context, ICurrentUser currentUser, TimeProvider timeProvider)
     : ICommandHandler<RecordFileAccessCommand>
@@ -59,7 +102,7 @@ internal sealed class RecordFileAccessHandler(ISmartLmsDbContext context, ICurre
             return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
         }
 
-        var fileExists = await context.Files.AnyAsync(f => f.Id == command.FileId, cancellationToken);
+        var fileExists = await context.Files.AnyAsync(f => f.Id == command.Input.FileId, cancellationToken);
         if (!fileExists)
         {
             return Error.NotFound("Files.NotFound", "File not found.");
@@ -67,7 +110,7 @@ internal sealed class RecordFileAccessHandler(ISmartLmsDbContext context, ICurre
 
         context.FileAccesses.Add(new Domain.Entities.History.FileAccess(
             userId,
-            command.FileId,
+            command.Input.FileId,
             timeProvider.GetUtcNow().UtcDateTime));
 
         await context.SaveChangesAsync(cancellationToken);
@@ -84,12 +127,13 @@ public sealed record MyProgressItem(
     decimal WatchedSeconds,
     DateTime LastAccessAtUtc);
 
-public sealed record MyProgressQuery : IQuery<IReadOnlyList<MyProgressItem>>;
+public sealed record MyProgressQuery(Guid? ClassId = null, int? Page = null, int? PageSize = null)
+    : IQuery<Paged<MyProgressItem>>;
 
 internal sealed class MyProgressHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
-    : IQueryHandler<MyProgressQuery, IReadOnlyList<MyProgressItem>>
+    : IQueryHandler<MyProgressQuery, Paged<MyProgressItem>>
 {
-    public async ValueTask<ErrorOr<IReadOnlyList<MyProgressItem>>> Handle(
+    public async ValueTask<ErrorOr<Paged<MyProgressItem>>> Handle(
         MyProgressQuery query,
         CancellationToken cancellationToken)
     {
@@ -98,44 +142,32 @@ internal sealed class MyProgressHandler(ISmartLmsDbContext context, ICurrentUser
             return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
         }
 
-        var items = await context.ClassAccesses
-            .Where(a => a.UserId == userId)
-            .GroupBy(a => a.ClassId)
-            .Select(g => new
-            {
-                ClassId = g.Key,
-                Percentual = g.Max(a => a.Percentual),
-                WatchedSeconds = g.Max(a => a.WatchedSeconds),
-                LastAccess = g.Max(a => a.AccessDateTime),
-                ClassName = g.Select(a => a.Class.Name).First(),
-                CourseName = g.Select(a => a.Class.Course.Name).First(),
-            })
-            .OrderByDescending(x => x.LastAccess)
+        var accessSpec = new ClassAccessesByUserSpec(userId, query.ClassId);
+        var items = await SpecificationEvaluator.Default
+            .GetQuery(context.ClassAccesses.AsNoTracking(), accessSpec)
+            .OrderByDescending(a => a.AccessDateTime)
+            .Select(a => new MyProgressItem(
+                a.ClassId,
+                a.Class.Name,
+                a.Class.Course.Name,
+                a.Percentual,
+                a.WatchedSeconds,
+                a.AccessDateTime))
             .ToListAsync(cancellationToken);
 
-        List<MyProgressItem> results =
-        [
-            .. items.Select(x => new MyProgressItem(
-                x.ClassId,
-                x.ClassName,
-                x.CourseName,
-                x.Percentual,
-                x.WatchedSeconds,
-                x.LastAccess)),
-        ];
-        return (ErrorOr<IReadOnlyList<MyProgressItem>>)results;
+        return items.PageInMemory(query.Page, query.PageSize);
     }
 }
 
-public sealed record MyClassroomQuery : IQuery<IReadOnlyList<MyPlanItem>>;
+public sealed record MyClassroomQuery(int? Page = null, int? PageSize = null) : IQuery<Paged<MyPlanItem>>;
 
 public sealed record MyPlanItem(Guid ClassroomId, string Name, int DeliveredCount, int TotalCount);
 
 /// <summary>Classrooms where the caller has delivery plans, with delivery progress.</summary>
 internal sealed class MyClassroomHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
-    : IQueryHandler<MyClassroomQuery, IReadOnlyList<MyPlanItem>>
+    : IQueryHandler<MyClassroomQuery, Paged<MyPlanItem>>
 {
-    public async ValueTask<ErrorOr<IReadOnlyList<MyPlanItem>>> Handle(
+    public async ValueTask<ErrorOr<Paged<MyPlanItem>>> Handle(
         MyClassroomQuery query,
         CancellationToken cancellationToken)
     {
@@ -144,13 +176,9 @@ internal sealed class MyClassroomHandler(ISmartLmsDbContext context, ICurrentUse
             return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
         }
 
-        var plans = await context.DeliveryPlans
-            .Include(p => p.DeliveredClasses)
-            .Include(p => p.Classroom)
-            .ThenInclude(c => c.Courses)
-            .ThenInclude(cc => cc.Course)
-            .ThenInclude(c => c.Classes)
-            .Where(p => p.Students.Any(s => s.Id == userId))
+        var plansSpec = new DeliveryPlansByStudentSpec(userId);
+        var plans = await SpecificationEvaluator.Default
+            .GetQuery(context.DeliveryPlans.AsNoTracking(), plansSpec)
             .ToListAsync(cancellationToken);
 
         var result = plans
@@ -165,6 +193,6 @@ internal sealed class MyClassroomHandler(ISmartLmsDbContext context, ICurrentUse
             .OrderBy(c => c.Name)
             .ToList();
 
-        return result;
+        return result.PageInMemory(query.Page, query.PageSize);
     }
 }

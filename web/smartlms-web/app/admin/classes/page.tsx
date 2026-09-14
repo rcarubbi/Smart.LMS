@@ -1,19 +1,30 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { api, errorMessage } from "@/lib/api";
+import { api, apiList, errorMessage } from "@/lib/api";
 import type { ListItem } from "@/lib/api";
+import { usePagedList } from "@/lib/usePagedList";
+import { useTrashConfirmations } from "@/lib/useTrashConfirmations";
 import AppShell from "@/components/AppShell";
 import AuthGuard from "@/components/AuthGuard";
 import Panel from "@/components/ui/Panel";
 import FormModal from "@/components/ui/FormModal";
-import ConfirmModal from "@/components/ui/ConfirmModal";
 import Icon from "@/components/ui/Icon";
 import IconButton from "@/components/ui/IconButton";
+import Pagination from "@/components/ui/Pagination";
+import ViewTabs, { type ViewFilter } from "@/components/ui/ViewTabs";
 import { useToast } from "@/components/ui/Toast";
 
-type ClassItem = { id: string; name: string; order: number; deliveryDays: number; contentType: string };
+type ClassItem = {
+  id: string;
+  name: string;
+  order: number;
+  deliveryDays: number;
+  contentType: string;
+  active: boolean;
+};
+type SupportFile = { name: string; url: string };
 type Course = ListItem & { id: string };
 type Teacher = { id: string; name: string };
 
@@ -34,48 +45,61 @@ function ClassesInner() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [courseId, setCourseId] = useState(courseParam);
-  const [classes, setClasses] = useState<ClassItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [view, setView] = useState<ViewFilter>("active");
+  const { items: classes, total, loading, page, setPage, reload } = usePagedList<ClassItem>(
+    courseId ? `/api/classes?courseId=${courseId}` : "",
+    { active: view === "all" ? undefined : view === "active" },
+  );
 
-  const [modal, setModal] = useState<{ item?: ClassItem; name: string; content: string; order: string; deliveryDays: string; contentType: string; teacherId: string } | null>(null);
-  const [deleting, setDeleting] = useState<ClassItem | null>(null);
-
-  const loadOptions = useCallback(async () => {
-    const [cs, t] = await Promise.all([
-      api<Course[]>("/api/courses"),
-      api<Teacher[]>("/api/users?role=Teacher"),
-    ]);
-    setCourses(cs);
-    setTeachers(t);
-    if (!courseId && cs.length > 0) setCourseId(cs[0].id);
-  }, [courseId]);
-
-  const load = useCallback(async () => {
-    if (!courseId) return;
-    setLoading(true);
-    try {
-      setClasses(await api<ClassItem[]>(`/api/classes?courseId=${courseId}`));
-    } catch (e) {
-      toast("error", errorMessage(e));
-    } finally {
-      setLoading(false);
-    }
-  }, [courseId, toast]);
-
-  useEffect(() => {
-    loadOptions();
-  }, [loadOptions]);
-
-  useEffect(() => {
-    load();
-  }, [load]);
+  const [modal, setModal] = useState<{
+    item?: ClassItem;
+    name: string;
+    content: string;
+    order: string;
+    deliveryDays: string;
+    contentType: string;
+    teacherId: string;
+    files: SupportFile[];
+  } | null>(null);
+  const { setDeleting, setPurging, restore, modals } = useTrashConfirmations<ClassItem>({
+    reload,
+    basePath: "/api/classes",
+    labels: {
+      trash: "Aula movida para a lixeira.",
+      restore: "Aula restaurada.",
+      purge: "Aula excluída definitivamente.",
+    },
+    messages: {
+      trash: (i) => `Mover "${i.name}" para a lixeira? Você poderá restaurá-la depois.`,
+      purge: (i) =>
+        `Excluir "${i.name}" definitivamente? Essa ação não pode ser desfeita e remove o material de apoio vinculado.`,
+    },
+  });
+  const [uploadingFiles, setUploadingFiles] = useState(false);
 
   useEffect(() => {
-    if (courseParam && courseParam !== courseId) setCourseId(courseParam);
-  }, [courseParam, courseId]);
+    let cancelled = false;
+    (async () => {
+      try {
+        const [cs, t] = await Promise.all([
+          apiList<Course>("/api/courses"),
+          apiList<Teacher>("/api/users?role=Teacher"),
+        ]);
+        if (cancelled) return;
+        setCourses(cs);
+        setTeachers(t);
+        if (cs.length > 0) setCourseId((cur) => cur || cs[0].id);
+      } catch (e) {
+        toast("error", errorMessage(e));
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [toast]);
 
   function openNew() {
-    setModal({ name: "", content: "", order: "0", deliveryDays: "0", contentType: "YouTube", teacherId: "" });
+    setModal({ name: "", content: "", order: "0", deliveryDays: "0", contentType: "YouTube", teacherId: "", files: [] });
   }
 
   function openEdit(item: ClassItem) {
@@ -87,20 +111,49 @@ function ClassesInner() {
       deliveryDays: String(item.deliveryDays),
       contentType: item.contentType,
       teacherId: "",
+      files: [],
     });
-    api<{ content: string; teacherId: string }>(`/api/classes/${item.id}`)
+    api<{ content: string; teacherId: string; files: { name: string; storagePath: string }[] }>(`/api/classes/${item.id}`)
       .then((detail) =>
         setModal((m) =>
           m && m.item?.id === item.id
-            ? { ...m, content: detail.content, teacherId: detail.teacherId }
+            ? {
+                ...m,
+                content: detail.content,
+                teacherId: detail.teacherId,
+                files: (detail.files ?? []).map((f) => ({ name: f.name, url: f.storagePath })),
+              }
             : m,
         ),
       )
       .catch(() => {});
   }
 
+  async function uploadMaterials(fileList: File[]) {
+    if (fileList.length === 0) return;
+    const fd = new FormData();
+    for (const file of fileList) {
+      fd.append("files", file);
+    }
+    setUploadingFiles(true);
+    try {
+      const uploaded = await api<SupportFile[]>("/api/uploads/support-files", { method: "POST", body: fd });
+      setModal((m) => (m ? { ...m, files: [...m.files, ...uploaded] } : m));
+      toast("success", `${uploaded.length} arquivo(s) enviado(s).`);
+    } catch (e) {
+      toast("error", errorMessage(e));
+    } finally {
+      setUploadingFiles(false);
+    }
+  }
+
   async function submit() {
     if (!modal) return;
+    if (!modal.teacherId) {
+      toast("error", "Selecione um professor para a aula.");
+      return;
+    }
+    const files = modal.files.map((f) => ({ name: f.name, storagePath: f.url }));
     const payload = {
       name: modal.name,
       content: modal.content,
@@ -109,19 +162,13 @@ function ClassesInner() {
       contentType: modal.contentType,
       courseId,
       teacherId: modal.teacherId,
+      files,
     };
     try {
       if (modal.item) {
         await api(`/api/classes/${modal.item.id}`, {
           method: "PUT",
-          body: JSON.stringify({
-            name: modal.name,
-            content: modal.content,
-            order: Number(modal.order),
-            deliveryDays: Number(modal.deliveryDays),
-            contentType: modal.contentType,
-            teacherId: modal.teacherId,
-          }),
+          body: JSON.stringify(payload),
         });
         toast("success", "Aula atualizada.");
       } else {
@@ -129,19 +176,7 @@ function ClassesInner() {
         toast("success", "Aula criada.");
       }
       setModal(null);
-      load();
-    } catch (e) {
-      toast("error", errorMessage(e));
-    }
-  }
-
-  async function confirmDelete() {
-    if (!deleting) return;
-    try {
-      await api(`/api/classes/${deleting.id}`, { method: "DELETE" });
-      toast("success", "Aula excluída.");
-      setDeleting(null);
-      load();
+      reload();
     } catch (e) {
       toast("error", errorMessage(e));
     }
@@ -180,12 +215,16 @@ function ClassesInner() {
             </select>
           </label>
 
+          <ViewTabs view={view} onChange={setView} total={total} />
+
           {loading ? (
             <p className="text-sm text-white/50">Carregando...</p>
           ) : !courseId ? (
             <p className="text-sm text-white/50">Selecione um curso para listar as aulas.</p>
           ) : classes.length === 0 ? (
-            <p className="text-sm text-white/50">Nenhuma aula neste curso.</p>
+            <p className="text-sm text-white/50">
+              {view === "trash" ? "A lixeira está vazia." : "Nenhuma aula neste curso."}
+            </p>
           ) : (
             <table className="w-full text-left text-sm">
               <thead>
@@ -201,18 +240,35 @@ function ClassesInner() {
                 {classes.map((item) => (
                   <tr key={item.id} className="hover:bg-white/5">
                     <td className="py-2.5 pr-2 text-white/60">{item.order}</td>
-                    <td className="py-2.5 pr-2 font-medium">{item.name}</td>
+                    <td className="py-2.5 pr-2 font-medium">
+                      {item.name}
+                      {!item.active && (
+                        <span className="ml-2 rounded bg-amber-500/20 px-1.5 py-0.5 text-xs text-amber-300">
+                          Na lixeira
+                        </span>
+                      )}
+                    </td>
                     <td className="py-2.5 pr-2 text-white/70">{item.contentType}</td>
                     <td className="py-2.5 pr-2 text-white/60">{item.deliveryDays}</td>
                     <td className="py-2.5 text-right">
-                      <IconButton name="edit" title="Editar" onClick={() => openEdit(item)} />
-                      <IconButton name="delete" title="Excluir" danger onClick={() => setDeleting(item)} />
+                      {item.active ? (
+                        <>
+                          <IconButton name="edit" title="Editar" onClick={() => openEdit(item)} />
+                          <IconButton name="delete" title="Mover para a lixeira" variant="danger" onClick={() => setDeleting(item)} />
+                        </>
+                      ) : (
+                        <>
+                          <IconButton name="restore" title="Restaurar" onClick={() => restore(item)} />
+                          <IconButton name="delete_forever" title="Excluir definitivamente" variant="danger" onClick={() => setPurging(item)} />
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
+          <Pagination page={page} total={total} pageSize={25} onChange={setPage} />
         </Panel>
 
         <FormModal
@@ -231,13 +287,16 @@ function ClassesInner() {
             />
           </label>
           <label className="block space-y-1">
-            <span className="text-sm text-white/60">Conteúdo (URL do vídeo)</span>
+            <span className="text-sm text-white/60">Conteúdo (ID do vídeo ou URL)</span>
             <input
               value={modal?.content ?? ""}
               onChange={(e) => setModal((m) => (m ? { ...m, content: e.target.value } : m))}
               className="field"
-              placeholder="https://www.youtube.com/watch?v=..."
+              placeholder="Ex.: uKH-fiYIBvU ou https://www.youtube.com/watch?v=uKH-fiYIBvU"
             />
+            <span className="block text-xs text-white/40">
+              Pode colar apenas o ID (YouTube ou Vimeo) — a URL completa é montada automaticamente.
+            </span>
           </label>
           <div className="grid grid-cols-3 gap-3">
             <label className="block space-y-1">
@@ -285,15 +344,58 @@ function ClassesInner() {
               ))}
             </select>
           </label>
+          <label className="block space-y-1">
+            <span className="text-sm text-white/60">Material de apoio</span>
+            <div
+              className="rounded-lg border-2 border-dashed border-white/20 bg-white/5 px-3 py-6 text-center text-sm text-white/50 transition hover:border-white/40 hover:bg-white/10"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                if (e.dataTransfer.files.length > 0) uploadMaterials(Array.from(e.dataTransfer.files));
+              }}
+            >
+              {uploadingFiles ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Icon name="cloud_upload" className="text-xl" /> Enviando arquivos...
+                </span>
+              ) : (
+                <>
+                  <Icon name="attach_file" className="text-2xl" />
+                  <span className="ml-2">Arraste arquivos aqui ou clique para escolher</span>
+                </>
+              )}
+              <input
+                type="file"
+                multiple
+                className="hidden"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.xlt,.xltx,.csv,.ppt,.pptx,.txt,.zip,.rtf,.odt,.ods,.odp,.md,.xml,.xsl,.xslt,.json,.jpg,.jpeg,.png,.webp,.gif"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) uploadMaterials(Array.from(e.target.files));
+                  e.target.value = "";
+                }}
+              />
+            </div>
+            {modal && modal.files.length > 0 && (
+              <ul className="mt-2 max-h-32 space-y-1 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-2">
+                {modal.files.map((f, idx) => (
+                  <li key={`${f.url}-${idx}`} className="flex items-center gap-2 text-xs">
+                    <Icon name="description" className="text-white/50" />
+                    <span className="truncate">{f.name}</span>
+                    <button
+                      type="button"
+                      className="ml-auto text-red-300 hover:text-red-200"
+                      onClick={() => setModal((m) => (m ? { ...m, files: m.files.filter((_, i) => i !== idx) } : m))}
+                    >
+                      Remover
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </label>
         </FormModal>
 
-        <ConfirmModal
-          open={!!deleting}
-          title="Excluir aula"
-          message={`Excluir "${deleting?.name}"?`}
-          onConfirm={confirmDelete}
-          onCancel={() => setDeleting(null)}
-        />
+        {modals}
       </AppShell>
     </AuthGuard>
   );

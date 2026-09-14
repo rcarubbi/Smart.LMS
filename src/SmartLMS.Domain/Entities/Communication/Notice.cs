@@ -67,4 +67,10 @@ public class Notice : Entity
         DeliveryPlan = plan;
         DeliveryPlanId = plan.Id;
     }
+
+    public void DetachDeliveryPlan()
+    {
+        DeliveryPlan = null;
+        DeliveryPlanId = null;
+    }
 }

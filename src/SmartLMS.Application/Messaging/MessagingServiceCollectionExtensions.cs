@@ -65,22 +65,37 @@ internal static class MessagingServiceCollectionExtensions
         var definition = serviceType.GetGenericTypeDefinition();
 
         // Inside-out composition: transaction -> validation -> logging.
+        // IOwnsTransaction commands skip the ambient transaction (they commit per batch).
         return definition switch
         {
             _ when definition == typeof(ICommandHandler<>) =>
                 Decorate(typeof(LoggingCommandDecorator<>), typeArguments, serviceProvider,
                     Decorate(typeof(ValidationCommandDecorator<>), typeArguments, serviceProvider,
-                        Decorate(typeof(TransactionCommandDecorator<>), typeArguments, serviceProvider, inner))),
+                        Transact(typeArguments, serviceProvider, inner))),
 
             _ when definition == typeof(ICommandHandler<,>) =>
                 Decorate(typeof(LoggingCommandDecorator<,>), typeArguments, serviceProvider,
                     Decorate(typeof(ValidationCommandDecorator<,>), typeArguments, serviceProvider,
-                        Decorate(typeof(TransactionCommandDecorator<,>), typeArguments, serviceProvider, inner))),
+                        Transact(typeArguments, serviceProvider, inner))),
 
             _ => // IQueryHandler<,>: no transaction wrapper.
                 Decorate(typeof(LoggingQueryDecorator<,>), typeArguments, serviceProvider,
                     Decorate(typeof(ValidationQueryDecorator<,>), typeArguments, serviceProvider, inner)),
         };
+    }
+
+    private static object Transact(Type[] typeArguments, IServiceProvider serviceProvider, object inner)
+    {
+        // typeArguments[0] is always TCommand for both ICommandHandler shapes.
+        if (typeof(IOwnsTransaction).IsAssignableFrom(typeArguments[0]))
+        {
+            return inner;
+        }
+
+        var openDecorator = typeArguments.Length == 1
+            ? typeof(TransactionCommandDecorator<>)
+            : typeof(TransactionCommandDecorator<,>);
+        return Decorate(openDecorator, typeArguments, serviceProvider, inner);
     }
 
     private static object Decorate(Type openDecoratorType, Type[] messageTypes, IServiceProvider serviceProvider, object inner)

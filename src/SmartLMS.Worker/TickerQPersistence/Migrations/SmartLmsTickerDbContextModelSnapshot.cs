@@ -22,7 +22,7 @@ namespace SmartLMS.Worker.TickerQPersistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SmartLMS.Worker.TickerQPersistence.CronTicker", b =>
+            modelBuilder.Entity("TickerQ.Utilities.Entities.CronTickerEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -67,13 +67,76 @@ namespace SmartLMS.Worker.TickerQPersistence.Migrations
                     b.HasIndex("Expression")
                         .HasDatabaseName("IX_CronTickers_Expression");
 
+                    b.HasIndex("Function")
+                        .IsUnique()
+                        .HasFilter("[Function] IS NOT NULL");
+
                     b.HasIndex("Function", "Expression")
                         .HasDatabaseName("IX_Function_Expression");
 
                     b.ToTable("CronTickers", "ticker");
                 });
 
-            modelBuilder.Entity("SmartLMS.Worker.TickerQPersistence.TimeTicker", b =>
+            modelBuilder.Entity("TickerQ.Utilities.Entities.CronTickerOccurrenceEntity<TickerQ.Utilities.Entities.CronTickerEntity>", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CronTickerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("ElapsedTime")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ExceptionMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ExecutedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExecutionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LockHolder")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LockedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SkippedReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CronTickerId")
+                        .HasDatabaseName("IX_CronTickerOccurrence_CronTickerId");
+
+                    b.HasIndex("ExecutionTime")
+                        .HasDatabaseName("IX_CronTickerOccurrence_ExecutionTime");
+
+                    b.HasIndex("CronTickerId", "ExecutionTime")
+                        .IsUnique()
+                        .HasDatabaseName("UQ_CronTickerId_ExecutionTime");
+
+                    b.HasIndex("Status", "ExecutionTime")
+                        .HasDatabaseName("IX_CronTickerOccurrence_Status_ExecutionTime");
+
+                    b.ToTable("CronTickerOccurrences", "ticker");
+                });
+
+            modelBuilder.Entity("TickerQ.Utilities.Entities.TimeTickerEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -149,78 +212,9 @@ namespace SmartLMS.Worker.TickerQPersistence.Migrations
                     b.ToTable("TimeTickers", "ticker");
                 });
 
-            modelBuilder.Entity("TickerQ.Utilities.Entities.CronTickerOccurrenceEntity<SmartLMS.Worker.TickerQPersistence.CronTicker>", b =>
+            modelBuilder.Entity("TickerQ.Utilities.Entities.CronTickerOccurrenceEntity<TickerQ.Utilities.Entities.CronTickerEntity>", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CronTickerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("ElapsedTime")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ExceptionMessage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ExecutedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExecutionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LockHolder")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LockedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RetryCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SkippedReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CronTickerId")
-                        .HasDatabaseName("IX_CronTickerOccurrence_CronTickerId");
-
-                    b.HasIndex("ExecutionTime")
-                        .HasDatabaseName("IX_CronTickerOccurrence_ExecutionTime");
-
-                    b.HasIndex("CronTickerId", "ExecutionTime")
-                        .IsUnique()
-                        .HasDatabaseName("UQ_CronTickerId_ExecutionTime");
-
-                    b.HasIndex("Status", "ExecutionTime")
-                        .HasDatabaseName("IX_CronTickerOccurrence_Status_ExecutionTime");
-
-                    b.ToTable("CronTickerOccurrences", "ticker");
-                });
-
-            modelBuilder.Entity("SmartLMS.Worker.TickerQPersistence.TimeTicker", b =>
-                {
-                    b.HasOne("SmartLMS.Worker.TickerQPersistence.TimeTicker", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("TickerQ.Utilities.Entities.CronTickerOccurrenceEntity<SmartLMS.Worker.TickerQPersistence.CronTicker>", b =>
-                {
-                    b.HasOne("SmartLMS.Worker.TickerQPersistence.CronTicker", "CronTicker")
+                    b.HasOne("TickerQ.Utilities.Entities.CronTickerEntity", "CronTicker")
                         .WithMany()
                         .HasForeignKey("CronTickerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -229,7 +223,17 @@ namespace SmartLMS.Worker.TickerQPersistence.Migrations
                     b.Navigation("CronTicker");
                 });
 
-            modelBuilder.Entity("SmartLMS.Worker.TickerQPersistence.TimeTicker", b =>
+            modelBuilder.Entity("TickerQ.Utilities.Entities.TimeTickerEntity", b =>
+                {
+                    b.HasOne("TickerQ.Utilities.Entities.TimeTickerEntity", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("TickerQ.Utilities.Entities.TimeTickerEntity", b =>
                 {
                     b.Navigation("Children");
                 });

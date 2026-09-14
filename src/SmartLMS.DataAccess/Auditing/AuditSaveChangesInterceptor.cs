@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using SmartLMS.Application.Abstractions;
 using SmartLMS.Domain.Entities;
 using SmartLMS.Domain.Entities.History;
 
@@ -11,7 +12,7 @@ namespace SmartLMS.DataAccess.Auditing;
 /// Writes an <see cref="AuditLog"/> row for every added/modified entity on SaveChanges,
 /// replacing the XML audit mechanism of the legacy EF6 Context.
 /// </summary>
-public sealed class AuditSaveChangesInterceptor(ICurrentUserProvider currentUserProvider) : SaveChangesInterceptor
+public sealed class AuditSaveChangesInterceptor(ICurrentUser currentUser) : SaveChangesInterceptor
 {
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -44,7 +45,7 @@ public sealed class AuditSaveChangesInterceptor(ICurrentUserProvider currentUser
 
     private void CollectAuditEntries(DbContext context)
     {
-        var userId = currentUserProvider.GetCurrentUserId();
+        var userId = currentUser.UserId;
         var now = DateTime.UtcNow;
 
         // Materialize first: adding AuditLog entities below mutates the change tracker.

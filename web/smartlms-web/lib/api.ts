@@ -87,7 +87,7 @@ export async function api<T>(
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  if (options.body && !headers.has("Content-Type")) {
+  if (options.body && !(options.body instanceof FormData) && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
 
@@ -118,3 +118,16 @@ export function errorMessage(err: unknown, fallback = "Falha na operação."): s
 }
 
 export type ListItem = { id: string; name: string; order: number };
+
+export type Paged<T> = { items: T[]; total: number; page: number; pageSize: number; totalPages: number };
+
+/** Fetches a paged list endpoint (always returns the Paged<T> envelope). */
+export async function apiPage<T>(path: string, options?: RequestInit & { retry?: boolean }): Promise<Paged<T>> {
+  return api<Paged<T>>(path, options);
+}
+
+/** Fetches a list endpoint and unwraps the Paged<T> envelope to the raw items array. */
+export async function apiList<T>(path: string, options?: RequestInit & { retry?: boolean }): Promise<T[]> {
+  const paged = await apiPage<T>(path, options);
+  return paged.items;
+}

@@ -7,17 +7,18 @@ using SmartLMS.Domain.Entities.UserAccess;
 
 namespace SmartLMS.Application.Users.CreateUser;
 
-public sealed record CreateUserCommand(string Name, string Email, string Password, UserRole Role, bool Active = true)
-    : ICommand<Guid>;
+public sealed record CreateUserInput(string Name, string Email, string Password, UserRole Role);
+
+public sealed record CreateUserCommand(CreateUserInput Input) : ICommand<Guid>;
 
 internal sealed class CreateUserValidator : AbstractValidator<CreateUserCommand>
 {
     public CreateUserValidator()
     {
-        RuleFor(c => c.Name).NotEmpty().MaximumLength(200);
-        RuleFor(c => c.Email).NotEmpty().EmailAddress().MaximumLength(256);
-        RuleFor(c => c.Password).NotEmpty().MinimumLength(8);
-        RuleFor(c => c.Role).IsInEnum();
+        RuleFor(c => c.Input.Name).NotEmpty().MaximumLength(200);
+        RuleFor(c => c.Input.Email).NotEmpty().EmailAddress().MaximumLength(256);
+        RuleFor(c => c.Input.Password).NotEmpty().MinimumLength(8);
+        RuleFor(c => c.Input.Role).IsInEnum();
     }
 }
 
@@ -28,27 +29,22 @@ internal sealed class CreateUserHandler(
     public async ValueTask<ErrorOr<Guid>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
         var emailTaken = await context.Users
-            .AnyAsync(u => u.Email == command.Email, cancellationToken);
+            .AnyAsync(u => u.Email == command.Input.Email, cancellationToken);
 
         if (emailTaken)
         {
-            return Error.Conflict("Users.EmailAlreadyExists", $"The email '{command.Email}' is already registered.");
+            return Error.Conflict("Users.EmailAlreadyExists", $"The email '{command.Input.Email}' is already registered.");
         }
 
-        User user = command.Role switch
+        User user = command.Input.Role switch
         {
-            UserRole.Admin => new Admin(command.Name, command.Email),
-            UserRole.Teacher => new Teacher(command.Name, command.Email),
-            UserRole.Student => new Student(command.Name, command.Email),
+            UserRole.Admin => new Admin(command.Input.Name, command.Input.Email),
+            UserRole.Teacher => new Teacher(command.Input.Name, command.Input.Email),
+            UserRole.Student => new Student(command.Input.Name, command.Input.Email),
             _ => throw new InvalidOperationException("Unknown role."),
         };
 
-        user.UpdatePasswordHash(passwordHasher.Hash(command.Password));
-        if (!command.Active)
-        {
-            user.Deactivate();
-        }
-
+        user.UpdatePasswordHash(passwordHasher.Hash(command.Input.Password));
         context.Users.Add(user);
         await context.SaveChangesAsync(cancellationToken);
 

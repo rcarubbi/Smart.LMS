@@ -1,8 +1,10 @@
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using SmartLMS.Application;
@@ -10,7 +12,6 @@ using SmartLMS.Application.Abstractions;
 using SmartLMS.DataAccess;
 using SmartLMS.DataAccess.Auditing;
 using SmartLMS.Infrastructure;
-using SmartLMS.Infrastructure.Persistence;
 using SmartLMS.Infrastructure.Security;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Presentation.Api;
@@ -24,11 +25,12 @@ builder.Services
     .AddDataAccess(builder.Configuration)
     .AddInfrastructure(builder.Configuration);
 
-builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<HttpCurrentUser>();
 builder.Services.AddScoped<ICurrentUser>(sp => sp.GetRequiredService<HttpCurrentUser>());
-builder.Services.AddScoped<ICurrentUserProvider>(sp => sp.GetRequiredService<HttpCurrentUser>());
 
 var jwtOptions = builder.Configuration
     .GetSection(JwtOptions.SectionName)
@@ -76,15 +78,15 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
+var uploadsPath = builder.Configuration["Uploads:Directory"]
+    ?? Path.Combine(builder.Environment.ContentRootPath, "uploads");
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     await using var scope = app.Services.CreateAsyncScope();
-    await DbSeeder.SeedAsync(
-        scope.ServiceProvider.GetRequiredService<SmartLmsDbContext>(),
-        scope.ServiceProvider.GetRequiredService<IPasswordHasher>(),
-        app.Logger);
+    await scope.ServiceProvider.GetRequiredService<IDbSeeder>().SeedAsync();
 
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
@@ -96,6 +98,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("Development");
+Directory.CreateDirectory(uploadsPath);
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsPath),
+    RequestPath = "/uploads",
+});
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -105,6 +113,7 @@ app.MapUserEndpoints();
 app.MapCatalogEndpoints();
 app.MapLearningEndpoints();
 app.MapAssessmentEndpoints();
+app.MapUploadEndpoints(uploadsPath);
 
 await app.RunAsync();
 

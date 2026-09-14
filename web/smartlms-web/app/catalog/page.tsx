@@ -1,31 +1,56 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { Suspense, useEffect, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { api, apiList } from "@/lib/api";
+import { usePagedList } from "@/lib/usePagedList";
 import Nav from "@/components/Nav";
+import Pagination from "@/components/ui/Pagination";
 
 type ListItem = { id: string; name: string; order: number };
 type CourseItem = { id: string; name: string; order: number; subjectId: string; classCount: number };
 
 export default function CatalogPage() {
+  return (
+    <Suspense fallback={null}>
+      <CatalogInner />
+    </Suspense>
+  );
+}
+
+function CatalogInner() {
+  const search = useSearchParams();
+  const areaParam = search.get("area");
+  const subjectParam = search.get("subject");
+
   const [areas, setAreas] = useState<ListItem[]>([]);
   const [subjects, setSubjects] = useState<ListItem[]>([]);
-  const [courses, setCourses] = useState<CourseItem[]>([]);
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
+  const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [newAreaName, setNewAreaName] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const { items: courses, total, page, setPage } = usePagedList<CourseItem>(
+    "/api/courses",
+    { subjectId: selectedSubject ?? "", active: true },
+  );
 
-  async function reload(areaId: string | null) {
-    setAreas(await api<ListItem[]>("/api/knowledge-areas"));
-    setSubjects(
-      await api<ListItem[]>(`/api/subjects${areaId ? `?knowledgeAreaId=${areaId}` : ""}`),
-    );
-    setCourses(await api<CourseItem[]>("/api/courses"));
+  async function reload(areaId: string | null, subjectId: string | null) {
+    const [areasData, subjectsData] = await Promise.all([
+      apiList<ListItem>("/api/knowledge-areas?active=true"),
+      apiList<ListItem>(`/api/subjects${areaId ? `?knowledgeAreaId=${areaId}&active=true` : "?active=true"}`),
+    ]);
+    setAreas(areasData);
+    setSubjects(subjectsData);
   }
 
   useEffect(() => {
-    reload(null).catch((e) => setError(String(e)));
-  }, []);
+    const area = areaParam ?? null;
+    const subject = subjectParam ?? null;
+    setSelectedArea(area);
+    setSelectedSubject(subject);
+    reload(area, subject).catch((e) => setError(String(e)));
+  }, [areaParam, subjectParam]);
 
   async function createArea(event: React.FormEvent) {
     event.preventDefault();
@@ -36,7 +61,7 @@ export default function CatalogPage() {
         body: JSON.stringify({ name: newAreaName, order: areas.length + 1 }),
       });
       setNewAreaName("");
-      await reload(selectedArea);
+      await reload(selectedArea, selectedSubject);
     } catch {
       setError("Não foi possível criar a área (nome duplicado?).");
     }
@@ -45,10 +70,20 @@ export default function CatalogPage() {
   async function deleteArea(id: string) {
     try {
       await api(`/api/knowledge-areas/${id}`, { method: "DELETE" });
-      await reload(selectedArea === id ? null : selectedArea);
+      const nextArea = selectedArea === id ? null : selectedArea;
+      const nextSubject = selectedArea === id ? null : selectedSubject;
+      setSelectedArea(nextArea);
+      setSelectedSubject(nextSubject);
+      await reload(nextArea, nextSubject);
     } catch {
-      setError("Remova os assuntos antes de excluir a área.");
+      setError("A área não pode ser excluída agora (mova para a lixeira pela área administrativa).");
     }
+  }
+
+  async function toggleSubject(id: string) {
+    const next = selectedSubject === id ? null : id;
+    setSelectedSubject(next);
+    await reload(selectedArea, next);
   }
 
   return (
@@ -80,7 +115,8 @@ export default function CatalogPage() {
                   onClick={() => {
                     const next = selectedArea === a.id ? null : a.id;
                     setSelectedArea(next);
-                    reload(next);
+                    setSelectedSubject(null);
+                    reload(next, null);
                   }}
                   className="text-left text-gray-200 hover:text-white"
                 >
@@ -98,8 +134,14 @@ export default function CatalogPage() {
           <h2 className="font-medium">Assuntos{selectedArea ? " (da área selecionada)" : ""}</h2>
           <ul className="divide-y divide-gray-800 rounded border border-gray-800 bg-gray-900">
             {subjects.map((s) => (
-              <li key={s.id} className="p-3 text-sm text-gray-300">
-                {s.name}
+              <li key={s.id} className="p-3 text-sm">
+                <button
+                  onClick={() => toggleSubject(s.id)}
+                  className={`text-left hover:text-white ${selectedSubject === s.id ? "text-indigo-300" : "text-gray-300"}`}
+                >
+                  {s.name}
+                </button>
+                {selectedSubject === s.id && <span className="ml-2 text-xs text-indigo-400">filtro de cursos ativo</span>}
               </li>
             ))}
             {subjects.length === 0 && <li className="p-3 text-sm text-gray-500">Nenhum assunto.</li>}
@@ -107,16 +149,21 @@ export default function CatalogPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="font-medium">Cursos</h2>
+          <h2 className="font-medium">
+            Cursos{selectedSubject ? " (do assunto selecionado)" : ""}
+          </h2>
           <ul className="divide-y divide-gray-800 rounded border border-gray-800 bg-gray-900">
             {courses.map((c) => (
               <li key={c.id} className="flex items-center justify-between p-3 text-sm text-gray-300">
-                <span>{c.name}</span>
+                <Link href={`/course/${c.id}`} className="text-indigo-300 hover:underline">
+                  {c.name}
+                </Link>
                 <span className="text-xs text-gray-500">{c.classCount} aulas</span>
               </li>
             ))}
             {courses.length === 0 && <li className="p-3 text-sm text-gray-500">Nenhum curso.</li>}
           </ul>
+          <Pagination page={page} total={total} pageSize={25} onChange={setPage} />
         </section>
       </div>
     </main>

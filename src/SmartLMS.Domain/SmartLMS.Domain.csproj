@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- Domain layer: pure business model, no external dependencies. -->
+  <!-- Domain layer: pure business model, except Ardalis.Specification abstractions for query specs. -->
 
   <ItemGroup>
     <PackageReference Include="Ardalis.Specification" />

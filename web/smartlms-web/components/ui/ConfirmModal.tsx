@@ -8,7 +8,6 @@ export default function ConfirmModal({
   title,
   message,
   confirmLabel = "Confirmar",
-  danger = true,
   onConfirm,
   onCancel,
 }: {
@@ -16,7 +15,6 @@ export default function ConfirmModal({
   title: string;
   message: React.ReactNode;
   confirmLabel?: string;
-  danger?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }) {
@@ -52,7 +50,7 @@ export default function ConfirmModal({
             <Icon name="thumb_down" /> Cancelar
           </button>
           <button
-            className={`btn ${danger ? "bg-red-600 text-white hover:bg-red-500" : "btn-primary"}`}
+            className="btn bg-red-600 text-white hover:bg-red-500"
             onClick={onConfirm}
           >
             <Icon name="thumb_up" /> {confirmLabel}

@@ -32,7 +32,15 @@ export default function AssessmentPage() {
 
   const load = useCallback(async () => {
     try {
-      setAssessment(await api<AssessmentDetail>(`/api/assessments/${assessmentId}`));
+      const a = await api<AssessmentDetail>(`/api/assessments/${assessmentId}`);
+      setAssessment(a);
+      // Seed the in-progress answer state with the original option order so
+      // the reorder arrows operate on a real (non-empty) list.
+      const seeded: Record<string, string[]> = {};
+      for (const q of a.questions) {
+        if (q.type === "Reordering") seeded[q.id] = q.options.map((o) => o.id);
+      }
+      setAnswers((prev) => ({ ...seeded, ...prev }));
     } catch (e) {
       toast("error", errorMessage(e, "Avaliação não encontrada."));
     }

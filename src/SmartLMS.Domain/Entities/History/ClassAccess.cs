@@ -65,4 +65,28 @@ public class ClassAccess
         get => _watchedSeconds;
         private set => _watchedSeconds = value;
     }
+
+    /// <summary>
+    /// Updates the tracked progress of an existing access row (upsert by user + class).
+    /// Monotonic: percentual/watched never regress, so a stale client event can't
+    /// reopen the assessment gate after the student already hit 100%.
+    /// Access time always advances to the latest heartbeat.
+    /// </summary>
+    public void UpdateProgress(int percentual, decimal watchedSeconds, DateTime accessDateTime)
+    {
+        if (percentual > Percentual)
+        {
+            Percentual = percentual;
+        }
+
+        if (watchedSeconds > WatchedSeconds)
+        {
+            WatchedSeconds = watchedSeconds;
+        }
+
+        if (accessDateTime > AccessDateTime)
+        {
+            AccessDateTime = accessDateTime;
+        }
+    }
 }

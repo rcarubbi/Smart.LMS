@@ -6,6 +6,7 @@ using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.History;
+using SmartLMS.Domain.Entities.Integration;
 using SmartLMS.Domain.Entities.UserAccess;
 
 namespace SmartLMS.Application.Abstractions;
@@ -44,6 +45,7 @@ public interface ISmartLmsDbContext
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<Parameter> Parameters { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
+    DbSet<OutboxMessage> OutboxMessages { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

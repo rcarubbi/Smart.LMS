@@ -77,7 +77,7 @@ public class DeliveryPlanTests
     }
 
     [Test]
-    public async Task MarkDelivered_throws_on_duplicate_class()
+    public async Task MarkDelivered_is_idempotent_on_duplicate_class()
     {
         var classroom = new ClassroomBuilder()
             .WithCourse("Course", order: 1, c => c.WithClass("C1", deliveryDays: 1))
@@ -86,9 +86,17 @@ public class DeliveryPlanTests
         var plan = CreatePlan(classroom);
         var classId = classroom.Courses.Single().Course.Classes.Single().Id;
 
-        plan.MarkDelivered(classId);
+        var first = plan.MarkDelivered(classId);
+        var second = plan.MarkDelivered(classId);
 
-        await Assert.That(() => plan.MarkDelivered(classId)).Throws<InvalidOperationException>();
+        using (Assert.Multiple())
+        {
+            await Assert.That(second.ClassId).IsEqualTo(classId);
+            await Assert.That(plan.DeliveredClasses.Count).IsEqualTo(1);
+            await Assert.That(plan.Concluded).IsTrue();
+        }
+
+        _ = first;
     }
 
     [Test]

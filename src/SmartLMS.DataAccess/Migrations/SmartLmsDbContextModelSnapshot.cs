@@ -554,7 +554,8 @@ namespace SmartLMS.DataAccess.Migrations
 
                     b.HasIndex("ClassId");
 
-                    b.HasIndex("UserId", "ClassId");
+                    b.HasIndex("UserId", "ClassId")
+                        .IsUnique();
 
                     b.ToTable("ClassAccesses", (string)null);
                 });
@@ -583,6 +584,44 @@ namespace SmartLMS.DataAccess.Migrations
                     b.HasIndex("UserId", "FileId");
 
                     b.ToTable("FileAccesses", (string)null);
+                });
+
+            modelBuilder.Entity("SmartLMS.Domain.Entities.Integration.OutboxMessage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CorrelationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ProcessedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProcessedOn", "Attempts", "CreatedAt");
+
+                    b.ToTable("OutboxMessages", (string)null);
                 });
 
             modelBuilder.Entity("SmartLMS.Domain.Entities.Parameter", b =>

@@ -46,6 +46,9 @@ public abstract class Question : Entity
 
     public abstract QuestionTypes Type { get; }
 
+    /// <summary>Scores one submission: each subtype owns its correctness rule.</summary>
+    public abstract bool IsCorrect(IReadOnlyList<Guid> submittedOptionIds);
+
     public void SetDescription(string description) => Description = description;
 
     public void SetScore(int score) => Score = score;

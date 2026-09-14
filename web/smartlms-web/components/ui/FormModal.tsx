@@ -45,6 +45,7 @@ export default function FormModal({
           </button>
         </div>
         <form
+          noValidate
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit();

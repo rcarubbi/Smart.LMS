@@ -1,7 +1,9 @@
+using Ardalis.Specification.EntityFrameworkCore;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
+using SmartLMS.Domain.Specifications;
 using ErrorOr;
 
 namespace SmartLMS.Application.Learning.Notices;
@@ -13,12 +15,13 @@ public sealed record NoticeItem(
     bool Seen,
     Guid? DeliveryPlanId);
 
-public sealed record ListMyNoticesQuery : IQuery<IReadOnlyList<NoticeItem>>;
+public sealed record ListMyNoticesQuery(int? Page = null, int? PageSize = null)
+    : IQuery<Paged<NoticeItem>>;
 
 internal sealed class ListMyNoticesHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
-    : IQueryHandler<ListMyNoticesQuery, IReadOnlyList<NoticeItem>>
+    : IQueryHandler<ListMyNoticesQuery, Paged<NoticeItem>>
 {
-    public async ValueTask<ErrorOr<IReadOnlyList<NoticeItem>>> Handle(
+    public async ValueTask<ErrorOr<Paged<NoticeItem>>> Handle(
         ListMyNoticesQuery query,
         CancellationToken cancellationToken)
     {
@@ -27,16 +30,17 @@ internal sealed class ListMyNoticesHandler(ISmartLmsDbContext context, ICurrentU
             return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
         }
 
-        var notices = await context.Notices
-            .Where(n => n.Active && (n.UserId == userId || n.UserId == null))
-            .OrderByDescending(n => n.DateTime)
+        var spec = new MyNoticesSpec(userId);
+        var filtered = SpecificationEvaluator.Default.GetQuery(context.Notices.AsNoTracking(), spec);
+
+        var notices = await filtered
             .Select(n => new NoticeItem(
                 n.Id,
                 n.Text,
                 n.DateTime,
                 n.Users.Any(un => un.UserId == userId),
                 n.DeliveryPlanId))
-            .ToListAsync(cancellationToken);
+            .PageAsync(query.Page, query.PageSize, cancellationToken);
 
         return notices;
     }

@@ -13,37 +13,37 @@ internal static class AuthEndpoints
     {
         var group = app.MapGroup("/api/auth").WithTags("Auth");
 
-        group.MapPost("/login", async (LoginRequest request, IDispatcher dispatcher, CancellationToken ct) =>
+        group.MapPost("/login", async (LoginInput request, IDispatcher dispatcher, CancellationToken ct) =>
             {
-                var result = await dispatcher.Send(new LoginCommand(request.Email, request.Password), ct);
-                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
+                var result = await dispatcher.Send(new LoginCommand(request), ct);
+                return result.ToResult();
             })
             .AllowAnonymous()
             .Produces(200)
             .Produces(401)
             .Produces(400);
 
-        group.MapPost("/refresh", async (RefreshTokenRequest request, IDispatcher dispatcher, CancellationToken ct) =>
+        group.MapPost("/refresh", async (RefreshTokenInput request, IDispatcher dispatcher, CancellationToken ct) =>
             {
-                var result = await dispatcher.Send(new RefreshTokenCommand(request.RefreshToken), ct);
-                return result.IsError ? result.FirstError.ToProblem() : Results.Ok(result.Value);
+                var result = await dispatcher.Send(new RefreshTokenCommand(request), ct);
+                return result.ToResult();
             })
             .AllowAnonymous()
             .Produces(200)
             .Produces(401);
 
-        group.MapPost("/logout", async (LogoutRequest request, IDispatcher dispatcher, CancellationToken ct) =>
+        group.MapPost("/logout", async (LogoutInput request, IDispatcher dispatcher, CancellationToken ct) =>
             {
-                var result = await dispatcher.Send(new LogoutCommand(request.RefreshToken), ct);
-                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
+                var result = await dispatcher.Send(new LogoutCommand(request), ct);
+                return result.ToResult();
             })
             .RequireAuthorization()
             .Produces(204);
 
-        group.MapPost("/change-password", async (ChangePasswordRequest request, IDispatcher dispatcher, CancellationToken ct) =>
+        group.MapPost("/change-password", async (ChangePasswordInput request, IDispatcher dispatcher, CancellationToken ct) =>
             {
-                var result = await dispatcher.Send(new ChangePasswordCommand(request.CurrentPassword, request.NewPassword), ct);
-                return result.IsError ? result.FirstError.ToProblem() : Results.NoContent();
+                var result = await dispatcher.Send(new ChangePasswordCommand(request), ct);
+                return result.ToResult();
             })
             .RequireAuthorization()
             .Produces(204)
@@ -53,11 +53,3 @@ internal static class AuthEndpoints
         return app;
     }
 }
-
-public sealed record LoginRequest(string Email, string Password);
-
-public sealed record RefreshTokenRequest(string RefreshToken);
-
-public sealed record LogoutRequest(string RefreshToken);
-
-public sealed record ChangePasswordRequest(string CurrentPassword, string NewPassword);

@@ -11,11 +11,15 @@ export default function Nav() {
   const user = typeof window !== "undefined" ? currentUser() : null;
   const isAdmin = user?.role === "Admin";
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const managementMenuRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      const insideManagement = managementMenuRef.current?.contains(target);
+      const insideUser = userMenuRef.current?.contains(target);
+      if (!insideManagement && !insideUser) {
         setOpenMenu(null);
       }
     }
@@ -52,7 +56,7 @@ export default function Nav() {
         </Link>
 
         {isAdmin && (
-          <div ref={menuRef} className="relative">
+          <div ref={managementMenuRef} className="relative">
             <button
               onClick={() => toggle("management")}
               className="flex items-center gap-1 rounded px-2 py-1.5 text-white/70 hover:bg-white/5 hover:text-white"
@@ -93,7 +97,7 @@ export default function Nav() {
         )}
       </nav>
 
-      <div className="relative" ref={menuRef}>
+      <div className="relative" ref={userMenuRef}>
         {user ? (
           <>
             <button

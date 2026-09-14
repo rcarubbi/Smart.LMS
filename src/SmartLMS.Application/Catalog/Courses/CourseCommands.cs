@@ -1,12 +1,14 @@
+using Ardalis.Specification.EntityFrameworkCore;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
+using SmartLMS.Domain.Specifications;
 using ErrorOr;
 
 namespace SmartLMS.Application.Catalog.Courses;
 
-public sealed record ClassSummary(Guid Id, string Name, int Order, int DeliveryDays, string ContentType);
+public sealed record ClassSummary(Guid Id, string Name, int Order, int DeliveryDays, string ContentType, bool Active);
 
 public sealed record CourseDetail(
     Guid Id,
@@ -18,21 +20,23 @@ public sealed record CourseDetail(
     Guid? TeacherInChargeId,
     IReadOnlyList<ClassSummary> Classes);
 
-public sealed record CreateCourseCommand(
+public sealed record CourseInput(
     string Name,
     int Order,
     Guid SubjectId,
     Guid? TeacherInChargeId = null,
-    string? Image = null) : ICommand<Guid>;
+    string? Image = null);
+
+public sealed record CreateCourseCommand(CourseInput Input) : ICommand<Guid>;
 
 internal sealed class CreateCourseValidator : AbstractValidator<CreateCourseCommand>
 {
     public CreateCourseValidator()
     {
-        RuleFor(c => c.Name).NotEmpty().MaximumLength(200);
-        RuleFor(c => c.Order).GreaterThanOrEqualTo(0);
-        RuleFor(c => c.SubjectId).NotEmpty();
-        RuleFor(c => c.Image).MaximumLength(1000);
+        RuleFor(c => c.Input.Name).NotEmpty().MaximumLength(200);
+        RuleFor(c => c.Input.Order).GreaterThanOrEqualTo(0);
+        RuleFor(c => c.Input.SubjectId).NotEmpty();
+        RuleFor(c => c.Input.Image).MaximumLength(1000);
     }
 }
 
@@ -40,18 +44,18 @@ internal sealed class CreateCourseHandler(ISmartLmsDbContext context) : ICommand
 {
     public async ValueTask<ErrorOr<Guid>> Handle(CreateCourseCommand command, CancellationToken cancellationToken)
     {
-        var subjectExists = await context.Subjects.AnyAsync(s => s.Id == command.SubjectId, cancellationToken);
+        var subjectExists = await context.Subjects.AnyAsync(s => s.Id == command.Input.SubjectId, cancellationToken);
         if (!subjectExists)
         {
             return Error.NotFound("Subjects.NotFound", "Subject not found.");
         }
 
         var course = new Domain.Entities.Content.Course(
-            command.Name,
-            command.Order,
-            command.SubjectId,
-            command.TeacherInChargeId,
-            command.Image);
+            command.Input.Name,
+            command.Input.Order,
+            command.Input.SubjectId,
+            command.Input.TeacherInChargeId,
+            command.Input.Image);
 
         context.Courses.Add(course);
         await context.SaveChangesAsync(cancellationToken);
@@ -60,20 +64,14 @@ internal sealed class CreateCourseHandler(ISmartLmsDbContext context) : ICommand
     }
 }
 
-public sealed record UpdateCourseCommand(
-    Guid Id,
-    string Name,
-    int Order,
-    Guid SubjectId,
-    Guid? TeacherInChargeId,
-    string? Image) : ICommand;
+public sealed record UpdateCourseCommand(Guid Id, CourseInput Input) : ICommand;
 
 internal sealed class UpdateCourseValidator : AbstractValidator<UpdateCourseCommand>
 {
     public UpdateCourseValidator()
     {
-        RuleFor(c => c.Name).NotEmpty().MaximumLength(200);
-        RuleFor(c => c.Order).GreaterThanOrEqualTo(0);
+        RuleFor(c => c.Input.Name).NotEmpty().MaximumLength(200);
+        RuleFor(c => c.Input.Order).GreaterThanOrEqualTo(0);
     }
 }
 
@@ -87,17 +85,17 @@ internal sealed class UpdateCourseHandler(ISmartLmsDbContext context) : ICommand
             return Error.NotFound("Courses.NotFound", "Course not found.");
         }
 
-        var subjectExists = await context.Subjects.AnyAsync(s => s.Id == command.SubjectId, cancellationToken);
+        var subjectExists = await context.Subjects.AnyAsync(s => s.Id == command.Input.SubjectId, cancellationToken);
         if (!subjectExists)
         {
             return Error.NotFound("Subjects.NotFound", "Subject not found.");
         }
 
-        course.Rename(command.Name);
-        course.SetOrder(command.Order);
-        course.MoveToSubject(command.SubjectId);
-        course.AssignTeacher(command.TeacherInChargeId);
-        course.ChangeImage(command.Image);
+        course.Rename(command.Input.Name);
+        course.SetOrder(command.Input.Order);
+        course.MoveToSubject(command.Input.SubjectId);
+        course.AssignTeacher(command.Input.TeacherInChargeId);
+        course.ChangeImage(command.Input.Image);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success;
@@ -113,18 +111,90 @@ internal sealed class DeleteCourseHandler(ISmartLmsDbContext context) : ICommand
         var course = await context.Courses.FindAsync([command.Id], cancellationToken);
         if (course is null)
         {
-            return Error.NotFound("Courses.NotFound", "Course not found.");
+            return Error.NotFound("Courses.NotFound", "Curso não encontrado.");
         }
 
-        var enrolledInClassrooms = await context.ClassroomCourses
-            .AnyAsync(cc => cc.CourseId == command.Id, cancellationToken);
+        course.Deactivate();
+        await context.SaveChangesAsync(cancellationToken);
 
-        if (enrolledInClassrooms)
+        return Result.Success;
+    }
+}
+
+public sealed record RestoreCourseCommand(Guid Id) : ICommand;
+
+internal sealed class RestoreCourseHandler(ISmartLmsDbContext context) : ICommandHandler<RestoreCourseCommand>
+{
+    public async ValueTask<ErrorOr<Success>> Handle(RestoreCourseCommand command, CancellationToken cancellationToken)
+    {
+        var course = await context.Courses.FindAsync([command.Id], cancellationToken);
+        if (course is null)
+        {
+            return Error.NotFound("Courses.NotFound", "Curso não encontrado.");
+        }
+
+        var subjectActive = await context.Subjects.AnyAsync(s => s.Id == course.SubjectId && s.Active, cancellationToken);
+        if (!subjectActive)
         {
             return Error.Conflict(
-                "Courses.EnrolledInClassrooms",
-                "Cannot delete a course that is part of a classroom delivery plan.");
+                "Courses.SubjectInactive",
+                "O assunto deste curso está na lixeira. Restaure o assunto antes de restaurar o curso.");
         }
+
+        course.Activate();
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success;
+    }
+}
+
+public sealed record DeleteCoursePermanentlyCommand(Guid Id) : ICommand;
+
+internal sealed class DeleteCoursePermanentlyHandler(ISmartLmsDbContext context)
+    : ICommandHandler<DeleteCoursePermanentlyCommand>
+{
+    public async ValueTask<ErrorOr<Success>> Handle(DeleteCoursePermanentlyCommand command, CancellationToken cancellationToken)
+    {
+        var course = await context.Courses.FindAsync([command.Id], cancellationToken);
+        if (course is null)
+        {
+            return Error.NotFound("Courses.NotFound", "Curso não encontrado.");
+        }
+
+        var classIds = await context.Classes
+            .Where(c => c.CourseId == command.Id)
+            .Select(c => c.Id)
+            .ToListAsync(cancellationToken);
+
+        if (classIds.Count > 0)
+        {
+            var fileIds = await context.Files
+                .Where(f => classIds.Contains(f.ClassId))
+                .Select(f => f.Id)
+                .ToListAsync(cancellationToken);
+
+            if (fileIds.Count > 0)
+            {
+                context.FileAccesses.RemoveRange(
+                    await context.FileAccesses.Where(a => fileIds.Contains(a.FileId)).ToListAsync(cancellationToken));
+            }
+
+            context.ClassAccesses.RemoveRange(
+                await context.ClassAccesses.Where(a => classIds.Contains(a.ClassId)).ToListAsync(cancellationToken));
+            context.ClassDeliveryPlans.RemoveRange(
+                await context.ClassDeliveryPlans.Where(d => classIds.Contains(d.ClassId)).ToListAsync(cancellationToken));
+            context.Comments.RemoveRange(
+                await context.Comments.Where(c => classIds.Contains(c.ClassId)).ToListAsync(cancellationToken));
+            context.Files.RemoveRange(
+                await context.Files.Where(f => classIds.Contains(f.ClassId)).ToListAsync(cancellationToken));
+            context.Classes.RemoveRange(
+                await context.Classes.Where(c => classIds.Contains(c.Id)).ToListAsync(cancellationToken));
+        }
+
+        context.Assessments.RemoveRange(
+            await context.Assessments.Where(a => a.CourseId == command.Id).ToListAsync(cancellationToken));
+        context.ClassroomCourses.RemoveRange(
+            await context.ClassroomCourses.Where(cc => cc.CourseId == command.Id).ToListAsync(cancellationToken));
 
         context.Courses.Remove(course);
         await context.SaveChangesAsync(cancellationToken);
@@ -139,8 +209,9 @@ internal sealed class GetCourseHandler(ISmartLmsDbContext context) : IQueryHandl
 {
     public async ValueTask<ErrorOr<CourseDetail>> Handle(GetCourseQuery query, CancellationToken cancellationToken)
     {
-        var detail = await context.Courses
-            .Where(c => c.Id == query.Id)
+        var spec = new CourseByIdSpec(query.Id);
+        var detail = await SpecificationEvaluator.Default
+            .GetQuery(context.Courses.AsNoTracking(), spec)
             .Select(c => new CourseDetail(
                 c.Id,
                 c.Name,
@@ -150,8 +221,9 @@ internal sealed class GetCourseHandler(ISmartLmsDbContext context) : IQueryHandl
                 c.Subject.Name,
                 c.TeacherInChargeId,
                 c.Classes
+                    .Where(cl => cl.Active)
                     .OrderBy(cl => cl.Order)
-                    .Select(cl => new ClassSummary(cl.Id, cl.Name, cl.Order, cl.DeliveryDays, cl.ContentType.ToString()))
+                    .Select(cl => new ClassSummary(cl.Id, cl.Name, cl.Order, cl.DeliveryDays, cl.ContentType.ToString(), true))
                     .ToList()))
             .SingleOrDefaultAsync(cancellationToken);
 
@@ -161,20 +233,33 @@ internal sealed class GetCourseHandler(ISmartLmsDbContext context) : IQueryHandl
     }
 }
 
-public sealed record CourseListItem(Guid Id, string Name, int Order, Guid SubjectId, string? Image, string? TeacherInChargeName, int ClassCount);
+public sealed record CourseListItem(
+    Guid Id,
+    string Name,
+    int Order,
+    Guid SubjectId,
+    string? Image,
+    string? TeacherInChargeName,
+    int ClassCount,
+    bool Active);
 
-public sealed record ListCoursesQuery(Guid? SubjectId) : IQuery<IReadOnlyList<CourseListItem>>;
+public sealed record ListCoursesQuery(
+    Guid? SubjectId,
+    bool? Active = null,
+    int? Page = null,
+    int? PageSize = null) : IQuery<Paged<CourseListItem>>;
 
 internal sealed class ListCoursesHandler(ISmartLmsDbContext context)
-    : IQueryHandler<ListCoursesQuery, IReadOnlyList<CourseListItem>>
+    : IQueryHandler<ListCoursesQuery, Paged<CourseListItem>>
 {
-    public async ValueTask<ErrorOr<IReadOnlyList<CourseListItem>>> Handle(
+    public async ValueTask<ErrorOr<Paged<CourseListItem>>> Handle(
         ListCoursesQuery query,
         CancellationToken cancellationToken)
     {
-        var items = await context.Courses
-            .Where(c => query.SubjectId == null || c.SubjectId == query.SubjectId)
-            .OrderBy(c => c.Order).ThenBy(c => c.Name)
+        var spec = new CoursesListSpec(query.SubjectId, query.Active);
+        var filtered = SpecificationEvaluator.Default.GetQuery(context.Courses.AsNoTracking(), spec);
+
+        var items = await filtered
             .Select(c => new CourseListItem(
                 c.Id,
                 c.Name,
@@ -182,8 +267,9 @@ internal sealed class ListCoursesHandler(ISmartLmsDbContext context)
                 c.SubjectId,
                 c.Image,
                 c.TeacherInCharge != null ? c.TeacherInCharge.Name : null,
-                c.Classes.Count))
-            .ToListAsync(cancellationToken);
+                c.Classes.Count,
+                c.Active))
+            .PageAsync(query.Page, query.PageSize, cancellationToken);
 
         return items;
     }

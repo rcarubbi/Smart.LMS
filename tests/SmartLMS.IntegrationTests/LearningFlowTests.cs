@@ -3,7 +3,12 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
-using SmartLMS.Infrastructure.Persistence;
+using Microsoft.Data.SqlClient;
+using SmartLMS.DataAccess.Seed;
+using SmartLMS.Application.Auth.Login;
+using SmartLMS.Application.Learning.Classrooms;
+using SmartLMS.Application.Learning.History;
+using SmartLMS.Application.Users.CreateUser;
 using SmartLMS.Presentation.Api.Endpoints;
 using Testcontainers.MsSql;
 
@@ -13,15 +18,13 @@ namespace SmartLMS.IntegrationTests;
 public class LearningFlowTests
 {
     [Test]
-    public async Task Delivery_plan_releases_classes_notifies_students_and_tracks_progress()
+    [ClassDataSource<TestSqlContainer>(Shared = SharedType.PerTestSession)]
+    public async Task Delivery_plan_releases_classes_notifies_students_and_tracks_progress(TestSqlContainer db)
     {
-        await using var container = new MsSqlBuilder().Build();
         IntegrationTestGate.Instance.Wait();
         try
         {
-            await container.StartAsync();
-
-        Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", container.GetConnectionString());
+        Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", db.ConnectionStringForDatabase("learning"));
         Environment.SetEnvironmentVariable("Jwt__SigningKey", "learning-test-signing-key-0123456789abcdef");
 
             await using var factory = new WebApplicationFactory<Program>();
@@ -36,14 +39,14 @@ public class LearningFlowTests
             var courseId = await PostForIdAsync(client,
                 "/api/courses", new { name = "Message Queues", order = 1, subjectId });
 
-            var teacherResponse = await client.PostAsJsonAsync("/api/users", new CreateUserRequest(
+            var teacherResponse = await client.PostAsJsonAsync("/api/users", new CreateUserInput(
                 "Grace Teacher", "grace@smartlms.local", "teacher-pass-123", Domain.Entities.UserAccess.UserRole.Teacher));
             var teacherId = (await teacherResponse.Content.ReadFromJsonAsync<CreatedId>(JsonOpts))!.Id;
 
             await PostForIdAsync(client, "/api/classes", new
             {
                 name = "Queues 101",
-                content = "<p>intro</p>",
+                content = "https://vimeo.com/76979871",
                 order = 1,
                 deliveryDays = 1,
                 contentType = "Vimeo",
@@ -54,7 +57,7 @@ public class LearningFlowTests
             await PostForIdAsync(client, "/api/classes", new
             {
                 name = "Queues 201",
-                content = "<p>advanced</p>",
+                content = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                 order = 2,
                 deliveryDays = 2,
                 contentType = "YouTube",
@@ -62,13 +65,13 @@ public class LearningFlowTests
                 teacherId,
             });
 
-            var studentResponse = await client.PostAsJsonAsync("/api/users", new CreateUserRequest(
+            var studentResponse = await client.PostAsJsonAsync("/api/users", new CreateUserInput(
                 "Helen Student", "helen@smartlms.local", "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
             var studentId = (await studentResponse.Content.ReadFromJsonAsync<CreatedId>(JsonOpts))!.Id;
 
             var classroomId = await PostForIdAsync(client, "/api/classrooms", new { name = "Night Class" });
             var enroll = await client.PutAsJsonAsync($"/api/classrooms/{classroomId}/courses",
-                new EnrollCoursesRequest([courseId]));
+                new EnrollCoursesInput([courseId]));
             await Assert.That(enroll.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
 
             await PostForIdAsync(client, "/api/delivery-plans", new
@@ -99,64 +102,133 @@ public class LearningFlowTests
             var deliveredAgain = await runAgain.Content.ReadFromJsonAsync<List<DeliveredStub>>(JsonOpts);
             await Assert.That(deliveredAgain ?? []).IsEmpty();
 
+            // Outbox: delivery notifications are persisted (not sent inline) so the
+            // dual-write is avoided and a worker can drain them asynchronously.
+            await using (var conn = new SqlConnection(db.ConnectionStringForDatabase("learning")))
+            {
+                await conn.OpenAsync();
+                await using var cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT COUNT(*) FROM OutboxMessages WHERE ProcessedOn IS NULL";
+                var outboxCount = (int)(await cmd.ExecuteScalarAsync() ?? 0);
+                await Assert.That(outboxCount).IsGreaterThan(0);
+            }
+
             // Student sees the broadcast notice and marks it seen.
             var studentClient = factory.CreateClient();
             var studentLogin = await LoginAsync(studentClient, "helen@smartlms.local", "student-pass-123");
             studentClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", studentLogin.AccessToken);
 
-            var notices = await studentClient.GetFromJsonAsync<List<NoticeStub>>("/api/notices", JsonOpts);
-            if (notices is null || notices.Count < 2)
+            var notices = await studentClient.GetFromJsonAsync<PagedStub<NoticeStub>>("/api/notices", JsonOpts);
+            var noticeItems = notices?.Items ?? [];
+            if (noticeItems.Count < 2)
             {
-                throw new InvalidOperationException($"Expected two notices, got {notices?.Count ?? 0}.");
+                throw new InvalidOperationException($"Expected two notices, got {noticeItems.Count}.");
             }
 
             using (Assert.Multiple())
             {
-                await Assert.That(notices.All(n => !n.Seen)).IsTrue();
-                await Assert.That(notices.Any(n => n.Text.Contains("Queues 101"))).IsTrue();
+                await Assert.That(noticeItems.All(n => !n.Seen)).IsTrue();
+                await Assert.That(noticeItems.Any(n => n.Text.Contains("Queues 101"))).IsTrue();
             }
 
-            var firstNotice = notices[0];
+            var firstNotice = noticeItems[0];
             var seen = await studentClient.PostAsync($"/api/notices/{firstNotice.Id}/seen", null);
             await Assert.That(seen.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
 
             // Record a class access and read progress back.
-            var classList = await studentClient.GetFromJsonAsync<List<ClassStub>>($"/api/classes?courseId={courseId}", JsonOpts);
-            if (classList is null || classList.Count != 2)
+            var classList = await studentClient.GetFromJsonAsync<PagedStub<ClassStub>>($"/api/classes?courseId={courseId}", JsonOpts);
+            var classItems = classList?.Items ?? [];
+            if (classItems.Count != 2)
             {
                 throw new InvalidOperationException("Expected two classes in the course.");
             }
 
-            var firstClass = classList.First(c => c.Name == "Queues 101");
+            var firstClass = classItems.First(c => c.Name == "Queues 101");
             var access = await studentClient.PostAsJsonAsync("/api/me/class-access",
-                new ClassAccessRequest(firstClass.Id, 40, 120m));
+                new RecordClassAccessInput(firstClass.Id, 40, 120m));
             await Assert.That(access.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
 
-            var progress = await studentClient.GetFromJsonAsync<List<ProgressStub>>("/api/me/progress", JsonOpts);
-            if (progress is null || progress.Count != 1)
+            var progress = await studentClient.GetFromJsonAsync<PagedStub<ProgressStub>>("/api/me/progress", JsonOpts);
+            if (progress is null || progress.Items.Count != 1)
             {
-                throw new InvalidOperationException($"Expected one progress row, got {progress?.Count ?? 0}.");
+                throw new InvalidOperationException($"Expected one progress row, got {progress?.Items.Count ?? 0}.");
             }
 
             using (Assert.Multiple())
             {
-                await Assert.That(progress[0].ClassName).IsEqualTo("Queues 101");
-                await Assert.That(progress[0].Percentual).IsEqualTo(40);
+                await Assert.That(progress.Items[0].ClassName).IsEqualTo("Queues 101");
+                await Assert.That(progress.Items[0].Percentual).IsEqualTo(40);
             }
 
             // Student classroom view shows delivered/total.
-            var myClassrooms = await studentClient.GetFromJsonAsync<List<MyPlanStub>>("/api/me/classrooms", JsonOpts);
-            if (myClassrooms is null || myClassrooms.Count != 1)
+            var myClassrooms = await studentClient.GetFromJsonAsync<PagedStub<MyPlanStub>>("/api/me/classrooms", JsonOpts);
+            if (myClassrooms is null || myClassrooms.Items.Count != 1)
             {
                 throw new InvalidOperationException("Expected exactly one classroom for the student.");
             }
 
             using (Assert.Multiple())
             {
-                await Assert.That(myClassrooms[0].Name).IsEqualTo("Night Class");
-                await Assert.That(myClassrooms[0].DeliveredCount).IsEqualTo(2);
-                await Assert.That(myClassrooms[0].TotalCount).IsEqualTo(2);
+                await Assert.That(myClassrooms.Items[0].Name).IsEqualTo("Night Class");
+                await Assert.That(myClassrooms.Items[0].DeliveredCount).IsEqualTo(2);
+                await Assert.That(myClassrooms.Items[0].TotalCount).IsEqualTo(2);
+            }
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", null);
+            Environment.SetEnvironmentVariable("Jwt__SigningKey", null);
+            IntegrationTestGate.Instance.Release();
+        }
+    }
+
+    [Test]
+    [ClassDataSource<TestSqlContainer>(Shared = SharedType.PerTestSession)]
+    public async Task List_endpoints_return_paged_envelope(TestSqlContainer db)
+    {
+        IntegrationTestGate.Instance.Wait();
+        try
+        {
+            Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", db.ConnectionStringForDatabase("learning-paging"));
+            Environment.SetEnvironmentVariable("Jwt__SigningKey", "paging-test-signing-key-0123456789abcdef");
+
+            await using var factory = new WebApplicationFactory<Program>();
+            var client = factory.CreateClient();
+
+            var admin = await LoginAsync(client, DbSeeder.DefaultAdminEmail, DbSeeder.DefaultAdminPassword);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", admin.AccessToken);
+
+            for (var i = 1; i <= 3; i++)
+            {
+                var response = await client.PostAsJsonAsync("/api/users", new CreateUserInput(
+                    $"Paging Student {i}", $"paging{i}@smartlms.local", "student-pass-123",
+                    Domain.Entities.UserAccess.UserRole.Student));
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new InvalidOperationException(
+                        $"POST /api/users failed [{(int)response.StatusCode}]: {await response.Content.ReadAsStringAsync()}");
+                }
+            }
+
+            var page1 = await client.GetFromJsonAsync<PagedStub<UserStub>>(
+                "/api/users?role=Student&active=true&page=1&pageSize=2", JsonOpts);
+            var page2 = await client.GetFromJsonAsync<PagedStub<UserStub>>(
+                "/api/users?role=Student&active=true&page=2&pageSize=2", JsonOpts);
+
+            if (page1 is null || page1.Items is null || page2 is null || page2.Items is null)
+            {
+                throw new InvalidOperationException("Expected paged user responses but got null.");
+            }
+
+            using (Assert.Multiple())
+            {
+                await Assert.That(page1.Items).Count().IsEqualTo(2);
+                await Assert.That(page1.Total).IsEqualTo(3);
+                await Assert.That(page1.TotalPages).IsEqualTo(2);
+                await Assert.That(page1.Page).IsEqualTo(1);
+                await Assert.That(page2.Items).Count().IsEqualTo(1);
+                await Assert.That(page2.Total).IsEqualTo(3);
             }
         }
         finally
@@ -169,7 +241,7 @@ public class LearningFlowTests
 
     private static async Task<AuthTokens> LoginAsync(HttpClient client, string email, string password)
     {
-        var response = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest(email, password));
+        var response = await client.PostAsJsonAsync("/api/auth/login", new LoginInput(email, password));
         if (response.StatusCode != HttpStatusCode.OK)
         {
             throw new InvalidOperationException($"Login failed for {email}: {(int)response.StatusCode}");
@@ -197,6 +269,10 @@ public class LearningFlowTests
     private sealed record AuthTokens(string AccessToken, DateTime AccessTokenExpiresAtUtc, string RefreshToken, DateTime RefreshTokenExpiresAtUtc);
 
     private sealed record DeliveredStub(Guid ClassId, string ClassName, string CourseName, int StudentCount);
+
+    private sealed record PagedStub<T>(List<T> Items, int Total, int Page, int PageSize, int TotalPages);
+
+    private sealed record UserStub(Guid Id, string Name, string Email, string Role, bool Active);
 
     private sealed record NoticeStub(Guid Id, string Text, DateTime DateTime, bool Seen, Guid? DeliveryPlanId);
 

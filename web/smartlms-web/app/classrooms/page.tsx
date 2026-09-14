@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, apiList } from "@/lib/api";
 import Nav from "@/components/Nav";
 
 type ClassroomItem = { id: string; name: string; courseCount: number; planCount: number };
@@ -12,7 +12,7 @@ export default function ClassroomsPage() {
   const [error, setError] = useState<string | null>(null);
 
   async function reload() {
-    setClassrooms(await api<ClassroomItem[]>("/api/classrooms"));
+    setClassrooms(await apiList<ClassroomItem>("/api/classrooms"));
   }
 
   useEffect(() => {

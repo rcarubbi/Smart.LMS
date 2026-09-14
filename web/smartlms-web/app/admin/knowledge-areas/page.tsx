@@ -1,44 +1,51 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { api, errorMessage } from "@/lib/api";
 import type { ListItem } from "@/lib/api";
+import { usePagedList } from "@/lib/usePagedList";
+import { useTrashConfirmations } from "@/lib/useTrashConfirmations";
 import AppShell from "@/components/AppShell";
 import AuthGuard from "@/components/AuthGuard";
 import Panel from "@/components/ui/Panel";
 import FormModal from "@/components/ui/FormModal";
-import ConfirmModal from "@/components/ui/ConfirmModal";
 import Icon from "@/components/ui/Icon";
 import IconButton from "@/components/ui/IconButton";
+import Pagination from "@/components/ui/Pagination";
+import ViewTabs, { type ViewFilter } from "@/components/ui/ViewTabs";
 import { useToast } from "@/components/ui/Toast";
+
+type Area = ListItem & { active: boolean };
 
 export default function KnowledgeAreasAdmin() {
   const { toast } = useToast();
-  const [items, setItems] = useState<ListItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<ViewFilter>("active");
+  const { items, total, loading, page, setPage, reload } = usePagedList<Area>(
+    "/api/knowledge-areas",
+    { active: view === "all" ? undefined : view === "active" },
+  );
 
-  const [modal, setModal] = useState<{ item?: ListItem; name: string; order: string } | null>(null);
-  const [deleting, setDeleting] = useState<ListItem | null>(null);
-
-  const load = useCallback(async () => {
-    try {
-      setItems(await api<ListItem[]>("/api/knowledge-areas"));
-    } catch (e) {
-      toast("error", errorMessage(e));
-    } finally {
-      setLoading(false);
-    }
-  }, [toast]);
-
-  useEffect(() => {
-    load();
-  }, [load]);
+  const [modal, setModal] = useState<{ item?: Area; name: string; order: string } | null>(null);
+  const { setDeleting, setPurging, restore, modals } = useTrashConfirmations<Area>({
+    reload,
+    basePath: "/api/knowledge-areas",
+    labels: {
+      trash: "Área movida para a lixeira.",
+      restore: "Área restaurada.",
+      purge: "Área excluída definitivamente.",
+    },
+    messages: {
+      trash: (i) => `Mover "${i.name}" para a lixeira? Você poderá restaurá-la depois.`,
+      purge: (i) =>
+        `Excluir "${i.name}" definitivamente? Essa ação não pode ser desfeita e remove os assuntos, cursos e aulas vinculados.`,
+    },
+  });
 
   function openNew() {
     setModal({ name: "", order: "0" });
   }
 
-  function openEdit(item: ListItem) {
+  function openEdit(item: Area) {
     setModal({ item, name: item.name, order: String(item.order) });
   }
 
@@ -59,19 +66,7 @@ export default function KnowledgeAreasAdmin() {
         toast("success", "Área criada.");
       }
       setModal(null);
-      load();
-    } catch (e) {
-      toast("error", errorMessage(e));
-    }
-  }
-
-  async function confirmDelete() {
-    if (!deleting) return;
-    try {
-      await api(`/api/knowledge-areas/${deleting.id}`, { method: "DELETE" });
-      toast("success", "Área excluída.");
-      setDeleting(null);
-      load();
+      reload();
     } catch (e) {
       toast("error", errorMessage(e));
     }
@@ -90,10 +85,14 @@ export default function KnowledgeAreasAdmin() {
             </button>
           }
         >
+          <ViewTabs view={view} onChange={setView} total={total} />
+
           {loading ? (
             <p className="text-sm text-white/50">Carregando...</p>
           ) : items.length === 0 ? (
-            <p className="text-sm text-white/50">Nenhuma área cadastrada.</p>
+            <p className="text-sm text-white/50">
+              {view === "trash" ? "A lixeira está vazia." : "Nenhuma área cadastrada."}
+            </p>
           ) : (
             <table className="w-full text-left text-sm">
               <thead>
@@ -107,16 +106,33 @@ export default function KnowledgeAreasAdmin() {
                 {items.map((item) => (
                   <tr key={item.id} className="hover:bg-white/5">
                     <td className="py-2.5 pr-2 text-white/60">{item.order}</td>
-                    <td className="py-2.5 pr-2">{item.name}</td>
+                    <td className="py-2.5 pr-2">
+                      {item.name}
+                      {!item.active && (
+                        <span className="ml-2 rounded bg-amber-500/20 px-1.5 py-0.5 text-xs text-amber-300">
+                          Na lixeira
+                        </span>
+                      )}
+                    </td>
                     <td className="py-2.5 text-right">
-                      <IconButton name="edit" title="Editar" onClick={() => openEdit(item)} />
-                      <IconButton name="delete" title="Excluir" danger onClick={() => setDeleting(item)} />
+                      {item.active ? (
+                        <>
+                          <IconButton name="edit" title="Editar" onClick={() => openEdit(item)} />
+                          <IconButton name="delete" title="Mover para a lixeira" variant="danger" onClick={() => setDeleting(item)} />
+                        </>
+                      ) : (
+                        <>
+                          <IconButton name="restore" title="Restaurar" onClick={() => restore(item)} />
+                          <IconButton name="delete_forever" title="Excluir definitivamente" variant="danger" onClick={() => setPurging(item)} />
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
+          <Pagination page={page} total={total} pageSize={25} onChange={setPage} />
         </Panel>
 
         <FormModal
@@ -145,13 +161,7 @@ export default function KnowledgeAreasAdmin() {
           </label>
         </FormModal>
 
-        <ConfirmModal
-          open={!!deleting}
-          title="Excluir área"
-          message={`Excluir "${deleting?.name}"?`}
-          onConfirm={confirmDelete}
-          onCancel={() => setDeleting(null)}
-        />
+        {modals}
       </AppShell>
     </AuthGuard>
   );

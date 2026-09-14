@@ -13,4 +13,8 @@ public sealed class ReorderingQuestion : Question
     }
 
     public override QuestionTypes Type => QuestionTypes.Reordering;
+
+    /// <summary>Correct only when the submitted sequence matches options ordered by <see cref="QuestionOption.Order"/>.</summary>
+    public override bool IsCorrect(IReadOnlyList<Guid> submittedOptionIds) =>
+        submittedOptionIds.SequenceEqual([.. Options.OrderBy(o => o.Order).Select(o => o.Id)]);
 }

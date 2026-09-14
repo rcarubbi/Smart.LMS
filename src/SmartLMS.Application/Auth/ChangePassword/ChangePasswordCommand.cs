@@ -6,17 +6,19 @@ using SmartLMS.Application.Abstractions.Messaging;
 
 namespace SmartLMS.Application.Auth.ChangePassword;
 
-public sealed record ChangePasswordCommand(string CurrentPassword, string NewPassword) : ICommand;
+public sealed record ChangePasswordInput(string CurrentPassword, string NewPassword);
+
+public sealed record ChangePasswordCommand(ChangePasswordInput Input) : ICommand;
 
 internal sealed class ChangePasswordValidator : AbstractValidator<ChangePasswordCommand>
 {
     public ChangePasswordValidator()
     {
-        RuleFor(c => c.CurrentPassword).NotEmpty();
-        RuleFor(c => c.NewPassword)
+        RuleFor(c => c.Input.CurrentPassword).NotEmpty();
+        RuleFor(c => c.Input.NewPassword)
             .NotEmpty()
             .MinimumLength(8)
-            .NotEqual(c => c.CurrentPassword)
+            .NotEqual(c => c.Input.CurrentPassword)
             .WithMessage("The new password must be different from the current password.");
     }
 }
@@ -35,12 +37,12 @@ internal sealed class ChangePasswordHandler(
         }
 
         var user = await context.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellationToken);
-        if (user is null || !user.Active || !passwordHasher.Verify(command.CurrentPassword, user.PasswordHash))
+        if (user is null || !user.Active || !passwordHasher.Verify(command.Input.CurrentPassword, user.PasswordHash))
         {
             return Error.Unauthorized("Auth.InvalidCredentials", "The current password is incorrect.");
         }
 
-        user.UpdatePasswordHash(passwordHasher.Hash(command.NewPassword));
+        user.UpdatePasswordHash(passwordHasher.Hash(command.Input.NewPassword));
 
         // Revoke every active session: a password change invalidates existing refresh tokens.
         var activeTokens = await context.RefreshTokens

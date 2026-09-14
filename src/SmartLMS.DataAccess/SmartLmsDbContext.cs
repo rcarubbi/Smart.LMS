@@ -6,6 +6,7 @@ using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.Content;
 using SmartLMS.Domain.Entities.Delivery;
 using SmartLMS.Domain.Entities.History;
+using SmartLMS.Domain.Entities.Integration;
 using SmartLMS.Domain.Entities.UserAccess;
 using FileAccess = SmartLMS.Domain.Entities.History.FileAccess;
 
@@ -42,6 +43,7 @@ public class SmartLmsDbContext(DbContextOptions<SmartLmsDbContext> options) : Db
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<Parameter> Parameters => Set<Parameter>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

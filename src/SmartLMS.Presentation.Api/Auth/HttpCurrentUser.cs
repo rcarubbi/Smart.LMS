@@ -1,14 +1,11 @@
 using System.Security.Claims;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Domain.Entities.UserAccess;
-using DataAccessUserProvider = SmartLMS.DataAccess.ICurrentUserProvider;
 
 namespace SmartLMS.Presentation.Api.Auth;
 
 /// <summary>Resolves the authenticated user from JWT claims (inbound claim mapping disabled).</summary>
-internal sealed class HttpCurrentUser(IHttpContextAccessor accessor)
-    : ICurrentUser,
-      DataAccessUserProvider
+internal sealed class HttpCurrentUser(IHttpContextAccessor accessor) : ICurrentUser
 {
     private const string UserIdClaim = "sub";
     private const string RoleClaim = "role";
@@ -18,6 +15,4 @@ internal sealed class HttpCurrentUser(IHttpContextAccessor accessor)
 
     public UserRole? Role =>
         Enum.TryParse<UserRole>(accessor.HttpContext?.User?.FindFirstValue(RoleClaim), out var role) ? role : null;
-
-    Guid? DataAccessUserProvider.GetCurrentUserId() => UserId;
 }

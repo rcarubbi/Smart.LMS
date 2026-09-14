@@ -1,61 +1,87 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { api, errorMessage } from "@/lib/api";
+import { useEffect, useState } from "react";
+import { api, apiList, errorMessage } from "@/lib/api";
 import type { ListItem } from "@/lib/api";
+import { usePagedList } from "@/lib/usePagedList";
+import { useTrashConfirmations } from "@/lib/useTrashConfirmations";
 import AppShell from "@/components/AppShell";
 import AuthGuard from "@/components/AuthGuard";
 import Panel from "@/components/ui/Panel";
 import FormModal from "@/components/ui/FormModal";
-import ConfirmModal from "@/components/ui/ConfirmModal";
 import Icon from "@/components/ui/Icon";
 import IconButton from "@/components/ui/IconButton";
+import Pagination from "@/components/ui/Pagination";
+import ViewTabs, { type ViewFilter } from "@/components/ui/ViewTabs";
 import { useToast } from "@/components/ui/Toast";
+
+type SubjectItem = {
+  id: string;
+  name: string;
+  order: number;
+  knowledgeAreaId: string;
+  knowledgeAreaName: string;
+  active: boolean;
+};
 
 export default function SubjectsAdmin() {
   const { toast } = useToast();
   const [areas, setAreas] = useState<ListItem[]>([]);
   const [areaFilter, setAreaFilter] = useState<string>("");
-  const [items, setItems] = useState<ListItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<ViewFilter>("active");
+  const { items, total, loading, page, setPage, reload } = usePagedList<SubjectItem>(
+    "/api/subjects",
+    {
+      knowledgeAreaId: areaFilter,
+      active: view === "all" ? undefined : view === "active",
+    },
+  );
 
-  const [modal, setModal] = useState<{ item?: ListItem; name: string; order: string; areaId: string } | null>(null);
-  const [deleting, setDeleting] = useState<ListItem | null>(null);
-
-  const loadAreas = useCallback(async () => {
-    setAreas(await api<ListItem[]>("/api/knowledge-areas"));
-  }, []);
-
-  const load = useCallback(async () => {
-    const q = areaFilter ? `?knowledgeAreaId=${areaFilter}` : "";
-    setItems(await api<ListItem[]>(`/api/subjects${q}`));
-  }, [areaFilter]);
+  const [modal, setModal] = useState<{ item?: SubjectItem; name: string; order: string; areaId: string } | null>(null);
+  const { setDeleting, setPurging, restore, modals } = useTrashConfirmations<SubjectItem>({
+    reload,
+    basePath: "/api/subjects",
+    labels: {
+      trash: "Assunto movido para a lixeira.",
+      restore: "Assunto restaurado.",
+      purge: "Assunto excluído definitivamente.",
+    },
+    messages: {
+      trash: (i) => `Mover "${i.name}" para a lixeira? Você poderá restaurá-lo depois.`,
+      purge: (i) =>
+        `Excluir "${i.name}" definitivamente? Essa ação não pode ser desfeita e remove os cursos e aulas vinculados.`,
+    },
+  });
 
   useEffect(() => {
-    loadAreas();
-  }, [loadAreas]);
-
-  useEffect(() => {
-    load()
-      .catch((e) => toast("error", errorMessage(e)))
-      .finally(() => setLoading(false));
-  }, [load, toast]);
+    (async () => {
+      try {
+        setAreas(await apiList<ListItem>("/api/knowledge-areas?active=true"));
+      } catch (e) {
+        toast("error", errorMessage(e));
+      }
+    })();
+  }, [toast]);
 
   function openNew() {
     setModal({ name: "", order: "0", areaId: areaFilter });
   }
 
-  function openEdit(item: ListItem) {
-    setModal({ item, name: item.name, order: String(item.order), areaId: areaFilter });
+  function openEdit(item: SubjectItem) {
+    setModal({ item, name: item.name, order: String(item.order), areaId: item.knowledgeAreaId });
   }
 
   async function submit() {
     if (!modal) return;
+    if (!modal.areaId) {
+      toast("error", "Selecione a área de conhecimento.");
+      return;
+    }
     try {
       if (modal.item) {
         await api(`/api/subjects/${modal.item.id}`, {
           method: "PUT",
-          body: JSON.stringify({ name: modal.name, order: Number(modal.order) }),
+          body: JSON.stringify({ name: modal.name, order: Number(modal.order), knowledgeAreaId: modal.areaId }),
         });
         toast("success", "Assunto atualizado.");
       } else {
@@ -66,19 +92,7 @@ export default function SubjectsAdmin() {
         toast("success", "Assunto criado.");
       }
       setModal(null);
-      load();
-    } catch (e) {
-      toast("error", errorMessage(e));
-    }
-  }
-
-  async function confirmDelete() {
-    if (!deleting) return;
-    try {
-      await api(`/api/subjects/${deleting.id}`, { method: "DELETE" });
-      toast("success", "Assunto excluído.");
-      setDeleting(null);
-      load();
+      reload();
     } catch (e) {
       toast("error", errorMessage(e));
     }
@@ -97,7 +111,7 @@ export default function SubjectsAdmin() {
             </button>
           }
         >
-          <label className="mb-4 inline-flex items-center gap-2 text-sm">
+          <label className="mb-2 inline-flex items-center gap-2 text-sm">
             <span className="text-white/60">Filtrar por área:</span>
             <select className="field w-auto" value={areaFilter} onChange={(e) => setAreaFilter(e.target.value)}>
               <option value="">Todas</option>
@@ -109,10 +123,14 @@ export default function SubjectsAdmin() {
             </select>
           </label>
 
+          <ViewTabs view={view} onChange={setView} total={total} />
+
           {loading ? (
             <p className="text-sm text-white/50">Carregando...</p>
           ) : items.length === 0 ? (
-            <p className="text-sm text-white/50">Nenhum assunto cadastrado.</p>
+            <p className="text-sm text-white/50">
+              {view === "trash" ? "A lixeira está vazia." : "Nenhum assunto cadastrado."}
+            </p>
           ) : (
             <table className="w-full text-left text-sm">
               <thead>
@@ -124,23 +142,37 @@ export default function SubjectsAdmin() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {items.map((item) => {
-                  const area = areas.find((a) => a.id === areaFilter) ?? areas[0];
-                  return (
-                    <tr key={item.id} className="hover:bg-white/5">
-                      <td className="py-2.5 pr-2 text-white/60">{item.order}</td>
-                      <td className="py-2.5 pr-2">{item.name}</td>
-                      <td className="py-2.5 pr-2 text-white/60">{areaFilter ? area?.name : "—"}</td>
-                      <td className="py-2.5 text-right">
-                        <IconButton name="edit" title="Editar" onClick={() => openEdit(item)} />
-                        <IconButton name="delete" title="Excluir" danger onClick={() => setDeleting(item)} />
-                      </td>
-                    </tr>
-                  );
-                })}
+                {items.map((item) => (
+                  <tr key={item.id} className="hover:bg-white/5">
+                    <td className="py-2.5 pr-2 text-white/60">{item.order}</td>
+                    <td className="py-2.5 pr-2">
+                      {item.name}
+                      {!item.active && (
+                        <span className="ml-2 rounded bg-amber-500/20 px-1.5 py-0.5 text-xs text-amber-300">
+                          Na lixeira
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-2.5 pr-2 text-white/60">{item.knowledgeAreaName || "—"}</td>
+                    <td className="py-2.5 text-right">
+                      {item.active ? (
+                        <>
+                          <IconButton name="edit" title="Editar" onClick={() => openEdit(item)} />
+                          <IconButton name="delete" title="Mover para a lixeira" variant="danger" onClick={() => setDeleting(item)} />
+                        </>
+                      ) : (
+                        <>
+                          <IconButton name="restore" title="Restaurar" onClick={() => restore(item)} />
+                          <IconButton name="delete_forever" title="Excluir definitivamente" variant="danger" onClick={() => setPurging(item)} />
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           )}
+          <Pagination page={page} total={total} pageSize={25} onChange={setPage} />
         </Panel>
 
         <FormModal
@@ -184,13 +216,7 @@ export default function SubjectsAdmin() {
           </label>
         </FormModal>
 
-        <ConfirmModal
-          open={!!deleting}
-          title="Excluir assunto"
-          message={`Excluir "${deleting?.name}"?`}
-          onConfirm={confirmDelete}
-          onCancel={() => setDeleting(null)}
-        />
+        {modals}
       </AppShell>
     </AuthGuard>
   );

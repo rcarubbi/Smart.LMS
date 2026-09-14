@@ -1,9 +1,11 @@
+using Ardalis.Specification.EntityFrameworkCore;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Specifications;
 using ErrorOr;
 
 namespace SmartLMS.Application.Catalog.Classes.Comments;
@@ -15,39 +17,42 @@ public sealed record CommentItem(
     Guid UserId,
     DateTime DateTime);
 
-public sealed record ListClassCommentsQuery(Guid ClassId) : IQuery<IReadOnlyList<CommentItem>>;
+public sealed record ListClassCommentsQuery(Guid ClassId, int? Page = null, int? PageSize = null)
+    : IQuery<Paged<CommentItem>>;
 
 internal sealed class ListClassCommentsHandler(ISmartLmsDbContext context)
-    : IQueryHandler<ListClassCommentsQuery, IReadOnlyList<CommentItem>>
+    : IQueryHandler<ListClassCommentsQuery, Paged<CommentItem>>
 {
-    public async ValueTask<ErrorOr<IReadOnlyList<CommentItem>>> Handle(
+    public async ValueTask<ErrorOr<Paged<CommentItem>>> Handle(
         ListClassCommentsQuery query,
         CancellationToken cancellationToken)
     {
-        var comments = await context.Comments
-            .AsNoTracking()
-            .Where(c => c.ClassId == query.ClassId)
-            .OrderByDescending(c => c.DateTime)
+        var spec = new ClassCommentsByClassSpec(query.ClassId);
+        var filtered = SpecificationEvaluator.Default.GetQuery(context.Comments.AsNoTracking(), spec);
+
+        var comments = await filtered
             .Select(c => new CommentItem(
                 c.Id,
                 c.CommentText,
                 c.User.Name,
                 c.UserId,
                 c.DateTime))
-            .ToListAsync(cancellationToken);
+            .PageAsync(query.Page, query.PageSize, cancellationToken);
 
         return comments;
     }
 }
 
-public sealed record AddClassCommentCommand(Guid ClassId, string CommentText) : ICommand<Guid>;
+public sealed record AddCommentInput(string CommentText);
+
+public sealed record AddClassCommentCommand(Guid ClassId, AddCommentInput Input) : ICommand<Guid>;
 
 internal sealed class AddClassCommentValidator : AbstractValidator<AddClassCommentCommand>
 {
     public AddClassCommentValidator()
     {
         RuleFor(c => c.ClassId).NotEmpty();
-        RuleFor(c => c.CommentText).NotEmpty().MaximumLength(2000);
+        RuleFor(c => c.Input.CommentText).NotEmpty().MaximumLength(2000);
     }
 }
 
@@ -70,7 +75,7 @@ internal sealed class AddClassCommentHandler(
         }
 
         var comment = new Comment(
-            command.CommentText,
+            command.Input.CommentText,
             command.ClassId,
             userId,
             timeProvider.GetUtcNow().UtcDateTime);

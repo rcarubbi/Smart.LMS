@@ -1,8 +1,15 @@
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Polly.Registry;
 using SmartLMS.Application.Abstractions;
 
 namespace SmartLMS.Infrastructure.Messaging;
+
+/// <summary>Keys of the resilience pipelines registered in DI.</summary>
+public static class ResiliencePipelines
+{
+    public const string Email = "email";
+}
 
 public sealed class SmtpOptions
 {
@@ -17,9 +24,12 @@ public sealed class SmtpOptions
     public bool UseSsl { get; set; }
 }
 
-internal sealed class MailKitEmailSender(IOptions<SmtpOptions> options) : IEmailSender
+internal sealed class MailKitEmailSender(
+    IOptions<SmtpOptions> options,
+    ResiliencePipelineProvider<string> pipelines) : IEmailSender
 {
     private readonly SmtpOptions _options = options.Value;
+    private readonly Polly.ResiliencePipeline _pipeline = pipelines.GetPipeline(ResiliencePipelines.Email);
 
     public async Task SendAsync(string to, string subject, string htmlBody, CancellationToken cancellationToken = default)
     {
@@ -29,15 +39,21 @@ internal sealed class MailKitEmailSender(IOptions<SmtpOptions> options) : IEmail
         message.Subject = subject;
         message.Body = new BodyBuilder { HtmlBody = htmlBody }.ToMessageBody();
 
-        using var client = new MailKit.Net.Smtp.SmtpClient();
-        await client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl, cancellationToken);
-
-        if (!string.IsNullOrEmpty(_options.Username))
+        // At-least-once: transient SMTP faults retry inside the pipeline;
+        // the outbox marks processed only after this returns, so a failure
+        // here becomes another attempt, never a lost e-mail.
+        await _pipeline.ExecuteAsync(async ct =>
         {
-            await client.AuthenticateAsync(_options.Username, _options.Password ?? string.Empty, cancellationToken);
-        }
+            using var client = new MailKit.Net.Smtp.SmtpClient();
+            await client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl, ct);
 
-        await client.SendAsync(message, cancellationToken);
-        await client.DisconnectAsync(quit: true, cancellationToken);
+            if (!string.IsNullOrEmpty(_options.Username))
+            {
+                await client.AuthenticateAsync(_options.Username, _options.Password ?? string.Empty, ct);
+            }
+
+            await client.SendAsync(message, ct);
+            await client.DisconnectAsync(quit: true, ct);
+        }, cancellationToken);
     }
 }

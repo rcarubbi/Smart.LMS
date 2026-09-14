@@ -13,46 +13,79 @@ internal static class AssessmentEndpoints
         group.MapGet("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var r = await dispatcher.Query(new GetAssessmentQuery(id), ct);
-                return r.IsError ? r.FirstError.ToProblem() : Results.Ok(r.Value);
+                return r.ToResult();
             })
             .RequireAuthorization()
             .Produces(404);
 
-        group.MapPost("/", async (CreateRequest request, IDispatcher dispatcher, CancellationToken ct) =>
+        group.MapPost("/", async (CreateAssessmentInput request, IDispatcher dispatcher, CancellationToken ct) =>
             {
-                var r = await dispatcher.Send(new CreateAssessmentCommand(
-                    request.CourseId, request.MinimumScore, request.Questions), ct);
-                return r.IsError ? r.FirstError.ToProblem() : Results.Created($"/api/assessments/{r.Value}", new { id = r.Value });
+                var r = await dispatcher.Send(new CreateAssessmentCommand(request), ct);
+                return r.ToResult(id => Results.Created($"/api/assessments/{id}", new { id }));
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(201)
             .Produces(400);
 
+        group.MapPut("/{id:guid}", async (Guid id, UpdateAssessmentInput request, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var r = await dispatcher.Send(new UpdateAssessmentCommand(id, request), ct);
+                return r.ToResult();
+            })
+            .RequireAuthorization(Policies.AdminOnly)
+            .Produces(204)
+            .Produces(400)
+            .Produces(404);
+
+        group.MapGet("/{id:guid}/edit", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var r = await dispatcher.Query(new GetAssessmentForEditQuery(id), ct);
+                return r.ToResult();
+            })
+            .RequireAuthorization(Policies.AdminOnly)
+            .Produces(200)
+            .Produces(404);
+
         group.MapDelete("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var r = await dispatcher.Send(new DeleteAssessmentCommand(id), ct);
-                return r.IsError ? r.FirstError.ToProblem() : Results.NoContent();
+                return r.ToResult();
             })
             .RequireAuthorization(Policies.AdminOnly);
 
-        group.MapPost("/{id:guid}/submit", async (Guid id, SubmitRequest request, IDispatcher dispatcher, CancellationToken ct) =>
+        group.MapPost("/{id:guid}/restore", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
-                var submissions = request.Questions
-                    .Select(q => new QuestionSubmission(q.QuestionId, q.OptionIds))
-                    .ToList();
+                var r = await dispatcher.Send(new RestoreAssessmentCommand(id), ct);
+                return r.ToResult();
+            })
+            .RequireAuthorization(Policies.AdminOnly)
+            .Produces(204)
+            .Produces(404)
+            .Produces(409);
 
-                var r = await dispatcher.Send(new SubmitAssessmentCommand(id, submissions), ct);
-                return r.IsError ? r.FirstError.ToProblem() : Results.Ok(r.Value);
+        group.MapDelete("/{id:guid}/permanent", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var r = await dispatcher.Send(new DeleteAssessmentPermanentlyCommand(id), ct);
+                return r.ToResult();
+            })
+            .RequireAuthorization(Policies.AdminOnly)
+            .Produces(204)
+            .Produces(404);
+
+        group.MapPost("/{id:guid}/submit", async (Guid id, SubmitAssessmentInput request, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var r = await dispatcher.Send(new SubmitAssessmentCommand(id, request), ct);
+                return r.ToResult();
             })
             .RequireAuthorization()
             .Produces(200)
             .Produces(404);
 
         app.MapGet("/api/courses/{courseId:guid}/assessments",
-                async (Guid courseId, IDispatcher dispatcher, CancellationToken ct) =>
+                async (Guid courseId, bool? active, int? page, int? pageSize, IDispatcher dispatcher, CancellationToken ct) =>
             {
-                var r = await dispatcher.Query(new ListAssessmentsQuery(courseId), ct);
-                return r.IsError ? r.FirstError.ToProblem() : Results.Ok(r.Value);
+                var r = await dispatcher.Query(new ListAssessmentsQuery(courseId, active, page, pageSize), ct);
+                return r.ToResult();
             })
             .WithTags("Assessments")
             .RequireAuthorization();
@@ -60,9 +93,3 @@ internal static class AssessmentEndpoints
         return app;
     }
 }
-
-public sealed record CreateRequest(Guid CourseId, int MinimumScore, IReadOnlyList<QuestionInput> Questions);
-
-public sealed record SubmitRequest(IReadOnlyList<QuestionSubmissionBody> Questions);
-
-public sealed record QuestionSubmissionBody(Guid QuestionId, IReadOnlyList<Guid> OptionIds);

@@ -7,7 +7,7 @@ namespace SmartLMS.Domain.Entities.Delivery;
 /// Pure scheduling rules live here; orchestration (notices, e-mails, persistence)
 /// belongs to the application layer.
 /// </summary>
-public class DeliveryPlan : Entity
+public class DeliveryPlan : AggregateRoot
 {
     public DeliveryPlan(Guid classroomId, DateTime startDate)
     {
@@ -81,28 +81,27 @@ public class DeliveryPlan : Entity
         return schedule;
     }
 
-    /// <summary>Schedule entries due on or before <paramref name="today"/> that have not been delivered yet.</summary>
+    /// <summary>
+    /// Schedule entries due on or before <paramref name="today"/> that have not been delivered yet.
+    /// Note: this deliberately ignores the <see cref="Concluded"/> flag, because a class added to a
+    /// course after a plan was marked concluded must still be released (and announced) on its due date.
+    /// <see cref="MarkDelivered"/> recalculates <see cref="Concluded"/> based on the current schedule.
+    /// </summary>
     public IReadOnlyList<ScheduledClass> GetPendingClasses(DateOnly today)
     {
         var deliveredIds = DeliveredClasses.Select(d => d.ClassId).ToHashSet();
-        var pending = GetSchedule()
+        return GetSchedule()
             .Where(s => DateOnly.FromDateTime(s.DeliveryDate) <= today && !deliveredIds.Contains(s.ClassId))
             .ToList();
-
-        if (!Concluded)
-        {
-            return pending;
-        }
-
-        return [];
     }
 
     /// <summary>Marks a class as delivered. Flags the plan as concluded when every scheduled class is delivered.</summary>
     public ClassDeliveryPlan MarkDelivered(Guid classId)
     {
-        if (DeliveredClasses.Any(d => d.ClassId == classId))
+        var existing = DeliveredClasses.FirstOrDefault(d => d.ClassId == classId);
+        if (existing is not null)
         {
-            throw new InvalidOperationException($"Class '{classId}' is already delivered by this plan.");
+            return existing;
         }
 
         var entry = new ClassDeliveryPlan(classId, DateTime.UtcNow, this);

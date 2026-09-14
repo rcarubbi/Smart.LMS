@@ -3,7 +3,9 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
-using SmartLMS.Infrastructure.Persistence;
+using SmartLMS.DataAccess.Seed;
+using SmartLMS.Application.Auth.Login;
+using SmartLMS.Application.Users.CreateUser;
 using SmartLMS.Presentation.Api.Endpoints;
 using Testcontainers.MsSql;
 
@@ -18,15 +20,13 @@ namespace SmartLMS.IntegrationTests;
 public class CatalogFlowTests
 {
     [Test]
-    public async Task Admin_builds_catalog_searches_and_students_are_read_only()
+    [ClassDataSource<TestSqlContainer>(Shared = SharedType.PerTestSession)]
+    public async Task Admin_builds_catalog_searches_and_students_are_read_only(TestSqlContainer db)
     {
-        await using var container = new MsSqlBuilder().Build();
         IntegrationTestGate.Instance.Wait();
         try
         {
-            await container.StartAsync();
-
-        Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", container.GetConnectionString());
+        Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", db.ConnectionStringForDatabase("catalog"));
         Environment.SetEnvironmentVariable("Jwt__SigningKey", "catalog-test-signing-key-0123456789abcdef");
 
             await using var factory = new WebApplicationFactory<Program>();
@@ -45,7 +45,7 @@ public class CatalogFlowTests
                 new { name = "Clean Architecture", order = 1, subjectId }, $"/api/courses/{subjectId}");
 
             // Teacher required for classes: create one first.
-            var teacherResponse = await client.PostAsJsonAsync("/api/users", new CreateUserRequest(
+            var teacherResponse = await client.PostAsJsonAsync("/api/users", new CreateUserInput(
                 "Ada Teacher", "ada.teacher@smartlms.local", "teacher-pass-123", Domain.Entities.UserAccess.UserRole.Teacher));
             if (teacherResponse.StatusCode != HttpStatusCode.Created)
             {
@@ -57,18 +57,18 @@ public class CatalogFlowTests
             _ = teacherToken; // teachers authenticate but still cannot write catalog
 
             // Extract teacher id via search (name match).
-            var teacherSearch = await client.GetFromJsonAsync<List<SearchItem>>(
+            var teacherSearch = await client.GetFromJsonAsync<PagedStub<SearchItem>>(
                 $"/api/search?q=ada", JsonOpts);
-            if (teacherSearch is null || teacherSearch.Count > 0)
+            if (teacherSearch is null || teacherSearch.Total > 0)
             {
                 // Users are not searchable; this assert documents that expectation.
-                await Assert.That(teacherSearch ?? []).IsEmpty();
+                await Assert.That(teacherSearch?.Total ?? -1).IsEqualTo(0);
             }
 
             // Get teacher id directly through a fresh login is not enough; query users table
             // indirectly by creating class with an invalid teacher id must fail with conflict.
             var badClass = await client.PostAsJsonAsync("/api/classes", new ClassRequest(
-                "Intro", "<p>content</p>", 1, 1, "YouTube", courseId, Guid.NewGuid()));
+                "Intro", "https://www.youtube.com/watch?v=dQw4w9WgXcQ", 1, 1, "YouTube", courseId, Guid.NewGuid()));
             await Assert.That(badClass.StatusCode).IsEqualTo(HttpStatusCode.Conflict);
 
             // Create the real class using the seeded admin as stand-in teacher id lookup:
@@ -77,7 +77,7 @@ public class CatalogFlowTests
             var teacherCreated = await teacherResponse.Content.ReadFromJsonAsync<CreatedId>(JsonOpts);
 
             var classResponse = await client.PostAsJsonAsync("/api/classes", new ClassRequest(
-                "Intro to Clean Architecture", "<p>vimeo content</p>", 1, 2, "Vimeo",
+                "Intro to Clean Architecture", "https://vimeo.com/76979871", 1, 2, "Vimeo",
                 courseId, teacherCreated!.Id));
             if (classResponse.StatusCode != HttpStatusCode.Created)
             {
@@ -90,7 +90,7 @@ public class CatalogFlowTests
             using (Assert.Multiple())
             {
                 await Assert.That(courseDetail).IsNotNull();
-                await Assert.That(courseDetail!.Classes).HasCount().EqualTo(1);
+                await Assert.That(courseDetail!.Classes).Count().IsEqualTo(1);
                 await Assert.That(courseDetail.Classes[0].Name).IsEqualTo("Intro to Clean Architecture");
             }
 
@@ -102,12 +102,13 @@ public class CatalogFlowTests
                     $"Search failed [{(int)searchResponse.StatusCode}]: {await searchResponse.Content.ReadAsStringAsync()}");
             }
 
-            var results = await searchResponse.Content.ReadFromJsonAsync<List<SearchItem>>(JsonOpts);
-            if (results is null)
+            var search = await searchResponse.Content.ReadFromJsonAsync<PagedStub<SearchItem>>(JsonOpts);
+            if (search is null || search.Items is null)
             {
                 throw new InvalidOperationException("Search response was empty.");
             }
 
+            var results = search.Items;
             var dump = string.Join(", ", results.Select(r => $"{r.ResultType}:{r.Description}"));
             var types = results.Select(r => r.ResultType).ToHashSet();
             using (Assert.Multiple())
@@ -118,12 +119,12 @@ public class CatalogFlowTests
                     .IsEqualTo("Clean Architecture");
             }
 
-            // Business rule: deleting a knowledge area with subjects conflicts.
+            // Soft delete: areas with subjects are deactivated (moved to trash), not rejected.
             var deleteArea = await client.DeleteAsync($"/api/knowledge-areas/{areaId}");
-            await Assert.That(deleteArea.StatusCode).IsEqualTo(HttpStatusCode.Conflict);
+            await Assert.That(deleteArea.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
 
             // Student role is read-only for catalog writes.
-            var studentResponse = await client.PostAsJsonAsync("/api/users", new CreateUserRequest(
+            var studentResponse = await client.PostAsJsonAsync("/api/users", new CreateUserInput(
                 "Bob Student", "bob.student@smartlms.local", "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
             await Assert.That(studentResponse.StatusCode).IsEqualTo(HttpStatusCode.Created);
 
@@ -147,7 +148,7 @@ public class CatalogFlowTests
 
     private static async Task<AuthTokens> LoginAsync(HttpClient client, string email, string password)
     {
-        var response = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest(email, password));
+        var response = await client.PostAsJsonAsync("/api/auth/login", new LoginInput(email, password));
         if (response.StatusCode != HttpStatusCode.OK)
         {
             throw new InvalidOperationException($"Login failed for {email}: {(int)response.StatusCode}");
@@ -181,4 +182,6 @@ public class CatalogFlowTests
     private sealed record ClassStub(Guid Id, string Name, int Order, int DeliveryDays, string ContentType);
 
     private sealed record SearchItem(Guid Id, string Description, string ResultType, int Percentual);
+
+    private sealed record PagedStub<T>(List<T> Items, int Total, int Page, int PageSize, int TotalPages);
 }

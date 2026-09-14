@@ -1,25 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
+import { usePagedList } from "@/lib/usePagedList";
 import AppShell from "@/components/AppShell";
 import Panel from "@/components/ui/Panel";
+import Pagination from "@/components/ui/Pagination";
 
 type MyPlan = { classroomId: string; name: string; deliveredCount: number; totalCount: number };
 type Progress = { classId: string; className: string; courseName: string; percentual: number; watchedSeconds: number; lastAccessAtUtc: string };
-type NoticeItem = { id: string; text: string; seen: boolean };
 
 export default function MePage() {
-  const [plans, setPlans] = useState<MyPlan[]>([]);
-  const [progress, setProgress] = useState<Progress[]>([]);
-  const [notices, setNotices] = useState<NoticeItem[]>([]);
-
-  useEffect(() => {
-    api<MyPlan[]>("/api/me/classrooms").then(setPlans).catch(() => setPlans([]));
-    api<Progress[]>("/api/me/progress").then(setProgress).catch(() => setProgress([]));
-    api<NoticeItem[]>("/api/notices").then(setNotices).catch(() => setNotices([]));
-  }, []);
+  const { items: plans, total: plansTotal, page: plansPage, setPage: setPlansPage } = usePagedList<MyPlan>("/api/me/classrooms", {});
+  const { items: progress, total: progressTotal, page: progressPage, setPage: setProgressPage } = usePagedList<Progress>("/api/me/progress", {});
 
   function bar(v: number) {
     const w = Math.max(0, Math.min(100, v));
@@ -49,6 +41,7 @@ export default function MePage() {
               ))}
             </ul>
           )}
+          <Pagination page={plansPage} total={plansTotal} pageSize={25} onChange={setPlansPage} />
         </Panel>
 
         <Panel icon="insights" title="Meu progresso" accent="#6366f1">
@@ -70,25 +63,7 @@ export default function MePage() {
               ))}
             </ul>
           )}
-        </Panel>
-      </div>
-
-      <div className="mt-6">
-        <Panel icon="notifications" title="Avisos" accent="#f59e0b">
-          {notices.length === 0 ? (
-            <p className="text-sm text-white/50">Sem avisos.</p>
-          ) : (
-            <ul className="space-y-2">
-              {notices.map((n) => (
-                <li key={n.id} className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-3 text-sm">
-                  <div dangerouslySetInnerHTML={{ __html: n.text }} className="[&_a]:text-indigo-300" />
-                  <span className={`ml-3 shrink-0 text-xs ${n.seen ? "text-white/40" : "font-medium text-indigo-400"}`}>
-                    {n.seen ? "lido" : "novo"}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
+          <Pagination page={progressPage} total={progressTotal} pageSize={25} onChange={setProgressPage} />
         </Panel>
       </div>
     </AppShell>

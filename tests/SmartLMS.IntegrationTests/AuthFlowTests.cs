@@ -4,6 +4,12 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
+using SmartLMS.Application.Auth.ChangePassword;
+using SmartLMS.Application.Auth.Login;
+using SmartLMS.Application.Auth.Logout;
+using SmartLMS.Application.Auth.Refresh;
+using SmartLMS.Application.Users.CreateUser;
+using SmartLMS.DataAccess.Seed;
 using SmartLMS.Presentation.Api.Endpoints;
 using Testcontainers.MsSql;
 
@@ -18,17 +24,15 @@ namespace SmartLMS.IntegrationTests;
 public class AuthFlowTests
 {
     [Test]
-    public async Task Login_refresh_and_role_protected_endpoints_work()
+    [ClassDataSource<TestSqlContainer>(Shared = SharedType.PerTestSession)]
+    public async Task Login_refresh_and_role_protected_endpoints_work(TestSqlContainer db)
     {
-        await using var container = new MsSqlBuilder().Build();
         IntegrationTestGate.Instance.Wait();
         try
         {
-            await container.StartAsync();
-
         // Environment variables are the most reliable way to feed configuration into
         // the minimal-hosting pipeline under WebApplicationFactory.
-        Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", container.GetConnectionString());
+        Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", db.ConnectionStringForDatabase("auth"));
         Environment.SetEnvironmentVariable("Jwt__SigningKey", "integration-test-signing-key-0123456789abcdef");
 
             await using var factory = new WebApplicationFactory<Program>();
@@ -50,14 +54,14 @@ public class AuthFlowTests
     {
 
         // 1. Wrong password -> 401.
-        var unauthorized = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest(
-            Infrastructure.Persistence.DbSeeder.DefaultAdminEmail, "wrong-password"));
+        var unauthorized = await client.PostAsJsonAsync("/api/auth/login", new LoginInput(
+            DbSeeder.DefaultAdminEmail, "wrong-password"));
         await Assert.That(unauthorized.StatusCode).IsEqualTo(HttpStatusCode.Unauthorized);
 
         // 2. Correct seeded admin credentials -> 200 with tokens.
-        var login = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest(
-            Infrastructure.Persistence.DbSeeder.DefaultAdminEmail,
-            Infrastructure.Persistence.DbSeeder.DefaultAdminPassword));
+        var login = await client.PostAsJsonAsync("/api/auth/login", new LoginInput(
+            DbSeeder.DefaultAdminEmail,
+            DbSeeder.DefaultAdminPassword));
 
         await Assert.That(login.StatusCode).IsEqualTo(HttpStatusCode.OK);
         var auth = await login.Content.ReadFromJsonAsync<AuthResponseStub>(JsonOptions);
@@ -76,7 +80,7 @@ public class AuthFlowTests
         client.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", auth.AccessToken);
 
-        var firstRefresh = await client.PostAsJsonAsync("/api/auth/refresh", new RefreshTokenRequest(auth.RefreshToken));
+        var firstRefresh = await client.PostAsJsonAsync("/api/auth/refresh", new RefreshTokenInput(auth.RefreshToken));
         await Assert.That(firstRefresh.StatusCode).IsEqualTo(HttpStatusCode.OK);
 
         var rotated = await firstRefresh.Content.ReadFromJsonAsync<AuthResponseStub>(JsonOptions);
@@ -92,7 +96,7 @@ public class AuthFlowTests
 
         Console.WriteLine("REFRESHED TOKEN PAYLOAD: " + DecodeJwtPayload(rotated.AccessToken));
 
-        var createStudent = await client.PostAsJsonAsync("/api/users", new CreateUserRequest(
+        var createStudent = await client.PostAsJsonAsync("/api/users", new CreateUserInput(
             "John Student", "john.student@smartlms.local", "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
 
         if (createStudent.StatusCode != HttpStatusCode.Created)
@@ -103,15 +107,15 @@ public class AuthFlowTests
         }
 
         // 5. Duplicate email -> 409.
-        var duplicate = await client.PostAsJsonAsync("/api/users", new CreateUserRequest(
+        var duplicate = await client.PostAsJsonAsync("/api/users", new CreateUserInput(
             "John Clone", "john.student@smartlms.local", "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
         await Assert.That(duplicate.StatusCode).IsEqualTo(HttpStatusCode.Conflict);
 
         // 6. Logout revokes; refreshing with revoked token -> 401.
-        var logout = await client.PostAsJsonAsync("/api/auth/logout", new LogoutRequest(rotated.RefreshToken));
+        var logout = await client.PostAsJsonAsync("/api/auth/logout", new LogoutInput(rotated.RefreshToken));
         await Assert.That(logout.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
 
-        var revokedRefresh = await client.PostAsJsonAsync("/api/auth/refresh", new RefreshTokenRequest(rotated.RefreshToken));
+        var revokedRefresh = await client.PostAsJsonAsync("/api/auth/refresh", new RefreshTokenInput(rotated.RefreshToken));
         await Assert.That(revokedRefresh.StatusCode).IsEqualTo(HttpStatusCode.Unauthorized);
     }
 

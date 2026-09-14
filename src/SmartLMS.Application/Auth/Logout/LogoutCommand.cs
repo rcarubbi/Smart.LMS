@@ -1,19 +1,23 @@
+using Ardalis.Specification.EntityFrameworkCore;
 using ErrorOr;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Specifications;
 
 namespace SmartLMS.Application.Auth.Logout;
 
-public sealed record LogoutCommand(string RefreshToken) : ICommand;
+public sealed record LogoutInput(string RefreshToken);
+
+public sealed record LogoutCommand(LogoutInput Input) : ICommand;
 
 internal sealed class LogoutValidator : AbstractValidator<LogoutCommand>
 {
     public LogoutValidator()
     {
-        RuleFor(c => c.RefreshToken).NotEmpty();
+        RuleFor(c => c.Input.RefreshToken).NotEmpty();
     }
 }
 
@@ -24,11 +28,13 @@ internal sealed class LogoutHandler(
 {
     public async ValueTask<ErrorOr<Success>> Handle(LogoutCommand command, CancellationToken cancellationToken)
     {
-        var tokenHash = tokenService.HashRefreshToken(command.RefreshToken);
+        var tokenHash = tokenService.HashRefreshToken(command.Input.RefreshToken);
         var now = timeProvider.GetUtcNow().UtcDateTime;
 
-        var stored = await context.RefreshTokens
-            .SingleOrDefaultAsync(t => t.TokenHash == tokenHash && t.RevokedAtUtc == null, cancellationToken);
+        // Tracking on purpose: Revoke mutates + SaveChanges; null stays idempotent success.
+        var stored = await SpecificationEvaluator.Default
+            .GetQuery(context.RefreshTokens, new ActiveRefreshTokenByHashSpec(tokenHash))
+            .SingleOrDefaultAsync(cancellationToken);
 
         if (stored is not null)
         {

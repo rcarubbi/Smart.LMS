@@ -24,7 +24,9 @@ public class ClassAccessMapping : IEntityTypeConfiguration<ClassAccess>
             .HasForeignKey(a => a.ClassId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasIndex(a => new { a.UserId, a.ClassId });
+        // Backstop for the RecordClassAccess upsert: one row per user+class,
+        // so concurrent first-heartbeats can't duplicate and MyProgress needs no masking.
+        builder.HasIndex(a => new { a.UserId, a.ClassId }).IsUnique();
     }
 }
 

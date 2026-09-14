@@ -1,44 +1,39 @@
+using Ardalis.Specification.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Domain.Entities.UserAccess;
+using SmartLMS.Domain.Specifications;
 using ErrorOr;
 
 namespace SmartLMS.Application.Users.ListUsers;
 
 public sealed record UserListItem(Guid Id, string Name, string Email, string Role, bool Active);
 
-public sealed record ListUsersQuery(UserRole? Role) : IQuery<IReadOnlyList<UserListItem>>;
+public sealed record ListUsersQuery(
+    UserRole? Role,
+    bool? Active = null,
+    int? Page = null,
+    int? PageSize = null) : IQuery<Paged<UserListItem>>;
 
 internal sealed class ListUsersHandler(ISmartLmsDbContext context)
-    : IQueryHandler<ListUsersQuery, IReadOnlyList<UserListItem>>
+    : IQueryHandler<ListUsersQuery, Paged<UserListItem>>
 {
-    public async ValueTask<ErrorOr<IReadOnlyList<UserListItem>>> Handle(
+    public async ValueTask<ErrorOr<Paged<UserListItem>>> Handle(
         ListUsersQuery query,
         CancellationToken cancellationToken)
     {
-        var users = context.Users.AsNoTracking();
-
-        if (query.Role is { } role)
-        {
-            users = role switch
-            {
-                UserRole.Admin => users.Where(u => u is Admin),
-                UserRole.Teacher => users.Where(u => u is Teacher),
-                UserRole.Student => users.Where(u => u is Student),
-                _ => users,
-            };
-        }
+        var spec = new UsersByRoleSpec(query.Role, query.Active);
+        var users = SpecificationEvaluator.Default.GetQuery(context.Users.AsNoTracking(), spec);
 
         var items = await users
-            .OrderBy(u => u.Name)
             .Select(u => new UserListItem(
                 u.Id,
                 u.Name,
                 u.Email,
                 u is Admin ? nameof(UserRole.Admin) : u is Teacher ? nameof(UserRole.Teacher) : nameof(UserRole.Student),
                 u.Active))
-            .ToListAsync(cancellationToken);
+            .PageAsync(query.Page, query.PageSize, cancellationToken);
 
         return items;
     }

@@ -3,10 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { api, currentUser, errorMessage } from "@/lib/api";
+import { api, apiList, currentUser, errorMessage } from "@/lib/api";
+import { usePagedList } from "@/lib/usePagedList";
 import AppShell from "@/components/AppShell";
 import Panel from "@/components/ui/Panel";
 import Icon from "@/components/ui/Icon";
+import Pagination from "@/components/ui/Pagination";
 import { useToast } from "@/components/ui/Toast";
 
 type CourseDetail = {
@@ -22,20 +24,23 @@ type CourseDetail = {
 
 type AssessmentItem = { id: string; courseName: string; minimumScore: number; questionCount: number };
 
+type ProgressItem = { classId: string; className: string; courseName: string; percentual: number; watchedSeconds: number; lastAccessAtUtc: string };
+
 export default function CoursePage() {
   const params = useParams<{ courseId: string }>();
   const courseId = params.courseId;
   const { toast } = useToast();
   const user = currentUser();
   const [course, setCourse] = useState<CourseDetail | null>(null);
-  const [assessments, setAssessments] = useState<AssessmentItem[]>([]);
+  const { items: assessments, total: aTotal, page, setPage } = usePagedList<AssessmentItem>(
+    `/api/courses/${courseId}/assessments`,
+    { active: true },
+  );
+  const [progressMap, setProgressMap] = useState<Record<string, number>>({});
 
   const load = useCallback(async () => {
     try {
-      const c = await api<CourseDetail>(`/api/courses/${courseId}`);
-      setCourse(c);
-      const a = await api<AssessmentItem[]>(`/api/courses/${courseId}/assessments`);
-      setAssessments(a);
+      setCourse(await api<CourseDetail>(`/api/courses/${courseId}`));
     } catch (e) {
       toast("error", errorMessage(e, "Curso não encontrado."));
     }
@@ -44,6 +49,20 @@ export default function CoursePage() {
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => {
+    if (user?.role === "Admin") {
+      setProgressMap({});
+      return;
+    }
+    apiList<ProgressItem>("/api/me/progress")
+      .then((progress) => {
+        const map: Record<string, number> = {};
+        for (const item of progress) map[item.classId] = item.percentual;
+        setProgressMap(map);
+      })
+      .catch(() => undefined);
+  }, [user?.role]);
 
   if (!course) {
     return (
@@ -75,23 +94,38 @@ export default function CoursePage() {
             <p className="text-sm text-white/50">Nenhuma aula neste curso.</p>
           ) : (
             <ol className="space-y-2">
-              {course.classes.map((c) => (
-                <li key={c.id}>
-                  <Link
-                    href={`/class/${c.id}`}
-                    className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3 transition hover:border-indigo-500/50 hover:bg-white/10"
-                  >
-                    <span className="material-icon rounded-full bg-white/10 p-2 text-base leading-none">{c.contentType === "Vimeo" ? "videocam" : "play_circle"}</span>
-                    <div className="flex-1">
-                      <div className="font-medium">{c.name}</div>
-                      <div className="text-xs text-white/40">
-                        {c.contentType} • liberada em {c.deliveryDays} dia(s)
+              {course.classes.map((c) => {
+                const pct = progressMap[c.id] ?? 0;
+                const locked = user?.role !== "Admin" && pct < 100;
+                return (
+                  <li key={c.id}>
+                    <Link
+                      href={`/class/${c.id}`}
+                      className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3 transition hover:border-indigo-500/50 hover:bg-white/10"
+                    >
+                      <span className="material-icon rounded-full bg-white/10 p-2 text-base leading-none">{c.contentType === "Vimeo" ? "videocam" : "play_circle"}</span>
+                      <div className="flex-1">
+                        <div className="font-medium">{c.name}</div>
+                        <div className="text-xs text-white/40">
+                          {c.contentType} • liberada em {c.deliveryDays} dia(s) •{" "}
+                          {locked ? (
+                            <span className="inline-flex items-center gap-1 text-amber-400">
+                              <Icon name="lock" className="text-sm" /> {pct}% concluída
+                            </span>
+                          ) : pct >= 100 ? (
+                            <span className="inline-flex items-center gap-1 text-emerald-400">
+                              <Icon name="check_circle" className="text-sm" /> Concluída
+                            </span>
+                          ) : (
+                            <span>{pct}% assistida</span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    <span className="material-icon text-white/30">chevron_right</span>
-                  </Link>
-                </li>
-              ))}
+                      <span className="material-icon text-white/30">{locked ? "lock" : "chevron_right"}</span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ol>
           )}
         </Panel>
@@ -118,6 +152,7 @@ export default function CoursePage() {
               ))}
             </ul>
           )}
+          <Pagination page={page} total={aTotal} pageSize={25} onChange={setPage} />
           {user?.role === "Admin" && (
             <Link href={`/admin/assessments?course=${courseId}`} className="btn btn-ghost mt-4 w-full justify-center text-sm">
               <Icon name="add" /> Administrar avaliações

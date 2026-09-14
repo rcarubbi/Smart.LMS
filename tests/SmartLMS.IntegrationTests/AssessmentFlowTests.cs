@@ -3,7 +3,9 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
-using SmartLMS.Infrastructure.Persistence;
+using SmartLMS.DataAccess.Seed;
+using SmartLMS.Application.Auth.Login;
+using SmartLMS.Application.Users.CreateUser;
 using SmartLMS.Presentation.Api.Endpoints;
 using Testcontainers.MsSql;
 
@@ -13,12 +15,11 @@ namespace SmartLMS.IntegrationTests;
 public class AssessmentFlowTests
 {
     [Test]
-    public async Task Create_assessment_hide_answers_score_submission()
+    [ClassDataSource<TestSqlContainer>(Shared = SharedType.PerTestSession)]
+    public async Task Create_assessment_hide_answers_score_submission(TestSqlContainer db)
     {
-        await using var container = new MsSqlBuilder().Build();
-        await container.StartAsync();
 
-        Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", container.GetConnectionString());
+        Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", db.ConnectionStringForDatabase("assessment"));
         Environment.SetEnvironmentVariable("Jwt__SigningKey", "assessment-test-signing-key-0123456789abcdef");
 
         try
@@ -155,6 +156,82 @@ public class AssessmentFlowTests
                     await Assert.That(failedResult!.Score).IsEqualTo(0);
                     await Assert.That(failedResult.Passed).IsFalse();
                 }
+
+                // Update: full replace (minimumScore 7 -> 10, same questions).
+                var updateResponse = await client.PutAsJsonAsync($"/api/assessments/{assessmentId}", new
+                {
+                    minimumScore = 10,
+                    questions = new object[]
+                    {
+                        new
+                        {
+                            type = "SingleChoice",
+                            description = "What does TDD stand for?",
+                            score = 3,
+                            options = new[] { new { text = "Test Driven Development", order = 0 }, new { text = "Test Design Doc", order = 1 } },
+                            singleChoiceRightOrder = 0,
+                        },
+                        new
+                        {
+                            type = "MultipleChoice",
+                            description = "Which are xUnit attributes?",
+                            score = 4,
+                            options = new[] { new { text = "[Test]", order = 0 }, new { text = "[Fact]", order = 1 }, new { text = "[TestCase]", order = 2 } },
+                            multipleChoiceRightOrders = new[] { 1, 2 },
+                        },
+                        new
+                        {
+                            type = "Reordering",
+                            description = "Order the TDD cycle",
+                            score = 3,
+                            options = new[] { new { text = "Red", order = 1 }, new { text = "Green", order = 2 }, new { text = "Refactor", order = 3 } },
+                        },
+                    },
+                });
+                await Assert.That(updateResponse.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
+
+                // Admin edit view exposes right answers for the editor.
+                var editDetail = await client.GetFromJsonAsync<AssessmentEditStub>($"/api/assessments/{assessmentId}/edit", JsonOpts);
+                using (Assert.Multiple())
+                {
+                    await Assert.That(editDetail).IsNotNull();
+                    await Assert.That(editDetail!.MinimumScore).IsEqualTo(10);
+                    await Assert.That(editDetail.Questions.Count).IsEqualTo(3);
+                    await Assert.That(editDetail.Questions[0].SingleChoiceRightOrder).IsEqualTo(0);
+                }
+
+                // Student view still hides right answers after the update.
+                var rawAfterUpdate = await studentClient.GetStringAsync($"/api/assessments/{assessmentId}");
+                using (Assert.Multiple())
+                {
+                    await Assert.That(rawAfterUpdate.Contains("rightOption", StringComparison.OrdinalIgnoreCase)).IsFalse();
+                    await Assert.That(rawAfterUpdate.Contains("rightAnswer", StringComparison.OrdinalIgnoreCase)).IsFalse();
+                }
+
+                // Rewired answers still score: refetch (option ids changed) and submit perfect.
+                var detailAfter = await studentClient.GetFromJsonAsync<AssessmentDetailStub>($"/api/assessments/{assessmentId}", JsonOpts);
+                if (detailAfter is null || detailAfter.Questions.Count != 3)
+                {
+                    throw new InvalidOperationException("Assessment detail should contain three questions after update.");
+                }
+
+                var perfectAfter = new
+                {
+                    questions = new object[]
+                    {
+                        new { questionId = detailAfter.Questions[0].Id, optionIds = new[] { detailAfter.Questions[0].Options[0].Id } },
+                        new { questionId = detailAfter.Questions[1].Id, optionIds = new[] { detailAfter.Questions[1].Options[2].Id, detailAfter.Questions[1].Options[1].Id } },
+                        new { questionId = detailAfter.Questions[2].Id, optionIds = OrderedByOptionOrder(detailAfter.Questions[2]) },
+                    },
+                };
+
+                var perfectAfterRun = await studentClient.PostAsJsonAsync($"/api/assessments/{assessmentId}/submit", perfectAfter);
+                var perfectAfterResult = await perfectAfterRun.Content.ReadFromJsonAsync<ResultStub>(JsonOpts);
+                using (Assert.Multiple())
+                {
+                    await Assert.That(perfectAfterResult!.Score).IsEqualTo(10);
+                    await Assert.That(perfectAfterResult.Passed).IsTrue();
+                }
             }
             finally
             {
@@ -174,7 +251,7 @@ public class AssessmentFlowTests
     private static async Task<string> EnsureStudentAsync(HttpClient adminClient)
     {
         const string email = "quiz.student@smartlms.local";
-        var response = await adminClient.PostAsJsonAsync("/api/users", new CreateUserRequest(
+        var response = await adminClient.PostAsJsonAsync("/api/users", new CreateUserInput(
             "Quiz Student", email, "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
 
         if (response.StatusCode != HttpStatusCode.Created)
@@ -187,7 +264,7 @@ public class AssessmentFlowTests
 
     private static async Task<AuthTokens> LoginAsync(HttpClient client, string email, string password)
     {
-        var response = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest(email, password));
+        var response = await client.PostAsJsonAsync("/api/auth/login", new LoginInput(email, password));
         if (response.StatusCode != HttpStatusCode.OK)
         {
             throw new InvalidOperationException($"Login failed for {email}: {(int)response.StatusCode}");
@@ -216,6 +293,20 @@ public class AssessmentFlowTests
 
     private sealed record AssessmentDetailStub(Guid Id, Guid CourseId, int MinimumScore, IReadOnlyList<QuestionStub> Questions);
 
+    private sealed record AssessmentEditStub(
+        Guid Id,
+        Guid CourseId,
+        int MinimumScore,
+        IReadOnlyList<QuestionEditStub> Questions);
+
+    private sealed record QuestionEditStub(
+        Guid Id,
+        string Type,
+        string Description,
+        int Score,
+        IReadOnlyList<OptionStub> Options,
+        int? SingleChoiceRightOrder,
+        IReadOnlyList<int> MultipleChoiceRightOrders);
     private sealed record QuestionStub(Guid Id, string Type, string Description, int Score, IReadOnlyList<OptionStub> Options);
 
     private sealed record OptionStub(Guid Id, string Text, int Order);

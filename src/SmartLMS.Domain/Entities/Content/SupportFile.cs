@@ -42,13 +42,13 @@ public class SupportFile : Entity
 
     public void Rename(string name) => Name = name;
 
-    private static string? ArgumentNotEmpty(string? value, string paramName)
+    private static string ArgumentNotEmpty(string? value, string paramName)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
             throw new ArgumentException("Value cannot be null or whitespace.", paramName);
         }
 
-        return value;
+        return value!;
     }
 }
