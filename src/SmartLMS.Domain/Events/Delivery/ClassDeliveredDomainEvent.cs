@@ -15,6 +15,10 @@ public sealed record ClassDeliveredDomainEvent(
     string SubjectName,
     string ClassroomName,
     IReadOnlyList<ClassDeliveredRecipient> Recipients,
-    DateTime OccurredOn) : IDomainEvent;
+    DateTime OccurredOn) : IDomainEvent
+{
+    /// <summary>The class release is keyed to the delivery plan that raised it.</summary>
+    public Guid? CorrelationId => PlanId;
+}
 
 public sealed record ClassDeliveredRecipient(Guid StudentId, string Name, string Email);

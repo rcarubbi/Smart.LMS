@@ -35,6 +35,28 @@ public sealed class SingleChoiceQuestion : Question
         RightOptionId = option.Id;
     }
 
+    public override bool TryWireRightAnswers(
+        int? singleChoiceOrder,
+        IReadOnlyList<int> multipleChoiceOrders,
+        out string? error)
+    {
+        error = null;
+        if (singleChoiceOrder is not { } order)
+        {
+            return true;
+        }
+
+        var option = Options.ElementAtOrDefault(order);
+        if (option is null)
+        {
+            error = "Single choice right answer index is out of range.";
+            return false;
+        }
+
+        SetRightOption(option.Id);
+        return true;
+    }
+
     /// <summary>Clears the right answer so the question/options can be replaced or deleted
     /// without tripping the NoAction FK.</summary>
     public void ClearRightOption()

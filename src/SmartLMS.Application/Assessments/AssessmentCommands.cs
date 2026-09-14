@@ -117,17 +117,25 @@ internal sealed class QuestionInputValidator : AbstractValidator<QuestionInput>
 /// </summary>
 internal static class AssessmentQuestionFactory
 {
+    /// <summary>Registry of question-type constructors (strategy table): adding a question
+    /// type means adding its class plus one entry here, not editing a dispatch switch.</summary>
+    private static readonly IReadOnlyDictionary<QuestionTypes, Func<string, int, Question>> Factories =
+        new Dictionary<QuestionTypes, Func<string, int, Question>>
+        {
+            [QuestionTypes.SingleChoice] = static (description, score) => new SingleChoiceQuestion(description, score),
+            [QuestionTypes.MultipleChoice] = static (description, score) => new MultipleChoiceQuestion(description, score),
+            [QuestionTypes.Reordering] = static (description, score) => new ReorderingQuestion(description, score),
+        };
+
     public static Question Create(QuestionInput input)
     {
         var type = Enum.Parse<QuestionTypes>(input.Type, ignoreCase: true);
-
-        Question question = type switch
+        if (!Factories.TryGetValue(type, out var factory))
         {
-            QuestionTypes.SingleChoice => new SingleChoiceQuestion(input.Description, input.Score),
-            QuestionTypes.MultipleChoice => new MultipleChoiceQuestion(input.Description, input.Score),
-            QuestionTypes.Reordering => new ReorderingQuestion(input.Description, input.Score),
-            _ => throw new InvalidOperationException($"Unknown question type '{input.Type}'."),
-        };
+            throw new InvalidOperationException($"Unknown question type '{input.Type}'.");
+        }
+
+        var question = factory(input.Description, input.Score);
 
         foreach (var optionInput in input.Options.OrderBy(o => o.Order))
         {
@@ -157,35 +165,9 @@ internal static class AssessmentQuestionFactory
     {
         foreach (var p in pending)
         {
-            switch (p.Question)
+            if (!p.Question.TryWireRightAnswers(p.SingleChoiceRightOrder, p.MultipleRightOrders, out var error))
             {
-                case SingleChoiceQuestion single when p.SingleChoiceRightOrder is { } order:
-                    var singleOption = single.Options.ElementAtOrDefault(order);
-                    if (singleOption is null)
-                    {
-                        return Error.Validation(
-                            "Assessments.RightAnswerOutOfRange",
-                            "Single choice right answer index is out of range.");
-                    }
-
-                    single.SetRightOption(singleOption.Id);
-                    break;
-
-                case MultipleChoiceQuestion multiple:
-                    foreach (var index in p.MultipleRightOrders)
-                    {
-                        var option = multiple.Options.ElementAtOrDefault(index);
-                        if (option is null)
-                        {
-                            return Error.Validation(
-                                "Assessments.RightAnswerOutOfRange",
-                                "Multiple choice right answer indexes are out of range.");
-                        }
-
-                        multiple.AddRightOption(option);
-                    }
-
-                    break;
+                return Error.Validation("Assessments.RightAnswerOutOfRange", error ?? "Right answer index is out of range.");
             }
         }
 

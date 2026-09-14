@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Application.Auth;
+using SmartLMS.Application.Integration;
 using SmartLMS.Application.Messaging;
 
 namespace SmartLMS.Application;
@@ -29,6 +30,13 @@ public static class DependencyInjection
                 (interfaceType.GetGenericTypeDefinition() == typeof(ICommandHandler<>) ||
                  interfaceType.GetGenericTypeDefinition() == typeof(ICommandHandler<,>) ||
                  interfaceType.GetGenericTypeDefinition() == typeof(IQueryHandler<,>))))
+            .WithScopedLifetime());
+
+        // Outbox integration side-effects: one strategy per message type.
+        services.Scan(scan => scan
+            .FromAssembliesOf(typeof(DependencyInjection))
+            .AddClasses(classes => classes.AssignableTo<IOutboxEventHandler>(), publicOnly: false)
+            .As<IOutboxEventHandler>()
             .WithScopedLifetime());
 
         // Cross-cutting middleware pipeline (decorator pattern).

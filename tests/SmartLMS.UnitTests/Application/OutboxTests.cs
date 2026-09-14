@@ -50,7 +50,8 @@ public class OutboxTests
 
         var email = Substitute.For<IEmailSender>();
         var handler = new ProcessOutboxMessagesHandler(
-            context, outbox, email, TimeProvider.System, NullLogger<ProcessOutboxMessagesHandler>.Instance);
+            context, outbox, new IOutboxEventHandler[] { new ClassDeliveredEmailHandler(email) },
+            TimeProvider.System, NullLogger<ProcessOutboxMessagesHandler>.Instance);
 
         var result = await handler.Handle(new ProcessOutboxMessagesCommand(), CancellationToken.None);
 
@@ -82,7 +83,8 @@ public class OutboxTests
 
         var email = Substitute.For<IEmailSender>();
         var handler = new ProcessOutboxMessagesHandler(
-            context, outbox, email, TimeProvider.System, NullLogger<ProcessOutboxMessagesHandler>.Instance);
+            context, outbox, new IOutboxEventHandler[] { new ClassDeliveredEmailHandler(email) },
+            TimeProvider.System, NullLogger<ProcessOutboxMessagesHandler>.Instance);
 
         var result = await handler.Handle(new ProcessOutboxMessagesCommand(), CancellationToken.None);
 
@@ -116,7 +118,8 @@ public class OutboxTests
             .Returns(Task.FromException(new InvalidOperationException("smtp down")));
 
         var handler = new ProcessOutboxMessagesHandler(
-            context, outbox, email, TimeProvider.System, NullLogger<ProcessOutboxMessagesHandler>.Instance);
+            context, outbox, new IOutboxEventHandler[] { new ClassDeliveredEmailHandler(email) },
+            TimeProvider.System, NullLogger<ProcessOutboxMessagesHandler>.Instance);
 
         var result = await handler.Handle(new ProcessOutboxMessagesCommand(), CancellationToken.None);
 

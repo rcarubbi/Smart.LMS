@@ -7,6 +7,8 @@ public sealed class Teacher : User
     {
     }
 
+    public override UserRole Kind => UserRole.Teacher;
+
     // ORM materialization.
     private Teacher()
     {

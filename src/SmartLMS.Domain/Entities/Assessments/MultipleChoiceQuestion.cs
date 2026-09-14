@@ -22,6 +22,27 @@ public sealed class MultipleChoiceQuestion : Question
 
     public void AddRightOption(QuestionOption option) => RightOptions.Add(option);
 
+    public override bool TryWireRightAnswers(
+        int? singleChoiceOrder,
+        IReadOnlyList<int> multipleChoiceOrders,
+        out string? error)
+    {
+        foreach (var index in multipleChoiceOrders)
+        {
+            var option = Options.ElementAtOrDefault(index);
+            if (option is null)
+            {
+                error = "Multiple choice right answer indexes are out of range.";
+                return false;
+            }
+
+            AddRightOption(option);
+        }
+
+        error = null;
+        return true;
+    }
+
     /// <summary>Clears right answers so the question/options can be replaced or deleted
     /// without tripping the NoAction FK.</summary>
     public void ClearRightOptions() => RightOptions.Clear();

@@ -19,7 +19,7 @@ internal sealed class DeleteUserHandler(ISmartLmsDbContext context) : ICommandHa
             return Error.NotFound("Users.NotFound", "User not found.");
         }
 
-        if (user is Admin)
+        if (user.Kind == UserRole.Admin)
         {
             return Error.Conflict("Users.CannotDeleteAdmin", "Não é possível excluir um administrador.");
         }

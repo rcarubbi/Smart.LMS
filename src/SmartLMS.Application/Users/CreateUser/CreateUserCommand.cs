@@ -26,6 +26,16 @@ internal sealed class CreateUserHandler(
     ISmartLmsDbContext context,
     IPasswordHasher passwordHasher) : ICommandHandler<CreateUserCommand, Guid>
 {
+    /// <summary>Registry of per-role user constructors (strategy table): adding a role means
+    /// adding its user subclass plus one entry here, not editing a dispatch switch.</summary>
+    private static readonly IReadOnlyDictionary<UserRole, Func<string, string, User>> Activators =
+        new Dictionary<UserRole, Func<string, string, User>>
+        {
+            [UserRole.Admin] = static (name, email) => new Admin(name, email),
+            [UserRole.Teacher] = static (name, email) => new Teacher(name, email),
+            [UserRole.Student] = static (name, email) => new Student(name, email),
+        };
+
     public async ValueTask<ErrorOr<Guid>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
         var emailTaken = await context.Users
@@ -36,13 +46,12 @@ internal sealed class CreateUserHandler(
             return Error.Conflict("Users.EmailAlreadyExists", $"The email '{command.Input.Email}' is already registered.");
         }
 
-        User user = command.Input.Role switch
+        if (!Activators.TryGetValue(command.Input.Role, out var activate))
         {
-            UserRole.Admin => new Admin(command.Input.Name, command.Input.Email),
-            UserRole.Teacher => new Teacher(command.Input.Name, command.Input.Email),
-            UserRole.Student => new Student(command.Input.Name, command.Input.Email),
-            _ => throw new InvalidOperationException("Unknown role."),
-        };
+            throw new InvalidOperationException("Unknown role.");
+        }
+
+        var user = activate(command.Input.Name, command.Input.Email);
 
         user.UpdatePasswordHash(passwordHasher.Hash(command.Input.Password));
         context.Users.Add(user);

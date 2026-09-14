@@ -28,12 +28,12 @@ internal sealed class DeleteUserPermanentlyHandler(ISmartLmsDbContext context)
             return Error.NotFound("Users.NotFound", "User not found.");
         }
 
-        if (user is Admin)
+        if (user.Kind == UserRole.Admin)
         {
             return Error.Conflict("Users.CannotDeleteAdmin", "Não é possível excluir um administrador.");
         }
 
-        if (user is Teacher)
+        if (user.Kind == UserRole.Teacher)
         {
             var assignedToCourse = await context.Courses.AnyAsync(c => c.TeacherInChargeId == command.Id, cancellationToken);
             var assignedToClass = await context.Classes.AnyAsync(c => c.TeacherId == command.Id, cancellationToken);
@@ -45,7 +45,7 @@ internal sealed class DeleteUserPermanentlyHandler(ISmartLmsDbContext context)
             }
         }
 
-        if (user is Student student)
+        if (user.Kind == UserRole.Student)
         {
             var plans = await context.DeliveryPlans
                 .Include(p => p.Students)
@@ -54,7 +54,7 @@ internal sealed class DeleteUserPermanentlyHandler(ISmartLmsDbContext context)
 
             foreach (var plan in plans)
             {
-                plan.Students.Remove(student);
+                plan.Students.Remove((Student)user);
             }
         }
 

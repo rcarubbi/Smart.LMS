@@ -54,18 +54,12 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
                 context.Set<OutboxMessage>().Add(new OutboxMessage(
                     domainEvent.GetType().Name,
                     JsonSerializer.Serialize(domainEvent, domainEvent.GetType(), JsonOptions),
-                    correlationId: GetCorrelationId(domainEvent)));
+                    correlationId: domainEvent.CorrelationId));
             }
 
             aggregate.ClearDomainEvents();
         }
     }
-
-    private static Guid? GetCorrelationId(IDomainEvent domainEvent) => domainEvent switch
-    {
-        ClassDeliveredDomainEvent delivered => delivered.PlanId,
-        _ => null,
-    };
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {

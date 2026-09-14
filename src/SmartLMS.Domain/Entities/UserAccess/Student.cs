@@ -14,5 +14,7 @@ public sealed class Student : User
     {
     }
 
+    public override UserRole Kind => UserRole.Student;
+
     public ICollection<DeliveryPlan> DeliveryPlans { get; private set; } = [];
 }

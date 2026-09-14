@@ -7,6 +7,8 @@ public sealed class Admin : User
     {
     }
 
+    public override UserRole Kind => UserRole.Admin;
+
     // ORM materialization.
     private Admin()
     {

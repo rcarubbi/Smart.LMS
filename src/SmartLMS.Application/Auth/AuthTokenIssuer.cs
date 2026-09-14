@@ -13,7 +13,7 @@ internal sealed class AuthTokenIssuer(
     public async ValueTask<AuthResponse> IssueAsync(User user, CancellationToken cancellationToken)
     {
         var now = timeProvider.GetUtcNow().UtcDateTime;
-        var role = ResolveRole(user);
+        var role = user.Kind;
 
         var access = tokenService.CreateAccessToken(user.Id, user.Email, role);
         var refreshMaterial = tokenService.CreateRefreshToken();
@@ -32,12 +32,4 @@ internal sealed class AuthTokenIssuer(
             refreshMaterial.Token,
             refreshMaterial.ExpiresAtUtc);
     }
-
-    public static UserRole ResolveRole(User user) => user switch
-    {
-        Admin => UserRole.Admin,
-        Teacher => UserRole.Teacher,
-        Student => UserRole.Student,
-        _ => throw new InvalidOperationException($"Unknown user type '{user.GetType().Name}'."),
-    };
 }

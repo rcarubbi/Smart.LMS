@@ -7,4 +7,8 @@ namespace SmartLMS.Domain.Events;
 public interface IDomainEvent
 {
     DateTime OccurredOn { get; }
+
+    /// <summary>Business correlation key the outbox persists with the event
+    /// (e.g. the plan that raised it), or null when the event has none.</summary>
+    Guid? CorrelationId { get; }
 }

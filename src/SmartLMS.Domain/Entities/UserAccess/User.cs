@@ -47,6 +47,11 @@ public abstract class User : Entity
 
     public ICollection<Notice> PrivateNotices { get; private set; } = [];
 
+    /// <summary>The role each user subtype embodies, resolved polymorphically.
+    /// Named <c>Kind</c> because <c>Role</c> is the string TPH discriminator column
+    /// already mapped in <see cref="SmartLMS.DataAccess.Mappings.UserMapping"/>.</summary>
+    public abstract UserRole Kind { get; }
+
     /// <summary>Updates the display name (validated by <see cref="PersonName"/>).</summary>
     public void Rename(string name) => Name = name;
 
