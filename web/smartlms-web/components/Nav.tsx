@@ -10,6 +10,7 @@ export default function Nav() {
   const router = useRouter();
   const user = typeof window !== "undefined" ? currentUser() : null;
   const isAdmin = user?.role === "Admin";
+  const isTeacher = user?.role === "Teacher";
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const managementMenuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -88,6 +89,12 @@ export default function Nav() {
               </div>
             )}
           </div>
+        )}
+
+        {isTeacher && (
+          <Link href="/teaching" className="rounded px-2 py-1.5 text-white/70 hover:bg-white/5 hover:text-white">
+            Área do professor
+          </Link>
         )}
 
         {isAdmin && (

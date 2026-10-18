@@ -4,6 +4,7 @@ using SmartLMS.Application.Users.DeleteUser;
 using SmartLMS.Application.Users.DeleteUserPermanently;
 using SmartLMS.Application.Users.ListUsers;
 using SmartLMS.Application.Users.RestoreUser;
+using SmartLMS.Application.Users.UpdateUser;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Presentation.Api.Extensions;
 
@@ -34,6 +35,17 @@ internal static class UserEndpoints
             .Produces(201)
             .Produces(400)
             .Produces(403);
+
+        group.MapPut("/{id:guid}", async (Guid id, UpdateUserInput request, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var result = await dispatcher.Send(new UpdateUserCommand(id, request), ct);
+                return result.ToResult();
+            })
+            .RequireAuthorization(Policies.AdminOnly)
+            .Produces(204)
+            .Produces(400)
+            .Produces(404)
+            .Produces(409);
 
         group.MapDelete("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {

@@ -8,10 +8,14 @@ import Pagination from "@/components/ui/Pagination";
 
 type MyPlan = { classroomId: string; name: string; deliveredCount: number; totalCount: number };
 type Progress = { classId: string; className: string; courseName: string; percentual: number; watchedSeconds: number; lastAccessAtUtc: string };
+type MyCourse = { courseId: string; courseName: string; deliveredCount: number; totalCount: number; percentual: number };
+type ReleasedClass = { classId: string; className: string; courseId: string; courseName: string; releasedAtUtc: string };
 
 export default function MePage() {
   const { items: plans, total: plansTotal, page: plansPage, setPage: setPlansPage } = usePagedList<MyPlan>("/api/me/classrooms", {});
   const { items: progress, total: progressTotal, page: progressPage, setPage: setProgressPage } = usePagedList<Progress>("/api/me/progress", {});
+  const { items: courses, total: coursesTotal, page: coursesPage, setPage: setCoursesPage } = usePagedList<MyCourse>("/api/me/courses", {});
+  const { items: released, total: releasedTotal, page: releasedPage, setPage: setReleasedPage } = usePagedList<ReleasedClass>("/api/me/released-classes", {});
 
   function bar(v: number) {
     const w = Math.max(0, Math.min(100, v));
@@ -25,6 +29,34 @@ export default function MePage() {
   return (
     <AppShell>
       <div className="grid gap-6 lg:grid-cols-2">
+        <Panel icon="menu_book" title="Meus cursos" accent="#0ea5e9">
+          {courses.length === 0 ? <p className="text-sm text-white/50">Nenhum curso atribuído.</p> : (
+            <ul className="space-y-3">{courses.map((course) => (
+              <li key={course.courseId}>
+                <Link href={`/course/${course.courseId}`} className="block rounded-lg border border-white/10 bg-white/5 p-3 hover:bg-white/10">
+                  <div className="flex justify-between gap-3 text-sm"><span className="font-medium">{course.courseName}</span><span className="text-white/50">{course.deliveredCount}/{course.totalCount}</span></div>
+                  {bar(course.percentual)}
+                </Link>
+              </li>
+            ))}</ul>
+          )}
+          <Pagination page={coursesPage} total={coursesTotal} pageSize={25} onChange={setCoursesPage} />
+        </Panel>
+
+        <Panel icon="new_releases" title="Aulas liberadas recentemente" accent="#14b8a6">
+          {released.length === 0 ? <p className="text-sm text-white/50">Nenhuma aula liberada.</p> : (
+            <ul className="space-y-2">{released.map((item) => (
+              <li key={item.classId}>
+                <Link href={`/class/${item.classId}`} className="block rounded-lg border border-white/10 bg-white/5 p-3 hover:bg-white/10">
+                  <span className="block text-sm font-medium">{item.className}</span>
+                  <span className="text-xs text-white/40">{item.courseName} · {new Date(item.releasedAtUtc).toLocaleDateString("pt-BR")}</span>
+                </Link>
+              </li>
+            ))}</ul>
+          )}
+          <Pagination page={releasedPage} total={releasedTotal} pageSize={25} onChange={setReleasedPage} />
+        </Panel>
+
         <Panel icon="groups" title="Minhas turmas" accent="#ec4899">
           {plans.length === 0 ? (
             <p className="text-sm text-white/50">Você não está em nenhuma turma.</p>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { api, storeTokens } from "@/lib/api";
 import Icon from "@/components/ui/Icon";
 
@@ -64,6 +65,10 @@ export default function LoginPage() {
         <button type="submit" disabled={loading} className="btn btn-primary w-full justify-center">
           {loading ? "Entrando..." : (<><Icon name="login" /> Entrar</>)}
         </button>
+
+        <Link href="/request-password-reset" className="block text-center text-sm text-indigo-300 hover:underline">
+          Esqueci minha senha
+        </Link>
 
         <p className="text-center text-xs text-white/40">
           admin padrão: administrator@yourcompany.com / smart123

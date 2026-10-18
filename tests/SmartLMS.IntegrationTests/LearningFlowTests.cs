@@ -154,6 +154,10 @@ public class LearningFlowTests
                 await Assert.That(noticeItems.All(n => !n.Seen)).IsTrue();
                 await Assert.That(noticeItems.Any(n => n.Text.Contains("Queues 101"))).IsTrue();
             }
+            var deliveryNotices = await studentClient.GetFromJsonAsync<PagedStub<NoticeStub>>("/api/notices?audience=Delivery", JsonOpts);
+            var globalNotices = await studentClient.GetFromJsonAsync<PagedStub<NoticeStub>>("/api/notices?audience=Global", JsonOpts);
+            await Assert.That(deliveryNotices!.Items).Count().IsEqualTo(2);
+            await Assert.That(globalNotices!.Items).IsEmpty();
 
             var firstNotice = noticeItems[0];
             var seen = await studentClient.PostAsync($"/api/notices/{firstNotice.Id}/seen", null);
@@ -162,6 +166,7 @@ public class LearningFlowTests
             var outsiderResponse = await client.PostAsJsonAsync("/api/users", new CreateUserInput(
                 "Unaffiliated Student", "outsider@smartlms.local", "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
             await Assert.That(outsiderResponse.StatusCode).IsEqualTo(HttpStatusCode.Created);
+            var outsiderId = (await outsiderResponse.Content.ReadFromJsonAsync<CreatedId>(JsonOpts))!.Id;
             var outsiderClient = factory.CreateClient();
             var outsiderLogin = await LoginAsync(outsiderClient, "outsider@smartlms.local", "student-pass-123");
             outsiderClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", outsiderLogin.AccessToken);
@@ -169,6 +174,17 @@ public class LearningFlowTests
             await Assert.That(outsiderNotices!.Items.Any(n => n.DeliveryPlanId is not null)).IsFalse();
             await Assert.That((await outsiderClient.PostAsync($"/api/notices/{noticeItems.Last(n => n.DeliveryPlanId is not null).Id}/seen", null))
                 .StatusCode).IsEqualTo(HttpStatusCode.NotFound);
+
+            var enrollmentUpdate = await client.PutAsJsonAsync($"/api/delivery-plans/{deliveryPlanId}/students",
+                new { studentIds = new[] { studentId, outsiderId } });
+            await Assert.That(enrollmentUpdate.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
+            await Assert.That((await outsiderClient.GetAsync($"/api/classes/{firstClassId}")).StatusCode)
+                .IsEqualTo(HttpStatusCode.OK);
+            var removeEnrollment = await client.PutAsJsonAsync($"/api/delivery-plans/{deliveryPlanId}/students",
+                new { studentIds = new[] { studentId } });
+            await Assert.That(removeEnrollment.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
+            await Assert.That((await outsiderClient.GetAsync($"/api/classes/{firstClassId}")).StatusCode)
+                .IsEqualTo(HttpStatusCode.NotFound);
 
             // Record a class access and read progress back.
             var classList = await studentClient.GetFromJsonAsync<PagedStub<ClassStub>>($"/api/classes?courseId={courseId}", JsonOpts);
@@ -211,6 +227,32 @@ public class LearningFlowTests
                 await Assert.That(progress.Items[0].Percentual).IsEqualTo(40);
             }
 
+            var teacherClient = factory.CreateClient();
+            var teacherLogin = await LoginAsync(teacherClient, "grace@smartlms.local", "teacher-pass-123");
+            teacherClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", teacherLogin.AccessToken);
+            var teachingCourses = await teacherClient.GetFromJsonAsync<PagedStub<TeachingCourseStub>>("/api/me/teaching/courses", JsonOpts);
+            await Assert.That(teachingCourses!.Items.Any(c => c.Id == courseId && c.Classes.Any(k => k.Id == firstClassId))).IsTrue();
+            var teachingProgress = await teacherClient.GetFromJsonAsync<PagedStub<TeachingProgressStub>>(
+                $"/api/me/teaching/progress?classId={firstClassId}", JsonOpts);
+            await Assert.That(teachingProgress!.Items.Single().StudentId).IsEqualTo(studentId);
+            var teachingStudents = await teacherClient.GetFromJsonAsync<PagedStub<TeachingStudentStub>>(
+                $"/api/me/teaching/students?courseId={courseId}", JsonOpts);
+            await Assert.That(teachingStudents!.Items.Any(s => s.Id == studentId && s.ClassroomName == "Night Class")).IsTrue();
+            var teachingHistory = await teacherClient.GetFromJsonAsync<PagedStub<TeachingDeliveryStub>>(
+                $"/api/me/teaching/delivery-history?courseId={courseId}", JsonOpts);
+            await Assert.That(teachingHistory!.Items).Count().IsEqualTo(2);
+            var editLesson = await teacherClient.PutAsJsonAsync($"/api/classes/{firstClassId}", new
+            {
+                name = "Queues 101",
+                content = "https://vimeo.com/76979871",
+                order = 1,
+                deliveryDays = 1,
+                contentType = "Vimeo",
+                teacherId,
+                files = new[] { new { name = uploadedFile.Name, storagePath = uploadedFile.Url } },
+            });
+            await Assert.That(editLesson.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
+
             // Student classroom view shows delivered/total.
             var myClassrooms = await studentClient.GetFromJsonAsync<PagedStub<MyPlanStub>>("/api/me/classrooms", JsonOpts);
             if (myClassrooms is null || myClassrooms.Items.Count != 1)
@@ -224,6 +266,11 @@ public class LearningFlowTests
                 await Assert.That(myClassrooms.Items[0].DeliveredCount).IsEqualTo(2);
                 await Assert.That(myClassrooms.Items[0].TotalCount).IsEqualTo(2);
             }
+            var myCourses = await studentClient.GetFromJsonAsync<PagedStub<MyCourseStub>>("/api/me/courses", JsonOpts);
+            await Assert.That(myCourses!.Items.Single().CourseId).IsEqualTo(courseId);
+            await Assert.That(myCourses.Items[0].Percentual).IsEqualTo(100);
+            var recentReleases = await studentClient.GetFromJsonAsync<PagedStub<ReleasedStub>>("/api/me/released-classes", JsonOpts);
+            await Assert.That(recentReleases!.Items).Count().IsEqualTo(2);
 
             await Assert.That((await client.DeleteAsync($"/api/classrooms/{classroomId}")).StatusCode)
                 .IsEqualTo(HttpStatusCode.NoContent);
@@ -347,8 +394,17 @@ public class LearningFlowTests
     private sealed record FileDetailStub(Guid Id, string Name, string StoragePath);
 
     private sealed record ProgressStub(Guid ClassId, string ClassName, string CourseName, int Percentual, decimal WatchedSeconds, DateTime LastAccessAtUtc);
+    private sealed record TeachingCourseStub(Guid Id, string Name, int Order, Guid? TeacherInChargeId, IReadOnlyList<TeachingClassStub> Classes);
+    private sealed record TeachingClassStub(Guid Id, string Name, int Order, bool Active);
+    private sealed record TeachingProgressStub(Guid StudentId, string StudentName, string StudentEmail, Guid ClassId,
+        string ClassName, string CourseName, int Percentual, decimal WatchedSeconds, DateTime LastAccessAtUtc);
+    private sealed record TeachingStudentStub(Guid Id, string Name, string Email, string ClassroomName);
+    private sealed record TeachingDeliveryStub(Guid ClassId, string ClassName, string CourseName, string ClassroomName,
+        DateTime ReleasedAtUtc, int StudentCount);
 
     private sealed record MyPlanStub(Guid ClassroomId, string Name, int DeliveredCount, int TotalCount);
+    private sealed record MyCourseStub(Guid CourseId, string CourseName, int DeliveredCount, int TotalCount, int Percentual);
+    private sealed record ReleasedStub(Guid ClassId, string ClassName, Guid CourseId, string CourseName, DateTime ReleasedAtUtc);
 
     private sealed record ClassStub(Guid Id, string Name);
 }

@@ -203,3 +203,83 @@ internal sealed class MyClassroomHandler(ISmartLmsDbContext context, ICurrentUse
         return result.PageInMemory(query.Page, query.PageSize);
     }
 }
+
+public sealed record MyCourseQuery(int? Page = null, int? PageSize = null) : IQuery<Paged<MyCourseItem>>;
+public sealed record MyCourseItem(Guid CourseId, string CourseName, int DeliveredCount, int TotalCount, int Percentual);
+
+internal sealed class MyCoursesHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
+    : IQueryHandler<MyCourseQuery, Paged<MyCourseItem>>
+{
+    public async ValueTask<ErrorOr<Paged<MyCourseItem>>> Handle(MyCourseQuery query, CancellationToken cancellationToken)
+    {
+        if (currentUser.UserId is not { } userId)
+        {
+            return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
+        }
+
+        var plans = await SpecificationEvaluator.Default
+            .GetQuery(context.DeliveryPlans.AsNoTracking(), new DeliveryPlansByStudentSpec(userId))
+            .ToListAsync(cancellationToken);
+        var latest = new Dictionary<Guid, (DateTime CreatedAt, MyCourseItem Item)>();
+        foreach (var plan in plans)
+        {
+            var delivered = plan.DeliveredClasses.Select(d => d.ClassId).ToHashSet();
+            foreach (var course in plan.Classroom.Courses.Select(cc => cc.Course))
+            {
+                var classes = course.Classes.Where(c => c.Active).ToList();
+                var count = classes.Count(c => delivered.Contains(c.Id));
+                var item = new MyCourseItem(course.Id, course.Name, count, classes.Count,
+                    classes.Count == 0 ? 0 : count * 100 / classes.Count);
+                if (!latest.TryGetValue(course.Id, out var previous) || plan.CreatedAt > previous.CreatedAt)
+                {
+                    latest[course.Id] = (plan.CreatedAt, item);
+                }
+            }
+        }
+
+        var items = latest.Values.Select(x => x.Item).OrderBy(x => x.CourseName).ToList();
+        return items.PageInMemory(query.Page, query.PageSize);
+    }
+}
+
+public sealed record MyReleasedClassesQuery(int? Page = null, int? PageSize = null)
+    : IQuery<Paged<MyReleasedClassItem>>;
+public sealed record MyReleasedClassItem(Guid ClassId, string ClassName, Guid CourseId, string CourseName, DateTime ReleasedAtUtc);
+
+internal sealed class MyReleasedClassesHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
+    : IQueryHandler<MyReleasedClassesQuery, Paged<MyReleasedClassItem>>
+{
+    public async ValueTask<ErrorOr<Paged<MyReleasedClassItem>>> Handle(
+        MyReleasedClassesQuery query,
+        CancellationToken cancellationToken)
+    {
+        if (currentUser.UserId is not { } userId)
+        {
+            return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
+        }
+
+        var plans = await SpecificationEvaluator.Default
+            .GetQuery(context.DeliveryPlans.AsNoTracking(), new DeliveryPlansWithGraphSpec())
+            .Where(p => p.Classroom.Active && p.Students.Any(s => s.Id == userId))
+            .ToListAsync(cancellationToken);
+        var latest = new Dictionary<Guid, MyReleasedClassItem>();
+        foreach (var plan in plans)
+        {
+            foreach (var delivery in plan.DeliveredClasses)
+            {
+                var klass = plan.Classroom.Courses.SelectMany(cc => cc.Course.Classes)
+                    .FirstOrDefault(c => c.Id == delivery.ClassId && c.Active);
+                if (klass is null) continue;
+
+                var item = new MyReleasedClassItem(klass.Id, klass.Name, klass.CourseId, klass.Course.Name, delivery.DeliveryDate);
+                if (!latest.TryGetValue(klass.Id, out var previous) || item.ReleasedAtUtc > previous.ReleasedAtUtc)
+                {
+                    latest[klass.Id] = item;
+                }
+            }
+        }
+
+        var items = latest.Values.OrderByDescending(x => x.ReleasedAtUtc).ToList();
+        return items.PageInMemory(query.Page, query.PageSize);
+    }
+}

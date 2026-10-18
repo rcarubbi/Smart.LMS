@@ -101,7 +101,7 @@ export default function CoursePage() {
             <ol className="space-y-2">
               {course.classes.map((c) => {
                 const pct = progressMap[c.id] ?? 0;
-                const locked = user?.role !== "Admin" && pct < 100;
+                const locked = user?.role === "Student" && pct < 100;
                 return (
                   <li key={c.id}>
                     <Link

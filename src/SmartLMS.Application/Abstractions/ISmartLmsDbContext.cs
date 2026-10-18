@@ -45,6 +45,7 @@ public interface ISmartLmsDbContext
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<Parameter> Parameters { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
+    DbSet<PasswordResetToken> PasswordResetTokens { get; }
     DbSet<OutboxMessage> OutboxMessages { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

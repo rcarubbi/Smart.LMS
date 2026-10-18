@@ -158,14 +158,15 @@ public sealed record ListKnowledgeAreasQuery(
     int? Page = null,
     int? PageSize = null) : IQuery<Paged<CatalogListItem>>;
 
-internal sealed class ListKnowledgeAreasHandler(ISmartLmsDbContext context)
+internal sealed class ListKnowledgeAreasHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
     : IQueryHandler<ListKnowledgeAreasQuery, Paged<CatalogListItem>>
 {
     public async ValueTask<ErrorOr<Paged<CatalogListItem>>> Handle(
         ListKnowledgeAreasQuery query,
         CancellationToken cancellationToken)
     {
-        var spec = new KnowledgeAreasListSpec(query.Active);
+        var active = currentUser.Role == Domain.Entities.UserAccess.UserRole.Admin ? query.Active : true;
+        var spec = new KnowledgeAreasListSpec(active);
         var filtered = SpecificationEvaluator.Default.GetQuery(context.KnowledgeAreas.AsNoTracking(), spec);
 
         var items = await filtered

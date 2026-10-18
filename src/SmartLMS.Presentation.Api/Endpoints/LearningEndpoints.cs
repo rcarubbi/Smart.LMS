@@ -1,8 +1,10 @@
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Application.Learning.Classrooms;
+using SmartLMS.Application.Learning.Contact;
 using SmartLMS.Application.Learning.Delivery;
 using SmartLMS.Application.Learning.History;
 using SmartLMS.Application.Learning.Notices;
+using SmartLMS.Application.Learning.Teaching;
 using SmartLMS.Presentation.Api.Extensions;
 
 namespace SmartLMS.Presentation.Api.Endpoints;
@@ -86,6 +88,16 @@ internal static class LearningEndpoints
             .Produces(200)
             .Produces(404);
 
+        delivery.MapPut("/{id:guid}/students", async (Guid id, UpdateDeliveryPlanStudentsInput request, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var r = await dispatcher.Send(new UpdateDeliveryPlanStudentsCommand(id, request), ct);
+                return r.ToResult();
+            })
+            .RequireAuthorization(Policies.AdminOnly)
+            .Produces(204)
+            .Produces(404)
+            .Produces(400);
+
         delivery.MapPost("/", async (CreateDeliveryPlanInput request, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var r = await dispatcher.Send(new CreateDeliveryPlanCommand(request), ct);
@@ -104,12 +116,28 @@ internal static class LearningEndpoints
             .Produces(200);
 
         var notices = app.MapGroup("/api/notices").WithTags("Notices");
-        notices.MapGet("/", async (int? page, int? pageSize, IDispatcher dispatcher, CancellationToken ct) =>
+        notices.MapGet("/", async (
+            int? page,
+            int? pageSize,
+            DateTime? startDate,
+            DateTime? endDate,
+            NoticeAudience? audience,
+            IDispatcher dispatcher,
+            CancellationToken ct) =>
             {
-                var r = await dispatcher.Query(new ListMyNoticesQuery(page, pageSize), ct);
+                var r = await dispatcher.Query(new ListMyNoticesQuery(page, pageSize, startDate, endDate, audience ?? NoticeAudience.All), ct);
                 return r.ToResult();
             })
             .RequireAuthorization();
+
+        app.MapPost("/api/contact", async (ContactMessageInput request, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var r = await dispatcher.Send(new SendContactMessageCommand(request), ct);
+                return r.ToResult();
+            })
+            .AllowAnonymous()
+            .Produces(204)
+            .Produces(400);
 
         notices.MapPost("/", async (SendNoticeInput request, IDispatcher dispatcher, CancellationToken ct) =>
             {
@@ -142,6 +170,20 @@ internal static class LearningEndpoints
             })
             .RequireAuthorization();
 
+        history.MapGet("/courses", async (int? page, int? pageSize, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var r = await dispatcher.Query(new MyCourseQuery(page, pageSize), ct);
+                return r.ToResult();
+            })
+            .RequireAuthorization();
+
+        history.MapGet("/released-classes", async (int? page, int? pageSize, IDispatcher dispatcher, CancellationToken ct) =>
+            {
+                var r = await dispatcher.Query(new MyReleasedClassesQuery(page, pageSize), ct);
+                return r.ToResult();
+            })
+            .RequireAuthorization();
+
         history.MapPost("/class-access", async (RecordClassAccessInput request, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var r = await dispatcher.Send(new RecordClassAccessCommand(request), ct);
@@ -155,6 +197,16 @@ internal static class LearningEndpoints
                 return r.ToResult();
             })
             .RequireAuthorization();
+
+        var teaching = app.MapGroup("/api/me/teaching").WithTags("Teaching").RequireAuthorization(Policies.AdminOrTeacher);
+        teaching.MapGet("/courses", async (int? page, int? pageSize, IDispatcher dispatcher, CancellationToken ct) =>
+            (await dispatcher.Query(new MyTeachingCoursesQuery(page, pageSize), ct)).ToResult());
+        teaching.MapGet("/progress", async (Guid? courseId, Guid? classId, int? page, int? pageSize, IDispatcher dispatcher, CancellationToken ct) =>
+            (await dispatcher.Query(new TeachingProgressQuery(courseId, classId, page, pageSize), ct)).ToResult());
+        teaching.MapGet("/students", async (Guid? courseId, Guid? classId, int? page, int? pageSize, IDispatcher dispatcher, CancellationToken ct) =>
+            (await dispatcher.Query(new TeachingStudentsQuery(courseId, classId, page, pageSize), ct)).ToResult());
+        teaching.MapGet("/delivery-history", async (Guid? courseId, int? page, int? pageSize, IDispatcher dispatcher, CancellationToken ct) =>
+            (await dispatcher.Query(new TeachingDeliveryHistoryQuery(courseId, page, pageSize), ct)).ToResult());
 
         return app;
     }

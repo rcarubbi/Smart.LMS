@@ -121,9 +121,56 @@ public sealed record DeliveryPlanDetail(
     string StartDate,
     int StudentCount,
     bool Concluded,
-    IReadOnlyList<ScheduleItem> Classes);
+    IReadOnlyList<ScheduleItem> Classes,
+    IReadOnlyList<DeliveryPlanStudentSummary> Students);
+
+public sealed record DeliveryPlanStudentSummary(Guid Id, string Name, string Email, bool Active);
 
 public sealed record GetDeliveryPlanQuery(Guid Id) : IQuery<DeliveryPlanDetail>;
+
+public sealed record UpdateDeliveryPlanStudentsInput(IReadOnlyList<Guid> StudentIds);
+public sealed record UpdateDeliveryPlanStudentsCommand(Guid PlanId, UpdateDeliveryPlanStudentsInput Input) : ICommand;
+
+internal sealed class UpdateDeliveryPlanStudentsValidator : AbstractValidator<UpdateDeliveryPlanStudentsCommand>
+{
+    public UpdateDeliveryPlanStudentsValidator() => RuleFor(c => c.PlanId).NotEmpty();
+}
+
+internal sealed class UpdateDeliveryPlanStudentsHandler(ISmartLmsDbContext context)
+    : ICommandHandler<UpdateDeliveryPlanStudentsCommand>
+{
+    public async ValueTask<ErrorOr<Success>> Handle(UpdateDeliveryPlanStudentsCommand command, CancellationToken cancellationToken)
+    {
+        var plan = await context.DeliveryPlans.Include(p => p.Students)
+            .SingleOrDefaultAsync(p => p.Id == command.PlanId, cancellationToken);
+        if (plan is null)
+        {
+            return Error.NotFound("DeliveryPlans.NotFound", "Plano de entrega não encontrado.");
+        }
+
+        var ids = command.Input.StudentIds.Distinct().ToHashSet();
+        var existingIds = plan.Students.Select(s => s.Id).ToHashSet();
+        var students = await context.Students
+            .Where(s => ids.Contains(s.Id) && (s.Active || existingIds.Contains(s.Id)))
+            .ToListAsync(cancellationToken);
+        if (students.Count != ids.Count)
+        {
+            return Error.Validation("DeliveryPlans.InvalidStudents", "Selecione alunos ativos ou mantenha as inscrições inativas já existentes.");
+        }
+
+        foreach (var student in plan.Students.Where(s => !ids.Contains(s.Id)).ToList())
+        {
+            plan.Students.Remove(student);
+        }
+        foreach (var student in students.Where(s => plan.Students.All(current => current.Id != s.Id)))
+        {
+            plan.AddStudent(student);
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+        return Result.Success;
+    }
+}
 
 internal sealed class GetDeliveryPlanHandler(ISmartLmsDbContext context)
     : IQueryHandler<GetDeliveryPlanQuery, DeliveryPlanDetail>
@@ -175,7 +222,10 @@ internal sealed class GetDeliveryPlanHandler(ISmartLmsDbContext context)
             plan.StartDate.ToString("dd/MM/yyyy"),
             plan.Students.Count,
             plan.Concluded,
-            schedule);
+            schedule,
+            plan.Students.OrderBy(s => s.Name)
+                .Select(s => new DeliveryPlanStudentSummary(s.Id, s.Name, s.Email, s.Active))
+                .ToList());
     }
 }
 

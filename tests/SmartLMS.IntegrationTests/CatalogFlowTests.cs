@@ -85,6 +85,16 @@ public class CatalogFlowTests
                     $"Class creation failed [{(int)classResponse.StatusCode}]: {await classResponse.Content.ReadAsStringAsync()}");
             }
 
+            var anonymous = factory.CreateClient();
+            await Assert.That((await anonymous.GetAsync("/api/knowledge-areas")).StatusCode).IsEqualTo(HttpStatusCode.OK);
+            await Assert.That((await anonymous.GetAsync("/api/subjects")).StatusCode).IsEqualTo(HttpStatusCode.OK);
+            await Assert.That((await anonymous.GetAsync("/api/courses")).StatusCode).IsEqualTo(HttpStatusCode.OK);
+            await Assert.That((await anonymous.GetAsync($"/api/courses/{courseId}")).StatusCode).IsEqualTo(HttpStatusCode.OK);
+            await Assert.That((await anonymous.GetAsync($"/api/classes?courseId={courseId}")).StatusCode).IsEqualTo(HttpStatusCode.OK);
+            await Assert.That((await anonymous.GetAsync("/api/search?q=archi")).StatusCode).IsEqualTo(HttpStatusCode.OK);
+            await Assert.That((await anonymous.GetAsync($"/api/classes/{(await classResponse.Content.ReadFromJsonAsync<CreatedId>(JsonOpts))!.Id}")).StatusCode)
+                .IsEqualTo(HttpStatusCode.Unauthorized);
+
             // Read back the full chain.
             var courseDetail = await client.GetFromJsonAsync<CourseDetailStub>($"/api/courses/{courseId}", JsonOpts);
             using (Assert.Multiple())

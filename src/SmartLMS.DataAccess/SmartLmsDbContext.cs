@@ -43,6 +43,7 @@ public class SmartLmsDbContext(DbContextOptions<SmartLmsDbContext> options) : Db
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<Parameter> Parameters => Set<Parameter>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

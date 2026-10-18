@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { api } from "@/lib/api";
 import { usePagedList } from "@/lib/usePagedList";
 import AppShell from "@/components/AppShell";
@@ -10,7 +11,14 @@ import Pagination from "@/components/ui/Pagination";
 type NoticeItem = { id: string; text: string; dateTime: string; seen: boolean };
 
 export default function NoticesPage() {
-  const { items: notices, loading, page, total, setPage, setItems } = usePagedList<NoticeItem>("/api/notices", {});
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [audience, setAudience] = useState("All");
+  const { items: notices, loading, page, total, setPage, setItems } = usePagedList<NoticeItem>("/api/notices", {
+    startDate: startDate || undefined,
+    endDate: endDate || undefined,
+    audience,
+  });
 
   async function markSeen(id: string) {
     await api(`/api/notices/${id}/seen`, { method: "POST" });
@@ -38,6 +46,25 @@ export default function NoticesPage() {
           ) : null
         }
       >
+        <div className="mb-4 grid gap-3 sm:grid-cols-3">
+          <label className="space-y-1 text-xs text-white/50">
+            De
+            <input type="date" className="field" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          </label>
+          <label className="space-y-1 text-xs text-white/50">
+            Até
+            <input type="date" className="field" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          </label>
+          <label className="space-y-1 text-xs text-white/50">
+            Tipo
+            <select className="field" value={audience} onChange={(e) => setAudience(e.target.value)}>
+              <option value="All" className="bg-gray-900">Todos</option>
+              <option value="Global" className="bg-gray-900">Gerais</option>
+              <option value="Delivery" className="bg-gray-900">Aulas liberadas</option>
+              <option value="Personal" className="bg-gray-900">Pessoais</option>
+            </select>
+          </label>
+        </div>
         {loading ? (
           <p className="text-sm text-white/50">Carregando...</p>
         ) : notices.length === 0 ? (

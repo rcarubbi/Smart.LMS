@@ -26,6 +26,8 @@ export default function HomePage() {
   const [results, setResults] = useState<SearchResult[] | null>(null);
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [areas, setAreas] = useState<ListItem[]>([]);
+  const [contact, setContact] = useState({ name: "", email: "", message: "" });
+  const [contactSent, setContactSent] = useState(false);
 
   useEffect(() => {
     apiList<NoticeItem>("/api/notices")
@@ -57,6 +59,17 @@ export default function HomePage() {
       setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
     } catch (e) {
       toast("error", errorMessage(e, "Não foi possível baixar o arquivo."));
+    }
+  }
+
+  async function sendContact(event: React.FormEvent) {
+    event.preventDefault();
+    try {
+      await api("/api/contact", { method: "POST", body: JSON.stringify(contact) });
+      setContactSent(true);
+      setContact({ name: "", email: "", message: "" });
+    } catch (error) {
+      toast("error", errorMessage(error, "Não foi possível enviar a mensagem."));
     }
   }
 
@@ -134,6 +147,24 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
+          )}
+        </Panel>
+      </div>
+
+      <div className="mt-6">
+        <Panel title="Fale conosco" accent="#6366f1">
+          {contactSent ? (
+            <p className="text-sm text-white/70">Mensagem enviada. Obrigado pelo contato.</p>
+          ) : (
+            <form onSubmit={sendContact} className="grid gap-3 md:grid-cols-2">
+              <input className="field" required maxLength={200} placeholder="Nome" value={contact.name}
+                onChange={(e) => setContact((current) => ({ ...current, name: e.target.value }))} />
+              <input className="field" required type="email" maxLength={256} placeholder="E-mail" value={contact.email}
+                onChange={(e) => setContact((current) => ({ ...current, email: e.target.value }))} />
+              <textarea className="field min-h-28 md:col-span-2" required maxLength={5000} placeholder="Mensagem" value={contact.message}
+                onChange={(e) => setContact((current) => ({ ...current, message: e.target.value }))} />
+              <button className="btn btn-primary md:col-span-2 md:justify-self-end">Enviar mensagem</button>
+            </form>
           )}
         </Panel>
       </div>

@@ -176,14 +176,15 @@ public sealed record ListSubjectsQuery(
     int? Page = null,
     int? PageSize = null) : IQuery<Paged<SubjectListItem>>;
 
-internal sealed class ListSubjectsHandler(ISmartLmsDbContext context)
+internal sealed class ListSubjectsHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
     : IQueryHandler<ListSubjectsQuery, Paged<SubjectListItem>>
 {
     public async ValueTask<ErrorOr<Paged<SubjectListItem>>> Handle(
         ListSubjectsQuery query,
         CancellationToken cancellationToken)
     {
-        var spec = new SubjectsListSpec(query.KnowledgeAreaId, query.Active);
+        var active = currentUser.Role == Domain.Entities.UserAccess.UserRole.Admin ? query.Active : true;
+        var spec = new SubjectsListSpec(query.KnowledgeAreaId, active);
         var filtered = SpecificationEvaluator.Default.GetQuery(context.Subjects.AsNoTracking(), spec);
 
         var items = await filtered

@@ -24,7 +24,7 @@ export default function UserAdmin({ role, icon, title, accent }: { role: Role; i
     "/api/users",
     { role, active: view === "all" ? undefined : view === "active" },
   );
-  const [modal, setModal] = useState<{ name: string; email: string; password: string } | null>(null);
+  const [modal, setModal] = useState<{ item?: UserItem; name: string; email: string; password: string } | null>(null);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<UserItem | null>(null);
   const [purging, setPurging] = useState<UserItem | null>(null);
@@ -43,17 +43,21 @@ export default function UserAdmin({ role, icon, title, accent }: { role: Role; i
       toast("error", "Informe um e-mail válido.");
       return;
     }
-    if (modal.password.length < 8) {
+    if ((!modal.item || modal.password) && modal.password.length < 8) {
       toast("error", "A senha deve ter no mínimo 8 caracteres.");
       return;
     }
     setSaving(true);
     try {
-      await api("/api/users", {
-        method: "POST",
-        body: JSON.stringify({ name, email, password: modal.password, role }),
+      await api(modal.item ? `/api/users/${modal.item.id}` : "/api/users", {
+        method: modal.item ? "PUT" : "POST",
+        body: JSON.stringify(modal.item
+          ? { name, email, newPassword: modal.password || null }
+          : { name, email, password: modal.password, role }),
       });
-      toast("success", role === "Teacher" ? "Professor criado." : "Aluno criado.");
+      toast("success", modal.item
+        ? "Usuário atualizado."
+        : role === "Teacher" ? "Professor criado." : "Aluno criado.");
       setModal(null);
       reload();
     } catch (e) {
@@ -162,14 +166,17 @@ export default function UserAdmin({ role, icon, title, accent }: { role: Role; i
                           )}
                         </td>
                         <td className="py-2.5 text-right">
-                          {u.active ? (
-                            <IconButton name="delete" title="Mover para a lixeira" variant="danger" onClick={() => setDeleting(u)} />
-                          ) : (
+                          <>
+                            <IconButton name="edit" title="Editar usuário" onClick={() => setModal({ item: u, name: u.name, email: u.email, password: "" })} />
+                            {u.active ? (
+                              <IconButton name="delete" title="Mover para a lixeira" variant="danger" onClick={() => setDeleting(u)} />
+                            ) : (
                             <>
                               <IconButton name="restore" title="Restaurar" onClick={() => restore(u)} />
                               <IconButton name="delete_forever" title="Excluir definitivamente" variant="danger" onClick={() => setPurging(u)} />
                             </>
-                          )}
+                            )}
+                          </>
                         </td>
                       </tr>
                     ))}
@@ -183,7 +190,7 @@ export default function UserAdmin({ role, icon, title, accent }: { role: Role; i
 
         <FormModal
           open={!!modal}
-          title={`Novo ${role === "Teacher" ? "professor" : "aluno"}`}
+          title={modal?.item ? "Editar usuário" : `Novo ${role === "Teacher" ? "professor" : "aluno"}`}
           onClose={() => setModal(null)}
           onSubmit={submit}
           submitLabel={saving ? "Salvando..." : "Salvar"}
@@ -207,7 +214,7 @@ export default function UserAdmin({ role, icon, title, accent }: { role: Role; i
             />
           </label>
           <label className="block space-y-1">
-            <span className="text-sm text-white/60">Senha</span>
+            <span className="text-sm text-white/60">{modal?.item ? "Nova senha (opcional)" : "Senha"}</span>
             <input
               type="password"
               className="field"

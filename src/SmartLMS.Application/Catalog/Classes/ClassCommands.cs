@@ -6,6 +6,7 @@ using SmartLMS.Application.Authorization;
 using SmartLMS.Application.Catalog.Courses;
 using ErrorOr;
 using SmartLMS.Domain.Entities.Content;
+using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Specifications;
 using Ardalis.Specification.EntityFrameworkCore;
 using ClassSummary = SmartLMS.Application.Catalog.Courses.ClassSummary;
@@ -40,14 +41,24 @@ internal sealed class CreateClassValidator : AbstractValidator<CreateClassComman
     }
 }
 
-internal sealed class CreateClassHandler(ISmartLmsDbContext context) : ICommandHandler<CreateClassCommand, Guid>
+internal sealed class CreateClassHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
+    : ICommandHandler<CreateClassCommand, Guid>
 {
     public async ValueTask<ErrorOr<Guid>> Handle(CreateClassCommand command, CancellationToken cancellationToken)
     {
-        var courseExists = await context.Courses.AnyAsync(c => c.Id == command.Input.CourseId, cancellationToken);
-        if (!courseExists)
+        var course = await context.Courses.AsNoTracking()
+            .Where(c => c.Id == command.Input.CourseId)
+            .Select(c => new { c.Id, c.TeacherInChargeId })
+            .SingleOrDefaultAsync(cancellationToken);
+        if (course is null)
         {
             return Error.NotFound("Courses.NotFound", "Course not found.");
+        }
+
+        if (currentUser.Role == UserRole.Teacher &&
+            (course.TeacherInChargeId != currentUser.UserId || command.Input.TeacherId != currentUser.UserId))
+        {
+            return Error.Forbidden("Classes.NotCourseOwner", "Somente o professor responsável pelo curso pode criar aulas.");
         }
 
         var teacherIsTeacher = await context.Users
@@ -104,7 +115,10 @@ internal sealed class UpdateClassValidator : AbstractValidator<UpdateClassComman
     }
 }
 
-internal sealed class UpdateClassHandler(ISmartLmsDbContext context) : ICommandHandler<UpdateClassCommand>
+internal sealed class UpdateClassHandler(
+    ISmartLmsDbContext context,
+    ICurrentUser currentUser,
+    ClassAccessPolicy accessPolicy) : ICommandHandler<UpdateClassCommand>
 {
     public async ValueTask<ErrorOr<Success>> Handle(UpdateClassCommand command, CancellationToken cancellationToken)
     {
@@ -112,6 +126,16 @@ internal sealed class UpdateClassHandler(ISmartLmsDbContext context) : ICommandH
         if (klass is null)
         {
             return Error.NotFound("Classes.NotFound", "Class not found.");
+        }
+
+        if (!await accessPolicy.CanAccessClassAsync(command.Id, cancellationToken))
+        {
+            return Error.NotFound("Classes.NotFound", "Class not found.");
+        }
+
+        if (currentUser.Role == UserRole.Teacher && command.Input.TeacherId != klass.TeacherId)
+        {
+            return Error.Forbidden("Classes.CannotReassignTeacher", "Professores não podem alterar a atribuição de professor da aula.");
         }
 
         klass.Rename(command.Input.Name);
@@ -275,15 +299,20 @@ public sealed record ListClassesQuery(
     int? Page = null,
     int? PageSize = null) : IQuery<Paged<ClassSummary>>;
 
-internal sealed class ListClassesHandler(ClassAccessPolicy accessPolicy)
+internal sealed class ListClassesHandler(
+    ISmartLmsDbContext context,
+    ICurrentUser currentUser,
+    ClassAccessPolicy accessPolicy)
     : IQueryHandler<ListClassesQuery, Paged<ClassSummary>>
 {
     public async ValueTask<ErrorOr<Paged<ClassSummary>>> Handle(
         ListClassesQuery query,
         CancellationToken cancellationToken)
     {
-        var spec = new ActiveClassesInCourseSpec(query.CourseId, query.Active);
-        var filtered = SpecificationEvaluator.Default.GetQuery(accessPolicy.AccessibleClasses(), spec);
+        var active = currentUser.Role == UserRole.Admin ? query.Active : true;
+        var spec = new ActiveClassesInCourseSpec(query.CourseId, active);
+        var source = currentUser.UserId is null ? context.Classes.AsNoTracking() : accessPolicy.AccessibleClasses();
+        var filtered = SpecificationEvaluator.Default.GetQuery(source, spec);
 
         var items = await filtered
             .Select(c => new Courses.ClassSummary(

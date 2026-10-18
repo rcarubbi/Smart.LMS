@@ -116,9 +116,16 @@ public class AuthFlowTests
             "John Clone", "john.student@smartlms.local", "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
         await Assert.That(duplicate.StatusCode).IsEqualTo(HttpStatusCode.Conflict);
 
+        var update = await client.PutAsJsonAsync($"/api/users/{createdStudent.Id}", new
+        {
+            name = "John Updated",
+            email = "john.updated@smartlms.local",
+        });
+        await Assert.That(update.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
+
         // Deactivation revokes refresh tokens and immediately invalidates existing access tokens.
         var studentLoginResponse = await client.PostAsJsonAsync("/api/auth/login", new LoginInput(
-            "john.student@smartlms.local", "student-pass-123"));
+            "john.updated@smartlms.local", "student-pass-123"));
         var studentTokens = (await studentLoginResponse.Content.ReadFromJsonAsync<AuthResponseStub>(JsonOptions))!;
         client.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", rotated.AccessToken);

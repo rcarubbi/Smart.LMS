@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { api, apiList, errorMessage } from "@/lib/api";
+import { api, apiList, currentUser, errorMessage } from "@/lib/api";
 import type { ListItem } from "@/lib/api";
 import { usePagedList } from "@/lib/usePagedList";
 import { useTrashConfirmations } from "@/lib/useTrashConfirmations";
@@ -25,7 +25,7 @@ type ClassItem = {
   active: boolean;
 };
 type SupportFile = { name: string; url: string };
-type Course = ListItem & { id: string };
+type Course = ListItem & { id: string; teacherInChargeId?: string | null };
 type Teacher = { id: string; name: string };
 
 export default function ClassesAdminPage() {
@@ -42,6 +42,8 @@ function ClassesInner() {
   const courseParam = search.get("course") ?? "";
 
   const { toast } = useToast();
+  const user = currentUser();
+  const isTeacher = user?.role === "Teacher";
   const [courses, setCourses] = useState<Course[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [courseId, setCourseId] = useState(courseParam);
@@ -81,10 +83,10 @@ function ClassesInner() {
     let cancelled = false;
     (async () => {
       try {
-        const [cs, t] = await Promise.all([
-          apiList<Course>("/api/courses"),
-          apiList<Teacher>("/api/users?role=Teacher"),
-        ]);
+        const cs = await apiList<Course>(isTeacher ? "/api/me/teaching/courses" : "/api/courses");
+        const t = isTeacher
+          ? [{ id: user?.sub ?? "", name: user?.email ?? "Professor" }]
+          : await apiList<Teacher>("/api/users?role=Teacher");
         if (cancelled) return;
         setCourses(cs);
         setTeachers(t);
@@ -96,10 +98,10 @@ function ClassesInner() {
     return () => {
       cancelled = true;
     };
-  }, [toast]);
+  }, [isTeacher, toast, user?.email, user?.sub]);
 
   function openNew() {
-    setModal({ name: "", content: "", order: "0", deliveryDays: "0", contentType: "YouTube", teacherId: "", files: [] });
+    setModal({ name: "", content: "", order: "0", deliveryDays: "0", contentType: "YouTube", teacherId: user?.sub ?? "", files: [] });
   }
 
   function openEdit(item: ClassItem) {
@@ -183,16 +185,18 @@ function ClassesInner() {
   }
 
   return (
-    <AuthGuard roles={["Admin"]}>
+    <AuthGuard roles={["Admin", "Teacher"]}>
       <AppShell>
         <Panel
           icon="play_circle"
           title={`Aulas — ${courses.find((c) => c.id === courseId)?.name ?? "Curso"}`}
           accent="#f59e0b"
           action={
+            (!isTeacher || courses.find((c) => c.id === courseId)?.teacherInChargeId === user?.sub) && (
             <button className="btn btn-primary text-sm" onClick={openNew}>
               <Icon name="add" /> Nova aula
             </button>
+            )
           }
         >
           <label className="mb-4 inline-flex items-center gap-2 text-sm">
@@ -215,7 +219,7 @@ function ClassesInner() {
             </select>
           </label>
 
-          <ViewTabs view={view} onChange={setView} total={total} />
+          {!isTeacher && <ViewTabs view={view} onChange={setView} total={total} />}
 
           {loading ? (
             <p className="text-sm text-white/50">Carregando...</p>
@@ -254,14 +258,14 @@ function ClassesInner() {
                       {item.active ? (
                         <>
                           <IconButton name="edit" title="Editar" onClick={() => openEdit(item)} />
-                          <IconButton name="delete" title="Mover para a lixeira" variant="danger" onClick={() => setDeleting(item)} />
+                          {!isTeacher && <IconButton name="delete" title="Mover para a lixeira" variant="danger" onClick={() => setDeleting(item)} />}
                         </>
-                      ) : (
+                      ) : !isTeacher ? (
                         <>
                           <IconButton name="restore" title="Restaurar" onClick={() => restore(item)} />
                           <IconButton name="delete_forever" title="Excluir definitivamente" variant="danger" onClick={() => setPurging(item)} />
                         </>
-                      )}
+                      ) : null}
                     </td>
                   </tr>
                 ))}
@@ -329,21 +333,23 @@ function ClassesInner() {
               </select>
             </label>
           </div>
-          <label className="block space-y-1">
-            <span className="text-sm text-white/60">Professor</span>
-            <select
-              className="field"
-              value={modal?.teacherId ?? ""}
-              onChange={(e) => setModal((m) => (m ? { ...m, teacherId: e.target.value } : m))}
-            >
-              <option value="">Selecione...</option>
-              {teachers.map((t) => (
-                <option key={t.id} value={t.id} className="bg-gray-900">
-                  {t.name}
-                </option>
-              ))}
-            </select>
-          </label>
+          {!isTeacher && (
+            <label className="block space-y-1">
+              <span className="text-sm text-white/60">Professor</span>
+              <select
+                className="field"
+                value={modal?.teacherId ?? ""}
+                onChange={(e) => setModal((m) => (m ? { ...m, teacherId: e.target.value } : m))}
+              >
+                <option value="">Selecione...</option>
+                {teachers.map((t) => (
+                  <option key={t.id} value={t.id} className="bg-gray-900">
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <label className="block space-y-1">
             <span className="text-sm text-white/60">Material de apoio</span>
             <div

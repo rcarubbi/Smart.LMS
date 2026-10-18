@@ -29,6 +29,7 @@ type PlanDetail = {
   startDate: string;
   studentCount: number;
   concluded: boolean;
+  students: { id: string; name: string; email: string; active: boolean }[];
   classes: {
     classId: string;
     courseName: string;
@@ -51,12 +52,13 @@ export default function DeliveryPlansAdmin() {
   const [classroomId, setClassroomId] = useState("");
   const [startDate, setStartDate] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
+  const [planStudents, setPlanStudents] = useState<Record<string, string[]>>({});
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     const [cl, st] = await Promise.all([
       apiList<Classroom>("/api/classrooms"),
-      apiList<Student>("/api/users?role=Student"),
+      apiList<Student>("/api/users?role=Student&active=true"),
     ]);
     setClassrooms(cl);
     setStudents(st);
@@ -79,9 +81,27 @@ export default function DeliveryPlansAdmin() {
       try {
         const detail = await api<PlanDetail>(`/api/delivery-plans/${id}`);
         setDetails((cur) => ({ ...cur, [id]: detail }));
+        setPlanStudents((cur) => ({ ...cur, [id]: detail.students.map((s) => s.id) }));
       } catch (e) {
         toast("error", errorMessage(e));
       }
+    }
+  }
+
+  async function savePlanStudents(id: string) {
+    try {
+      const studentIds = planStudents[id] ?? [];
+      await api(`/api/delivery-plans/${id}/students`, {
+        method: "PUT",
+        body: JSON.stringify({ studentIds }),
+      });
+      const detail = await api<PlanDetail>(`/api/delivery-plans/${id}`);
+      setDetails((current) => ({ ...current, [id]: detail }));
+      setPlanStudents((current) => ({ ...current, [id]: detail.students.map((s) => s.id) }));
+      reload();
+      toast("success", "Inscrições atualizadas; aulas já liberadas continuam registradas.");
+    } catch (e) {
+      toast("error", errorMessage(e));
     }
   }
 
@@ -247,6 +267,35 @@ export default function DeliveryPlansAdmin() {
                                 Início: {details[p.id].startDate}
                               </span>
                             </div>
+                            <section className="mb-4 rounded-lg border border-white/10 bg-black/10 p-3">
+                              <div className="mb-2 flex items-center justify-between">
+                                <span className="text-sm font-medium">Alunos inscritos ({details[p.id].students.length})</span>
+                                <button className="btn btn-primary text-xs" onClick={() => savePlanStudents(p.id)}>
+                                  Salvar inscrições
+                                </button>
+                              </div>
+                              <div className="flex flex-wrap gap-x-4 gap-y-2">
+                                {[...students, ...details[p.id].students.filter((student) => !student.active)].map((student) => {
+                                  const checked = (planStudents[p.id] ?? []).includes(student.id);
+                                  return (
+                                    <label key={student.id} className="flex items-center gap-2 text-xs text-white/70">
+                                      <input
+                                        type="checkbox"
+                                        checked={checked}
+                                        onChange={() => setPlanStudents((current) => {
+                                          const selectedIds = current[p.id] ?? [];
+                                          return { ...current, [p.id]: checked
+                                            ? selectedIds.filter((id) => id !== student.id)
+                                            : [...selectedIds, student.id] };
+                                        })}
+                                        className="accent-indigo-500"
+                                      />
+                                      {student.name}{!student.active && " (inativo)"}
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            </section>
                             <div className="grid gap-4 lg:grid-cols-2">
                               <table className="w-full text-left text-xs">
                                 <thead>

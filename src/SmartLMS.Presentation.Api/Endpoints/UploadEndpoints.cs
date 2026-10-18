@@ -94,7 +94,7 @@ internal static class UploadEndpoints
 
                 return Results.Ok(uploaded);
             })
-            .RequireAuthorization(Policies.AdminOnly)
+            .RequireAuthorization(Policies.AdminOrTeacher)
             .DisableAntiforgery()
             .Produces(200)
             .Produces(400);

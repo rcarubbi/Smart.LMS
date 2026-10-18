@@ -205,13 +205,15 @@ internal sealed class DeleteCoursePermanentlyHandler(ISmartLmsDbContext context)
 
 public sealed record GetCourseQuery(Guid Id) : IQuery<CourseDetail>;
 
-internal sealed class GetCourseHandler(ISmartLmsDbContext context) : IQueryHandler<GetCourseQuery, CourseDetail>
+internal sealed class GetCourseHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
+    : IQueryHandler<GetCourseQuery, CourseDetail>
 {
     public async ValueTask<ErrorOr<CourseDetail>> Handle(GetCourseQuery query, CancellationToken cancellationToken)
     {
         var spec = new CourseByIdSpec(query.Id);
         var detail = await SpecificationEvaluator.Default
             .GetQuery(context.Courses.AsNoTracking(), spec)
+            .Where(c => currentUser.Role == Domain.Entities.UserAccess.UserRole.Admin || c.Active)
             .Select(c => new CourseDetail(
                 c.Id,
                 c.Name,
@@ -221,7 +223,8 @@ internal sealed class GetCourseHandler(ISmartLmsDbContext context) : IQueryHandl
                 c.Subject.Name,
                 c.TeacherInChargeId,
                 c.Classes
-                    .Where(cl => cl.Active)
+                    .Where(cl => cl.Active && (currentUser.Role != Domain.Entities.UserAccess.UserRole.Teacher ||
+                        c.TeacherInChargeId == currentUser.UserId || cl.TeacherId == currentUser.UserId))
                     .OrderBy(cl => cl.Order)
                     .Select(cl => new ClassSummary(cl.Id, cl.Name, cl.Order, cl.DeliveryDays, cl.ContentType.ToString(), true))
                     .ToList()))
@@ -249,14 +252,15 @@ public sealed record ListCoursesQuery(
     int? Page = null,
     int? PageSize = null) : IQuery<Paged<CourseListItem>>;
 
-internal sealed class ListCoursesHandler(ISmartLmsDbContext context)
+internal sealed class ListCoursesHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
     : IQueryHandler<ListCoursesQuery, Paged<CourseListItem>>
 {
     public async ValueTask<ErrorOr<Paged<CourseListItem>>> Handle(
         ListCoursesQuery query,
         CancellationToken cancellationToken)
     {
-        var spec = new CoursesListSpec(query.SubjectId, query.Active);
+        var active = currentUser.Role == Domain.Entities.UserAccess.UserRole.Admin ? query.Active : true;
+        var spec = new CoursesListSpec(query.SubjectId, active);
         var filtered = SpecificationEvaluator.Default.GetQuery(context.Courses.AsNoTracking(), spec);
 
         var items = await filtered

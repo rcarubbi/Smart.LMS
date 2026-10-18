@@ -35,7 +35,7 @@ internal static class CatalogEndpoints
                 var result = await dispatcher.Query(new ListKnowledgeAreasQuery(active, page, pageSize), ct);
                 return result.ToResult();
             })
-            .RequireAuthorization();
+            .AllowAnonymous();
 
         group.MapPost("/", async (KnowledgeAreaInput request, IDispatcher dispatcher, CancellationToken ct) =>
             {
@@ -92,7 +92,7 @@ internal static class CatalogEndpoints
                 var result = await dispatcher.Query(new ListSubjectsQuery(knowledgeAreaId, active, page, pageSize), ct);
                 return result.ToResult();
             })
-            .RequireAuthorization();
+            .AllowAnonymous();
 
         group.MapPost("/", async (SubjectInput request, Guid knowledgeAreaId, IDispatcher dispatcher, CancellationToken ct) =>
             {
@@ -148,14 +148,14 @@ internal static class CatalogEndpoints
                 var result = await dispatcher.Query(new ListCoursesQuery(subjectId, active, page, pageSize), ct);
                 return result.ToResult();
             })
-            .RequireAuthorization();
+            .AllowAnonymous();
 
         group.MapGet("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
                 var result = await dispatcher.Query(new GetCourseQuery(id), ct);
                 return result.ToResult();
             })
-            .RequireAuthorization()
+            .AllowAnonymous()
             .Produces(200)
             .Produces(404);
 
@@ -213,7 +213,7 @@ internal static class CatalogEndpoints
                 var result = await dispatcher.Query(new ListClassesQuery(courseId, active, page, pageSize), ct);
                 return result.ToResult();
             })
-            .RequireAuthorization();
+            .AllowAnonymous();
 
         group.MapGet("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
             {
@@ -250,7 +250,7 @@ internal static class CatalogEndpoints
                 var result = await dispatcher.Send(new CreateClassCommand(input), ct);
                 return result.ToResult(id => Results.Created($"/api/classes/{id}", new { id }));
             })
-            .RequireAuthorization(Policies.AdminOnly)
+            .RequireAuthorization(Policies.AdminOrTeacher)
             .Produces(201)
             .Produces(400)
             .Produces(409);
@@ -281,7 +281,7 @@ internal static class CatalogEndpoints
                 var result = await dispatcher.Send(new UpdateClassCommand(id, input), ct);
                 return result.ToResult();
             })
-            .RequireAuthorization(Policies.AdminOnly)
+            .RequireAuthorization(Policies.AdminOrTeacher)
             .Produces(204);
 
         group.MapDelete("/{id:guid}", async (Guid id, IDispatcher dispatcher, CancellationToken ct) =>
@@ -354,7 +354,7 @@ internal static class CatalogEndpoints
                 return result.ToResult();
             })
             .WithTags("Search")
-            .RequireAuthorization()
+            .AllowAnonymous()
             .Produces(200)
             .Produces(400);
     }

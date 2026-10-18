@@ -8,6 +8,14 @@ using ErrorOr;
 
 namespace SmartLMS.Application.Learning.Notices;
 
+public enum NoticeAudience
+{
+    All,
+    Global,
+    Delivery,
+    Personal,
+}
+
 public sealed record NoticeItem(
     Guid Id,
     string Text,
@@ -15,8 +23,20 @@ public sealed record NoticeItem(
     bool Seen,
     Guid? DeliveryPlanId);
 
-public sealed record ListMyNoticesQuery(int? Page = null, int? PageSize = null)
+public sealed record ListMyNoticesQuery(
+    int? Page = null,
+    int? PageSize = null,
+    DateTime? StartDate = null,
+    DateTime? EndDate = null,
+    NoticeAudience Audience = NoticeAudience.All)
     : IQuery<Paged<NoticeItem>>;
+
+internal sealed class ListMyNoticesValidator : AbstractValidator<ListMyNoticesQuery>
+{
+    public ListMyNoticesValidator() =>
+        RuleFor(q => q).Must(q => !q.StartDate.HasValue || !q.EndDate.HasValue || q.StartDate <= q.EndDate)
+            .WithMessage("The start date must be before the end date.");
+}
 
 internal sealed class ListMyNoticesHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
     : IQueryHandler<ListMyNoticesQuery, Paged<NoticeItem>>
@@ -32,6 +52,23 @@ internal sealed class ListMyNoticesHandler(ISmartLmsDbContext context, ICurrentU
 
         var spec = new MyNoticesSpec(userId);
         var filtered = SpecificationEvaluator.Default.GetQuery(context.Notices.AsNoTracking(), spec);
+        if (query.StartDate is { } startDate)
+        {
+            filtered = filtered.Where(n => n.DateTime >= startDate.Date);
+        }
+
+        if (query.EndDate is { } endDate)
+        {
+            filtered = filtered.Where(n => n.DateTime < endDate.Date.AddDays(1));
+        }
+
+        filtered = query.Audience switch
+        {
+            NoticeAudience.Global => filtered.Where(n => n.UserId == null && n.DeliveryPlanId == null),
+            NoticeAudience.Delivery => filtered.Where(n => n.DeliveryPlanId != null),
+            NoticeAudience.Personal => filtered.Where(n => n.UserId == userId),
+            _ => filtered,
+        };
 
         var notices = await filtered
             .Select(n => new NoticeItem(
