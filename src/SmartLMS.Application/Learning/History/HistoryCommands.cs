@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
+using SmartLMS.Application.Authorization;
 using SmartLMS.Domain.Specifications;
 using ErrorOr;
 
@@ -22,7 +23,11 @@ internal sealed class RecordClassAccessValidator : AbstractValidator<RecordClass
     }
 }
 
-internal sealed class RecordClassAccessHandler(ISmartLmsDbContext context, ICurrentUser currentUser, TimeProvider timeProvider)
+internal sealed class RecordClassAccessHandler(
+    ISmartLmsDbContext context,
+    ICurrentUser currentUser,
+    ClassAccessPolicy accessPolicy,
+    TimeProvider timeProvider)
     : ICommandHandler<RecordClassAccessCommand>
 {
     public async ValueTask<ErrorOr<Success>> Handle(RecordClassAccessCommand command, CancellationToken cancellationToken)
@@ -32,8 +37,7 @@ internal sealed class RecordClassAccessHandler(ISmartLmsDbContext context, ICurr
             return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
         }
 
-        var classExists = await context.Classes.AnyAsync(c => c.Id == command.Input.ClassId, cancellationToken);
-        if (!classExists)
+        if (!await accessPolicy.CanAccessClassAsync(command.Input.ClassId, cancellationToken))
         {
             return Error.NotFound("Classes.NotFound", "Class not found.");
         }
@@ -92,7 +96,11 @@ public sealed record RecordFileAccessInput(Guid FileId);
 
 public sealed record RecordFileAccessCommand(RecordFileAccessInput Input) : ICommand;
 
-internal sealed class RecordFileAccessHandler(ISmartLmsDbContext context, ICurrentUser currentUser, TimeProvider timeProvider)
+internal sealed class RecordFileAccessHandler(
+    ISmartLmsDbContext context,
+    ICurrentUser currentUser,
+    ClassAccessPolicy accessPolicy,
+    TimeProvider timeProvider)
     : ICommandHandler<RecordFileAccessCommand>
 {
     public async ValueTask<ErrorOr<Success>> Handle(RecordFileAccessCommand command, CancellationToken cancellationToken)
@@ -102,8 +110,7 @@ internal sealed class RecordFileAccessHandler(ISmartLmsDbContext context, ICurre
             return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
         }
 
-        var fileExists = await context.Files.AnyAsync(f => f.Id == command.Input.FileId, cancellationToken);
-        if (!fileExists)
+        if (!await accessPolicy.CanAccessFileAsync(command.Input.FileId, cancellationToken))
         {
             return Error.NotFound("Files.NotFound", "File not found.");
         }

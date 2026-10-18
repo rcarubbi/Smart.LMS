@@ -237,8 +237,7 @@ internal sealed class ExecuteDeliveriesHandler(
                     plan.MarkDelivered(klass.Id);
 
                     context.Notices.Add(new Notice(
-                        $"<a href='/class/{klass.Id}'>{klass.Name}</a> is now available! <br />" +
-                        $"<a href='/course/{course.Id}'>{course.Name}</a>",
+                        $"{klass.Name} is now available! {course.Name}",
                         timeProvider.GetUtcNow().UtcDateTime,
                         plan.Id));
 

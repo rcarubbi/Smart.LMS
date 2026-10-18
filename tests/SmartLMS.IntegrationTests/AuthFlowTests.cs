@@ -42,6 +42,7 @@ public class AuthFlowTests
 
             await RunAuthFlowAsync(client);
         }
+
         finally
         {
             Environment.SetEnvironmentVariable("ConnectionStrings__SmartLMS", null);
@@ -83,6 +84,9 @@ public class AuthFlowTests
         var firstRefresh = await client.PostAsJsonAsync("/api/auth/refresh", new RefreshTokenInput(auth.RefreshToken));
         await Assert.That(firstRefresh.StatusCode).IsEqualTo(HttpStatusCode.OK);
 
+        var replayedRefresh = await client.PostAsJsonAsync("/api/auth/refresh", new RefreshTokenInput(auth.RefreshToken));
+        await Assert.That(replayedRefresh.StatusCode).IsEqualTo(HttpStatusCode.Unauthorized);
+
         var rotated = await firstRefresh.Content.ReadFromJsonAsync<AuthResponseStub>(JsonOptions);
         if (rotated is null || string.IsNullOrWhiteSpace(rotated.AccessToken))
         {
@@ -105,11 +109,29 @@ public class AuthFlowTests
             throw new InvalidOperationException(
                 $"Create user returned {(int)createStudent.StatusCode} [{challengeHeader}]: {await createStudent.Content.ReadAsStringAsync()}");
         }
+        var createdStudent = (await createStudent.Content.ReadFromJsonAsync<CreatedId>(JsonOptions))!;
 
         // 5. Duplicate email -> 409.
         var duplicate = await client.PostAsJsonAsync("/api/users", new CreateUserInput(
             "John Clone", "john.student@smartlms.local", "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
         await Assert.That(duplicate.StatusCode).IsEqualTo(HttpStatusCode.Conflict);
+
+        // Deactivation revokes refresh tokens and immediately invalidates existing access tokens.
+        var studentLoginResponse = await client.PostAsJsonAsync("/api/auth/login", new LoginInput(
+            "john.student@smartlms.local", "student-pass-123"));
+        var studentTokens = (await studentLoginResponse.Content.ReadFromJsonAsync<AuthResponseStub>(JsonOptions))!;
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", rotated.AccessToken);
+        var deactivated = await client.DeleteAsync($"/api/users/{createdStudent.Id}");
+        await Assert.That(deactivated.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", studentTokens.AccessToken);
+        await Assert.That((await client.GetAsync("/api/me/progress")).StatusCode)
+            .IsEqualTo(HttpStatusCode.Unauthorized);
+        await Assert.That((await client.PostAsJsonAsync("/api/auth/refresh", new RefreshTokenInput(studentTokens.RefreshToken))).StatusCode)
+            .IsEqualTo(HttpStatusCode.Unauthorized);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", rotated.AccessToken);
 
         // 6. Logout revokes; refreshing with revoked token -> 401.
         var logout = await client.PostAsJsonAsync("/api/auth/logout", new LogoutInput(rotated.RefreshToken));
@@ -134,4 +156,6 @@ public class AuthFlowTests
     }
 
     private sealed record AuthResponseStub(string AccessToken, DateTime AccessTokenExpiresAtUtc, string RefreshToken, DateTime RefreshTokenExpiresAtUtc);
+
+    private sealed record CreatedId(Guid Id);
 }

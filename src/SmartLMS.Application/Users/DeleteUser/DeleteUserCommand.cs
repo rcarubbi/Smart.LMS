@@ -9,7 +9,8 @@ namespace SmartLMS.Application.Users.DeleteUser;
 /// <summary>Soft-deletes a teacher or student (moves it to the trash).</summary>
 public sealed record DeleteUserCommand(Guid Id) : ICommand;
 
-internal sealed class DeleteUserHandler(ISmartLmsDbContext context) : ICommandHandler<DeleteUserCommand>
+internal sealed class DeleteUserHandler(ISmartLmsDbContext context, TimeProvider timeProvider)
+    : ICommandHandler<DeleteUserCommand>
 {
     public async ValueTask<ErrorOr<Success>> Handle(DeleteUserCommand command, CancellationToken cancellationToken)
     {
@@ -25,6 +26,14 @@ internal sealed class DeleteUserHandler(ISmartLmsDbContext context) : ICommandHa
         }
 
         user.Deactivate();
+        var activeTokens = await context.RefreshTokens
+            .Where(t => t.UserId == command.Id && t.RevokedAtUtc == null)
+            .ToListAsync(cancellationToken);
+        foreach (var token in activeTokens)
+        {
+            token.Revoke(timeProvider.GetUtcNow().UtcDateTime);
+        }
+
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success;

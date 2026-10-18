@@ -23,7 +23,7 @@ public sealed class DeliveryPlansByStudentSpec : Specification<DeliveryPlan>
 {
     public DeliveryPlansByStudentSpec(Guid userId)
     {
-        Query.Where(p => p.Students.Any(s => s.Id == userId));
+        Query.Where(p => p.Classroom.Active && p.Students.Any(s => s.Id == userId));
         Query.Include(p => p.DeliveredClasses);
         Query.Include(p => p.Classroom);
         Query.Include("Classroom.Courses.Course.Classes");

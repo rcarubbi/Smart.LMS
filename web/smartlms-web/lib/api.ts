@@ -108,6 +108,22 @@ export async function api<T>(
   return (await response.json()) as T;
 }
 
+export async function apiBlob(path: string): Promise<Blob> {
+  const token = getAccessToken();
+  const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+  let response = await fetch(`${API_URL}${path}`, { headers });
+  if (response.status === 401 && (await refreshTokens())) {
+    const refreshedToken = getAccessToken();
+    response = await fetch(`${API_URL}${path}`, {
+      headers: refreshedToken ? { Authorization: `Bearer ${refreshedToken}` } : undefined,
+    });
+  }
+  if (!response.ok) {
+    throw new ApiError(response.status, await response.json().catch(() => undefined));
+  }
+  return response.blob();
+}
+
 /** Extracts a human-readable message from an ApiError thrown against an ErrorOr problem response. */
 export function errorMessage(err: unknown, fallback = "Falha na operação."): string {
   if (err instanceof ApiError) {

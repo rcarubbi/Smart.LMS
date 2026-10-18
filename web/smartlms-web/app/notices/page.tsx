@@ -52,10 +52,7 @@ export default function NoticesPage() {
                 }`}
               >
                 <div>
-                  <div
-                    className="[&_a]:text-indigo-300"
-                    dangerouslySetInnerHTML={{ __html: n.text }}
-                  />
+                  <div className="whitespace-pre-wrap">{n.text}</div>
                   <div className="mt-1 text-xs text-white/40">
                     {new Date(n.dateTime).toLocaleString("pt-BR")}
                   </div>

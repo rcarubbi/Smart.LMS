@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
+using SmartLMS.Application.Authorization;
 using SmartLMS.Application.Catalog.Courses;
 using ErrorOr;
 using SmartLMS.Domain.Entities.Content;
@@ -241,13 +242,14 @@ public sealed record FileSummary(Guid Id, string Name, string StoragePath);
 
 public sealed record GetClassQuery(Guid Id) : IQuery<ClassDetail>;
 
-internal sealed class GetClassHandler(ISmartLmsDbContext context) : IQueryHandler<GetClassQuery, ClassDetail>
+internal sealed class GetClassHandler(ClassAccessPolicy accessPolicy)
+    : IQueryHandler<GetClassQuery, ClassDetail>
 {
     public async ValueTask<ErrorOr<ClassDetail>> Handle(GetClassQuery query, CancellationToken cancellationToken)
     {
         var spec = new ClassByIdSpec(query.Id);
         var detail = await SpecificationEvaluator.Default
-            .GetQuery(context.Classes.AsNoTracking(), spec)
+            .GetQuery(accessPolicy.AccessibleClasses(), spec)
             .Select(c => new ClassDetail(
                 c.Id,
                 c.Name,
@@ -273,7 +275,7 @@ public sealed record ListClassesQuery(
     int? Page = null,
     int? PageSize = null) : IQuery<Paged<ClassSummary>>;
 
-internal sealed class ListClassesHandler(ISmartLmsDbContext context)
+internal sealed class ListClassesHandler(ClassAccessPolicy accessPolicy)
     : IQueryHandler<ListClassesQuery, Paged<ClassSummary>>
 {
     public async ValueTask<ErrorOr<Paged<ClassSummary>>> Handle(
@@ -281,7 +283,7 @@ internal sealed class ListClassesHandler(ISmartLmsDbContext context)
         CancellationToken cancellationToken)
     {
         var spec = new ActiveClassesInCourseSpec(query.CourseId, query.Active);
-        var filtered = SpecificationEvaluator.Default.GetQuery(context.Classes.AsNoTracking(), spec);
+        var filtered = SpecificationEvaluator.Default.GetQuery(accessPolicy.AccessibleClasses(), spec);
 
         var items = await filtered
             .Select(c => new Courses.ClassSummary(

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { api, apiList, errorMessage } from "@/lib/api";
 import type { ListItem } from "@/lib/api";
@@ -69,6 +70,8 @@ export default function CoursesAdmin() {
   }, []);
 
   useEffect(() => {
+    // This effect fetches remote options; state updates happen after the async response.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadOptions().catch((e) => toast("error", errorMessage(e)));
   }, [loadOptions, toast]);
 
@@ -184,7 +187,7 @@ export default function CoursesAdmin() {
                     <td className="py-2.5 pr-2">
                       <div className="flex items-center gap-3">
                         {c.image ? (
-                          <img src={c.image} alt="" className="h-9 w-14 rounded object-cover" loading="lazy" />
+                          <Image src={c.image} alt="" width={56} height={36} unoptimized className="h-9 w-14 rounded object-cover" />
                         ) : (
                           <span className="flex h-9 w-14 items-center justify-center rounded bg-white/10 text-white/40">
                             <Icon name="image" className="text-base" />
@@ -309,7 +312,7 @@ export default function CoursesAdmin() {
             >
               {modal?.image ? (
                 <>
-                  <img src={modal.image} alt="" className="h-16 w-28 rounded object-cover" />
+                  <Image src={modal.image} alt="" width={112} height={64} unoptimized className="h-16 w-28 rounded object-cover" />
                   <span className="ml-2">Arraste para substituir ou clique para escolher</span>
                 </>
               ) : (

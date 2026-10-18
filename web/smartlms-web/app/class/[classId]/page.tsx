@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { api, apiList, currentUser, errorMessage } from "@/lib/api";
+import { api, apiBlob, apiList, currentUser, errorMessage } from "@/lib/api";
 import { usePagedList } from "@/lib/usePagedList";
 import AppShell from "@/components/AppShell";
 import Panel from "@/components/ui/Panel";
@@ -54,10 +54,13 @@ function loadScript(src: string): Promise<void> {
   });
 }
 
+// External player APIs do not ship types in this project.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function waitForYouTube(): Promise<any> {
   return new Promise((resolve, reject) => {
     const started = Date.now();
     const poll = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const yt = (window as any).YT;
       if (yt?.Player) {
         resolve(yt);
@@ -87,6 +90,7 @@ export default function ClassPage() {
   const [watchPercent, setWatchPercent] = useState(0);
   const [playerReady, setPlayerReady] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const playerRef = useRef<any>(null);
   const vimeoRef = useRef<HTMLIFrameElement | null>(null);
   const resumeSecondsRef = useRef(0);
@@ -103,17 +107,19 @@ export default function ClassPage() {
   }, [classId, toast]);
 
   useEffect(() => {
+    // This effect fetches remote lesson data; state updates follow the response.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, [load]);
 
-  function recordProgress(percentual: number, watchedSeconds: number) {
+  const recordProgress = useCallback((percentual: number, watchedSeconds: number) => {
     api("/api/me/class-access", {
       method: "POST",
       body: JSON.stringify({ classId, percentual, watchedSeconds }),
     }).catch(() => {
       // Silently ignore: progress is best-effort and retried on the next heartbeat.
     });
-  }
+  }, [classId]);
 
   useEffect(() => {
     let disposed = false;
@@ -158,6 +164,7 @@ export default function ClassPage() {
       loadScript("https://player.vimeo.com/api/player.js")
         .then(() => {
           if (disposed || !vimeoRef.current) return;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const Vimeo = (window as any).Vimeo;
           const player = new Vimeo.Player(vimeoRef.current);
           playerRef.current = player;
@@ -217,6 +224,7 @@ export default function ClassPage() {
                 player.seekTo(resumeSecondsRef.current, true);
               }
             },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onStateChange: (e: any) => {
               if (disposed) return;
               if (e.data === yt.PlayerState.ENDED) {
@@ -247,7 +255,7 @@ export default function ClassPage() {
       })
       .catch((e) => toast("error", e.message));
     return teardown;
-  }, [detail, classId, toast]);
+  }, [detail, classId, toast, recordProgress]);
 
   async function addComment(e: React.FormEvent) {
     e.preventDefault();
@@ -270,6 +278,19 @@ export default function ClassPage() {
       reload();
     } catch (e) {
       toast("error", errorMessage(e));
+    }
+  }
+
+  async function openFile(id: string) {
+    try {
+      const blobUrl = URL.createObjectURL(await apiBlob(`/api/files/${id}`));
+      const anchor = document.createElement("a");
+      anchor.href = blobUrl;
+      anchor.download = detail?.files.find((file) => file.id === id)?.name ?? "download";
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    } catch (e) {
+      toast("error", errorMessage(e, "Não foi possível baixar o arquivo."));
     }
   }
 
@@ -344,9 +365,9 @@ export default function ClassPage() {
                     <Icon name="description" className="text-sky-400" />
                     <span className="flex-1">{f.name}</span>
                     {f.storagePath && (
-                      <a href={f.storagePath} target="_blank" rel="noreferrer" className="text-indigo-300 hover:underline">
-                        Abrir
-                      </a>
+                       <button onClick={() => openFile(f.id)} className="text-indigo-300 hover:underline">
+                         Baixar
+                       </button>
                     )}
                   </li>
                 ))}

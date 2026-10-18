@@ -77,27 +77,6 @@ internal sealed class DeleteClassroomHandler(ISmartLmsDbContext context) : IComm
             return Error.NotFound("Classrooms.NotFound", "Classroom not found.");
         }
 
-        var planIds = await context.DeliveryPlans
-            .Where(p => p.ClassroomId == command.Id)
-            .Select(p => p.Id)
-            .ToListAsync(cancellationToken);
-
-        if (planIds.Count > 0)
-        {
-            var notices = await context.Notices
-                .Where(n => n.DeliveryPlanId != null && planIds.Contains(n.DeliveryPlanId.Value))
-                .ToListAsync(cancellationToken);
-            foreach (var notice in notices)
-            {
-                notice.DetachDeliveryPlan();
-            }
-
-            var plans = await context.DeliveryPlans
-                .Where(p => planIds.Contains(p.Id))
-                .ToListAsync(cancellationToken);
-            context.DeliveryPlans.RemoveRange(plans);
-        }
-
         classroom.Deactivate();
         await context.SaveChangesAsync(cancellationToken);
 
@@ -149,9 +128,12 @@ internal sealed class DeleteClassroomPermanentlyHandler(ISmartLmsDbContext conte
             var notices = await context.Notices
                 .Where(n => n.DeliveryPlanId != null && planIds.Contains(n.DeliveryPlanId.Value))
                 .ToListAsync(cancellationToken);
-            foreach (var notice in notices)
+            if (notices.Count > 0)
             {
-                notice.DetachDeliveryPlan();
+                var noticeIds = notices.Select(n => n.Id).ToList();
+                context.UserNotices.RemoveRange(await context.UserNotices
+                    .Where(un => noticeIds.Contains(un.NoticeId)).ToListAsync(cancellationToken));
+                context.Notices.RemoveRange(notices);
             }
 
             var plans = await context.DeliveryPlans

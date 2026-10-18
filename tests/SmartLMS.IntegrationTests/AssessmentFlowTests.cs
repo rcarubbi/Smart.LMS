@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using SmartLMS.DataAccess.Seed;
 using SmartLMS.Application.Auth.Login;
 using SmartLMS.Application.Users.CreateUser;
+using SmartLMS.Application.Learning.Classrooms;
+using SmartLMS.Application.Learning.History;
 using SmartLMS.Presentation.Api.Endpoints;
 using Testcontainers.MsSql;
 
@@ -82,10 +84,39 @@ public class AssessmentFlowTests
                 var assessmentId = (await createResponse.Content.ReadFromJsonAsync<CreatedId>(JsonOpts))!.Id;
 
                 // Student view must not leak right answers.
+                var studentEmail = "quiz.student@smartlms.local";
+                var studentId = await PostForIdAsync(client, "/api/users", new CreateUserInput(
+                    "Quiz Student", studentEmail, "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
+                var teacherId = await PostForIdAsync(client, "/api/users", new CreateUserInput(
+                    "Quiz Teacher", "quiz.teacher@smartlms.local", "teacher-pass-123", Domain.Entities.UserAccess.UserRole.Teacher));
+                var classId = await PostForIdAsync(client, "/api/classes", new
+                {
+                    name = "Assessment prerequisite",
+                    content = "https://vimeo.com/76979871",
+                    order = 1,
+                    deliveryDays = 0,
+                    contentType = "Vimeo",
+                    courseId,
+                    teacherId,
+                });
+                var classroomId = await PostForIdAsync(client, "/api/classrooms", new { name = "Quiz classroom" });
+                await client.PutAsJsonAsync($"/api/classrooms/{classroomId}/courses", new EnrollCoursesInput([courseId]));
+                await PostForIdAsync(client, "/api/delivery-plans", new
+                {
+                    classroomId,
+                    startDate = DateTime.UtcNow.AddDays(-1),
+                    studentIds = new[] { studentId },
+                });
+                var delivery = await client.PostAsync("/api/delivery-plans/run", null);
+                await Assert.That(delivery.StatusCode).IsEqualTo(HttpStatusCode.OK);
+
                 var studentClient = factory.CreateClient();
-                var student = await LoginAsync(studentClient, await EnsureStudentAsync(client), "student-pass-123");
+                var student = await LoginAsync(studentClient, studentEmail, "student-pass-123");
                 studentClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", student.AccessToken);
+                var progress = await studentClient.PostAsJsonAsync("/api/me/class-access",
+                    new RecordClassAccessInput(classId, 100, 300m));
+                await Assert.That(progress.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
 
                 var detail = await studentClient.GetFromJsonAsync<AssessmentDetailStub>($"/api/assessments/{assessmentId}", JsonOpts);
                 if (detail is null || detail.Questions.Count != 3)
@@ -98,6 +129,9 @@ public class AssessmentFlowTests
                 {
                     await Assert.That(rawDetail.Contains("rightOption", StringComparison.OrdinalIgnoreCase)).IsFalse();
                     await Assert.That(rawDetail.Contains("rightAnswer", StringComparison.OrdinalIgnoreCase)).IsFalse();
+                    using var json = JsonDocument.Parse(rawDetail);
+                    await Assert.That(json.RootElement.GetProperty("questions")[2].GetProperty("options")[0]
+                        .TryGetProperty("order", out _)).IsFalse();
                 }
 
                 // Submit a perfect run.
@@ -106,14 +140,14 @@ public class AssessmentFlowTests
                 var qReorder = detail.Questions[2];
 
                 // Perfect answers derived from creation payload:
-                // single -> option index 0; multi -> indexes 1,2; reorder -> options ordered by order (Red, Green, Refactor).
+                // Answers are identified by label; reordering presentation is randomized and carries no order metadata.
                 var perfect = new
                 {
                     questions = new object[]
                     {
-                        new { questionId = qSingle.Id, optionIds = new[] { qSingle.Options[0].Id } },
-                        new { questionId = qMulti.Id, optionIds = new[] { qMulti.Options[2].Id, qMulti.Options[1].Id } },
-                        new { questionId = qReorder.Id, optionIds = OrderedByOptionOrder(qReorder) },
+                        new { questionId = qSingle.Id, optionIds = new[] { OptionId(qSingle, "Test Driven Development") } },
+                        new { questionId = qMulti.Id, optionIds = new[] { OptionId(qMulti, "[Fact]"), OptionId(qMulti, "[TestCase]") } },
+                        new { questionId = qReorder.Id, optionIds = CorrectReordering(qReorder) },
                     },
                 };
 
@@ -142,9 +176,9 @@ public class AssessmentFlowTests
                 {
                     questions = new object[]
                     {
-                        new { questionId = qSingle.Id, optionIds = new[] { qSingle.Options[1].Id } },
+                        new { questionId = qSingle.Id, optionIds = new[] { OptionId(qSingle, "Test Design Doc") } },
                         new { questionId = qMulti.Id, optionIds = Array.Empty<Guid>() },
-                        new { questionId = qReorder.Id, optionIds = ((IEnumerable<Guid>)OrderedByOptionOrder(qReorder)).Reverse().ToArray() },
+                        new { questionId = qReorder.Id, optionIds = CorrectReordering(qReorder).Reverse().ToArray() },
                     },
                 };
 
@@ -219,9 +253,9 @@ public class AssessmentFlowTests
                 {
                     questions = new object[]
                     {
-                        new { questionId = detailAfter.Questions[0].Id, optionIds = new[] { detailAfter.Questions[0].Options[0].Id } },
-                        new { questionId = detailAfter.Questions[1].Id, optionIds = new[] { detailAfter.Questions[1].Options[2].Id, detailAfter.Questions[1].Options[1].Id } },
-                        new { questionId = detailAfter.Questions[2].Id, optionIds = OrderedByOptionOrder(detailAfter.Questions[2]) },
+                        new { questionId = detailAfter.Questions[0].Id, optionIds = new[] { OptionId(detailAfter.Questions[0], "Test Driven Development") } },
+                        new { questionId = detailAfter.Questions[1].Id, optionIds = new[] { OptionId(detailAfter.Questions[1], "[Fact]"), OptionId(detailAfter.Questions[1], "[TestCase]") } },
+                        new { questionId = detailAfter.Questions[2].Id, optionIds = CorrectReordering(detailAfter.Questions[2]) },
                     },
                 };
 
@@ -245,22 +279,10 @@ public class AssessmentFlowTests
         }
     }
 
-    private static Guid[] OrderedByOptionOrder(QuestionStub question) =>
-        [.. question.Options.OrderBy(o => o.Order).Select(o => o.Id)];
+    private static Guid OptionId(QuestionStub question, string text) => question.Options.Single(o => o.Text == text).Id;
 
-    private static async Task<string> EnsureStudentAsync(HttpClient adminClient)
-    {
-        const string email = "quiz.student@smartlms.local";
-        var response = await adminClient.PostAsJsonAsync("/api/users", new CreateUserInput(
-            "Quiz Student", email, "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
-
-        if (response.StatusCode != HttpStatusCode.Created)
-        {
-            throw new InvalidOperationException($"Student creation failed: {(int)response.StatusCode}");
-        }
-
-        return email;
-    }
+    private static Guid[] CorrectReordering(QuestionStub question) =>
+        [OptionId(question, "Red"), OptionId(question, "Green"), OptionId(question, "Refactor")];
 
     private static async Task<AuthTokens> LoginAsync(HttpClient client, string email, string password)
     {
@@ -309,7 +331,7 @@ public class AssessmentFlowTests
         IReadOnlyList<int> MultipleChoiceRightOrders);
     private sealed record QuestionStub(Guid Id, string Type, string Description, int Score, IReadOnlyList<OptionStub> Options);
 
-    private sealed record OptionStub(Guid Id, string Text, int Order);
+    private sealed record OptionStub(Guid Id, string Text);
 
     private sealed record ResultStub(Guid AssessmentId, string CourseName, int Score, int MinimumScore, bool Passed, IReadOnlyList<QuestionResultStub> Questions);
 

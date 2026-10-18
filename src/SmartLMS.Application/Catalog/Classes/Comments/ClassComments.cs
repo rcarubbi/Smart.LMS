@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
+using SmartLMS.Application.Authorization;
 using SmartLMS.Domain.Entities.Communication;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Specifications;
@@ -20,13 +21,18 @@ public sealed record CommentItem(
 public sealed record ListClassCommentsQuery(Guid ClassId, int? Page = null, int? PageSize = null)
     : IQuery<Paged<CommentItem>>;
 
-internal sealed class ListClassCommentsHandler(ISmartLmsDbContext context)
+internal sealed class ListClassCommentsHandler(ISmartLmsDbContext context, ClassAccessPolicy accessPolicy)
     : IQueryHandler<ListClassCommentsQuery, Paged<CommentItem>>
 {
     public async ValueTask<ErrorOr<Paged<CommentItem>>> Handle(
         ListClassCommentsQuery query,
         CancellationToken cancellationToken)
     {
+        if (!await accessPolicy.CanAccessClassAsync(query.ClassId, cancellationToken))
+        {
+            return Error.NotFound("Classes.NotFound", "Class not found.");
+        }
+
         var spec = new ClassCommentsByClassSpec(query.ClassId);
         var filtered = SpecificationEvaluator.Default.GetQuery(context.Comments.AsNoTracking(), spec);
 
@@ -59,6 +65,7 @@ internal sealed class AddClassCommentValidator : AbstractValidator<AddClassComme
 internal sealed class AddClassCommentHandler(
     ISmartLmsDbContext context,
     ICurrentUser currentUser,
+    ClassAccessPolicy accessPolicy,
     TimeProvider timeProvider) : ICommandHandler<AddClassCommentCommand, Guid>
 {
     public async ValueTask<ErrorOr<Guid>> Handle(AddClassCommentCommand command, CancellationToken cancellationToken)
@@ -68,8 +75,7 @@ internal sealed class AddClassCommentHandler(
             return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
         }
 
-        var classExists = await context.Classes.AnyAsync(c => c.Id == command.ClassId, cancellationToken);
-        if (!classExists)
+        if (!await accessPolicy.CanAccessClassAsync(command.ClassId, cancellationToken))
         {
             return Error.NotFound("Classes.NotFound", "Class not found.");
         }
@@ -91,7 +97,8 @@ public sealed record DeleteClassCommentCommand(Guid ClassId, Guid CommentId) : I
 
 internal sealed class DeleteClassCommentHandler(
     ISmartLmsDbContext context,
-    ICurrentUser currentUser) : ICommandHandler<DeleteClassCommentCommand>
+    ICurrentUser currentUser,
+    ClassAccessPolicy accessPolicy) : ICommandHandler<DeleteClassCommentCommand>
 {
     public async ValueTask<ErrorOr<Success>> Handle(DeleteClassCommentCommand command, CancellationToken cancellationToken)
     {
@@ -104,6 +111,11 @@ internal sealed class DeleteClassCommentHandler(
         if (comment is null || comment.ClassId != command.ClassId)
         {
             return Error.NotFound("Comments.NotFound", "Comment not found.");
+        }
+
+        if (!await accessPolicy.CanAccessClassAsync(command.ClassId, cancellationToken))
+        {
+            return Error.NotFound("Classes.NotFound", "Class not found.");
         }
 
         var isOwner = comment.UserId == userId;

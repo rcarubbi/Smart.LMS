@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Application.Auth;
+using SmartLMS.Application.Authorization;
 using SmartLMS.Application.Integration;
 using SmartLMS.Application.Messaging;
 
@@ -17,6 +18,7 @@ public static class DependencyInjection
         services.AddScoped<IDispatcher, Dispatcher>();
         services.AddSingleton(TimeProvider.System);
         services.AddScoped<AuthTokenIssuer>();
+        services.AddScoped<ClassAccessPolicy>();
 
         // Discover all command/query handlers in the application layer.
         services.Scan(scan => scan

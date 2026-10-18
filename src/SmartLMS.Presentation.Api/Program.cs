@@ -41,6 +41,24 @@ builder.Services
     .AddJwtBearer(options =>
     {
         options.MapInboundClaims = false; // keep 'sub' and 'role' claim types as issued
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var subject = context.Principal?.FindFirst("sub")?.Value;
+                if (!Guid.TryParse(subject, out var userId))
+                {
+                    context.Fail("Invalid subject claim.");
+                    return;
+                }
+
+                var db = context.HttpContext.RequestServices.GetRequiredService<ISmartLmsDbContext>();
+                if (!await db.Users.AnyAsync(u => u.Id == userId && u.Active, context.HttpContext.RequestAborted))
+                {
+                    context.Fail("User is inactive.");
+                }
+            },
+        };
 
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -80,6 +98,8 @@ builder.Services.AddOpenApi(options =>
 
 var uploadsPath = builder.Configuration["Uploads:Directory"]
     ?? Path.Combine(builder.Environment.ContentRootPath, "uploads");
+var publicUploadsPath = Path.Combine(uploadsPath, "public");
+var privateUploadsPath = Path.Combine(uploadsPath, "private");
 
 var app = builder.Build();
 
@@ -98,10 +118,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("Development");
-Directory.CreateDirectory(uploadsPath);
+Directory.CreateDirectory(publicUploadsPath);
+Directory.CreateDirectory(privateUploadsPath);
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(uploadsPath),
+    FileProvider = new PhysicalFileProvider(publicUploadsPath),
     RequestPath = "/uploads",
 });
 app.UseAuthentication();
@@ -113,7 +134,7 @@ app.MapUserEndpoints();
 app.MapCatalogEndpoints();
 app.MapLearningEndpoints();
 app.MapAssessmentEndpoints();
-app.MapUploadEndpoints(uploadsPath);
+app.MapUploadEndpoints(publicUploadsPath, privateUploadsPath, uploadsPath);
 
 await app.RunAsync();
 

@@ -2,6 +2,7 @@ using Ardalis.Specification.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
+using SmartLMS.Application.Authorization;
 using SmartLMS.Domain.Entities.Assessments;
 using SmartLMS.Domain.Entities.UserAccess;
 using SmartLMS.Domain.Specifications;
@@ -31,7 +32,8 @@ public sealed record AssessmentResult(
 
 internal sealed class SubmitAssessmentHandler(
         ISmartLmsDbContext context,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser,
+        ClassAccessPolicy accessPolicy)
     : ICommandHandler<SubmitAssessmentCommand, AssessmentResult>
 {
     public async ValueTask<ErrorOr<AssessmentResult>> Handle(SubmitAssessmentCommand command, CancellationToken cancellationToken)
@@ -48,11 +50,17 @@ internal sealed class SubmitAssessmentHandler(
             return Error.NotFound("Assessments.NotFound", "Assessment not found.");
         }
 
+        if (!await accessPolicy.CanAccessCourseAsync(assessment.CourseId, cancellationToken))
+        {
+            return Error.Forbidden("Assessments.CourseUnavailable", "Esta avaliação não está disponível para este usuário.");
+        }
+
         // Only admins are exempt: everyone else must finish every class of the course first.
-        if (currentUser.Role != UserRole.Admin && currentUser.UserId is { } userId)
+        if (currentUser.Role == UserRole.Student && currentUser.UserId is { } userId)
         {
             var classIds = await SpecificationEvaluator.Default
                 .GetQuery(context.Classes.AsNoTracking(), new ClassesByCourseSpec(assessment.CourseId))
+                .Where(c => c.Active)
                 .Select(c => c.Id)
                 .ToListAsync(cancellationToken);
 
@@ -92,7 +100,8 @@ internal sealed class SubmitAssessmentHandler(
 public sealed record GetAssessmentQuery(Guid Id) : IQuery<AssessmentDetail>;
 
 /// <summary>Student-facing view: questions and options only, never the right answers.</summary>
-internal sealed class GetAssessmentHandler(ISmartLmsDbContext context) : IQueryHandler<GetAssessmentQuery, AssessmentDetail>
+internal sealed class GetAssessmentHandler(ISmartLmsDbContext context, ClassAccessPolicy accessPolicy)
+    : IQueryHandler<GetAssessmentQuery, AssessmentDetail>
 {
     public async ValueTask<ErrorOr<AssessmentDetail>> Handle(GetAssessmentQuery query, CancellationToken cancellationToken)
     {
@@ -109,14 +118,23 @@ internal sealed class GetAssessmentHandler(ISmartLmsDbContext context) : IQueryH
                         EF.Property<string>(q, "Discriminator"),
                         q.Description,
                         q.Score,
-                        q.Options.OrderBy(o => o.Order)
-                            .Select(o => new OptionDetail(o.Id, o.Text, o.Order))
+                        q.Options.Select(o => new OptionDetail(o.Id, o.Text))
                             .ToList()))
                     .ToList()))
             .SingleOrDefaultAsync(cancellationToken);
 
-        return detail is null
-            ? Error.NotFound("Assessments.NotFound", "Assessment not found.")
-            : detail;
+        if (detail is null || !await accessPolicy.CanAccessCourseAsync(detail.CourseId, cancellationToken))
+        {
+            return Error.NotFound("Assessments.NotFound", "Assessment not found.");
+        }
+
+        var questions = detail.Questions.Select(question =>
+        {
+            var options = question.Options.ToArray();
+            Random.Shared.Shuffle(options);
+            return question with { Options = options };
+        }).ToArray();
+
+        return detail with { Questions = questions };
     }
 }

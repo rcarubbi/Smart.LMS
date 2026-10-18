@@ -38,7 +38,7 @@ internal sealed class RefreshTokenHandler(
             .GetQuery(context.RefreshTokens, new RefreshTokenByHashWithUserSpec(tokenHash))
             .SingleOrDefaultAsync(cancellationToken);
 
-        if (stored is null || !stored.IsActive(now))
+        if (stored is null || !stored.IsActive(now) || !stored.User.Active)
         {
             return Error.Unauthorized("Auth.InvalidRefreshToken", "The refresh token is invalid or expired.");
         }

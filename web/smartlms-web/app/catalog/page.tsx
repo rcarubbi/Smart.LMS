@@ -35,7 +35,7 @@ function CatalogInner() {
     { subjectId: selectedSubject ?? "", active: true },
   );
 
-  async function reload(areaId: string | null, subjectId: string | null) {
+  async function reload(areaId: string | null) {
     const [areasData, subjectsData] = await Promise.all([
       apiList<ListItem>("/api/knowledge-areas?active=true"),
       apiList<ListItem>(`/api/subjects${areaId ? `?knowledgeAreaId=${areaId}&active=true` : "?active=true"}`),
@@ -47,9 +47,11 @@ function CatalogInner() {
   useEffect(() => {
     const area = areaParam ?? null;
     const subject = subjectParam ?? null;
+    // URL parameters initialize the corresponding filter state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedArea(area);
     setSelectedSubject(subject);
-    reload(area, subject).catch((e) => setError(String(e)));
+    reload(area).catch((e) => setError(String(e)));
   }, [areaParam, subjectParam]);
 
   async function createArea(event: React.FormEvent) {
@@ -61,7 +63,7 @@ function CatalogInner() {
         body: JSON.stringify({ name: newAreaName, order: areas.length + 1 }),
       });
       setNewAreaName("");
-      await reload(selectedArea, selectedSubject);
+      await reload(selectedArea);
     } catch {
       setError("Não foi possível criar a área (nome duplicado?).");
     }
@@ -74,7 +76,7 @@ function CatalogInner() {
       const nextSubject = selectedArea === id ? null : selectedSubject;
       setSelectedArea(nextArea);
       setSelectedSubject(nextSubject);
-      await reload(nextArea, nextSubject);
+      await reload(nextArea);
     } catch {
       setError("A área não pode ser excluída agora (mova para a lixeira pela área administrativa).");
     }
@@ -83,7 +85,7 @@ function CatalogInner() {
   async function toggleSubject(id: string) {
     const next = selectedSubject === id ? null : id;
     setSelectedSubject(next);
-    await reload(selectedArea, next);
+    await reload(selectedArea);
   }
 
   return (
@@ -116,7 +118,7 @@ function CatalogInner() {
                     const next = selectedArea === a.id ? null : a.id;
                     setSelectedArea(next);
                     setSelectedSubject(null);
-                    reload(next, null);
+                    reload(next);
                   }}
                   className="text-left text-gray-200 hover:text-white"
                 >

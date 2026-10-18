@@ -8,7 +8,7 @@ import Panel from "@/components/ui/Panel";
 import Icon from "@/components/ui/Icon";
 import { useToast } from "@/components/ui/Toast";
 
-type OptionDetail = { id: string; text: string; order: number };
+type OptionDetail = { id: string; text: string };
 type QuestionDetail = { id: string; type: string; description: string; score: number; options: OptionDetail[] };
 type AssessmentDetail = { id: string; courseId: string; minimumScore: number; questions: QuestionDetail[] };
 
@@ -47,6 +47,8 @@ export default function AssessmentPage() {
   }, [assessmentId, toast]);
 
   useEffect(() => {
+    // This effect fetches remote assessment data; state updates follow the response.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, [load]);
 

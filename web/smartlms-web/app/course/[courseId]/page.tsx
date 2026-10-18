@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { api, apiList, currentUser, errorMessage } from "@/lib/api";
@@ -47,11 +48,15 @@ export default function CoursePage() {
   }, [courseId, toast]);
 
   useEffect(() => {
+    // This effect fetches remote course data; state updates follow the response.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, [load]);
 
   useEffect(() => {
     if (user?.role === "Admin") {
+      // Admins do not request student progress; clear any stale role-specific state.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setProgressMap({});
       return;
     }
@@ -76,7 +81,7 @@ export default function CoursePage() {
     <AppShell>
       <div className="mb-6 overflow-hidden rounded-2xl border border-white/10">
         {course.image ? (
-          <img src={course.image} alt="" className="h-44 w-full object-cover" />
+          <Image src={course.image} alt="" width={1200} height={176} unoptimized className="h-44 w-full object-cover" />
         ) : (
           <div className="flex h-32 items-center justify-center bg-gradient-to-r from-indigo-900/40 to-sky-900/40">
             <Icon name="school" className="text-5xl text-white/30" />

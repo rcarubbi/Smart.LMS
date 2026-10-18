@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
+using SmartLMS.Application.Authorization;
 using SmartLMS.Domain.Specifications;
 using ErrorOr;
 
@@ -25,7 +26,10 @@ internal sealed class ContextualSearchValidator : AbstractValidator<ContextualSe
     }
 }
 
-internal sealed class ContextualSearchHandler(ISmartLmsDbContext context, ICurrentUser currentUser)
+internal sealed class ContextualSearchHandler(
+    ISmartLmsDbContext context,
+    ICurrentUser currentUser,
+    ClassAccessPolicy accessPolicy)
     : IQueryHandler<ContextualSearchQuery, Paged<SearchResultItem>>
 {
     public async ValueTask<ErrorOr<Paged<SearchResultItem>>> Handle(
@@ -51,7 +55,7 @@ internal sealed class ContextualSearchHandler(ISmartLmsDbContext context, ICurre
             .ToListAsync(cancellationToken);
 
         var classes = await SpecificationEvaluator.Default
-            .GetQuery(context.Classes.AsNoTracking(), new ClassesSearchSpec(term))
+            .GetQuery(accessPolicy.AccessibleClasses(), new ClassesSearchSpec(term))
             .Select(c => new { c.Id, c.Name })
             .ToListAsync(cancellationToken);
 
@@ -79,7 +83,7 @@ internal sealed class ContextualSearchHandler(ISmartLmsDbContext context, ICurre
         }
 
         var files = await SpecificationEvaluator.Default
-            .GetQuery(context.Files.AsNoTracking(), new SupportFilesSearchSpec(term))
+            .GetQuery(context.Files.AsNoTracking().Where(f => accessPolicy.AccessibleClasses().Any(c => c.Id == f.ClassId)), new SupportFilesSearchSpec(term))
             .Select(f => new { f.Id, f.Name, f.StoragePath })
             .ToListAsync(cancellationToken);
 
@@ -89,9 +93,7 @@ internal sealed class ContextualSearchHandler(ISmartLmsDbContext context, ICurre
                 f.Name,
                 "File",
                 0,
-                string.IsNullOrWhiteSpace(f.StoragePath) || !f.StoragePath.StartsWith("http", StringComparison.OrdinalIgnoreCase)
-                    ? null
-                    : f.StoragePath))
+                $"/api/files/{f.Id}"))
             .ToList();
 
         if (fileItems.Count > 0 && userId is not null)

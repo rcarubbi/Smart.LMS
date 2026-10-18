@@ -58,8 +58,10 @@ internal sealed class MarkNoticeSeenHandler(ISmartLmsDbContext context, ICurrent
             return Error.Unauthorized("Auth.NotAuthenticated", "No authenticated user.");
         }
 
-        var noticeExists = await context.Notices.AnyAsync(n => n.Id == command.NoticeId, cancellationToken);
-        if (!noticeExists)
+        var visible = await SpecificationEvaluator.Default
+            .GetQuery(context.Notices.AsNoTracking(), new MyNoticesSpec(userId))
+            .AnyAsync(n => n.Id == command.NoticeId, cancellationToken);
+        if (!visible)
         {
             return Error.NotFound("Notices.NotFound", "Notice not found.");
         }

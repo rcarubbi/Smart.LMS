@@ -44,10 +44,14 @@ export function usePagedList<T>(endpoint: string, params: Params, pageSize = 25)
   }, [endpointKey, page, enabled]);
 
   useEffect(() => {
+    // Reset page when filter key changes; the following fetch effect uses page 1.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
   }, [endpointKey]);
 
   useEffect(() => {
+    // Fetch remote list data; state updates happen after the request settles.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     reload();
   }, [reload]);
 

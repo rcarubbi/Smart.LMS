@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
+using SmartLMS.Application.Authorization;
 using ErrorOr;
 using SmartLMS.Domain.Entities.Assessments;
 using SmartLMS.Domain.Specifications;
@@ -39,7 +40,7 @@ public sealed record QuestionDetail(
     int Score,
     IReadOnlyList<OptionDetail> Options);
 
-public sealed record OptionDetail(Guid Id, string Text, int Order);
+public sealed record OptionDetail(Guid Id, string Text);
 
 // ----- Commands -----
 
@@ -458,13 +459,18 @@ public sealed record ListAssessmentsQuery(
 
 public sealed record AssessmentListItem(Guid Id, string CourseName, int MinimumScore, int QuestionCount, bool Active);
 
-internal sealed class ListAssessmentsHandler(ISmartLmsDbContext context)
+internal sealed class ListAssessmentsHandler(ISmartLmsDbContext context, ClassAccessPolicy accessPolicy)
     : IQueryHandler<ListAssessmentsQuery, Paged<AssessmentListItem>>
 {
     public async ValueTask<ErrorOr<Paged<AssessmentListItem>>> Handle(
         ListAssessmentsQuery query,
         CancellationToken cancellationToken)
     {
+        if (!await accessPolicy.CanAccessCourseAsync(query.CourseId, cancellationToken))
+        {
+            return Error.NotFound("Courses.NotFound", "Course not found.");
+        }
+
         var spec = new AssessmentsByCourseSpec(query.CourseId, query.Active);
         var filtered = SpecificationEvaluator.Default.GetQuery(context.Assessments.AsNoTracking(), spec);
 

@@ -16,6 +16,8 @@ export default function ClassroomsPage() {
   }
 
   useEffect(() => {
+    // This effect fetches remote classrooms; state updates follow the response.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     reload().catch((e) => setError(String(e)));
   }, []);
 

@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { api, apiList } from "@/lib/api";
+import { api, apiBlob, apiList, errorMessage } from "@/lib/api";
 import type { ListItem } from "@/lib/api";
 import AppShell from "@/components/AppShell";
 import Panel from "@/components/ui/Panel";
 import Icon from "@/components/ui/Icon";
+import { useToast } from "@/components/ui/Toast";
 
 type SearchResult = { id: string; description: string; resultType: string; percentual: number; link?: string | null };
 type NoticeItem = { id: string; text: string; dateTime: string; seen: boolean };
@@ -20,6 +21,7 @@ const typeLabels: Record<string, string> = {
 };
 
 export default function HomePage() {
+  const { toast } = useToast();
   const [term, setTerm] = useState("");
   const [results, setResults] = useState<SearchResult[] | null>(null);
   const [notices, setNotices] = useState<NoticeItem[]>([]);
@@ -43,6 +45,19 @@ export default function HomePage() {
   async function markSeen(id: string) {
     await api(`/api/notices/${id}/seen`, { method: "POST" });
     setNotices((current) => current.map((n) => (n.id === id ? { ...n, seen: true } : n)));
+  }
+
+  async function openFile(id: string, name: string) {
+    try {
+      const blobUrl = URL.createObjectURL(await apiBlob(`/api/files/${id}`));
+      const anchor = document.createElement("a");
+      anchor.href = blobUrl;
+      anchor.download = name;
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    } catch (e) {
+      toast("error", errorMessage(e, "Não foi possível baixar o arquivo."));
+    }
   }
 
   return (
@@ -77,9 +92,9 @@ export default function HomePage() {
                     {typeLabels[r.resultType] ?? r.resultType}
                   </span>
                   {r.resultType === "File" && r.link ? (
-                    <a href={r.link} target="_blank" rel="noreferrer" className="truncate text-indigo-300 hover:underline">
+                    <button onClick={() => openFile(r.id, r.description)} className="truncate text-left text-indigo-300 hover:underline">
                       {r.description}
-                    </a>
+                    </button>
                   ) : r.link ? (
                     <a href={r.link} className="truncate text-indigo-300 hover:underline">
                       {r.description}
@@ -141,7 +156,7 @@ export default function HomePage() {
                 .filter((n) => !n.seen)
                 .map((n) => (
                 <li key={n.id} className="flex items-start justify-between gap-4 rounded-lg border border-white/10 bg-white/5 p-3 text-sm">
-                  <div className="[&_a]:text-indigo-300" dangerouslySetInnerHTML={{ __html: n.text }} />
+                  <div className="whitespace-pre-wrap">{n.text}</div>
                   {!n.seen && (
                     <button
                       onClick={() => markSeen(n.id)}

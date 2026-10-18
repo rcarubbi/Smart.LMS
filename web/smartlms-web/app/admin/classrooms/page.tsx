@@ -226,7 +226,7 @@ export default function ClassroomsAdmin() {
           submitLabel="Salvar cursos"
         >
           <p className="text-xs text-white/50">
-            Selecione os cursos desta turma e arraste na lista "Selecionados" para definir a ordem.
+            Selecione os cursos desta turma e arraste na lista &quot;Selecionados&quot; para definir a ordem.
           </p>
           {(() => {
             const sel = (enrollModal?.selected ?? [])

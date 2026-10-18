@@ -64,6 +64,8 @@ export default function DeliveryPlansAdmin() {
   }, []);
 
   useEffect(() => {
+    // This effect fetches remote options; state updates happen after the async response.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load().catch((e) => toast("error", errorMessage(e)));
   }, [load, toast]);
 
@@ -384,7 +386,6 @@ function PlanCalendar({ startDate, classes }: { startDate: string; classes: Sche
       <div className="mt-1 grid grid-cols-7 gap-1">
         {cells.map((day, i) => {
           if (!day) return <div key={`e${i}`} className="aspect-square" />;
-          const d = new Date(year, month, day);
           const key = `${year}-${month}-${day}`;
           const items = byDate.get(key) ?? [];
           const isToday = key === todayKey;
