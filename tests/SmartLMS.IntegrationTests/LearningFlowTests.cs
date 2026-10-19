@@ -77,6 +77,29 @@ public class LearningFlowTests
                 "Helen Student", "helen@smartlms.local", "student-pass-123", Domain.Entities.UserAccess.UserRole.Student));
             var studentId = (await studentResponse.Content.ReadFromJsonAsync<CreatedId>(JsonOpts))!.Id;
 
+            // This first plan has an unrepresentable scheduled date. Its failure must not
+            // leave tracked mutations that poison the following valid plan in the same run.
+            var badCourseId = await PostForIdAsync(client, "/api/courses",
+                new { name = "Overflow Course", order = 2, subjectId });
+            await PostForIdAsync(client, "/api/classes", new
+            {
+                name = "Unrepresentable release",
+                content = "https://vimeo.com/76979871",
+                order = 1,
+                deliveryDays = int.MaxValue,
+                contentType = "Vimeo",
+                courseId = badCourseId,
+                teacherId,
+            });
+            var badClassroomId = await PostForIdAsync(client, "/api/classrooms", new { name = "Broken Schedule" });
+            await client.PutAsJsonAsync($"/api/classrooms/{badClassroomId}/courses", new EnrollCoursesInput([badCourseId]));
+            var badPlanId = await PostForIdAsync(client, "/api/delivery-plans", new
+            {
+                classroomId = badClassroomId,
+                startDate = DateTime.UtcNow.AddDays(-10),
+                studentIds = new[] { studentId },
+            });
+
             var classroomId = await PostForIdAsync(client, "/api/classrooms", new { name = "Night Class" });
             var enroll = await client.PutAsJsonAsync($"/api/classrooms/{classroomId}/courses",
                 new EnrollCoursesInput([courseId]));
@@ -109,20 +132,25 @@ public class LearningFlowTests
             await Assert.That(earlyProgress.StatusCode).IsEqualTo(HttpStatusCode.NotFound);
 
             // Both classes are due (1 + 2 days < 10 days ago).
-            var run = await client.PostAsync("/api/delivery-plans/run", null);
-            if (run.StatusCode != HttpStatusCode.OK)
+            var concurrentRuns = await Task.WhenAll(
+                client.PostAsync("/api/delivery-plans/run", null),
+                client.PostAsync("/api/delivery-plans/run", null));
+            if (concurrentRuns.Any(response => response.StatusCode != HttpStatusCode.OK))
             {
-                throw new InvalidOperationException(
-                    $"Delivery run failed [{(int)run.StatusCode}]: {await run.Content.ReadAsStringAsync()}");
+                var response = concurrentRuns.First(response => response.StatusCode != HttpStatusCode.OK);
+                throw new InvalidOperationException($"Concurrent delivery run failed [{(int)response.StatusCode}]: {await response.Content.ReadAsStringAsync()}");
             }
 
-            var delivered = await run.Content.ReadFromJsonAsync<List<DeliveredStub>>(JsonOpts);
-            if ((delivered ?? []).Count != 2)
+            var delivered = (await Task.WhenAll(concurrentRuns.Select(r => r.Content.ReadFromJsonAsync<List<DeliveredStub>>(JsonOpts))))
+                .SelectMany(items => items ?? []).ToList();
+            if (delivered.Count != 2)
             {
-                var raw = await run.Content.ReadAsStringAsync();
-                var plansDebug = "n/a";
-                throw new InvalidOperationException($"Expected 2 deliveries, got {delivered?.Count ?? 0}. Body: {raw}. Debug: {plansDebug}");
+                throw new InvalidOperationException($"Expected exactly two concurrent deliveries, got {delivered.Count}.");
             }
+
+            // Keep the intentionally corrupt schedule out of learner-facing schedule views.
+            var detachFailedPlan = await client.PutAsJsonAsync($"/api/delivery-plans/{badPlanId}/students", new { studentIds = Array.Empty<Guid>() });
+            await Assert.That(detachFailedPlan.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
 
             // Idempotent: second run delivers nothing more.
             var runAgain = await client.PostAsync("/api/delivery-plans/run", null);
@@ -214,6 +242,10 @@ public class LearningFlowTests
             var access = await studentClient.PostAsJsonAsync("/api/me/class-access",
                 new RecordClassAccessInput(firstClass.Id, 40, 120m));
             await Assert.That(access.StatusCode).IsEqualTo(HttpStatusCode.NoContent);
+            var simultaneousProgress = await Task.WhenAll(
+                studentClient.PostAsJsonAsync("/api/me/class-access", new RecordClassAccessInput(firstClass.Id, 80, 240m)),
+                studentClient.PostAsJsonAsync("/api/me/class-access", new RecordClassAccessInput(firstClass.Id, 65, 180m)));
+            await Assert.That(simultaneousProgress.All(r => r.StatusCode == HttpStatusCode.NoContent)).IsTrue();
 
             var progress = await studentClient.GetFromJsonAsync<PagedStub<ProgressStub>>("/api/me/progress", JsonOpts);
             if (progress is null || progress.Items.Count != 1)
@@ -224,7 +256,8 @@ public class LearningFlowTests
             using (Assert.Multiple())
             {
                 await Assert.That(progress.Items[0].ClassName).IsEqualTo("Queues 101");
-                await Assert.That(progress.Items[0].Percentual).IsEqualTo(40);
+                await Assert.That(progress.Items[0].Percentual).IsEqualTo(80);
+                await Assert.That(progress.Items[0].WatchedSeconds).IsEqualTo(240m);
             }
 
             var teacherClient = factory.CreateClient();
@@ -257,18 +290,18 @@ public class LearningFlowTests
             var myClassrooms = await studentClient.GetFromJsonAsync<PagedStub<MyPlanStub>>("/api/me/classrooms", JsonOpts);
             if (myClassrooms is null || myClassrooms.Items.Count != 1)
             {
-                throw new InvalidOperationException("Expected exactly one classroom for the student.");
+                throw new InvalidOperationException("Expected the successfully delivered classroom for the student.");
             }
 
+            var nightClass = myClassrooms.Items.Single(x => x.Name == "Night Class");
             using (Assert.Multiple())
             {
-                await Assert.That(myClassrooms.Items[0].Name).IsEqualTo("Night Class");
-                await Assert.That(myClassrooms.Items[0].DeliveredCount).IsEqualTo(2);
-                await Assert.That(myClassrooms.Items[0].TotalCount).IsEqualTo(2);
+                await Assert.That(nightClass.DeliveredCount).IsEqualTo(2);
+                await Assert.That(nightClass.TotalCount).IsEqualTo(2);
             }
             var myCourses = await studentClient.GetFromJsonAsync<PagedStub<MyCourseStub>>("/api/me/courses", JsonOpts);
-            await Assert.That(myCourses!.Items.Single().CourseId).IsEqualTo(courseId);
-            await Assert.That(myCourses.Items[0].Percentual).IsEqualTo(100);
+            var myCourse = myCourses!.Items.Single(x => x.CourseId == courseId);
+            await Assert.That(myCourse.Percentual).IsEqualTo(100);
             var recentReleases = await studentClient.GetFromJsonAsync<PagedStub<ReleasedStub>>("/api/me/released-classes", JsonOpts);
             await Assert.That(recentReleases!.Items).Count().IsEqualTo(2);
 

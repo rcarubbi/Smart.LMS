@@ -124,6 +124,16 @@ public class AssessmentFlowTests
                     throw new InvalidOperationException("Assessment detail should contain three questions.");
                 }
 
+                var malformed = await studentClient.PostAsJsonAsync($"/api/assessments/{assessmentId}/submit", new
+                {
+                    questions = new[]
+                    {
+                        new { questionId = detail.Questions[0].Id, optionIds = Array.Empty<Guid>() },
+                        new { questionId = detail.Questions[0].Id, optionIds = Array.Empty<Guid>() },
+                    },
+                });
+                await Assert.That(malformed.StatusCode).IsEqualTo(HttpStatusCode.BadRequest);
+
                 var rawDetail = await studentClient.GetStringAsync($"/api/assessments/{assessmentId}");
                 using (Assert.Multiple())
                 {

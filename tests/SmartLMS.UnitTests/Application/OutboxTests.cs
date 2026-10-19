@@ -42,7 +42,7 @@ public class OutboxTests
         var message = DeliveredMessage(planId);
 
         var outbox = Substitute.For<IOutboxMessageRepository>();
-        outbox.GetUnprocessedAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+        outbox.ClaimBatchAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<DateTime>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>())
             .Returns([message]);
 
         var context = Substitute.For<ISmartLmsDbContext>();
@@ -75,7 +75,7 @@ public class OutboxTests
         var valid = DeliveredMessage(planId);
 
         var outbox = Substitute.For<IOutboxMessageRepository>();
-        outbox.GetUnprocessedAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+        outbox.ClaimBatchAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<DateTime>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>())
             .Returns([unknown, valid]);
 
         var context = Substitute.For<ISmartLmsDbContext>();
@@ -107,7 +107,7 @@ public class OutboxTests
         var message = DeliveredMessage(Guid.NewGuid());
 
         var outbox = Substitute.For<IOutboxMessageRepository>();
-        outbox.GetUnprocessedAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+        outbox.ClaimBatchAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<DateTime>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>())
             .Returns([message]);
 
         var context = Substitute.For<ISmartLmsDbContext>();
@@ -130,6 +130,38 @@ public class OutboxTests
             await Assert.That(message.ProcessedOn).IsNull();
             await Assert.That(message.Attempts).IsEqualTo(1);
             await Assert.That(message.Error).Contains("smtp down");
+        }
+    }
+
+    [Test]
+    public async Task ProcessOutbox_does_not_count_shutdown_cancellation_as_a_failed_attempt()
+    {
+        var message = new OutboxMessage("cancel", "{}");
+        var outbox = Substitute.For<IOutboxMessageRepository>();
+        outbox.ClaimBatchAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<DateTime>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>())
+            .Returns([message]);
+        var context = Substitute.For<ISmartLmsDbContext>();
+        var handler = new ProcessOutboxMessagesHandler(
+            context, outbox, [new CancelHandler()], TimeProvider.System,
+            NullLogger<ProcessOutboxMessagesHandler>.Instance);
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        var threw = false;
+        try
+        {
+            await handler.Handle(new ProcessOutboxMessagesCommand(), cancellation.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            threw = true;
+        }
+
+        using (Assert.Multiple())
+        {
+            await Assert.That(threw).IsTrue();
+            await Assert.That(message.Attempts).IsEqualTo(0);
+            await context.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
         }
     }
 
@@ -164,10 +196,42 @@ public class OutboxTests
         {
             // Repository filters Attempts < 5, so 5 attempts means dead-letter.
             await Assert.That(message.Attempts).IsEqualTo(5);
+            await Assert.That(message.NextAttemptAtUtc).IsNull();
             await Assert.That(message.ProcessedOn).IsNull();
         }
 
         message.MarkProcessed(DateTime.UtcNow);
         await Assert.That(message.ProcessedOn).IsNotNull();
+    }
+
+    private sealed class CancelHandler : IOutboxEventHandler
+    {
+        public string MessageType => "cancel";
+        public ValueTask HandleAsync(string payload, CancellationToken cancellationToken) =>
+            ValueTask.FromCanceled(cancellationToken);
+    }
+
+    [Test]
+    public async Task Outbox_failures_back_off_and_manual_retry_resets_dead_letter()
+    {
+        var message = new OutboxMessage("T", "{}");
+        var failedAt = new DateTime(2026, 10, 19, 12, 0, 0, DateTimeKind.Utc);
+        message.MarkFailed("smtp down", failedAt);
+        await Assert.That(message.NextAttemptAtUtc).IsEqualTo(failedAt.AddMinutes(1));
+
+        for (var attempt = 1; attempt < OutboxMessage.MaxAttempts; attempt++)
+        {
+            message.MarkFailed("smtp down", failedAt.AddMinutes(attempt));
+        }
+        await Assert.That(message.Attempts).IsEqualTo(OutboxMessage.MaxAttempts);
+
+        message.Retry();
+        using (Assert.Multiple())
+        {
+            await Assert.That(message.Attempts).IsEqualTo(0);
+            await Assert.That(message.Error).IsNull();
+            await Assert.That(message.NextAttemptAtUtc).IsNull();
+            await Assert.That(message.ClaimId).IsNull();
+        }
     }
 }

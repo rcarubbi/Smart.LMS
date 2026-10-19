@@ -12,6 +12,7 @@ using SmartLMS.Application;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.DataAccess;
 using SmartLMS.DataAccess.Auditing;
+using SmartLMS.DataAccess.Seed;
 using SmartLMS.Infrastructure;
 using SmartLMS.Infrastructure.Security;
 using SmartLMS.Domain.Entities.UserAccess;
@@ -36,6 +37,31 @@ builder.Services.AddScoped<ICurrentUser>(sp => sp.GetRequiredService<HttpCurrent
 var jwtOptions = builder.Configuration
     .GetSection(JwtOptions.SectionName)
     .Get<JwtOptions>() ?? new JwtOptions();
+if (!builder.Environment.IsDevelopment())
+{
+    var connectionString = builder.Configuration.GetConnectionString("SmartLMS")
+        ?? throw new InvalidOperationException("ConnectionStrings:SmartLMS is required outside Development.");
+    var sql = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(connectionString);
+    var smtpHost = builder.Configuration["Smtp:Host"];
+    var publicBaseUrl = builder.Configuration["App:BaseUrl"];
+    if (jwtOptions.SigningKey.Length < 32 || jwtOptions.SigningKey.StartsWith("compose-signing-key-", StringComparison.Ordinal) ||
+        sql.Password == "yourStrong(!)Password" || string.IsNullOrWhiteSpace(smtpHost) || smtpHost is "localhost" or "mailpit")
+    {
+        throw new InvalidOperationException("Production requires a private JWT signing key and SQL password.");
+    }
+    if (string.IsNullOrWhiteSpace(publicBaseUrl) || publicBaseUrl.Contains("localhost", StringComparison.OrdinalIgnoreCase))
+    {
+        throw new InvalidOperationException("App:BaseUrl must point to the deployed web client.");
+    }
+
+    var bootstrapEmail = builder.Configuration["BootstrapAdmin:Email"];
+    var bootstrapPassword = builder.Configuration["BootstrapAdmin:Password"];
+    if (string.IsNullOrWhiteSpace(bootstrapEmail) || string.IsNullOrWhiteSpace(bootstrapPassword) ||
+        bootstrapPassword.Length < 12 || bootstrapPassword == DbSeeder.DefaultAdminPassword)
+    {
+        throw new InvalidOperationException("Production requires a private bootstrap admin email and password (minimum 12 characters).");
+    }
+}
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -93,10 +119,19 @@ builder.Services.AddRateLimiter(options => options.AddPolicy("password-reset", c
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Development", policy =>
-        policy.WithOrigins("http://localhost:3000")
-              .AllowAnyHeader()
-              .AllowAnyMethod());
+    var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+    if (builder.Environment.IsDevelopment() && !allowedOrigins.Contains("http://localhost:3000", StringComparer.OrdinalIgnoreCase))
+    {
+        allowedOrigins = [.. allowedOrigins, "http://localhost:3000"];
+    }
+    if (!builder.Environment.IsDevelopment() &&
+        (allowedOrigins.Length == 0 || allowedOrigins.Any(origin => origin.Contains("localhost", StringComparison.OrdinalIgnoreCase) ||
+            origin.Contains("127.0.0.1", StringComparison.OrdinalIgnoreCase))))
+    {
+        throw new InvalidOperationException("Configure Cors:AllowedOrigins with the deployed web origin.");
+    }
+
+    options.AddPolicy("Api", policy => policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod());
 });
 
 builder.Services.AddOpenApi(options =>
@@ -115,12 +150,13 @@ var publicUploadsPath = Path.Combine(uploadsPath, "public");
 var privateUploadsPath = Path.Combine(uploadsPath, "private");
 
 var app = builder.Build();
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    await scope.ServiceProvider.GetRequiredService<IDbSeeder>().SeedAsync();
+}
 
 if (app.Environment.IsDevelopment())
 {
-    await using var scope = app.Services.CreateAsyncScope();
-    await scope.ServiceProvider.GetRequiredService<IDbSeeder>().SeedAsync();
-
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
@@ -130,7 +166,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("Development");
+app.UseCors("Api");
 Directory.CreateDirectory(publicUploadsPath);
 Directory.CreateDirectory(privateUploadsPath);
 app.UseStaticFiles(new StaticFileOptions

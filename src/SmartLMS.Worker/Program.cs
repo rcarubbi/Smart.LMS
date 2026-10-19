@@ -26,6 +26,21 @@ builder.Services.AddSingleton<ICurrentUser, SystemCurrentUser>();
 var tickerConnectionString = builder.Configuration
     .GetConnectionString(SmartLMS.DataAccess.DependencyInjection.ConnectionStringName)
     ?? throw new InvalidOperationException("Connection string 'SmartLMS' is not configured.");
+var dashboardUser = builder.Configuration["TickerQ:Dashboard:Username"] ?? (builder.Environment.IsDevelopment() ? "admin" : string.Empty);
+var dashboardPassword = builder.Configuration["TickerQ:Dashboard:Password"] ?? (builder.Environment.IsDevelopment() ? "tickerq-admin" : string.Empty);
+if (!builder.Environment.IsDevelopment())
+{
+    var sql = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(tickerConnectionString);
+    var signingKey = builder.Configuration["Jwt:SigningKey"] ?? string.Empty;
+    var smtpHost = builder.Configuration["Smtp:Host"];
+    if (sql.Password == "yourStrong(!)Password" || signingKey.Length < 32 ||
+        signingKey.StartsWith("compose-signing-key-", StringComparison.Ordinal) ||
+        dashboardUser is "" or "admin" || dashboardPassword is "" or "admin" or "tickerq-admin" ||
+        string.IsNullOrWhiteSpace(smtpHost) || smtpHost is "localhost" or "mailpit")
+    {
+        throw new InvalidOperationException("Production requires private SQL/JWT secrets and non-default dashboard credentials.");
+    }
+}
 
 builder.Services.AddDbContext<SmartLmsTickerDbContext>(options => options.UseSqlServer(tickerConnectionString));
 
@@ -38,8 +53,8 @@ builder.Services.AddTickerQ<TimeTickerEntity, CronTickerEntity>(options =>
     {
         dashboard.SetBasePath("/tickerq");
         dashboard.WithBasicAuth(
-            builder.Configuration["TickerQ:Dashboard:Username"] ?? "admin",
-            builder.Configuration["TickerQ:Dashboard:Password"] ?? "admin");
+            dashboardUser,
+            dashboardPassword);
     });
 });
 

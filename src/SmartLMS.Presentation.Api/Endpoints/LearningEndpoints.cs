@@ -5,6 +5,7 @@ using SmartLMS.Application.Learning.Delivery;
 using SmartLMS.Application.Learning.History;
 using SmartLMS.Application.Learning.Notices;
 using SmartLMS.Application.Learning.Teaching;
+using SmartLMS.Application.Integration;
 using SmartLMS.Presentation.Api.Extensions;
 
 namespace SmartLMS.Presentation.Api.Endpoints;
@@ -114,6 +115,12 @@ internal static class LearningEndpoints
             })
             .RequireAuthorization(Policies.AdminOnly)
             .Produces(200);
+
+        var outbox = app.MapGroup("/api/outbox/dead-letters").WithTags("Outbox").RequireAuthorization(Policies.AdminOnly);
+        outbox.MapGet("/", async (int? page, int? pageSize, IDispatcher dispatcher, CancellationToken ct) =>
+            (await dispatcher.Query(new ListDeadLettersQuery(page, pageSize), ct)).ToResult());
+        outbox.MapPost("/{id:long}/retry", async (long id, IDispatcher dispatcher, CancellationToken ct) =>
+            (await dispatcher.Send(new RetryDeadLetterCommand(id), ct)).ToResult());
 
         var notices = app.MapGroup("/api/notices").WithTags("Notices");
         notices.MapGet("/", async (

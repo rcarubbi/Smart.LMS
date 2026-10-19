@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { api, apiList } from "@/lib/api";
+import { apiList } from "@/lib/api";
 import { usePagedList } from "@/lib/usePagedList";
 import Nav from "@/components/Nav";
 import Pagination from "@/components/ui/Pagination";
@@ -28,7 +28,6 @@ function CatalogInner() {
   const [subjects, setSubjects] = useState<ListItem[]>([]);
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
-  const [newAreaName, setNewAreaName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const { items: courses, total, page, setPage } = usePagedList<CourseItem>(
     "/api/courses",
@@ -54,34 +53,6 @@ function CatalogInner() {
     reload(area).catch((e) => setError(String(e)));
   }, [areaParam, subjectParam]);
 
-  async function createArea(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
-    try {
-      await api("/api/knowledge-areas", {
-        method: "POST",
-        body: JSON.stringify({ name: newAreaName, order: areas.length + 1 }),
-      });
-      setNewAreaName("");
-      await reload(selectedArea);
-    } catch {
-      setError("Não foi possível criar a área (nome duplicado?).");
-    }
-  }
-
-  async function deleteArea(id: string) {
-    try {
-      await api(`/api/knowledge-areas/${id}`, { method: "DELETE" });
-      const nextArea = selectedArea === id ? null : selectedArea;
-      const nextSubject = selectedArea === id ? null : selectedSubject;
-      setSelectedArea(nextArea);
-      setSelectedSubject(nextSubject);
-      await reload(nextArea);
-    } catch {
-      setError("A área não pode ser excluída agora (mova para a lixeira pela área administrativa).");
-    }
-  }
-
   async function toggleSubject(id: string) {
     const next = selectedSubject === id ? null : id;
     setSelectedSubject(next);
@@ -97,16 +68,6 @@ function CatalogInner() {
 
         <section className="space-y-3">
           <h2 className="font-medium">Áreas de conhecimento</h2>
-          <form onSubmit={createArea} className="flex gap-2">
-            <input
-              value={newAreaName}
-              onChange={(e) => setNewAreaName(e.target.value)}
-              required
-              placeholder="Nova área..."
-              className="flex-1 rounded border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            />
-            <button className="rounded bg-indigo-600 px-4 text-white hover:bg-indigo-500">Criar</button>
-          </form>
           <ul className="divide-y divide-gray-800 rounded border border-gray-800 bg-gray-900">
             {areas.map((a) => (
               <li
@@ -123,9 +84,6 @@ function CatalogInner() {
                   className="text-left text-gray-200 hover:text-white"
                 >
                   {a.name}
-                </button>
-                <button onClick={() => deleteArea(a.id)} className="text-xs text-red-400 hover:text-red-300">
-                  Excluir
                 </button>
               </li>
             ))}

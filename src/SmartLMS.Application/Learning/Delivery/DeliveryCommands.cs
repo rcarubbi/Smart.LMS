@@ -249,34 +249,44 @@ internal sealed class ExecuteDeliveriesHandler(
     {
         var today = DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
 
-        // Tracking query on purpose: MarkDelivered + Notices.Add + outbox
-        // persist per plan below.
-        var spec = new DeliveryPlansWithGraphSpec();
-        var plans = await SpecificationEvaluator.Default
-            .GetQuery(context.DeliveryPlans, spec)
+        var planIds = await context.DeliveryPlans.AsNoTracking()
+            .Where(p => p.Classroom.Active)
+            .OrderBy(p => p.CreatedAt)
+            .Select(p => p.Id)
             .ToListAsync(cancellationToken);
 
         List<DeliveredClassInfo> delivered = [];
 
-        foreach (var plan in plans)
+        foreach (var planId in planIds)
         {
-            var pending = plan.GetPendingClasses(today);
-            if (pending.Count == 0)
+            if (unitOfWork.HasActiveTransaction)
             {
-                continue;
+                throw new InvalidOperationException("Delivery processing requires an isolated unit of work.");
             }
 
-            // One transaction per plan: delivery + notice + outbox commit atomically,
-            // locks release early, and a failed plan doesn't roll back the run's progress.
-            // Nested sends reuse the ambient transaction instead.
-            var ownsTransaction = !unitOfWork.HasActiveTransaction;
-            if (ownsTransaction)
-            {
-                await unitOfWork.BeginTransactionAsync(cancellationToken);
-            }
-
+            await unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
+                // Load one tracked graph only after opening this plan's transaction.
+                // Failed plans can then be detached without losing other plans' state.
+                var spec = new DeliveryPlansWithGraphSpec(planId);
+                var plan = await SpecificationEvaluator.Default
+                    .GetQuery(context.DeliveryPlans, spec)
+                    .SingleOrDefaultAsync(cancellationToken);
+                if (plan is null)
+                {
+                    await unitOfWork.CommitAsync(cancellationToken);
+                    continue;
+                }
+
+                var pending = plan.GetPendingClasses(today);
+                if (pending.Count == 0)
+                {
+                    await unitOfWork.CommitAsync(cancellationToken);
+                    continue;
+                }
+
+                List<DeliveredClassInfo> planDeliveries = [];
                 foreach (var item in pending)
                 {
                     var klass = plan.Classroom.Courses
@@ -305,26 +315,27 @@ internal sealed class ExecuteDeliveriesHandler(
                             .ToList(),
                         timeProvider.GetUtcNow().UtcDateTime));
 
-                    delivered.Add(new DeliveredClassInfo(klass.Id, klass.Name, course.Name, plan.Students.Count));
+                    planDeliveries.Add(new DeliveredClassInfo(klass.Id, klass.Name, course.Name, plan.Students.Count));
                 }
 
                 await context.SaveChangesAsync(cancellationToken);
 
-                if (ownsTransaction)
-                {
-                    await unitOfWork.CommitAsync(cancellationToken);
-                }
+                await unitOfWork.CommitAsync(cancellationToken);
+                delivered.AddRange(planDeliveries);
+            }
+            catch (OperationCanceledException)
+            {
+                await unitOfWork.RollbackAsync(CancellationToken.None);
+                if (context is DbContext cancelledDb) cancelledDb.ChangeTracker.Clear();
+                throw;
             }
             catch (Exception ex)
             {
-                if (ownsTransaction)
-                {
-                    await unitOfWork.RollbackAsync(CancellationToken.None);
-                }
+                await unitOfWork.RollbackAsync(CancellationToken.None);
+                if (context is DbContext failedDb) failedDb.ChangeTracker.Clear();
 
-                // At-least-progress: committed plans stay delivered; this one retries next run.
-                delivered.RemoveAll(d => pending.Any(p => p.ClassId == d.ClassId));
-                logger.LogWarning(ex, "Delivery failed for plan {PlanId}; will retry on the next run", plan.Id);
+                // A failed plan retries next run; committed plans and their results remain intact.
+                logger.LogWarning(ex, "Delivery failed for plan {PlanId}; will retry on the next run", planId);
             }
         }
 

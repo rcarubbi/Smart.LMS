@@ -1,5 +1,6 @@
 using Ardalis.Specification.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
 using SmartLMS.Application.Authorization;
@@ -19,6 +20,26 @@ public sealed record SubmitAssessmentInput(IReadOnlyList<QuestionSubmission> Que
 public sealed record SubmitAssessmentCommand(
     Guid AssessmentId,
     SubmitAssessmentInput Input) : ICommand<AssessmentResult>;
+
+internal sealed class SubmitAssessmentValidator : AbstractValidator<SubmitAssessmentCommand>
+{
+    public SubmitAssessmentValidator()
+    {
+        RuleFor(c => c.AssessmentId).NotEmpty();
+        RuleFor(c => c.Input.Questions).NotNull();
+        RuleFor(c => c.Input.Questions)
+            .Must(questions => questions is not null && questions.Select(q => q.QuestionId).Distinct().Count() == questions.Count)
+            .When(c => c.Input?.Questions is not null)
+            .WithMessage("Each question can only be submitted once.");
+        RuleForEach(c => c.Input.Questions).ChildRules(question =>
+        {
+            question.RuleFor(q => q.QuestionId).NotEmpty();
+            question.RuleFor(q => q.OptionIds)
+                .Must(options => options is not null && options.Distinct().Count() == options.Count)
+                .WithMessage("An option can only be selected once per question.");
+        }).When(c => c.Input?.Questions is not null);
+    }
+}
 
 public sealed record QuestionResult(Guid QuestionId, bool Correct, int ScoreAwarded);
 
@@ -53,6 +74,14 @@ internal sealed class SubmitAssessmentHandler(
         if (!await accessPolicy.CanAccessCourseAsync(assessment.CourseId, cancellationToken))
         {
             return Error.Forbidden("Assessments.CourseUnavailable", "Esta avaliação não está disponível para este usuário.");
+        }
+
+        var optionsByQuestion = assessment.Questions.ToDictionary(q => q.Id, q => q.Options.Select(o => o.Id).ToHashSet());
+        if (command.Input.Questions.Any(submission =>
+                !optionsByQuestion.TryGetValue(submission.QuestionId, out var validOptions) ||
+                submission.OptionIds.Any(optionId => !validOptions.Contains(optionId))))
+        {
+            return Error.Validation("Assessments.InvalidSubmission", "A questão ou opção enviada não pertence a esta avaliação.");
         }
 
         // Only admins are exempt: everyone else must finish every class of the course first.

@@ -42,27 +42,22 @@ internal sealed class RecordClassAccessHandler(
             return Error.NotFound("Classes.NotFound", "Class not found.");
         }
 
-        var existing = await context.ClassAccesses
-            .FirstOrDefaultAsync(a => a.UserId == userId && a.ClassId == command.Input.ClassId, cancellationToken);
-
         var accessTime = timeProvider.GetUtcNow().UtcDateTime;
-
-        Domain.Entities.History.ClassAccess? added = null;
-        if (existing is null)
+        var rows = await UpdateProgressAtomicallyAsync(context.ClassAccesses
+            .Where(a => a.UserId == userId && a.ClassId == command.Input.ClassId),
+            command.Input.Percentual, command.Input.WatchedSeconds, accessTime, cancellationToken);
+        if (rows > 0)
         {
-            added = new Domain.Entities.History.ClassAccess(
-                userId,
-                command.Input.ClassId,
-                command.Input.Percentual,
-                command.Input.WatchedSeconds,
-                accessTime);
-            context.ClassAccesses.Add(added);
-        }
-        else
-        {
-            existing.UpdateProgress(command.Input.Percentual, command.Input.WatchedSeconds, accessTime);
+            return Result.Success;
         }
 
+        var added = new Domain.Entities.History.ClassAccess(
+            userId,
+            command.Input.ClassId,
+            command.Input.Percentual,
+            command.Input.WatchedSeconds,
+            accessTime);
+        context.ClassAccesses.Add(added);
         try
         {
             await context.SaveChangesAsync(cancellationToken);
@@ -70,26 +65,35 @@ internal sealed class RecordClassAccessHandler(
         catch (DbUpdateException)
         {
             // Two heartbeats raced on the unique (UserId, ClassId): detach our
-            // loser insert, reload the winner and apply monotonic progress
-            // instead of surfacing a 500.
-            if (added is not null && context is DbContext db)
+            // loser insert, then atomically apply monotonic max values to the winner.
+            if (context is DbContext db)
             {
                 db.Entry(added).State = EntityState.Detached;
             }
 
-            var winner = await context.ClassAccesses
-                .FirstOrDefaultAsync(a => a.UserId == userId && a.ClassId == command.Input.ClassId, cancellationToken);
-            if (winner is null)
+            rows = await UpdateProgressAtomicallyAsync(context.ClassAccesses
+                .Where(a => a.UserId == userId && a.ClassId == command.Input.ClassId),
+                command.Input.Percentual, command.Input.WatchedSeconds, accessTime, cancellationToken);
+            if (rows == 0)
             {
                 throw;
             }
-
-            winner.UpdateProgress(command.Input.Percentual, command.Input.WatchedSeconds, accessTime);
-            await context.SaveChangesAsync(cancellationToken);
         }
 
         return Result.Success;
     }
+
+    private static Task<int> UpdateProgressAtomicallyAsync(
+        IQueryable<Domain.Entities.History.ClassAccess> source,
+        int percentual,
+        decimal watchedSeconds,
+        DateTime accessTime,
+        CancellationToken cancellationToken) =>
+        source.ExecuteUpdateAsync(update => update
+            .SetProperty(a => a.Percentual, a => a.Percentual < percentual ? percentual : a.Percentual)
+            .SetProperty(a => a.WatchedSeconds, a => a.WatchedSeconds < watchedSeconds ? watchedSeconds : a.WatchedSeconds)
+            .SetProperty(a => a.AccessDateTime, a => a.AccessDateTime < accessTime ? accessTime : a.AccessDateTime),
+            cancellationToken);
 }
 
 public sealed record RecordFileAccessInput(Guid FileId);

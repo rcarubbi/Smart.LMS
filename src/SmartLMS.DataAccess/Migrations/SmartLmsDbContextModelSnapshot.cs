@@ -597,6 +597,9 @@ namespace SmartLMS.DataAccess.Migrations
                     b.Property<int>("Attempts")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("ClaimId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("CorrelationId")
                         .HasColumnType("uniqueidentifier");
 
@@ -605,6 +608,12 @@ namespace SmartLMS.DataAccess.Migrations
 
                     b.Property<string>("Error")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LeaseUntilUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NextAttemptAtUtc")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Payload")
                         .IsRequired()
@@ -619,7 +628,7 @@ namespace SmartLMS.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProcessedOn", "Attempts", "CreatedAt");
+                    b.HasIndex("ProcessedOn", "Attempts", "NextAttemptAtUtc", "LeaseUntilUtc", "CreatedAt");
 
                     b.ToTable("OutboxMessages", (string)null);
                 });

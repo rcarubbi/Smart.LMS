@@ -6,6 +6,12 @@ COPY web/smartlms-web/package.json web/smartlms-web/package-lock.json ./web/smar
 RUN cd web/smartlms-web && npm ci
 
 COPY web/smartlms-web ./web/smartlms-web
+ARG NEXT_PUBLIC_API_URL=http://localhost:8080
+ARG APP_ENVIRONMENT=Development
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+RUN if [ "$APP_ENVIRONMENT" != "Development" ] && echo "$NEXT_PUBLIC_API_URL" | grep -Eiq 'localhost|127[.]0[.]0[.]1'; then \
+      echo "Production web builds require a deployed NEXT_PUBLIC_API_URL"; exit 1; \
+    fi
 RUN cd web/smartlms-web && npm run build
 
 # Runtime stage (Next.js standalone output)

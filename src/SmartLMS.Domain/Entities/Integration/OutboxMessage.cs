@@ -6,6 +6,8 @@ namespace SmartLMS.Domain.Entities.Integration;
 /// </summary>
 public class OutboxMessage
 {
+    public const int MaxAttempts = 5;
+
     public OutboxMessage(string type, string payload, Guid? correlationId = null)
     {
         Type = type;
@@ -48,12 +50,41 @@ public class OutboxMessage
 
     public int Attempts { get; private set; }
 
-    public void MarkProcessed(DateTime processedOn) => ProcessedOn = processedOn;
+    public Guid? ClaimId { get; private set; }
 
-    public void MarkFailed(string? error)
+    public DateTime? LeaseUntilUtc { get; private set; }
+
+    public DateTime? NextAttemptAtUtc { get; private set; }
+
+    public void MarkProcessed(DateTime processedOn)
+    {
+        ProcessedOn = processedOn;
+        ClaimId = null;
+        LeaseUntilUtc = null;
+        NextAttemptAtUtc = null;
+        Error = null;
+    }
+
+    public void MarkFailed(string? error) => MarkFailed(error, DateTime.UtcNow);
+
+    public void MarkFailed(string? error, DateTime failedAtUtc)
     {
         Error = error;
         Attempts++;
+        ClaimId = null;
+        LeaseUntilUtc = null;
+        var retryMinutes = Math.Min(60, 1 << Math.Min(Attempts - 1, 6));
+        NextAttemptAtUtc = Attempts >= MaxAttempts ? null : failedAtUtc.AddMinutes(retryMinutes);
+        ProcessedOn = null;
+    }
+
+    public void Retry()
+    {
+        Attempts = 0;
+        Error = null;
+        ClaimId = null;
+        LeaseUntilUtc = null;
+        NextAttemptAtUtc = null;
         ProcessedOn = null;
     }
 }

@@ -1,19 +1,21 @@
 name: smartlms
 
+# Development convenience stack. Production must set strong, private secrets.
+
 services:
   sql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: smartlms-sql
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "yourStrong(!)Password"
-      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-yourStrong(!)Password}"
+      MSSQL_PID: "${MSSQL_PID:-Developer}"
     ports:
       - "1433:1433"
     volumes:
       - sql-data:/var/opt/mssql
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -C -Q 'SELECT 1' || exit 1"]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P '${MSSQL_SA_PASSWORD:-yourStrong(!)Password}' -C -Q 'SELECT 1' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -32,11 +34,19 @@ services:
       dockerfile: src/SmartLMS.Presentation.Api/Dockerfile
     container_name: smartlms-api
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__SmartLMS: "Server=sql,1433;Database=SmartLMS;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True"
-      Jwt__SigningKey: "compose-signing-key-0123456789abcdef0123456789abcdef"
-      Smtp__Host: mailpit
-      Smtp__Port: 1025
+      ASPNETCORE_ENVIRONMENT: "${ASPNETCORE_ENVIRONMENT:-Development}"
+      BootstrapAdmin__Email: "${BOOTSTRAP_ADMIN_EMAIL:-administrator@yourcompany.com}"
+      BootstrapAdmin__Password: "${BOOTSTRAP_ADMIN_PASSWORD:-smart123}"
+      ConnectionStrings__SmartLMS: "Server=sql,1433;Database=SmartLMS;User Id=sa;Password=${MSSQL_SA_PASSWORD:-yourStrong(!)Password};TrustServerCertificate=True"
+      Jwt__SigningKey: "${JWT_SIGNING_KEY:-compose-signing-key-0123456789abcdef0123456789abcdef}"
+      Cors__AllowedOrigins__0: "${CORS_ALLOWED_ORIGIN:-http://localhost:3000}"
+      App__BaseUrl: "${APP_BASE_URL:-http://localhost:3000}"
+      Smtp__Host: "${SMTP_HOST:-mailpit}"
+      Smtp__Port: "${SMTP_PORT:-1025}"
+      Smtp__FromAddress: "${SMTP_FROM_ADDRESS:-no-reply@smartlms.local}"
+      Smtp__Username: "${SMTP_USERNAME:-}"
+      Smtp__Password: "${SMTP_PASSWORD:-}"
+      Smtp__UseSsl: "${SMTP_USE_SSL:-false}"
     ports:
       - "8080:8080"
     depends_on:
@@ -53,15 +63,22 @@ services:
       dockerfile: src/SmartLMS.Worker/Dockerfile
     container_name: smartlms-worker
     environment:
-      DOTNET_ENVIRONMENT: Development
-      ConnectionStrings__SmartLMS: "Server=sql,1433;Database=SmartLMS;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True"
-      Jwt__SigningKey: "compose-signing-key-0123456789abcdef0123456789abcdef"
-      Smtp__Host: mailpit
-      Smtp__Port: 1025
-      TickerQ__Dashboard__Password: "tickerq-admin"
+      DOTNET_ENVIRONMENT: "${ASPNETCORE_ENVIRONMENT:-Development}"
+      ConnectionStrings__SmartLMS: "Server=sql,1433;Database=SmartLMS;User Id=sa;Password=${MSSQL_SA_PASSWORD:-yourStrong(!)Password};TrustServerCertificate=True"
+      Jwt__SigningKey: "${JWT_SIGNING_KEY:-compose-signing-key-0123456789abcdef0123456789abcdef}"
+      Smtp__Host: "${SMTP_HOST:-mailpit}"
+      Smtp__Port: "${SMTP_PORT:-1025}"
+      Smtp__FromAddress: "${SMTP_FROM_ADDRESS:-no-reply@smartlms.local}"
+      Smtp__Username: "${SMTP_USERNAME:-}"
+      Smtp__Password: "${SMTP_PASSWORD:-}"
+      Smtp__UseSsl: "${SMTP_USE_SSL:-false}"
+      TickerQ__Dashboard__Username: "${TICKERQ_DASHBOARD_USERNAME:-admin}"
+      TickerQ__Dashboard__Password: "${TICKERQ_DASHBOARD_PASSWORD:-tickerq-admin}"
     ports:
       - "8081:8081"
     depends_on:
+      api:
+        condition: service_started
       sql:
         condition: service_healthy
       mailpit:
@@ -71,9 +88,10 @@ services:
     build:
       context: .
       dockerfile: deploy/Dockerfile.web
+      args:
+        NEXT_PUBLIC_API_URL: "${NEXT_PUBLIC_API_URL:-http://localhost:8080}"
+        APP_ENVIRONMENT: "${ASPNETCORE_ENVIRONMENT:-Development}"
     container_name: smartlms-web
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8080
     ports:
       - "3000:3000"
     depends_on:

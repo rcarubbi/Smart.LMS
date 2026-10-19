@@ -31,6 +31,32 @@ docker compose up -d
 Default admin: `administrator@yourcompany.com` / `smart123`
 (the API seeds it plus baseline parameters on startup in Development).
 
+`docker-compose.yml` is a **development-only** convenience stack with weak defaults. Do not reuse these credentials in deployment.
+
+## Deployment configuration
+
+API and worker require production secrets; both reject the Compose development JWT/SQL values. Configure secrets and public URLs before building:
+
+```bash
+export ASPNETCORE_ENVIRONMENT=Production
+export MSSQL_PID=Standard # if using the bundled SQL Server container; requires the matching license
+export MSSQL_SA_PASSWORD='<strong unique SQL password>'
+export JWT_SIGNING_KEY='<random secret of at least 32 characters>'
+export TICKERQ_DASHBOARD_USERNAME='<private dashboard user>'
+export TICKERQ_DASHBOARD_PASSWORD='<strong unique dashboard password>'
+export BOOTSTRAP_ADMIN_EMAIL='admin@example.com'
+export BOOTSTRAP_ADMIN_PASSWORD='<unique password of at least 12 characters>'
+export CORS_ALLOWED_ORIGIN='https://lms.example.com'
+export APP_BASE_URL='https://lms.example.com'
+export NEXT_PUBLIC_API_URL='https://api.example.com'
+export SMTP_HOST='smtp.example.com'
+docker compose up -d --build
+```
+
+`NEXT_PUBLIC_API_URL` is embedded into the browser bundle at build time; rebuild the web image when it changes. `Cors__AllowedOrigins__0` must match the deployed web origin. The API applies main database migrations and creates the configured bootstrap admin on startup; the worker applies both application and TickerQ migrations. EF Core serializes concurrent migration attempts. Configure SMTP via `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM_ADDRESS`, and optional credentials. `App__BaseUrl` is the public web URL used in password-reset links and seeds the `BaseUrl` parameter on a new database.
+
+Outbox email delivery is **at-least-once**: a crash after SMTP accepts a message but before the database marks it processed can resend that message after its lease expires. Failures retry after 1, 2, 4, then 8 minutes; after five failed attempts, admins can inspect and manually retry from `/admin/outbox`.
+
 ## Local development
 
 ```bash
@@ -44,7 +70,7 @@ dotnet run --project src/SmartLMS.Presentation.Api  # API (:5242 dev profile)
 dotnet run --project src/SmartLMS.Worker            # worker + dashboard
 ```
 
-Migrations are applied automatically by the API/worker at startup (Development).
+The API applies main database migrations and seeds local development data at startup. The worker applies TickerQ migrations.
 To add one:
 
 ```bash

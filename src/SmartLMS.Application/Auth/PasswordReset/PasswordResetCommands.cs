@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SmartLMS.Application.Abstractions;
 using SmartLMS.Application.Abstractions.Messaging;
@@ -24,6 +25,7 @@ internal sealed class RequestPasswordResetValidator : AbstractValidator<RequestP
 internal sealed class RequestPasswordResetHandler(
     ISmartLmsDbContext context,
     IEmailSender emailSender,
+    IConfiguration configuration,
     TimeProvider timeProvider,
     ILogger<RequestPasswordResetHandler> logger) : ICommandHandler<RequestPasswordResetCommand>
 {
@@ -52,7 +54,7 @@ internal sealed class RequestPasswordResetHandler(
             now.AddMinutes(30)));
         await context.SaveChangesAsync(cancellationToken);
 
-        var baseUrl = await context.Parameters.AsNoTracking()
+        var baseUrl = configuration["App:BaseUrl"] ?? await context.Parameters.AsNoTracking()
             .Where(p => p.Key == Parameter.BaseUrlKey)
             .Select(p => p.Value)
             .FirstOrDefaultAsync(cancellationToken) ?? "http://localhost:3000";

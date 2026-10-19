@@ -10,8 +10,13 @@ namespace SmartLMS.Domain.Specifications;
 /// </summary>
 public sealed class DeliveryPlansWithGraphSpec : Specification<DeliveryPlan>
 {
-    public DeliveryPlansWithGraphSpec()
+    public DeliveryPlansWithGraphSpec(Guid? planId = null)
     {
+        if (planId.HasValue)
+        {
+            Query.Where(p => p.Id == planId.Value);
+        }
+
         Query.Include(p => p.Classroom);
         Query.Include(p => p.DeliveredClasses);
         Query.Include(p => p.Students);

@@ -14,7 +14,7 @@ public static class DependencyInjection
     {
         services.AddOptions<JwtOptions>()
             .Bind(configuration.GetSection(JwtOptions.SectionName))
-            .Validate(o => !string.IsNullOrWhiteSpace(o.SigningKey), "Jwt:SigningKey is required.")
+            .Validate(o => o.SigningKey.Length >= 32, "Jwt:SigningKey must contain at least 32 characters.")
             .ValidateOnStart();
 
         services.AddOptions<SmtpOptions>()

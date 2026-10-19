@@ -10,7 +10,6 @@ public class OutboxMessageMapping : IEntityTypeConfiguration<OutboxMessage>
     {
         builder.ToTable("OutboxMessages");
 
-        // Covers the drain query: WHERE ProcessedOn IS NULL AND Attempts < N ORDER BY CreatedAt.
-        builder.HasIndex(m => new { m.ProcessedOn, m.Attempts, m.CreatedAt });
+        builder.HasIndex(m => new { m.ProcessedOn, m.Attempts, m.NextAttemptAtUtc, m.LeaseUntilUtc, m.CreatedAt });
     }
 }

@@ -86,6 +86,7 @@ export default function Nav() {
                   Entrega
                 </p>
                 <DropdownLink href="/admin/delivery-plans" onClick={() => setOpenMenu(null)}>Plano de entrega</DropdownLink>
+                <DropdownLink href="/admin/outbox" onClick={() => setOpenMenu(null)}>Falhas de e-mail</DropdownLink>
               </div>
             )}
           </div>
